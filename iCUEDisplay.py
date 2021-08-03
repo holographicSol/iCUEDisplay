@@ -203,7 +203,7 @@ corsairled_id_num_netsnt = [2, 3, 4, 5, 6, 7, 8, 9, 10]
 corsairled_id_num_netrcv_utype = 23
 corsairled_id_num_netsnt_utype = 11
 corsairled_id_num_netcon_ms = int()
-corsairled_id_num_netcon_kb = ()
+corsairled_id_num_netcon_kb = int()
 corsairled_id_num_netshare = [74, 75, 76, 78]
 corsairled_id_num_kb_complete = []
 corsairled_id_num_ms_complete = []
@@ -4772,18 +4772,38 @@ class CompileDevicesClass(QThread):
         global thread_sdk_event_handler
         global thread_sdk_event_handler_read_file_events
         global thread_backlight_auto
+        global devices_kb, devices_ms
 
         print('-- [CompileDevicesClass.stop_all_threads] stopping all threads:', )
-        thread_disk_rw[0].stop()
-        thread_cpu_util[0].stop()
-        thread_dram_util[0].stop()
-        thread_vram_util[0].stop()
-        thread_net_traffic[0].stop()
-        thread_net_connection[0].stop()
-        thread_net_share[0].stop()
-        thread_sdk_event_handler[0].stop()
-        thread_sdk_event_handler_read_file_events[0].stop()
-        thread_backlight_auto[0].stop()
+        if len(devices_kb) >= 1 or len(devices_ms) >= 1:
+            try:
+                thread_disk_rw[0].stop()
+            except Exception as e:
+                print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
+            try:
+                thread_cpu_util[0].stop()
+            except Exception as e:
+                print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
+                thread_dram_util[0].stop()
+            try:
+                thread_vram_util[0].stop()
+            except Exception as e:
+                print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
+                thread_net_traffic[0].stop()
+            try:
+                thread_net_connection[0].stop()
+            except Exception as e:
+                print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
+                thread_net_share[0].stop()
+            try:
+                thread_sdk_event_handler[0].stop()
+            except Exception as e:
+                print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
+                thread_sdk_event_handler_read_file_events[0].stop()
+            try:
+                thread_backlight_auto[0].stop()
+            except Exception as e:
+                print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
 
     def start_all_threads(self):
         print('-- [CompileDevicesClass.start_all_threads]: plugged in')
@@ -4913,12 +4933,7 @@ class CompileDevicesClass(QThread):
                 device_i += 1
 
             if fresh_start is True:
-                self.entry_sequence()
                 print('-- [CompileDevicesClass.get_devices] fresh start: True')
-                devices_previous = device
-                self.stop_all_threads()
-                time.sleep(2)
-                self.start_all_threads()
                 if len(devices_kb) >= 1:
                     self.lbl_con_stat_kb.setText(str(devices_kb_name[0]))
                 elif len(devices_kb) < 1:
@@ -4927,6 +4942,13 @@ class CompileDevicesClass(QThread):
                     self.lbl_con_stat_mouse.setText(str(devices_ms_name[0]))
                 elif len(devices_ms) < 1:
                     self.lbl_con_stat_mouse.setText('')
+
+                if len(devices_kb) >= 1 or len(devices_ms) >= 1:
+                    self.entry_sequence()
+                    devices_previous = device
+                    self.stop_all_threads()
+                    time.sleep(2)
+                    self.start_all_threads()
 
     def sanitize_rgb_values(self):
         print('-- [Config_Compile.sanitize_rgb_values]: plugged in')
