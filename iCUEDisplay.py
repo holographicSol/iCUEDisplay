@@ -307,6 +307,8 @@ config_data = ['sdk_color_cpu_on: 255,255,0',
                'sdk_color_netshare_on: 255,15,100',
                'bool_switch_backlight: false',
                'sdk_color_backlight_on: 63,63,63',
+               'backlight_time_0: 1000',
+               'backlight_time_1: 0500',
                'bool_switch_backlight_auto: false',
                'bool_switch_event_notification_g1: false',
                'bool_switch_event_notification_g2: false',
@@ -646,7 +648,7 @@ class App(QMainWindow):
         self.btn_title_logo = QLabel(self)
         self.btn_title_logo.move(5, -4)
         self.btn_title_logo.resize(28, 28)
-        pixmap = QPixmap("./image/logo.png")
+        pixmap = QPixmap("./image/dev_target_20x20.png")
         self.btn_title_logo.setPixmap(pixmap)
         self.btn_title_logo.setStyleSheet(
             """QLabel{background-color: rgb(0, 0, 0);
