@@ -303,6 +303,7 @@ config_data = ['sdk_color_cpu_on: 255,255,0',
                'devices_network_adapter_name: ',
                'bool_switch_startup_net_con_ms: true',
                'bool_switch_startup_net_con_kb: true',
+               'corsairled_id_num_netcon_ms: 0',
                'bool_switch_startup_net_con: true',
                'netshare_startup: true',
                'sdk_color_netshare_on: 255,15,100',
@@ -1716,334 +1717,365 @@ class App(QMainWindow):
         self.initUI()
 
     def openFileNameDialogG1(self):
-        global str_event_notification_run_path_g1
+        global str_event_notification_run_path_g1, devices_kb
         print('-- [App.openFileNameDialogG1]: plugged in')
-        options = QFileDialog.Options()
-        fileName, _ = QFileDialog.getOpenFileName(self, "Select G1 File To Run", "",
-                                                  "All Files (*);;Python Files (*.py)", options=options)
-        if fileName:
-            print('-- [App.openFileNameDialogG1] file selected:', fileName)
-            str_event_notification_run_path_g1 = fileName
-            self.setFocus()
-            if self.write_engaged is False:
-                print('-- [App.btn_event_notification_g1_function] changing str_event_notification_run_path_g1:', str_event_notification_run_path_g1)
-                self.write_var = 'str_event_notification_run_path_g1: '+str_event_notification_run_path_g1
-                self.write_changes()
+
+        if len(devices_kb) > 0:
+            options = QFileDialog.Options()
+            fileName, _ = QFileDialog.getOpenFileName(self, "Select G1 File To Run", "",
+                                                      "All Files (*);;Python Files (*.py)", options=options)
+            if fileName:
+                print('-- [App.openFileNameDialogG1] file selected:', fileName)
+                str_event_notification_run_path_g1 = fileName
+                self.setFocus()
+                if self.write_engaged is False:
+                    print('-- [App.btn_event_notification_g1_function] changing str_event_notification_run_path_g1:', str_event_notification_run_path_g1)
+                    self.write_var = 'str_event_notification_run_path_g1: '+str_event_notification_run_path_g1
+                    self.write_changes()
 
     def openFileNameDialogG2(self):
-        global str_event_notification_run_path_g2
+        global str_event_notification_run_path_g2, devices_kb
         print('-- [App.openFileNameDialogG2]: plugged in')
-        options = QFileDialog.Options()
-        fileName, _ = QFileDialog.getOpenFileName(self, "Select G2 File To Run", "",
-                                                  "All Files (*);;Python Files (*.py)", options=options)
-        if fileName:
-            print('-- [App.openFileNameDialogG2] file selected:', fileName)
-            str_event_notification_run_path_g2 = fileName
-            self.setFocus()
-            if self.write_engaged is False:
-                print('-- [App.btn_event_notification_g2_function] changing str_event_notification_run_path_g2:', str_event_notification_run_path_g2)
-                self.write_var = 'str_event_notification_run_path_g2: '+str_event_notification_run_path_g2
-                self.write_changes()
+        if len(devices_kb) > 0:
+            options = QFileDialog.Options()
+            fileName, _ = QFileDialog.getOpenFileName(self, "Select G2 File To Run", "",
+                                                      "All Files (*);;Python Files (*.py)", options=options)
+            if fileName:
+                print('-- [App.openFileNameDialogG2] file selected:', fileName)
+                str_event_notification_run_path_g2 = fileName
+                self.setFocus()
+                if self.write_engaged is False:
+                    print('-- [App.btn_event_notification_g2_function] changing str_event_notification_run_path_g2:', str_event_notification_run_path_g2)
+                    self.write_var = 'str_event_notification_run_path_g2: '+str_event_notification_run_path_g2
+                    self.write_changes()
 
     def openFileNameDialogG3(self):
-        global str_event_notification_run_path_g3
+        global str_event_notification_run_path_g3, devices_kb
         print('-- [App.openFileNameDialogG3]: plugged in')
-        options = QFileDialog.Options()
-        fileName, _ = QFileDialog.getOpenFileName(self, "Select G3 File To Run", "",
-                                                  "All Files (*);;Python Files (*.py)", options=options)
-        if fileName:
-            print('-- [App.openFileNameDialogG3] file selected:', fileName)
-            str_event_notification_run_path_g3 = fileName
-            self.setFocus()
-            if self.write_engaged is False:
-                print('-- [App.btn_event_notification_g3_function] changing str_event_notification_run_path_g3:', str_event_notification_run_path_g3)
-                self.write_var = 'str_event_notification_run_path_g3: '+str_event_notification_run_path_g3
-                self.write_changes()
+        if len(devices_kb) > 0:
+            options = QFileDialog.Options()
+            fileName, _ = QFileDialog.getOpenFileName(self, "Select G3 File To Run", "",
+                                                      "All Files (*);;Python Files (*.py)", options=options)
+            if fileName:
+                print('-- [App.openFileNameDialogG3] file selected:', fileName)
+                str_event_notification_run_path_g3 = fileName
+                self.setFocus()
+                if self.write_engaged is False:
+                    print('-- [App.btn_event_notification_g3_function] changing str_event_notification_run_path_g3:', str_event_notification_run_path_g3)
+                    self.write_var = 'str_event_notification_run_path_g3: '+str_event_notification_run_path_g3
+                    self.write_changes()
 
     def openFileNameDialogG4(self):
-        global str_event_notification_run_path_g4
+        global str_event_notification_run_path_g4, devices_kb
         print('-- [App.openFileNameDialogG4]: plugged in')
-        options = QFileDialog.Options()
-        fileName, _ = QFileDialog.getOpenFileName(self, "Select G4 File To Run", "",
-                                                  "All Files (*);;Python Files (*.py)", options=options)
-        if fileName:
-            print('-- [App.openFileNameDialogG4] file selected:', fileName)
-            str_event_notification_run_path_g4 = fileName
-            self.setFocus()
-            if self.write_engaged is False:
-                print('-- [App.btn_event_notification_g4_function] changing str_event_notification_run_path_g4:', str_event_notification_run_path_g4)
-                self.write_var = 'str_event_notification_run_path_g4: '+str_event_notification_run_path_g4
-                self.write_changes()
+        if len(devices_kb) > 0:
+            options = QFileDialog.Options()
+            fileName, _ = QFileDialog.getOpenFileName(self, "Select G4 File To Run", "",
+                                                      "All Files (*);;Python Files (*.py)", options=options)
+            if fileName:
+                print('-- [App.openFileNameDialogG4] file selected:', fileName)
+                str_event_notification_run_path_g4 = fileName
+                self.setFocus()
+                if self.write_engaged is False:
+                    print('-- [App.btn_event_notification_g4_function] changing str_event_notification_run_path_g4:', str_event_notification_run_path_g4)
+                    self.write_var = 'str_event_notification_run_path_g4: '+str_event_notification_run_path_g4
+                    self.write_changes()
 
     def openFileNameDialogG5(self):
-        global str_event_notification_run_path_g5
+        global str_event_notification_run_path_g5, devices_kb
         print('-- [App.openFileNameDialogG5]: plugged in')
-        options = QFileDialog.Options()
-        fileName, _ = QFileDialog.getOpenFileName(self, "Select G5 File To Run", "",
-                                                  "All Files (*);;Python Files (*.py)", options=options)
-        if fileName:
-            print('-- [App.openFileNameDialogG5] file selected:', fileName)
-            str_event_notification_run_path_g5 = fileName
-            self.setFocus()
-            if self.write_engaged is False:
-                print('-- [App.btn_event_notification_g5_function] changing str_event_notification_run_path_g5:', str_event_notification_run_path_g5)
-                self.write_var = 'str_event_notification_run_path_g5: '+str_event_notification_run_path_g5
-                self.write_changes()
+        if len(devices_kb) > 0:
+            options = QFileDialog.Options()
+            fileName, _ = QFileDialog.getOpenFileName(self, "Select G5 File To Run", "",
+                                                      "All Files (*);;Python Files (*.py)", options=options)
+            if fileName:
+                print('-- [App.openFileNameDialogG5] file selected:', fileName)
+                str_event_notification_run_path_g5 = fileName
+                self.setFocus()
+                if self.write_engaged is False:
+                    print('-- [App.btn_event_notification_g5_function] changing str_event_notification_run_path_g5:', str_event_notification_run_path_g5)
+                    self.write_var = 'str_event_notification_run_path_g5: '+str_event_notification_run_path_g5
+                    self.write_changes()
 
     def openFileNameDialogG6(self):
-        global str_event_notification_run_path_g6
+        global str_event_notification_run_path_g6, devices_kb
         print('-- [App.openFileNameDialogG6]: plugged in')
-        options = QFileDialog.Options()
-        fileName, _ = QFileDialog.getOpenFileName(self, "Select G6 File To Run", "",
-                                                  "All Files (*);;Python Files (*.py)", options=options)
-        if fileName:
-            print('-- [App.openFileNameDialogG6] file selected:', fileName)
-            str_event_notification_run_path_g6 = fileName
-            self.setFocus()
-            if self.write_engaged is False:
-                print('-- [App.btn_event_notification_g6_function] changing str_event_notification_run_path_g6:', str_event_notification_run_path_g6)
-                self.write_var = 'str_event_notification_run_path_g6: '+str_event_notification_run_path_g6
-                self.write_changes()
+        if len(devices_kb) > 0:
+            options = QFileDialog.Options()
+            fileName, _ = QFileDialog.getOpenFileName(self, "Select G6 File To Run", "",
+                                                      "All Files (*);;Python Files (*.py)", options=options)
+            if fileName:
+                print('-- [App.openFileNameDialogG6] file selected:', fileName)
+                str_event_notification_run_path_g6 = fileName
+                self.setFocus()
+                if self.write_engaged is False:
+                    print('-- [App.btn_event_notification_g6_function] changing str_event_notification_run_path_g6:', str_event_notification_run_path_g6)
+                    self.write_var = 'str_event_notification_run_path_g6: '+str_event_notification_run_path_g6
+                    self.write_changes()
 
     def btn_event_notification_g1_function(self):
         print('-- [App.btn_event_notification_g1_function]: plugged in')
-        global bool_switch_event_notification_g1
+        global bool_switch_event_notification_g1, devices_kb
         self.setFocus()
-        if self.write_engaged is False:
+        
+        if len(devices_kb) > 0:
+            if self.write_engaged is False:
 
-            if bool_switch_event_notification_g1 is False:
-                bool_switch_event_notification_g1 = True
-                print('-- [App.btn_event_notification_g1_function] changing bool_switch_event_notification_g1: true')
-                self.write_var = 'bool_switch_event_notification_g1: true'
-                self.write_changes()
-                self.btn_event_notification_g1.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                if bool_switch_event_notification_g1 is False:
+                    bool_switch_event_notification_g1 = True
+                    print('-- [App.btn_event_notification_g1_function] changing bool_switch_event_notification_g1: true')
+                    self.write_var = 'bool_switch_event_notification_g1: true'
+                    self.write_changes()
+                    self.btn_event_notification_g1.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
 
-            elif bool_switch_event_notification_g1 is True:
-                bool_switch_event_notification_g1 = False
-                print('-- [App.btn_event_notification_g1_function] changing bool_switch_event_notification_g1: false')
-                self.write_var = 'bool_switch_event_notification_g1: false'
-                self.write_changes()
-                self.btn_event_notification_g1.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                elif bool_switch_event_notification_g1 is True:
+                    bool_switch_event_notification_g1 = False
+                    print('-- [App.btn_event_notification_g1_function] changing bool_switch_event_notification_g1: false')
+                    self.write_var = 'bool_switch_event_notification_g1: false'
+                    self.write_changes()
+                    self.btn_event_notification_g1.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
     def btn_event_notification_run_g1_function(self):
         print('-- [App.btn_event_notification_run_g1_function]: plugged in')
-        global bool_switch_event_notification_run_g1
+        global bool_switch_event_notification_run_g1, devices_kb
         self.setFocus()
-        if self.write_engaged is False:
 
-            if bool_switch_event_notification_run_g1 is False:
-                bool_switch_event_notification_run_g1 = True
-                print('-- [App.btn_event_notification_run_g1_function] changing bool_switch_event_notification_run_g1: true')
-                self.write_var = 'bool_switch_event_notification_run_g1: true'
-                self.write_changes()
-                self.btn_event_notification_run_g1.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+        if len(devices_kb) > 0:
+            if self.write_engaged is False:
 
-            elif bool_switch_event_notification_run_g1 is True:
-                bool_switch_event_notification_run_g1 = False
-                print('-- [App.btn_event_notification_run_g1_function] changing bool_switch_event_notification_run_g1: false')
-                self.write_var = 'bool_switch_event_notification_run_g1: false'
-                self.write_changes()
-                self.btn_event_notification_run_g1.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                if bool_switch_event_notification_run_g1 is False:
+                    bool_switch_event_notification_run_g1 = True
+                    print('-- [App.btn_event_notification_run_g1_function] changing bool_switch_event_notification_run_g1: true')
+                    self.write_var = 'bool_switch_event_notification_run_g1: true'
+                    self.write_changes()
+                    self.btn_event_notification_run_g1.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+
+                elif bool_switch_event_notification_run_g1 is True:
+                    bool_switch_event_notification_run_g1 = False
+                    print('-- [App.btn_event_notification_run_g1_function] changing bool_switch_event_notification_run_g1: false')
+                    self.write_var = 'bool_switch_event_notification_run_g1: false'
+                    self.write_changes()
+                    self.btn_event_notification_run_g1.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
     def btn_event_notification_g2_function(self):
         print('-- [App.btn_event_notification_g2_function]: plugged in')
-        global bool_switch_event_notification_g2
+        global bool_switch_event_notification_g2, devices_kb
         self.setFocus()
-        if self.write_engaged is False:
 
-            if bool_switch_event_notification_g2 is False:
-                bool_switch_event_notification_g2 = True
-                print('-- [App.btn_event_notification_g2_function] changing bool_switch_event_notification_g2: true')
-                self.write_var = 'bool_switch_event_notification_g2: true'
-                self.write_changes()
-                self.btn_event_notification_g2.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+        if len(devices_kb) > 0:
+            if self.write_engaged is False:
 
-            elif bool_switch_event_notification_g2 is True:
-                bool_switch_event_notification_g2 = False
-                print('-- [App.btn_event_notification_g2_function] changing bool_switch_event_notification_g2: false')
-                self.write_var = 'bool_switch_event_notification_g2: false'
-                self.write_changes()
-                self.btn_event_notification_g2.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                if bool_switch_event_notification_g2 is False:
+                    bool_switch_event_notification_g2 = True
+                    print('-- [App.btn_event_notification_g2_function] changing bool_switch_event_notification_g2: true')
+                    self.write_var = 'bool_switch_event_notification_g2: true'
+                    self.write_changes()
+                    self.btn_event_notification_g2.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+
+                elif bool_switch_event_notification_g2 is True:
+                    bool_switch_event_notification_g2 = False
+                    print('-- [App.btn_event_notification_g2_function] changing bool_switch_event_notification_g2: false')
+                    self.write_var = 'bool_switch_event_notification_g2: false'
+                    self.write_changes()
+                    self.btn_event_notification_g2.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
     def btn_event_notification_run_g2_function(self):
         print('-- [App.btn_event_notification_run_g2_function]: plugged in')
-        global bool_switch_event_notification_run_g2
+        global bool_switch_event_notification_run_g2, devices_kb
         self.setFocus()
-        if self.write_engaged is False:
 
-            if bool_switch_event_notification_run_g2 is False:
-                bool_switch_event_notification_run_g2 = True
-                print('-- [App.btn_event_notification_run_g2_function] changing bool_switch_event_notification_run_g2: true')
-                self.write_var = 'bool_switch_event_notification_run_g2: true'
-                self.write_changes()
-                self.btn_event_notification_run_g2.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+        if len(devices_kb) > 0:
+            if self.write_engaged is False:
 
-            elif bool_switch_event_notification_run_g2 is True:
-                bool_switch_event_notification_run_g2 = False
-                print('-- [App.btn_event_notification_run_g2_function] changing bool_switch_event_notification_run_g2: false')
-                self.write_var = 'bool_switch_event_notification_run_g2: false'
-                self.write_changes()
-                self.btn_event_notification_run_g2.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                if bool_switch_event_notification_run_g2 is False:
+                    bool_switch_event_notification_run_g2 = True
+                    print('-- [App.btn_event_notification_run_g2_function] changing bool_switch_event_notification_run_g2: true')
+                    self.write_var = 'bool_switch_event_notification_run_g2: true'
+                    self.write_changes()
+                    self.btn_event_notification_run_g2.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+
+                elif bool_switch_event_notification_run_g2 is True:
+                    bool_switch_event_notification_run_g2 = False
+                    print('-- [App.btn_event_notification_run_g2_function] changing bool_switch_event_notification_run_g2: false')
+                    self.write_var = 'bool_switch_event_notification_run_g2: false'
+                    self.write_changes()
+                    self.btn_event_notification_run_g2.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
     def btn_event_notification_g3_function(self):
         print('-- [App.btn_event_notification_g3_function]: plugged in')
-        global bool_switch_event_notification_g3
+        global bool_switch_event_notification_g3, devices_kb
         self.setFocus()
-        if self.write_engaged is False:
 
-            if bool_switch_event_notification_g3 is False:
-                bool_switch_event_notification_g3 = True
-                print('-- [App.btn_event_notification_g3_function] changing bool_switch_event_notification_g3: true')
-                self.write_var = 'bool_switch_event_notification_g3: true'
-                self.write_changes()
-                self.btn_event_notification_g3.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+        if len(devices_kb) > 0:
+            if self.write_engaged is False:
 
-            elif bool_switch_event_notification_g3 is True:
-                bool_switch_event_notification_g3 = False
-                print('-- [App.btn_event_notification_g3_function] changing bool_switch_event_notification_g3: false')
-                self.write_var = 'bool_switch_event_notification_g3: false'
-                self.write_changes()
-                self.btn_event_notification_g3.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                if bool_switch_event_notification_g3 is False:
+                    bool_switch_event_notification_g3 = True
+                    print('-- [App.btn_event_notification_g3_function] changing bool_switch_event_notification_g3: true')
+                    self.write_var = 'bool_switch_event_notification_g3: true'
+                    self.write_changes()
+                    self.btn_event_notification_g3.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+
+                elif bool_switch_event_notification_g3 is True:
+                    bool_switch_event_notification_g3 = False
+                    print('-- [App.btn_event_notification_g3_function] changing bool_switch_event_notification_g3: false')
+                    self.write_var = 'bool_switch_event_notification_g3: false'
+                    self.write_changes()
+                    self.btn_event_notification_g3.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
     def btn_event_notification_run_g3_function(self):
         print('-- [App.btn_event_notification_run_g3_function]: plugged in')
-        global bool_switch_event_notification_run_g3
+        global bool_switch_event_notification_run_g3, devices_kb
         self.setFocus()
-        if self.write_engaged is False:
 
-            if bool_switch_event_notification_run_g3 is False:
-                bool_switch_event_notification_run_g3 = True
-                print('-- [App.btn_event_notification_run_g3_function] changing bool_switch_event_notification_run_g3: true')
-                self.write_var = 'bool_switch_event_notification_run_g3: true'
-                self.write_changes()
-                self.btn_event_notification_run_g3.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+        if len(devices_kb) > 0:
+            if self.write_engaged is False:
 
-            elif bool_switch_event_notification_run_g3 is True:
-                bool_switch_event_notification_run_g3 = False
-                print('-- [App.btn_event_notification_run_g3_function] changing bool_switch_event_notification_run_g3: false')
-                self.write_var = 'bool_switch_event_notification_run_g3: false'
-                self.write_changes()
-                self.btn_event_notification_run_g3.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                if bool_switch_event_notification_run_g3 is False:
+                    bool_switch_event_notification_run_g3 = True
+                    print('-- [App.btn_event_notification_run_g3_function] changing bool_switch_event_notification_run_g3: true')
+                    self.write_var = 'bool_switch_event_notification_run_g3: true'
+                    self.write_changes()
+                    self.btn_event_notification_run_g3.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+
+                elif bool_switch_event_notification_run_g3 is True:
+                    bool_switch_event_notification_run_g3 = False
+                    print('-- [App.btn_event_notification_run_g3_function] changing bool_switch_event_notification_run_g3: false')
+                    self.write_var = 'bool_switch_event_notification_run_g3: false'
+                    self.write_changes()
+                    self.btn_event_notification_run_g3.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
     def btn_event_notification_g4_function(self):
         print('-- [App.btn_event_notification_g4_function]: plugged in')
-        global bool_switch_event_notification_g4
+        global bool_switch_event_notification_g4, devices_kb
         self.setFocus()
-        if self.write_engaged is False:
 
-            if bool_switch_event_notification_g4 is False:
-                bool_switch_event_notification_g4 = True
-                print('-- [App.btn_event_notification_g4_function] changing bool_switch_event_notification_g4: true')
-                self.write_var = 'bool_switch_event_notification_g4: true'
-                self.write_changes()
-                self.btn_event_notification_g4.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+        if len(devices_kb) > 0:
+            if self.write_engaged is False:
 
-            elif bool_switch_event_notification_g4 is True:
-                bool_switch_event_notification_g4 = False
-                print('-- [App.btn_event_notification_g4_function] changing bool_switch_event_notification_g4: false')
-                self.write_var = 'bool_switch_event_notification_g4: false'
-                self.write_changes()
-                self.btn_event_notification_g4.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                if bool_switch_event_notification_g4 is False:
+                    bool_switch_event_notification_g4 = True
+                    print('-- [App.btn_event_notification_g4_function] changing bool_switch_event_notification_g4: true')
+                    self.write_var = 'bool_switch_event_notification_g4: true'
+                    self.write_changes()
+                    self.btn_event_notification_g4.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+
+                elif bool_switch_event_notification_g4 is True:
+                    bool_switch_event_notification_g4 = False
+                    print('-- [App.btn_event_notification_g4_function] changing bool_switch_event_notification_g4: false')
+                    self.write_var = 'bool_switch_event_notification_g4: false'
+                    self.write_changes()
+                    self.btn_event_notification_g4.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
     def btn_event_notification_run_g4_function(self):
         print('-- [App.btn_event_notification_run_g4_function]: plugged in')
-        global bool_switch_event_notification_run_g4
+        global bool_switch_event_notification_run_g4, devices_kb
         self.setFocus()
-        if self.write_engaged is False:
 
-            if bool_switch_event_notification_run_g4 is False:
-                bool_switch_event_notification_run_g4 = True
-                print('-- [App.btn_event_notification_run_g4_function] changing bool_switch_event_notification_run_g4: true')
-                self.write_var = 'bool_switch_event_notification_run_g4: true'
-                self.write_changes()
-                self.btn_event_notification_run_g4.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+        if len(devices_kb) > 0:
+            if self.write_engaged is False:
 
-            elif bool_switch_event_notification_run_g4 is True:
-                bool_switch_event_notification_run_g4 = False
-                print('-- [App.btn_event_notification_run_g4_function] changing bool_switch_event_notification_run_g4: false')
-                self.write_var = 'bool_switch_event_notification_run_g4: false'
-                self.write_changes()
-                self.btn_event_notification_run_g4.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                if bool_switch_event_notification_run_g4 is False:
+                    bool_switch_event_notification_run_g4 = True
+                    print('-- [App.btn_event_notification_run_g4_function] changing bool_switch_event_notification_run_g4: true')
+                    self.write_var = 'bool_switch_event_notification_run_g4: true'
+                    self.write_changes()
+                    self.btn_event_notification_run_g4.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+
+                elif bool_switch_event_notification_run_g4 is True:
+                    bool_switch_event_notification_run_g4 = False
+                    print('-- [App.btn_event_notification_run_g4_function] changing bool_switch_event_notification_run_g4: false')
+                    self.write_var = 'bool_switch_event_notification_run_g4: false'
+                    self.write_changes()
+                    self.btn_event_notification_run_g4.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
     def btn_event_notification_g5_function(self):
         print('-- [App.btn_event_notification_g5_function]: plugged in')
-        global bool_switch_event_notification_g5
+        global bool_switch_event_notification_g5, devices_kb
         self.setFocus()
-        if self.write_engaged is False:
 
-            if bool_switch_event_notification_g5 is False:
-                bool_switch_event_notification_g5 = True
-                print('-- [App.btn_event_notification_g5_function] changing bool_switch_event_notification_g5: true')
-                self.write_var = 'bool_switch_event_notification_g5: true'
-                self.write_changes()
-                self.btn_event_notification_g5.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+        if len(devices_kb) > 0:
+            if self.write_engaged is False:
 
-            elif bool_switch_event_notification_g5 is True:
-                bool_switch_event_notification_g5 = False
-                print('-- [App.btn_event_notification_g5_function] changing bool_switch_event_notification_g5: false')
-                self.write_var = 'bool_switch_event_notification_g5: false'
-                self.write_changes()
-                self.btn_event_notification_g5.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                if bool_switch_event_notification_g5 is False:
+                    bool_switch_event_notification_g5 = True
+                    print('-- [App.btn_event_notification_g5_function] changing bool_switch_event_notification_g5: true')
+                    self.write_var = 'bool_switch_event_notification_g5: true'
+                    self.write_changes()
+                    self.btn_event_notification_g5.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+
+                elif bool_switch_event_notification_g5 is True:
+                    bool_switch_event_notification_g5 = False
+                    print('-- [App.btn_event_notification_g5_function] changing bool_switch_event_notification_g5: false')
+                    self.write_var = 'bool_switch_event_notification_g5: false'
+                    self.write_changes()
+                    self.btn_event_notification_g5.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
     def btn_event_notification_run_g5_function(self):
         print('-- [App.btn_event_notification_run_g5_function]: plugged in')
-        global bool_switch_event_notification_run_g5
+        global bool_switch_event_notification_run_g5, devices_kb
         self.setFocus()
-        if self.write_engaged is False:
 
-            if bool_switch_event_notification_run_g5 is False:
-                bool_switch_event_notification_run_g5 = True
-                print('-- [App.btn_event_notification_run_g5_function] changing bool_switch_event_notification_run_g5: true')
-                self.write_var = 'bool_switch_event_notification_run_g5: true'
-                self.write_changes()
-                self.btn_event_notification_run_g5.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+        if len(devices_kb) > 0:
+            if self.write_engaged is False:
 
-            elif bool_switch_event_notification_run_g5 is True:
-                bool_switch_event_notification_run_g5 = False
-                print('-- [App.btn_event_notification_run_g5_function] changing bool_switch_event_notification_run_g5: false')
-                self.write_var = 'bool_switch_event_notification_run_g5: false'
-                self.write_changes()
-                self.btn_event_notification_run_g5.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                if bool_switch_event_notification_run_g5 is False:
+                    bool_switch_event_notification_run_g5 = True
+                    print('-- [App.btn_event_notification_run_g5_function] changing bool_switch_event_notification_run_g5: true')
+                    self.write_var = 'bool_switch_event_notification_run_g5: true'
+                    self.write_changes()
+                    self.btn_event_notification_run_g5.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+
+                elif bool_switch_event_notification_run_g5 is True:
+                    bool_switch_event_notification_run_g5 = False
+                    print('-- [App.btn_event_notification_run_g5_function] changing bool_switch_event_notification_run_g5: false')
+                    self.write_var = 'bool_switch_event_notification_run_g5: false'
+                    self.write_changes()
+                    self.btn_event_notification_run_g5.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
     def btn_event_notification_g6_function(self):
         print('-- [App.btn_event_notification_g6_function]: plugged in')
-        global bool_switch_event_notification_g6
+        global bool_switch_event_notification_g6, devices_kb
         self.setFocus()
-        if self.write_engaged is False:
 
-            if bool_switch_event_notification_g6 is False:
-                bool_switch_event_notification_g6 = True
-                print('-- [App.btn_event_notification_g6_function] changing bool_switch_event_notification_g6: true')
-                self.write_var = 'bool_switch_event_notification_g6: true'
-                self.write_changes()
-                self.btn_event_notification_g6.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+        if len(devices_kb) > 0:
+            if self.write_engaged is False:
 
-            elif bool_switch_event_notification_g6 is True:
-                bool_switch_event_notification_g6 = False
-                print('-- [App.btn_event_notification_g6_function] changing bool_switch_event_notification_g6: false')
-                self.write_var = 'bool_switch_event_notification_g6: false'
-                self.write_changes()
-                self.btn_event_notification_g6.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                if bool_switch_event_notification_g6 is False:
+                    bool_switch_event_notification_g6 = True
+                    print('-- [App.btn_event_notification_g6_function] changing bool_switch_event_notification_g6: true')
+                    self.write_var = 'bool_switch_event_notification_g6: true'
+                    self.write_changes()
+                    self.btn_event_notification_g6.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+
+                elif bool_switch_event_notification_g6 is True:
+                    bool_switch_event_notification_g6 = False
+                    print('-- [App.btn_event_notification_g6_function] changing bool_switch_event_notification_g6: false')
+                    self.write_var = 'bool_switch_event_notification_g6: false'
+                    self.write_changes()
+                    self.btn_event_notification_g6.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
     def btn_event_notification_run_g6_function(self):
         print('-- [App.btn_event_notification_run_g6_function]: plugged in')
-        global bool_switch_event_notification_run_g6
+        global bool_switch_event_notification_run_g6, devices_kb
         self.setFocus()
-        if self.write_engaged is False:
 
-            if bool_switch_event_notification_run_g6 is False:
-                bool_switch_event_notification_run_g6 = True
-                print('-- [App.btn_event_notification_run_g6_function] changing bool_switch_event_notification_run_g6: true')
-                self.write_var = 'bool_switch_event_notification_run_g6: true'
-                self.write_changes()
-                self.btn_event_notification_run_g6.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+        if len(devices_kb) > 0:
+            if self.write_engaged is False:
 
-            elif bool_switch_event_notification_run_g6 is True:
-                bool_switch_event_notification_run_g6 = False
-                print('-- [App.btn_event_notification_run_g6_function] changing bool_switch_event_notification_run_g6: false')
-                self.write_var = 'bool_switch_event_notification_run_g6: false'
-                self.write_changes()
-                self.btn_event_notification_run_g6.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                if bool_switch_event_notification_run_g6 is False:
+                    bool_switch_event_notification_run_g6 = True
+                    print('-- [App.btn_event_notification_run_g6_function] changing bool_switch_event_notification_run_g6: true')
+                    self.write_var = 'bool_switch_event_notification_run_g6: true'
+                    self.write_changes()
+                    self.btn_event_notification_run_g6.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+
+                elif bool_switch_event_notification_run_g6 is True:
+                    bool_switch_event_notification_run_g6 = False
+                    print('-- [App.btn_event_notification_run_g6_function] changing bool_switch_event_notification_run_g6: false')
+                    self.write_var = 'bool_switch_event_notification_run_g6: false'
+                    self.write_changes()
+                    self.btn_event_notification_run_g6.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
     def recompile(self):
         print('-- [App.recompile]: plugged in')
@@ -2771,14 +2803,25 @@ class App(QMainWindow):
         global corsairled_id_num_ms_complete, corsairled_id_num_kb_complete
         global sdk_color_backlight, bool_switch_backlight, ui_feature_page, bool_switch_show_discrete, sdk_color_backlight_on
 
-        for _ in corsairled_id_num_kb_complete:
-            itm = [{_: sdk_color_backlight}]
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], itm[0])
-        sdk.set_led_colors_flush_buffer()
-        for _ in corsairled_id_num_ms_complete:
-            itm = [{_: sdk_color_backlight}]
-            sdk.set_led_colors_buffer_by_device_index(devices_ms[devices_ms_selected], itm[0])
-        sdk.set_led_colors_flush_buffer()
+        global devices_kb, devices_ms
+        global thread_net_connection
+
+        if len(devices_kb) > 0:
+            for _ in corsairled_id_num_kb_complete:
+                itm = [{_: sdk_color_backlight}]
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], itm[0])
+            sdk.set_led_colors_flush_buffer()
+
+        if len(devices_ms) > 0:
+            for _ in corsairled_id_num_ms_complete:
+                itm = [{_: sdk_color_backlight}]
+                sdk.set_led_colors_buffer_by_device_index(devices_ms[devices_ms_selected], itm[0])
+            sdk.set_led_colors_flush_buffer()
+
+        if len(devices_kb) > 0 or len(devices_ms) > 0:
+            if bool_switch_startup_net_con_kb is True or bool_switch_startup_net_con_ms is True:
+                thread_net_connection[0].stop()
+                thread_net_connection[0].start()
 
     def btn_bck_light_function(self):
         print('-- [App.btn_bck_light_function]: plugged in')
@@ -2814,28 +2857,30 @@ class App(QMainWindow):
                 self.btn_bck_light.setIcon(QIcon("./image/img_backlight_off.png"))
                 self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
             self.color_all_id()
-            # thread_disk_rw[0].stop()
-            # thread_disk_rw[0].start()
 
     def backlight_auto_function(self):
         print('-- [App.backlight_auto_function]: plugged in')
         global bool_switch_backlight_auto, thread_backlight_auto, backlight_time_0, backlight_time_1
+        global devices_kb, devices_ms
         self.setFocus()
-        if self.write_engaged is False:
-            if backlight_time_0.isdigit() and backlight_time_1.isdigit():
-                if bool_switch_backlight_auto is True:
-                    bool_switch_backlight_auto = False
-                    self.write_var = 'bool_switch_backlight_auto: false'
-                    self.btn_backlight_auto.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
-                    thread_backlight_auto[0].stop()
-                    self.write_changes()
 
-                elif bool_switch_backlight_auto is False:
-                    bool_switch_backlight_auto = True
-                    self.write_var = 'bool_switch_backlight_auto: true'
-                    self.btn_backlight_auto.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-                    thread_backlight_auto[0].start()
-                    self.write_changes()
+        if len(devices_kb) > 0 or len(devices_ms) > 0:
+            if self.write_engaged is False:
+                if backlight_time_0.isdigit() and backlight_time_1.isdigit():
+
+                    if bool_switch_backlight_auto is True:
+                        thread_backlight_auto[0].stop()
+                        bool_switch_backlight_auto = False
+                        self.write_var = 'bool_switch_backlight_auto: false'
+                        self.btn_backlight_auto.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                        self.write_changes()
+
+                    elif bool_switch_backlight_auto is False:
+                        thread_backlight_auto[0].start()
+                        bool_switch_backlight_auto = True
+                        self.write_var = 'bool_switch_backlight_auto: true'
+                        self.btn_backlight_auto.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                        self.write_changes()
 
     def btn_backlight_auto_time_0_function(self):
         print('-- [App.btn_backlight_auto_time_0_function]: plugged in')
@@ -2911,23 +2956,25 @@ class App(QMainWindow):
 
     def btn_exclusive_con_function(self):
         print('-- [App.btn_exclusive_con_function]: plugged in')
-        global bool_switch_startup_exclusive_control, sdk
+        global bool_switch_startup_exclusive_control, sdk, devices_kb, devices_ms
         self.setFocus()
-        if self.write_engaged is False:
-            if bool_switch_startup_exclusive_control is False:
-                print('-- [App.btn_exclusive_con_function] exclusive access request changed: requesting control')
-                self.write_var = 'exclusive_access: true'
-                sdk.request_control()
-                bool_switch_startup_exclusive_control = True
-                self.btn_exclusive_con.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-            elif bool_switch_startup_exclusive_control is True:
-                print('-- [App.btn_exclusive_con_function] exclusive access request changed: releasing control')
-                self.write_var = 'exclusive_access: false'
-                sdk.release_control()
-                bool_switch_startup_exclusive_control = False
-                self.btn_exclusive_con.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
-            self.write_changes()
-            self.recompile()
+
+        if len(devices_kb) > 0 or len(devices_ms) > 0:
+            if self.write_engaged is False:
+                if bool_switch_startup_exclusive_control is False:
+                    print('-- [App.btn_exclusive_con_function] exclusive access request changed: requesting control')
+                    self.write_var = 'exclusive_access: true'
+                    sdk.request_control()
+                    bool_switch_startup_exclusive_control = True
+                    self.btn_exclusive_con.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                elif bool_switch_startup_exclusive_control is True:
+                    print('-- [App.btn_exclusive_con_function] exclusive access request changed: releasing control')
+                    self.write_var = 'exclusive_access: false'
+                    sdk.release_control()
+                    bool_switch_startup_exclusive_control = False
+                    self.btn_exclusive_con.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                self.write_changes()
+                self.recompile()
 
     def btn_run_startup_function(self):
         print('-- [App.btn_run_startup_function]: plugged in')
@@ -3002,27 +3049,33 @@ class App(QMainWindow):
     def btn_cpu_mon_function(self):
         print('-- [App.btn_cpu_mon_function]: plugged in')
         global bool_switch_startup_cpu_util, thread_cpu_util, bool_switch_show_discrete, ui_feature_page
+        global devices_kb, devices_ms
         self.setFocus()
-        if self.write_engaged is False:
-            if bool_switch_startup_cpu_util is True:
-                print('-- [App.btn_cpu_mon_function] stopping thread: thread_cpu_util:')
-                thread_cpu_util[0].stop()
-                self.write_var = 'cpu_startup: false'
-                bool_switch_startup_cpu_util = False
-                self.btn_hotbar_cpu_mon.setStyleSheet(self.btn_hotbar_off_style)
-                if bool_switch_show_discrete is False and ui_feature_page == 0:
-                    self.btn_hotbar_cpu_mon.setStyleSheet(self.visually_combine_hotbar_off_settings_window_style)
-                self.btn_cpu_mon.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
-            elif bool_switch_startup_cpu_util is False:
-                print('-- [App.btn_cpu_mon_function] starting thread: thread_cpu_util:')
-                thread_cpu_util[0].start()
-                self.write_var = 'cpu_startup: true'
-                bool_switch_startup_cpu_util = True
-                self.btn_hotbar_cpu_mon.setStyleSheet(self.btn_hotbar_on_style)
-                if bool_switch_show_discrete is False and ui_feature_page == 0:
-                    self.btn_hotbar_cpu_mon.setStyleSheet(self.visually_combine_hotbar_on_settings_window_style)
-                self.btn_cpu_mon.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-            self.write_changes()
+
+        if len(devices_kb) > 0:
+            if self.write_engaged is False:
+
+                if bool_switch_startup_cpu_util is True:
+                    print('-- [App.btn_cpu_mon_function] stopping thread: thread_cpu_util:')
+                    thread_cpu_util[0].stop()
+                    self.write_var = 'cpu_startup: false'
+                    bool_switch_startup_cpu_util = False
+                    self.btn_hotbar_cpu_mon.setStyleSheet(self.btn_hotbar_off_style)
+                    self.btn_cpu_mon.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                    if bool_switch_show_discrete is False and ui_feature_page == 0:
+                        self.btn_hotbar_cpu_mon.setStyleSheet(self.visually_combine_hotbar_off_settings_window_style)
+                    self.write_changes()
+
+                elif bool_switch_startup_cpu_util is False:
+                    print('-- [App.btn_cpu_mon_function] starting thread: thread_cpu_util:')
+                    thread_cpu_util[0].start()
+                    self.write_var = 'cpu_startup: true'
+                    bool_switch_startup_cpu_util = True
+                    self.btn_hotbar_cpu_mon.setStyleSheet(self.btn_hotbar_on_style)
+                    self.btn_cpu_mon.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                    if bool_switch_show_discrete is False and ui_feature_page == 0:
+                        self.btn_hotbar_cpu_mon.setStyleSheet(self.visually_combine_hotbar_on_settings_window_style)
+                    self.write_changes()
 
     def btn_cpu_led_time_on_function(self):
         print('-- [App.btn_cpu_led_time_on_function]: plugged in')
@@ -3048,53 +3101,60 @@ class App(QMainWindow):
         print('-- [App.btn_cpu_mon_rgb_on_function]: plugged in')
         global sdk_color_cpu_on, thread_cpu_util, bool_switch_startup_cpu_util
         self.setFocus()
-        if self.write_engaged is False:
-            self.write_var_key = 0
-            self.write_var = self.qle_cpu_mon_rgb_on.text()
-            self.sanitize_rgb_values()
-            if self.write_var_bool is True:
-                print('-- [App.btn_cpu_mon_rgb_on_function] self.write_var passed sanitization checks:', self.qle_cpu_mon_rgb_on.text())
-                self.write_changes()
-                self.cpu_led_color_str = self.qle_cpu_mon_rgb_on.text().replace(' ', '')
-                self.cpu_led_color_str = self.cpu_led_color_str.replace(',', ', ')
-                self.qle_cpu_mon_rgb_on.setText(self.cpu_led_color_str)
-            else:
-                print('-- [App.btn_cpu_mon_rgb_on_function] self.write_var failed sanitization checks:', self.qle_cpu_mon_rgb_on.text())
-                self.cpu_led_color_str = str(sdk_color_cpu_on).replace('[', '')
-                self.cpu_led_color_str = self.cpu_led_color_str.replace(']', '')
-                self.cpu_led_color_str = self.cpu_led_color_str.replace(' ', '')
-                self.cpu_led_color_str = self.cpu_led_color_str.replace(',', ', ')
-                self.qle_cpu_mon_rgb_on.setText(self.cpu_led_color_str)
-            self.qle_cpu_mon_rgb_on.setAlignment(Qt.AlignCenter)
 
-            if bool_switch_startup_cpu_util is True:
-                thread_cpu_util[0].stop()
-                thread_cpu_util[0].start()
+        if len(devices_kb) > 0:
+            if self.write_engaged is False:
+                self.write_var_key = 0
+                self.write_var = self.qle_cpu_mon_rgb_on.text()
+                self.sanitize_rgb_values()
+                if self.write_var_bool is True:
+                    print('-- [App.btn_cpu_mon_rgb_on_function] self.write_var passed sanitization checks:', self.qle_cpu_mon_rgb_on.text())
+                    self.write_changes()
+                    self.cpu_led_color_str = self.qle_cpu_mon_rgb_on.text().replace(' ', '')
+                    self.cpu_led_color_str = self.cpu_led_color_str.replace(',', ', ')
+                    self.qle_cpu_mon_rgb_on.setText(self.cpu_led_color_str)
+                else:
+                    print('-- [App.btn_cpu_mon_rgb_on_function] self.write_var failed sanitization checks:', self.qle_cpu_mon_rgb_on.text())
+                    self.cpu_led_color_str = str(sdk_color_cpu_on).replace('[', '')
+                    self.cpu_led_color_str = self.cpu_led_color_str.replace(']', '')
+                    self.cpu_led_color_str = self.cpu_led_color_str.replace(' ', '')
+                    self.cpu_led_color_str = self.cpu_led_color_str.replace(',', ', ')
+                    self.qle_cpu_mon_rgb_on.setText(self.cpu_led_color_str)
+                self.qle_cpu_mon_rgb_on.setAlignment(Qt.AlignCenter)
+
+                if bool_switch_startup_cpu_util is True:
+                    thread_cpu_util[0].stop()
+                    thread_cpu_util[0].start()
 
     def btn_dram_mon_function(self):
         print('-- [App.btn_dram_mon_function]: plugged in')
         global bool_switch_startup_dram_util, thread_dram_util, bool_switch_show_discrete, ui_feature_page
+        global devices_kb
         self.setFocus()
-        if self.write_engaged is False:
-            if bool_switch_startup_dram_util is True:
-                print('-- [App.btn_dram_mon_function] stopping thread: thread_dram_util:')
-                thread_dram_util[0].stop()
-                self.write_var = 'dram_startup: false'
-                bool_switch_startup_dram_util = False
-                self.btn_hotbar_dram_mon.setStyleSheet(self.btn_hotbar_off_style)
-                if bool_switch_show_discrete is False and ui_feature_page == 0:
-                    self.btn_hotbar_dram_mon.setStyleSheet(self.visually_combine_hotbar_off_settings_window_style)
-                self.btn_dram_mon.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
-            elif bool_switch_startup_dram_util is False:
-                print('-- [App.btn_dram_mon_function] starting thread: thread_dram_util:')
-                thread_dram_util[0].start()
-                self.write_var = 'dram_startup: true'
-                bool_switch_startup_dram_util = True
-                self.btn_hotbar_dram_mon.setStyleSheet(self.btn_hotbar_on_style)
-                if bool_switch_show_discrete is False and ui_feature_page == 0:
-                    self.btn_hotbar_dram_mon.setStyleSheet(self.visually_combine_hotbar_on_settings_window_style)
-                self.btn_dram_mon.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-            self.write_changes()
+
+        if len(devices_kb) > 0:
+            if self.write_engaged is False:
+
+                if bool_switch_startup_dram_util is True:
+                    print('-- [App.btn_dram_mon_function] stopping thread: thread_dram_util:')
+                    thread_dram_util[0].stop()
+                    self.write_var = 'dram_startup: false'
+                    bool_switch_startup_dram_util = False
+                    self.btn_hotbar_dram_mon.setStyleSheet(self.btn_hotbar_off_style)
+                    if bool_switch_show_discrete is False and ui_feature_page == 0:
+                        self.btn_hotbar_dram_mon.setStyleSheet(self.visually_combine_hotbar_off_settings_window_style)
+                    self.btn_dram_mon.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+
+                elif bool_switch_startup_dram_util is False:
+                    print('-- [App.btn_dram_mon_function] starting thread: thread_dram_util:')
+                    thread_dram_util[0].start()
+                    self.write_var = 'dram_startup: true'
+                    bool_switch_startup_dram_util = True
+                    self.btn_hotbar_dram_mon.setStyleSheet(self.btn_hotbar_on_style)
+                    if bool_switch_show_discrete is False and ui_feature_page == 0:
+                        self.btn_hotbar_dram_mon.setStyleSheet(self.visually_combine_hotbar_on_settings_window_style)
+                    self.btn_dram_mon.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                self.write_changes()
 
     def btn_dram_led_time_on_function(self):
         print('-- [App.btn_dram_led_time_on_function]: plugged in')
@@ -3119,54 +3179,62 @@ class App(QMainWindow):
     def btn_dram_mon_rgb_on_function(self):
         print('-- [App.btn_dram_mon_rgb_on_function]: plugged in')
         global sdk_color_dram_on, thread_dram_util, bool_switch_startup_dram_util
+        global devices_kb
         self.setFocus()
-        if self.write_engaged is False:
-            self.write_var_key = 1
-            self.write_var = self.qle_dram_mon_rgb_on.text()
-            self.sanitize_rgb_values()
-            if self.write_var_bool is True:
-                print('-- [App.btn_dram_mon_rgb_on_function] self.write_var passed sanitization checks:', self.qle_dram_mon_rgb_on.text())
-                self.write_changes()
-                self.dram_led_color_str = self.qle_dram_mon_rgb_on.text().replace(' ', '')
-                self.dram_led_color_str = self.dram_led_color_str.replace(',', ', ')
-                self.qle_dram_mon_rgb_on.setText(self.dram_led_color_str)
-            else:
-                print('-- [App.btn_dram_mon_rgb_on_function] self.write_var failed sanitization checks:', self.qle_dram_mon_rgb_on.text())
-                self.dram_led_color_str = str(sdk_color_dram_on).replace('[', '')
-                self.dram_led_color_str = self.dram_led_color_str.replace(']', '')
-                self.dram_led_color_str = self.dram_led_color_str.text().replace(' ', '')
-                self.dram_led_color_str = self.dram_led_color_str.replace(',', ', ')
-                self.qle_dram_mon_rgb_on.setText(self.dram_led_color_str)
-            self.qle_dram_mon_rgb_on.setAlignment(Qt.AlignCenter)
 
-            if bool_switch_startup_cpu_util is True:
-                thread_dram_util[0].stop()
-                thread_dram_util[0].start()
+        if len(devices_kb) > 0:
+            if self.write_engaged is False:
+                self.write_var_key = 1
+                self.write_var = self.qle_dram_mon_rgb_on.text()
+                self.sanitize_rgb_values()
+                if self.write_var_bool is True:
+                    print('-- [App.btn_dram_mon_rgb_on_function] self.write_var passed sanitization checks:', self.qle_dram_mon_rgb_on.text())
+                    self.write_changes()
+                    self.dram_led_color_str = self.qle_dram_mon_rgb_on.text().replace(' ', '')
+                    self.dram_led_color_str = self.dram_led_color_str.replace(',', ', ')
+                    self.qle_dram_mon_rgb_on.setText(self.dram_led_color_str)
+                else:
+                    print('-- [App.btn_dram_mon_rgb_on_function] self.write_var failed sanitization checks:', self.qle_dram_mon_rgb_on.text())
+                    self.dram_led_color_str = str(sdk_color_dram_on).replace('[', '')
+                    self.dram_led_color_str = self.dram_led_color_str.replace(']', '')
+                    self.dram_led_color_str = self.dram_led_color_str.text().replace(' ', '')
+                    self.dram_led_color_str = self.dram_led_color_str.replace(',', ', ')
+                    self.qle_dram_mon_rgb_on.setText(self.dram_led_color_str)
+                self.qle_dram_mon_rgb_on.setAlignment(Qt.AlignCenter)
+
+                if bool_switch_startup_dram_util is True:
+                    thread_dram_util[0].stop()
+                    thread_dram_util[0].start()
 
     def btn_vram_mon_function(self):
         print('-- [App.btn_vram_mon_function]: plugged in')
         global bool_switch_startup_vram_util, thread_vram_util, bool_switch_show_discrete, ui_feature_page
+        global devices_kb
         self.setFocus()
-        if self.write_engaged is False:
-            if bool_switch_startup_vram_util is True:
-                print('-- [App.btn_vram_mon_function] stopping thread: thread_vram_util:')
-                thread_vram_util[0].stop()
-                self.write_var = 'vram_startup: false'
-                bool_switch_startup_vram_util = False
-                self.btn_hotbar_vram_mon.setStyleSheet(self.btn_hotbar_off_style)
-                if bool_switch_show_discrete is False and ui_feature_page == 0:
-                    self.btn_hotbar_vram_mon.setStyleSheet(self.visually_combine_hotbar_off_settings_window_style)
-                self.btn_vram_mon.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
-            elif bool_switch_startup_vram_util is False:
-                print('-- [App.btn_vram_mon_function] starting thread: thread_vram_util:')
-                thread_vram_util[0].start()
-                self.write_var = 'vram_startup: true'
-                bool_switch_startup_vram_util = True
-                self.btn_hotbar_vram_mon.setStyleSheet(self.btn_hotbar_on_style)
-                if bool_switch_show_discrete is False and ui_feature_page == 0:
-                    self.btn_hotbar_vram_mon.setStyleSheet(self.visually_combine_hotbar_on_settings_window_style)
-                self.btn_vram_mon.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-            self.write_changes()
+
+        if len(devices_kb) > 0:
+            if self.write_engaged is False:
+
+                if bool_switch_startup_vram_util is True:
+                    print('-- [App.btn_vram_mon_function] stopping thread: thread_vram_util:')
+                    thread_vram_util[0].stop()
+                    self.write_var = 'vram_startup: false'
+                    bool_switch_startup_vram_util = False
+                    self.btn_hotbar_vram_mon.setStyleSheet(self.btn_hotbar_off_style)
+                    if bool_switch_show_discrete is False and ui_feature_page == 0:
+                        self.btn_hotbar_vram_mon.setStyleSheet(self.visually_combine_hotbar_off_settings_window_style)
+                    self.btn_vram_mon.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+
+                elif bool_switch_startup_vram_util is False:
+                    print('-- [App.btn_vram_mon_function] starting thread: thread_vram_util:')
+                    thread_vram_util[0].start()
+                    self.write_var = 'vram_startup: true'
+                    bool_switch_startup_vram_util = True
+                    self.btn_hotbar_vram_mon.setStyleSheet(self.btn_hotbar_on_style)
+                    if bool_switch_show_discrete is False and ui_feature_page == 0:
+                        self.btn_hotbar_vram_mon.setStyleSheet(self.visually_combine_hotbar_on_settings_window_style)
+                    self.btn_vram_mon.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                self.write_changes()
 
     def btn_vram_led_time_on_function(self):
         print('-- [App.btn_vram_led_time_on_function]: plugged in')
@@ -3191,54 +3259,61 @@ class App(QMainWindow):
     def btn_vram_mon_rgb_on_function(self):
         print('-- [App.btn_vram_mon_rgb_on_function]: plugged in')
         global sdk_color_vram_on, thread_vram_util, bool_switch_startup_vram_util
+        global devices_kb
         self.setFocus()
-        if self.write_engaged is False:
-            self.write_var_key = 2
-            self.write_var = self.qle_vram_mon_rgb_on.text()
-            self.sanitize_rgb_values()
-            if self.write_var_bool is True:
-                print('-- [App.btn_vram_mon_rgb_on_function] self.write_var passed sanitization checks:', self.qle_vram_mon_rgb_on.text())
-                self.write_changes()
-                self.vram_led_color_str = self.qle_vram_mon_rgb_on.text().replace(' ', '')
-                self.vram_led_color_str = self.vram_led_color_str.replace(',', ', ')
-                self.qle_vram_mon_rgb_on.setText(self.vram_led_color_str)
-            else:
-                print('-- [App.btn_vram_mon_rgb_on_function] self.write_var failed sanitization checks:', self.qle_vram_mon_rgb_on.text())
-                self.vram_led_color_str = str(sdk_color_vram_on).replace('[', '')
-                self.vram_led_color_str = self.vram_led_color_str.replace(']', '')
-                self.vram_led_color_str = self.vram_led_color_str.replace(' ', '')
-                self.vram_led_color_str = self.vram_led_color_str.replace(',', ', ')
-                self.qle_vram_mon_rgb_on.setText(self.vram_led_color_str)
-            self.qle_vram_mon_rgb_on.setAlignment(Qt.AlignCenter)
 
-            if bool_switch_startup_vram_util is True:
-                thread_vram_util[0].stop()
-                thread_vram_util[0].start()
+        if len(devices_kb) > 0:
+            if self.write_engaged is False:
+                self.write_var_key = 2
+                self.write_var = self.qle_vram_mon_rgb_on.text()
+                self.sanitize_rgb_values()
+                if self.write_var_bool is True:
+                    print('-- [App.btn_vram_mon_rgb_on_function] self.write_var passed sanitization checks:', self.qle_vram_mon_rgb_on.text())
+                    self.write_changes()
+                    self.vram_led_color_str = self.qle_vram_mon_rgb_on.text().replace(' ', '')
+                    self.vram_led_color_str = self.vram_led_color_str.replace(',', ', ')
+                    self.qle_vram_mon_rgb_on.setText(self.vram_led_color_str)
+                else:
+                    print('-- [App.btn_vram_mon_rgb_on_function] self.write_var failed sanitization checks:', self.qle_vram_mon_rgb_on.text())
+                    self.vram_led_color_str = str(sdk_color_vram_on).replace('[', '')
+                    self.vram_led_color_str = self.vram_led_color_str.replace(']', '')
+                    self.vram_led_color_str = self.vram_led_color_str.replace(' ', '')
+                    self.vram_led_color_str = self.vram_led_color_str.replace(',', ', ')
+                    self.qle_vram_mon_rgb_on.setText(self.vram_led_color_str)
+                self.qle_vram_mon_rgb_on.setAlignment(Qt.AlignCenter)
+
+                if bool_switch_startup_vram_util is True:
+                    thread_vram_util[0].stop()
+                    thread_vram_util[0].start()
 
     def btn_hdd_mon_function(self):
         print('-- [App.btn_hdd_mon_function]: plugged in')
         global bool_switch_startup_hdd_read_write, thread_disk_rw, bool_switch_show_discrete, ui_feature_page
+        global devices_kb
         self.setFocus()
-        if self.write_engaged is False:
-            if bool_switch_startup_hdd_read_write is True:
-                print('-- [App.btn_hdd_mon_function] stopping thread: thread_disk_rw:')
-                thread_disk_rw[0].stop()
-                self.btn_hdd_mon.setIcon(QIcon("./image/img_toggle_switch_disabledx2h.png"))
-                self.write_var = 'hdd_startup: false'
-                self.btn_hotbar_diskrw_mon.setStyleSheet(self.btn_hotbar_off_style)
-                if bool_switch_show_discrete is False and ui_feature_page == 1:
-                    self.btn_hotbar_diskrw_mon.setStyleSheet(self.visually_combine_hotbar_off_settings_window_style)
-                bool_switch_startup_hdd_read_write = False
-            elif bool_switch_startup_hdd_read_write is False:
-                print('-- [App.btn_hdd_mon_function] starting thread: thread_disk_rw:')
-                thread_disk_rw[0].start()
-                self.btn_hdd_mon.setIcon(QIcon("./image/img_toggle_switch_enabledx2h.png"))
-                self.write_var = 'hdd_startup: true'
-                self.btn_hotbar_diskrw_mon.setStyleSheet(self.btn_hotbar_on_style)
-                if bool_switch_show_discrete is False and ui_feature_page == 1:
-                    self.btn_hotbar_diskrw_mon.setStyleSheet(self.visually_combine_hotbar_on_settings_window_style)
-                bool_switch_startup_hdd_read_write = True
-            self.write_changes()
+
+        if len(devices_kb) > 0:
+            if self.write_engaged is False:
+                if bool_switch_startup_hdd_read_write is True:
+                    print('-- [App.btn_hdd_mon_function] stopping thread: thread_disk_rw:')
+                    thread_disk_rw[0].stop()
+                    self.btn_hdd_mon.setIcon(QIcon("./image/img_toggle_switch_disabledx2h.png"))
+                    self.write_var = 'hdd_startup: false'
+                    self.btn_hotbar_diskrw_mon.setStyleSheet(self.btn_hotbar_off_style)
+                    if bool_switch_show_discrete is False and ui_feature_page == 1:
+                        self.btn_hotbar_diskrw_mon.setStyleSheet(self.visually_combine_hotbar_off_settings_window_style)
+                    bool_switch_startup_hdd_read_write = False
+                    self.write_changes()
+                elif bool_switch_startup_hdd_read_write is False:
+                    print('-- [App.btn_hdd_mon_function] starting thread: thread_disk_rw:')
+                    thread_disk_rw[0].start()
+                    self.btn_hdd_mon.setIcon(QIcon("./image/img_toggle_switch_enabledx2h.png"))
+                    self.write_var = 'hdd_startup: true'
+                    self.btn_hotbar_diskrw_mon.setStyleSheet(self.btn_hotbar_on_style)
+                    if bool_switch_show_discrete is False and ui_feature_page == 1:
+                        self.btn_hotbar_diskrw_mon.setStyleSheet(self.visually_combine_hotbar_on_settings_window_style)
+                    bool_switch_startup_hdd_read_write = True
+                    self.write_changes()
 
     def btn_hdd_led_time_on_function(self):
         print('-- [App.btn_hdd_led_time_on_function]: plugged in')
@@ -3263,97 +3338,108 @@ class App(QMainWindow):
     def btn_hdd_mon_rgb_on_function(self):
         print('-- [App.btn_hdd_mon_rgb_on_function]: plugged in')
         global sdk_color_hddwrite_on, thread_disk_rw, bool_switch_startup_hdd_read_write
+        global devices_kb
         self.setFocus()
-        if self.write_engaged is False:
-            self.write_var_key = 3
-            self.write_var = self.qle_hdd_mon_rgb_on.text()
-            self.sanitize_rgb_values()
-            if self.write_var_bool is True:
-                print('-- [App.btn_hdd_mon_rgb_on_function] self.write_var passed sanitization checks:', self.qle_hdd_mon_rgb_on.text())
-                self.write_changes()
-                self.hdd_led_color_str = self.qle_hdd_mon_rgb_on.text().replace(' ', '')
-                self.hdd_led_color_str = self.hdd_led_color_str.replace(',', ', ')
-                self.qle_hdd_mon_rgb_on.setText(self.hdd_led_color_str)
-            else:
-                print('-- [App.btn_hdd_mon_rgb_on_function] self.write_var failed sanitization checks:', self.qle_hdd_mon_rgb_on.text())
-                self.hdd_led_color_str = str(sdk_color_hddwrite_on).replace('[', '')
-                self.hdd_led_color_str = self.hdd_led_color_str.replace(']', '')
-                self.hdd_led_color_str = self.hdd_led_color_str.replace(' ', '')
-                self.hdd_led_color_str = self.hdd_led_color_str.replace(',', ', ')
-                self.qle_hdd_mon_rgb_on.setText(self.hdd_led_color_str)
-            self.qle_hdd_mon_rgb_on.setAlignment(Qt.AlignCenter)
 
-            if bool_switch_startup_hdd_read_write is True:
-                thread_disk_rw[0].stop()
-                thread_disk_rw[0].start()
+        if len(devices_kb) > 0:
+            if self.write_engaged is False:
+                self.write_var_key = 3
+                self.write_var = self.qle_hdd_mon_rgb_on.text()
+                self.sanitize_rgb_values()
+                if self.write_var_bool is True:
+                    print('-- [App.btn_hdd_mon_rgb_on_function] self.write_var passed sanitization checks:', self.qle_hdd_mon_rgb_on.text())
+                    self.write_changes()
+                    self.hdd_led_color_str = self.qle_hdd_mon_rgb_on.text().replace(' ', '')
+                    self.hdd_led_color_str = self.hdd_led_color_str.replace(',', ', ')
+                    self.qle_hdd_mon_rgb_on.setText(self.hdd_led_color_str)
+                else:
+                    print('-- [App.btn_hdd_mon_rgb_on_function] self.write_var failed sanitization checks:', self.qle_hdd_mon_rgb_on.text())
+                    self.hdd_led_color_str = str(sdk_color_hddwrite_on).replace('[', '')
+                    self.hdd_led_color_str = self.hdd_led_color_str.replace(']', '')
+                    self.hdd_led_color_str = self.hdd_led_color_str.replace(' ', '')
+                    self.hdd_led_color_str = self.hdd_led_color_str.replace(',', ', ')
+                    self.qle_hdd_mon_rgb_on.setText(self.hdd_led_color_str)
+                self.qle_hdd_mon_rgb_on.setAlignment(Qt.AlignCenter)
+
+                if bool_switch_startup_hdd_read_write is True:
+                    thread_disk_rw[0].stop()
+                    thread_disk_rw[0].start()
 
     def btn_hdd_read_mon_rgb_on_function(self):
         print('-- [App.btn_hdd_read_mon_rgb_on_function]: plugged in')
         global sdk_color_hddread_on, thread_disk_rw, bool_switch_startup_hdd_read_write
+        global devices_kb
         self.setFocus()
-        if self.write_engaged is False:
-            self.write_var_key = 9
-            self.write_var = self.qle_hdd_read_mon_rgb_on.text()
-            self.sanitize_rgb_values()
-            if self.write_var_bool is True:
-                print('-- [App.btn_hdd_read_mon_rgb_on_function] self.write_var passed sanitization checks:', self.qle_hdd_read_mon_rgb_on.text())
-                self.write_changes()
-                self.hdd_led_read_color_str = self.qle_hdd_read_mon_rgb_on.text().replace(' ', '')
-                self.hdd_led_read_color_str = self.hdd_led_read_color_str.replace(',', ', ')
-                self.qle_hdd_read_mon_rgb_on.setText(self.hdd_led_read_color_str)
-            else:
-                print('-- [App.btn_hdd_read_mon_rgb_on_function] self.write_var failed sanitization checks:', self.qle_hdd_read_mon_rgb_on.text())
-                self.hdd_led_read_color_str = str(sdk_color_hddread_on).replace('[', '')
-                self.hdd_led_read_color_str = self.hdd_led_read_color_str.replace(']', '')
-                self.hdd_led_read_color_str = self.hdd_led_read_color_str.replace(' ', '')
-                self.hdd_led_read_color_str = self.hdd_led_read_color_str.replace(',', ', ')
-                self.qle_hdd_read_mon_rgb_on.setText(self.hdd_led_read_color_str)
-            self.qle_hdd_read_mon_rgb_on.setAlignment(Qt.AlignCenter)
 
-            if bool_switch_startup_hdd_read_write is True:
-                thread_disk_rw[0].stop()
-                thread_disk_rw[0].start()
+        if len(devices_kb) > 0:
+            if self.write_engaged is False:
+                self.write_var_key = 9
+                self.write_var = self.qle_hdd_read_mon_rgb_on.text()
+                self.sanitize_rgb_values()
+                if self.write_var_bool is True:
+                    print('-- [App.btn_hdd_read_mon_rgb_on_function] self.write_var passed sanitization checks:', self.qle_hdd_read_mon_rgb_on.text())
+                    self.write_changes()
+                    self.hdd_led_read_color_str = self.qle_hdd_read_mon_rgb_on.text().replace(' ', '')
+                    self.hdd_led_read_color_str = self.hdd_led_read_color_str.replace(',', ', ')
+                    self.qle_hdd_read_mon_rgb_on.setText(self.hdd_led_read_color_str)
+                else:
+                    print('-- [App.btn_hdd_read_mon_rgb_on_function] self.write_var failed sanitization checks:', self.qle_hdd_read_mon_rgb_on.text())
+                    self.hdd_led_read_color_str = str(sdk_color_hddread_on).replace('[', '')
+                    self.hdd_led_read_color_str = self.hdd_led_read_color_str.replace(']', '')
+                    self.hdd_led_read_color_str = self.hdd_led_read_color_str.replace(' ', '')
+                    self.hdd_led_read_color_str = self.hdd_led_read_color_str.replace(',', ', ')
+                    self.qle_hdd_read_mon_rgb_on.setText(self.hdd_led_read_color_str)
+                self.qle_hdd_read_mon_rgb_on.setAlignment(Qt.AlignCenter)
+
+                if bool_switch_startup_hdd_read_write is True:
+                    thread_disk_rw[0].stop()
+                    thread_disk_rw[0].start()
 
     def btn_network_adapter_function(self):
         print('-- [App.btn_network_adapter_function]: plugged in')
         global bool_switch_startup_net_traffic, thread_net_traffic, bool_switch_show_discrete, ui_feature_page
+        global devices_kb
         self.setFocus()
-        if self.write_engaged is False:
-            if bool_switch_startup_net_traffic is True:
-                bool_switch_startup_net_traffic = False
-                print('-- [App.btn_network_adapter_function] stopping thread: thread_net_traffic:')
-                thread_net_traffic[0].stop()
-                self.write_var = 'network_adapter_startup: false'
-                self.write_changes()
-                self.btn_hotbar_nettraffic_mon.setStyleSheet(self.btn_hotbar_off_style)
-                if bool_switch_show_discrete is False and ui_feature_page == 2:
-                    self.btn_hotbar_nettraffic_mon.setStyleSheet(self.visually_combine_hotbar_off_settings_window_style)
-                self.btn_network_adapter.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
-            elif bool_switch_startup_net_traffic is False:
-                bool_switch_startup_net_traffic = True
-                print('-- [App.btn_network_adapter_function] starting thread: thread_net_traffic:')
-                thread_net_traffic[0].start()
-                self.write_var = 'network_adapter_startup: true'
-                self.write_changes()
-                self.btn_hotbar_nettraffic_mon.setStyleSheet(self.btn_hotbar_on_style)
-                if bool_switch_show_discrete is False and ui_feature_page == 2:
-                    self.btn_hotbar_nettraffic_mon.setStyleSheet(self.visually_combine_hotbar_on_settings_window_style)
-                self.btn_network_adapter.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+
+        if len(devices_kb) > 0:
+            if self.write_engaged is False:
+                if bool_switch_startup_net_traffic is True:
+                    bool_switch_startup_net_traffic = False
+                    print('-- [App.btn_network_adapter_function] stopping thread: thread_net_traffic:')
+                    thread_net_traffic[0].stop()
+                    self.write_var = 'network_adapter_startup: false'
+                    self.write_changes()
+                    self.btn_hotbar_nettraffic_mon.setStyleSheet(self.btn_hotbar_off_style)
+                    if bool_switch_show_discrete is False and ui_feature_page == 2:
+                        self.btn_hotbar_nettraffic_mon.setStyleSheet(self.visually_combine_hotbar_off_settings_window_style)
+                    self.btn_network_adapter.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                elif bool_switch_startup_net_traffic is False:
+                    bool_switch_startup_net_traffic = True
+                    print('-- [App.btn_network_adapter_function] starting thread: thread_net_traffic:')
+                    thread_net_traffic[0].start()
+                    self.write_var = 'network_adapter_startup: true'
+                    self.write_changes()
+                    self.btn_hotbar_nettraffic_mon.setStyleSheet(self.btn_hotbar_on_style)
+                    if bool_switch_show_discrete is False and ui_feature_page == 2:
+                        self.btn_hotbar_nettraffic_mon.setStyleSheet(self.visually_combine_hotbar_on_settings_window_style)
+                    self.btn_network_adapter.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
 
     def cmb_network_adapter_name_function(self, text):
         print('-- [App.cmb_network_adapter_name_function]: plugged in')
-        global devices_network_adapter_name, thread_net_traffic
-        if self.write_engaged is False:
-            devices_network_adapter_name = text
-            print('-- [App.cmb_network_adapter_name_function] setting devices_network_adapter_name:', devices_network_adapter_name)
-            self.setFocus()
-            self.write_var = 'devices_network_adapter_name: ' + devices_network_adapter_name
-            self.write_changes()
-            if bool_switch_startup_net_traffic is True:
-                print('-- [App.cmb_network_adapter_name_function] stopping thread: thread_net_traffic')
-                thread_net_traffic[0].stop()
-                print('-- [App.cmb_network_adapter_name_function] starting thread: thread_net_traffic')
-                thread_net_traffic[0].start()
+        global devices_network_adapter_name, thread_net_traffic, devices_kb
+
+        if len(devices_kb) > 0:
+            if self.write_engaged is False:
+                devices_network_adapter_name = text
+                print('-- [App.cmb_network_adapter_name_function] setting devices_network_adapter_name:', devices_network_adapter_name)
+                self.setFocus()
+                self.write_var = 'devices_network_adapter_name: ' + devices_network_adapter_name
+                self.write_changes()
+                if bool_switch_startup_net_traffic is True:
+                    print('-- [App.cmb_network_adapter_name_function] stopping thread: thread_net_traffic')
+                    thread_net_traffic[0].stop()
+                    print('-- [App.cmb_network_adapter_name_function] starting thread: thread_net_traffic')
+                    thread_net_traffic[0].start()
 
     def btn_network_adapter_refresh_function(self, text):
         print('-- [App.btn_network_adapter_refresh_function]: plugged in')
@@ -3395,158 +3481,169 @@ class App(QMainWindow):
     def btn_net_con_mouse_function(self):
         print('-- [App.btn_net_con_mouse_function]: plugged in')
         global bool_switch_startup_net_con_ms, bool_switch_startup_net_con_kb, bool_switch_startup_net_con
-        global thread_net_connection, bool_switch_show_discrete, ui_feature_page
+        global thread_net_connection, bool_switch_show_discrete, ui_feature_page, devices_kb, devices_ms
         self.setFocus()
-        if self.write_engaged is False:
-            if bool_switch_startup_net_con_ms is True:
-                bool_switch_startup_net_con_ms = False
-                print('-- [App.btn_net_con_mouse_function] stopping thread: thread_net_connection')
-                thread_net_connection[0].stop()
-                self.write_var = 'bool_switch_startup_net_con_ms: false'
-                self.write_changes()
-                self.btn_hotbar_netcon_ms_mon.setStyleSheet(self.btn_hotbar_off_style)
-                if bool_switch_show_discrete is False and ui_feature_page == 3:
-                    self.btn_hotbar_netcon_ms_mon.setStyleSheet(self.visually_combine_hotbar_off_settings_window_style)
-                self.btn_net_con_mouse.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
-                if bool_switch_startup_net_con_kb is False:
-                    self.write_var = 'bool_switch_startup_net_con: false'
+
+        if len(devices_kb) > 0 or len(devices_ms) > 0:
+            if self.write_engaged is False:
+                if bool_switch_startup_net_con_ms is True:
+                    bool_switch_startup_net_con_ms = False
+                    print('-- [App.btn_net_con_mouse_function] stopping thread: thread_net_connection')
+                    thread_net_connection[0].stop()
+                    self.write_var = 'bool_switch_startup_net_con_ms: false'
                     self.write_changes()
-                    bool_switch_startup_net_con = False
+                    self.btn_hotbar_netcon_ms_mon.setStyleSheet(self.btn_hotbar_off_style)
+                    if bool_switch_show_discrete is False and ui_feature_page == 3:
+                        self.btn_hotbar_netcon_ms_mon.setStyleSheet(self.visually_combine_hotbar_off_settings_window_style)
                     self.btn_net_con_mouse.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
-                elif bool_switch_startup_net_con_kb is True:
+                    if bool_switch_startup_net_con_kb is False:
+                        self.write_var = 'bool_switch_startup_net_con: false'
+                        self.write_changes()
+                        bool_switch_startup_net_con = False
+                        self.btn_net_con_mouse.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                    elif bool_switch_startup_net_con_kb is True:
+                        print('-- [App.btn_net_con_mouse_function] starting thread: thread_net_connection')
+                        thread_net_connection[0].start()
+                elif bool_switch_startup_net_con_ms is False:
+                    print('-- [App.btn_net_con_mouse_function] stopping thread: thread_net_connection')
+                    thread_net_connection[0].stop()
+                    bool_switch_startup_net_con_ms = True
                     print('-- [App.btn_net_con_mouse_function] starting thread: thread_net_connection')
                     thread_net_connection[0].start()
-            elif bool_switch_startup_net_con_ms is False:
-                print('-- [App.btn_net_con_mouse_function] stopping thread: thread_net_connection')
-                thread_net_connection[0].stop()
-                bool_switch_startup_net_con_ms = True
-                print('-- [App.btn_net_con_mouse_function] starting thread: thread_net_connection')
-                thread_net_connection[0].start()
-                self.write_var = 'bool_switch_startup_net_con_ms: true'
-                self.write_changes()
-                self.btn_hotbar_netcon_ms_mon.setStyleSheet(self.btn_hotbar_on_style)
-                if bool_switch_show_discrete is False and ui_feature_page == 3:
-                    self.btn_hotbar_netcon_ms_mon.setStyleSheet(self.visually_combine_hotbar_on_settings_window_style)
-                self.btn_net_con_mouse.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-                self.write_var = 'bool_switch_startup_net_con: true'
-                self.write_changes()
-                bool_switch_startup_net_con = True
+                    self.write_var = 'bool_switch_startup_net_con_ms: true'
+                    self.write_changes()
+                    self.btn_hotbar_netcon_ms_mon.setStyleSheet(self.btn_hotbar_on_style)
+                    if bool_switch_show_discrete is False and ui_feature_page == 3:
+                        self.btn_hotbar_netcon_ms_mon.setStyleSheet(self.visually_combine_hotbar_on_settings_window_style)
+                    self.btn_net_con_mouse.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                    self.write_var = 'bool_switch_startup_net_con: true'
+                    self.write_changes()
+                    bool_switch_startup_net_con = True
 
     def btn_net_con_kb_function(self):
         print('-- [App.btn_net_con_kb_function]: plugged in')
         global bool_switch_startup_net_con_kb, bool_switch_startup_net_con, bool_switch_startup_net_con_ms
-        global thread_net_connection, bool_switch_show_discrete, ui_feature_page
+        global thread_net_connection, bool_switch_show_discrete, ui_feature_page, devices_ms, devices_kb
         self.setFocus()
-        if self.write_engaged is False:
-            if bool_switch_startup_net_con_kb is True:
-                bool_switch_startup_net_con_kb = False
-                print('-- [App.btn_net_con_kb_function] stopping thread: thread_net_connection')
-                thread_net_connection[0].stop()
-                self.write_var = 'bool_switch_startup_net_con_kb: false'
-                self.write_changes()
-                self.btn_hotbar_netcon_kb_mon.setStyleSheet(self.btn_hotbar_off_style)
-                if bool_switch_show_discrete is False and ui_feature_page == 3:
-                    self.btn_hotbar_netcon_kb_mon.setStyleSheet(self.visually_combine_hotbar_off_settings_window_style)
-                self.btn_net_con_kb.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
-                if bool_switch_startup_net_con_ms is False:
-                    self.write_var = 'bool_switch_startup_net_con: false'
+        if len(devices_kb) > 0 or len(devices_ms) > 0:
+            if self.write_engaged is False:
+                if bool_switch_startup_net_con_kb is True:
+                    bool_switch_startup_net_con_kb = False
+                    print('-- [App.btn_net_con_kb_function] stopping thread: thread_net_connection')
+                    thread_net_connection[0].stop()
+                    self.write_var = 'bool_switch_startup_net_con_kb: false'
                     self.write_changes()
-                    bool_switch_startup_net_con = False
-                elif bool_switch_startup_net_con_ms is True:
+                    self.btn_hotbar_netcon_kb_mon.setStyleSheet(self.btn_hotbar_off_style)
+                    if bool_switch_show_discrete is False and ui_feature_page == 3:
+                        self.btn_hotbar_netcon_kb_mon.setStyleSheet(self.visually_combine_hotbar_off_settings_window_style)
+                    self.btn_net_con_kb.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+
+                    if bool_switch_startup_net_con_ms is False:
+                        self.write_var = 'bool_switch_startup_net_con: false'
+                        self.write_changes()
+                        bool_switch_startup_net_con = False
+                    elif bool_switch_startup_net_con_ms is True:
+                        print('-- [App.btn_net_con_kb_function] starting thread: thread_net_connection')
+                        thread_net_connection[0].start()
+
+                elif bool_switch_startup_net_con_kb is False:
+                    print('-- [App.btn_net_con_kb_function] stopping thread: thread_net_connection')
+                    thread_net_connection[0].stop()
+                    bool_switch_startup_net_con_kb = True
+                    self.write_var = 'bool_switch_startup_net_con_kb: true'
+                    self.write_changes()
+                    self.write_var = 'bool_switch_startup_net_con: true'
+                    self.write_changes()
+                    bool_switch_startup_net_con = True
+                    self.btn_hotbar_netcon_kb_mon.setStyleSheet(self.btn_hotbar_on_style)
+                    if bool_switch_show_discrete is False and ui_feature_page == 3:
+                        self.btn_hotbar_netcon_kb_mon.setStyleSheet(self.visually_combine_hotbar_on_settings_window_style)
+                    self.btn_net_con_kb.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
                     print('-- [App.btn_net_con_kb_function] starting thread: thread_net_connection')
                     thread_net_connection[0].start()
-
-            elif bool_switch_startup_net_con_kb is False:
-                print('-- [App.btn_net_con_kb_function] stopping thread: thread_net_connection')
-                thread_net_connection[0].stop()
-                bool_switch_startup_net_con_kb = True
-                self.write_var = 'bool_switch_startup_net_con_kb: true'
-                self.write_changes()
-                self.write_var = 'bool_switch_startup_net_con: true'
-                self.write_changes()
-                bool_switch_startup_net_con = True
-                self.btn_hotbar_netcon_kb_mon.setStyleSheet(self.btn_hotbar_on_style)
-                if bool_switch_show_discrete is False and ui_feature_page == 3:
-                    self.btn_hotbar_netcon_kb_mon.setStyleSheet(self.visually_combine_hotbar_on_settings_window_style)
-                self.btn_net_con_kb.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-                print('-- [App.btn_net_con_kb_function] starting thread: thread_net_connection')
-                thread_net_connection[0].start()
 
     def btn_net_con_mouse_led_selected_prev_function(self):
         print('-- [App.btn_net_con_mouse_led_selected_prev_function]: plugged in')
         global corsairled_id_num_netcon_ms, corsairled_id_num_ms_complete, sdk, devices_ms_selected, bool_switch_startup_net_con_ms, sdk_color_backlight
-        global thread_net_connection
+        global thread_net_connection, devices_kb, devices_ms
         self.setFocus()
-        if self.write_engaged is False:
-            if corsairled_id_num_netcon_ms > 0:
-                print('-- [App.btn_net_con_mouse_led_selected_prev_function] stopping thread: thread_net_connection')
-                thread_net_connection[0].stop()
-                sdk.set_led_colors_buffer_by_device_index(devices_ms[devices_ms_selected], ({corsairled_id_num_ms_complete[corsairled_id_num_netcon_ms]: sdk_color_backlight}))
-                corsairled_id_num_netcon_ms = int(corsairled_id_num_netcon_ms - 1)
-                print('-- [App.btn_net_con_mouse_led_selected_prev_function] setting lbl_net_con_mouse_led_selected:', corsairled_id_num_netcon_ms)
-                self.write_var = 'corsairled_id_num_netcon_ms: ' + str(corsairled_id_num_netcon_ms)
-                self.write_changes()
-                self.lbl_net_con_mouse_led_selected.setText(str(corsairled_id_num_netcon_ms))
-                if bool_switch_startup_net_con_ms is True or bool_switch_startup_net_con_kb is True:
-                    print('-- [App.btn_net_con_mouse_led_selected_prev_function] bool_switch_startup_net_con_ms:', bool_switch_startup_net_con_ms)
-                    print('-- [App.btn_net_con_mouse_led_selected_prev_function] bool_switch_startup_net_con_kb:', bool_switch_startup_net_con_kb)
-                    print('-- [App.btn_net_con_mouse_led_selected_prev_function] starting thread: thread_net_connection')
-                    thread_net_connection[0].start()
-                elif bool_switch_startup_net_con_ms is False and bool_switch_startup_net_con_kb is False:
-                    print('-- [App.btn_net_con_mouse_led_selected_prev_function] bool_switch_startup_net_con_ms:', bool_switch_startup_net_con_ms)
-                    print('-- [App.btn_net_con_mouse_led_selected_prev_function] bool_switch_startup_net_con_kb:', bool_switch_startup_net_con_kb)
-                    print('-- [App.btn_net_con_mouse_led_selected_prev_function]: skipping thread start')
+
+        if len(devices_kb) > 0 or len(devices_ms) > 0:
+            if self.write_engaged is False:
+                if corsairled_id_num_netcon_ms > 0:
+                    print('-- [App.btn_net_con_mouse_led_selected_prev_function] stopping thread: thread_net_connection')
+                    thread_net_connection[0].stop()
+                    sdk.set_led_colors_buffer_by_device_index(devices_ms[devices_ms_selected], ({corsairled_id_num_ms_complete[corsairled_id_num_netcon_ms]: sdk_color_backlight}))
+                    corsairled_id_num_netcon_ms = int(corsairled_id_num_netcon_ms - 1)
+                    print('-- [App.btn_net_con_mouse_led_selected_prev_function] setting lbl_net_con_mouse_led_selected:', corsairled_id_num_netcon_ms)
+                    self.write_var = 'corsairled_id_num_netcon_ms: ' + str(corsairled_id_num_netcon_ms)
+                    self.write_changes()
+                    self.lbl_net_con_mouse_led_selected.setText(str(corsairled_id_num_netcon_ms))
+                    if bool_switch_startup_net_con_ms is True or bool_switch_startup_net_con_kb is True:
+                        print('-- [App.btn_net_con_mouse_led_selected_prev_function] bool_switch_startup_net_con_ms:', bool_switch_startup_net_con_ms)
+                        print('-- [App.btn_net_con_mouse_led_selected_prev_function] bool_switch_startup_net_con_kb:', bool_switch_startup_net_con_kb)
+                        print('-- [App.btn_net_con_mouse_led_selected_prev_function] starting thread: thread_net_connection')
+                        thread_net_connection[0].start()
+                    elif bool_switch_startup_net_con_ms is False and bool_switch_startup_net_con_kb is False:
+                        print('-- [App.btn_net_con_mouse_led_selected_prev_function] bool_switch_startup_net_con_ms:', bool_switch_startup_net_con_ms)
+                        print('-- [App.btn_net_con_mouse_led_selected_prev_function] bool_switch_startup_net_con_kb:', bool_switch_startup_net_con_kb)
+                        print('-- [App.btn_net_con_mouse_led_selected_prev_function]: skipping thread start')
 
     def btn_net_con_mouse_led_selected_next_function(self):
         print('-- [App.btn_net_con_mouse_led_selected_next_function]: plugged in')
         global corsairled_id_num_netcon_ms, corsairled_id_num_ms_complete, sdk, devices_ms_selected, bool_switch_startup_net_con_ms, sdk_color_backlight
-        global thread_net_connection
+        global thread_net_connection, devices_kb, devices_ms
         self.setFocus()
-        if self.write_engaged is False:
-            if corsairled_id_num_netcon_ms < len(corsairled_id_num_ms_complete) - 1:
-                print('-- [App.btn_net_con_mouse_led_selected_next_function] stopping thread: thread_net_connection')
-                thread_net_connection[0].stop()
-                sdk.set_led_colors_buffer_by_device_index(devices_ms[devices_ms_selected], ({corsairled_id_num_ms_complete[corsairled_id_num_netcon_ms]: sdk_color_backlight}))
-                corsairled_id_num_netcon_ms = int(corsairled_id_num_netcon_ms + 1)
-                print('-- [App.btn_net_con_mouse_led_selected_next_function] setting lbl_net_con_mouse_led_selected:', corsairled_id_num_netcon_ms)
-                self.write_var = 'corsairled_id_num_netcon_ms: ' + str(corsairled_id_num_netcon_ms)
-                self.write_changes()
-                self.lbl_net_con_mouse_led_selected.setText(str(corsairled_id_num_netcon_ms))
-                if bool_switch_startup_net_con_ms is True or bool_switch_startup_net_con_kb is True:
-                    print('-- [App.btn_net_con_mouse_led_selected_next_function] bool_switch_startup_net_con_ms:', bool_switch_startup_net_con_ms)
-                    print('-- [App.btn_net_con_mouse_led_selected_next_function] bool_switch_startup_net_con_kb:', bool_switch_startup_net_con_kb)
-                    print('-- [App.btn_net_con_mouse_led_selected_next_function] starting thread: thread_net_connection')
-                    thread_net_connection[0].start()
-                elif bool_switch_startup_net_con_ms is False and bool_switch_startup_net_con_kb is False:
-                    print('-- [App.btn_net_con_mouse_led_selected_next_function] bool_switch_startup_net_con_ms:', bool_switch_startup_net_con_ms)
-                    print('-- [App.btn_net_con_mouse_led_selected_next_function] bool_switch_startup_net_con_kb:', bool_switch_startup_net_con_kb)
-                    print('-- [App.btn_net_con_mouse_led_selected_next_function]: skipping thread start')
+
+        if len(devices_kb) > 0 or len(devices_ms) > 0:
+            if self.write_engaged is False:
+                if corsairled_id_num_netcon_ms < len(corsairled_id_num_ms_complete) - 1:
+                    print('-- [App.btn_net_con_mouse_led_selected_next_function] stopping thread: thread_net_connection')
+                    thread_net_connection[0].stop()
+                    sdk.set_led_colors_buffer_by_device_index(devices_ms[devices_ms_selected], ({corsairled_id_num_ms_complete[corsairled_id_num_netcon_ms]: sdk_color_backlight}))
+                    corsairled_id_num_netcon_ms = int(corsairled_id_num_netcon_ms + 1)
+                    print('-- [App.btn_net_con_mouse_led_selected_next_function] setting lbl_net_con_mouse_led_selected:', corsairled_id_num_netcon_ms)
+                    self.write_var = 'corsairled_id_num_netcon_ms: ' + str(corsairled_id_num_netcon_ms)
+                    self.write_changes()
+                    self.lbl_net_con_mouse_led_selected.setText(str(corsairled_id_num_netcon_ms))
+                    if bool_switch_startup_net_con_ms is True or bool_switch_startup_net_con_kb is True:
+                        print('-- [App.btn_net_con_mouse_led_selected_next_function] bool_switch_startup_net_con_ms:', bool_switch_startup_net_con_ms)
+                        print('-- [App.btn_net_con_mouse_led_selected_next_function] bool_switch_startup_net_con_kb:', bool_switch_startup_net_con_kb)
+                        print('-- [App.btn_net_con_mouse_led_selected_next_function] starting thread: thread_net_connection')
+                        thread_net_connection[0].start()
+                    elif bool_switch_startup_net_con_ms is False and bool_switch_startup_net_con_kb is False:
+                        print('-- [App.btn_net_con_mouse_led_selected_next_function] bool_switch_startup_net_con_ms:', bool_switch_startup_net_con_ms)
+                        print('-- [App.btn_net_con_mouse_led_selected_next_function] bool_switch_startup_net_con_kb:', bool_switch_startup_net_con_kb)
+                        print('-- [App.btn_net_con_mouse_led_selected_next_function]: skipping thread start')
 
     def btn_defnetshare_function(self):
         print('-- [App.btn_defnetshare_function]: plugged in')
         global bool_switch_startup_net_share_mon, thread_net_share, bool_switch_show_discrete, ui_feature_page
+        global devices_ms, devices_kb
         self.setFocus()
-        if self.write_engaged is False:
-            if bool_switch_startup_net_share_mon is True:
-                print('-- [App.btn_defnetshare_function] stopping: thread_net_share')
-                thread_net_share[0].stop()
-                self.write_var = 'netshare_startup: false'
-                bool_switch_startup_net_share_mon = False
-                self.btn_hotbar_netshare_mon.setStyleSheet(self.btn_hotbar_off_style)
-                if bool_switch_show_discrete is False and ui_feature_page == 4:
-                    self.btn_hotbar_netshare_mon.setStyleSheet(self.visually_combine_hotbar_off_settings_window_style)
-                self.btn_netshare_mon.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
-            elif bool_switch_startup_net_share_mon is False:
-                print('-- [App.btn_defnetshare_function] starting: thread_net_share')
-                thread_net_share[0].start()
-                self.write_var = 'netshare_startup: true'
-                bool_switch_startup_net_share_mon = True
-                self.btn_hotbar_netshare_mon.setStyleSheet(self.btn_hotbar_on_style)
-                if bool_switch_show_discrete is False and ui_feature_page == 4:
-                    self.btn_hotbar_netshare_mon.setStyleSheet(self.visually_combine_hotbar_on_settings_window_style)
-                self.btn_netshare_mon.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-            self.write_changes()
+
+        if len(devices_kb) > 0:
+            if self.write_engaged is False:
+                if bool_switch_startup_net_share_mon is True:
+                    print('-- [App.btn_defnetshare_function] stopping: thread_net_share')
+                    thread_net_share[0].stop()
+                    self.write_var = 'netshare_startup: false'
+                    bool_switch_startup_net_share_mon = False
+                    self.btn_hotbar_netshare_mon.setStyleSheet(self.btn_hotbar_off_style)
+                    if bool_switch_show_discrete is False and ui_feature_page == 4:
+                        self.btn_hotbar_netshare_mon.setStyleSheet(self.visually_combine_hotbar_off_settings_window_style)
+                    self.btn_netshare_mon.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                elif bool_switch_startup_net_share_mon is False:
+                    print('-- [App.btn_defnetshare_function] starting: thread_net_share')
+                    thread_net_share[0].start()
+                    self.write_var = 'netshare_startup: true'
+                    bool_switch_startup_net_share_mon = True
+                    self.btn_hotbar_netshare_mon.setStyleSheet(self.btn_hotbar_on_style)
+                    if bool_switch_show_discrete is False and ui_feature_page == 4:
+                        self.btn_hotbar_netshare_mon.setStyleSheet(self.visually_combine_hotbar_on_settings_window_style)
+                    self.btn_netshare_mon.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                self.write_changes()
 
     def netshare_active_rgb_function(self):
         print('-- [App.netshare_active_rgb_function]: plugged in')
@@ -3573,159 +3670,178 @@ class App(QMainWindow):
 
     def g1_function_short(self):
         global thread_g1_notify, bool_allow_g1_short, bool_switch_event_notification_run_g1, str_event_notification_run_path_g1
+        global devices_kb
         print('-- [App.g1_function_short]: plugged in')
-        thread_g1_notify[0].stop()
-        if bool_allow_g1_short is True:
-            bool_allow_g1_short = False
-            if bool_switch_event_notification_run_g1 is True:
-                if os.path.exists(str_event_notification_run_path_g1):
-                    print('-- [App.g1_function_short]: attempting to run:', str_event_notification_run_path_g1)
-                    try:
-                        cmd = str_event_notification_run_path_g1
-                        cmd = cmd.strip()
-                        print('running command:', cmd)
-                        xcmd = subprocess.Popen(cmd, shell=True, startupinfo=info)
-                    except Exception as e:
-                        print('-- [App.g1_function_short] Error:', e)
-                else:
-                    print('-- [App.g1_function_short]: cannot find:', str_event_notification_run_path_g1)
+        if len(devices_kb):
+            thread_g1_notify[0].stop()
+            if bool_allow_g1_short is True:
+                bool_allow_g1_short = False
+                if bool_switch_event_notification_run_g1 is True:
+                    if os.path.exists(str_event_notification_run_path_g1):
+                        print('-- [App.g1_function_short]: attempting to run:', str_event_notification_run_path_g1)
+                        try:
+                            cmd = str_event_notification_run_path_g1
+                            cmd = cmd.strip()
+                            print('running command:', cmd)
+                            xcmd = subprocess.Popen(cmd, shell=True, startupinfo=info)
+                        except Exception as e:
+                            print('-- [App.g1_function_short] Error:', e)
+                    else:
+                        print('-- [App.g1_function_short]: cannot find:', str_event_notification_run_path_g1)
 
     def g1_function_long(self):
-        global thread_g1_notify, bool_allow_g1_short
+        global thread_g1_notify, bool_allow_g1_short, devices_kb
         print('-- [App.g1_function_long]: plugged in')
         print('-- [App.g1_function_long]: ignoring notification')
-        bool_allow_g1_short = False
-        thread_g1_notify[0].stop()
+        if len(devices_kb):
+            bool_allow_g1_short = False
+            thread_g1_notify[0].stop()
 
     def g2_function_short(self):
         global thread_g2_notify, bool_allow_g2_short, bool_switch_event_notification_run_g2, str_event_notification_run_path_g2
+        global devices_kb
         print('-- [App.g2_function_short]: plugged in')
-        thread_g2_notify[0].stop()
-        if bool_allow_g2_short is True:
-            bool_allow_g2_short = False
-            if bool_switch_event_notification_run_g2 is True:
-                if os.path.exists(str_event_notification_run_path_g2):
-                    print('-- [App.g2_function_short]: attempting to run:', str_event_notification_run_path_g2)
-                    try:
-                        cmd = str_event_notification_run_path_g2
-                        cmd = cmd.strip()
-                        print('running command:', cmd)
-                        xcmd = subprocess.Popen(cmd, shell=True, startupinfo=info)
-                    except Exception as e:
-                        print('-- [App.g2_function_short] Error:', e)
-                else:
-                    print('-- [App.g2_function_short]: cannot find:', str_event_notification_run_path_g2)
+        if len(devices_kb):
+            thread_g2_notify[0].stop()
+            if bool_allow_g2_short is True:
+                bool_allow_g2_short = False
+                if bool_switch_event_notification_run_g2 is True:
+                    if os.path.exists(str_event_notification_run_path_g2):
+                        print('-- [App.g2_function_short]: attempting to run:', str_event_notification_run_path_g2)
+                        try:
+                            cmd = str_event_notification_run_path_g2
+                            cmd = cmd.strip()
+                            print('running command:', cmd)
+                            xcmd = subprocess.Popen(cmd, shell=True, startupinfo=info)
+                        except Exception as e:
+                            print('-- [App.g2_function_short] Error:', e)
+                    else:
+                        print('-- [App.g2_function_short]: cannot find:', str_event_notification_run_path_g2)
 
     def g2_function_long(self):
-        global thread_g2_notify, bool_allow_g2_short
+        global thread_g2_notify, bool_allow_g2_short, devices_kb
         print('-- [App.g2_function_long]: plugged in')
         print('-- [App.g2_function_long]: ignoring notification')
-        bool_allow_g2_short = False
-        thread_g2_notify[0].stop()
+        if len(devices_kb):
+            bool_allow_g2_short = False
+            thread_g2_notify[0].stop()
 
     def g3_function_short(self):
         global thread_g3_notify, bool_allow_g3_short, bool_switch_event_notification_run_g3, str_event_notification_run_path_g3
+        global devices_kb
         print('-- [App.g3_function_short]: plugged in')
-        thread_g3_notify[0].stop()
-        if bool_allow_g3_short is True:
-            bool_allow_g3_short = False
-            if bool_switch_event_notification_run_g3 is True:
-                if os.path.exists(str_event_notification_run_path_g3):
-                    print('-- [App.g3_function_short]: attempting to run:', str_event_notification_run_path_g3)
-                    try:
-                        cmd = str_event_notification_run_path_g3
-                        cmd = cmd.strip()
-                        print('running command:', cmd)
-                        xcmd = subprocess.Popen(cmd, shell=True, startupinfo=info)
-                    except Exception as e:
-                        print('-- [App.g3_function_short] Error:', e)
-                else:
-                    print('-- [App.g3_function_short]: cannot find:', str_event_notification_run_path_g3)
+        if len(devices_kb):
+            thread_g3_notify[0].stop()
+            if bool_allow_g3_short is True:
+                bool_allow_g3_short = False
+                if bool_switch_event_notification_run_g3 is True:
+                    if os.path.exists(str_event_notification_run_path_g3):
+                        print('-- [App.g3_function_short]: attempting to run:', str_event_notification_run_path_g3)
+                        try:
+                            cmd = str_event_notification_run_path_g3
+                            cmd = cmd.strip()
+                            print('running command:', cmd)
+                            xcmd = subprocess.Popen(cmd, shell=True, startupinfo=info)
+                        except Exception as e:
+                            print('-- [App.g3_function_short] Error:', e)
+                    else:
+                        print('-- [App.g3_function_short]: cannot find:', str_event_notification_run_path_g3)
 
     def g3_function_long(self):
-        global thread_g3_notify, bool_allow_g3_short
+        global thread_g3_notify, bool_allow_g3_short, devices_kb
         print('-- [App.g3_function_long]: plugged in')
         print('-- [App.g3_function_long]: ignoring notification')
-        bool_allow_g3_short = False
-        thread_g3_notify[0].stop()
+        if len(devices_kb):
+            bool_allow_g3_short = False
+            thread_g3_notify[0].stop()
 
     def g4_function_short(self):
         global thread_g4_notify, bool_allow_g4_short, bool_switch_event_notification_run_g4, str_event_notification_run_path_g4
+        global devices_kb
         print('-- [App.g4_function_short]: plugged in')
-        thread_g4_notify[0].stop()
-        if bool_allow_g4_short is True:
-            bool_allow_g4_short = False
-            if bool_switch_event_notification_run_g4 is True:
-                if os.path.exists(str_event_notification_run_path_g4):
-                    print('-- [App.g4_function_short]: attempting to run:', str_event_notification_run_path_g4)
-                    try:
-                        cmd = str_event_notification_run_path_g4
-                        cmd = cmd.strip()
-                        print('running command:', cmd)
-                        xcmd = subprocess.Popen(cmd, shell=True, startupinfo=info)
-                    except Exception as e:
-                        print('-- [App.g4_function_short] Error:', e)
-                else:
-                    print('-- [App.g4_function_short]: cannot find:', str_event_notification_run_path_g4)
+        if len(devices_kb):
+            thread_g4_notify[0].stop()
+            if bool_allow_g4_short is True:
+                bool_allow_g4_short = False
+                if bool_switch_event_notification_run_g4 is True:
+                    if os.path.exists(str_event_notification_run_path_g4):
+                        print('-- [App.g4_function_short]: attempting to run:', str_event_notification_run_path_g4)
+                        try:
+                            cmd = str_event_notification_run_path_g4
+                            cmd = cmd.strip()
+                            print('running command:', cmd)
+                            xcmd = subprocess.Popen(cmd, shell=True, startupinfo=info)
+                        except Exception as e:
+                            print('-- [App.g4_function_short] Error:', e)
+                    else:
+                        print('-- [App.g4_function_short]: cannot find:', str_event_notification_run_path_g4)
 
     def g4_function_long(self):
         global thread_g4_notify, bool_allow_g4_short
+        global devices_kb
         print('-- [App.g4_function_long]: plugged in')
         print('-- [App.g4_function_long]: ignoring notification')
-        bool_allow_g4_short = False
-        thread_g4_notify[0].stop()
+        if len(devices_kb):
+            bool_allow_g4_short = False
+            thread_g4_notify[0].stop()
 
     def g5_function_short(self):
         global thread_g5_notify, bool_allow_g5_short, bool_switch_event_notification_run_g5, str_event_notification_run_path_g5
+        global devices_kb
         print('-- [App.g5_function_short]: plugged in')
-        thread_g5_notify[0].stop()
-        if bool_allow_g5_short is True:
-            bool_allow_g5_short = False
-            if bool_switch_event_notification_run_g5 is True:
-                if os.path.exists(str_event_notification_run_path_g5):
-                    print('-- [App.g5_function_short]: attempting to run:', str_event_notification_run_path_g5)
-                    try:
-                        cmd = str_event_notification_run_path_g5
-                        cmd = cmd.strip()
-                        print('running command:', cmd)
-                        xcmd = subprocess.Popen(cmd, shell=True, startupinfo=info)
-                    except Exception as e:
-                        print('-- [App.g5_function_short] Error:', e)
-                else:
-                    print('-- [App.g5_function_short]: cannot find:', str_event_notification_run_path_g5)
+        if len(devices_kb):
+            thread_g5_notify[0].stop()
+            if bool_allow_g5_short is True:
+                bool_allow_g5_short = False
+                if bool_switch_event_notification_run_g5 is True:
+                    if os.path.exists(str_event_notification_run_path_g5):
+                        print('-- [App.g5_function_short]: attempting to run:', str_event_notification_run_path_g5)
+                        try:
+                            cmd = str_event_notification_run_path_g5
+                            cmd = cmd.strip()
+                            print('running command:', cmd)
+                            xcmd = subprocess.Popen(cmd, shell=True, startupinfo=info)
+                        except Exception as e:
+                            print('-- [App.g5_function_short] Error:', e)
+                    else:
+                        print('-- [App.g5_function_short]: cannot find:', str_event_notification_run_path_g5)
 
     def g5_function_long(self):
-        global thread_g5_notify, bool_allow_g5_short
+        global thread_g5_notify, bool_allow_g5_short, devices_kb
         print('-- [App.g5_function_long]: plugged in')
         print('-- [App.g5_function_long]: ignoring notification')
-        bool_allow_g5_short = False
-        thread_g5_notify[0].stop()
+        if len(devices_kb):
+            bool_allow_g5_short = False
+            thread_g5_notify[0].stop()
 
     def g6_function_short(self):
         global thread_g6_notify, bool_allow_g6_short, bool_switch_event_notification_run_g6, str_event_notification_run_path_g6
+        global devices_kb
         print('-- [App.g6_function_short]: plugged in')
-        thread_g6_notify[0].stop()
-        if bool_allow_g6_short is True:
-            bool_allow_g6_short = False
-            if bool_switch_event_notification_run_g6 is True:
-                if os.path.exists(str_event_notification_run_path_g6):
-                    print('-- [App.g6_function_short]: attempting to run:', str_event_notification_run_path_g6)
-                    try:
-                        cmd = str_event_notification_run_path_g6
-                        cmd = cmd.strip()
-                        print('running command:', cmd)
-                        xcmd = subprocess.Popen(cmd, shell=True, startupinfo=info)
-                    except Exception as e:
-                        print('-- [App.g6_function_short] Error:', e)
-                else:
-                    print('-- [App.g6_function_short]: cannot find:', str_event_notification_run_path_g6)
+        if len(devices_kb):
+            thread_g6_notify[0].stop()
+            if bool_allow_g6_short is True:
+                bool_allow_g6_short = False
+                if bool_switch_event_notification_run_g6 is True:
+                    if os.path.exists(str_event_notification_run_path_g6):
+                        print('-- [App.g6_function_short]: attempting to run:', str_event_notification_run_path_g6)
+                        try:
+                            cmd = str_event_notification_run_path_g6
+                            cmd = cmd.strip()
+                            print('running command:', cmd)
+                            xcmd = subprocess.Popen(cmd, shell=True, startupinfo=info)
+                        except Exception as e:
+                            print('-- [App.g6_function_short] Error:', e)
+                    else:
+                        print('-- [App.g6_function_short]: cannot find:', str_event_notification_run_path_g6)
 
     def g6_function_long(self):
-        global thread_g6_notify, bool_allow_g6_short
+        global thread_g6_notify, bool_allow_g6_short, devices_kb
         print('-- [App.g6_function_long]: plugged in')
         print('-- [App.g6_function_long]: ignoring notification')
         bool_allow_g6_short = False
-        thread_g6_notify[0].stop()
+        if len(devices_kb):
+            thread_g6_notify[0].stop()
 
     def initUI(self):
         print('-- [App.initUI]: plugged in')
@@ -3831,7 +3947,8 @@ class App(QMainWindow):
             self.btn_backlight_auto.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
         elif bool_switch_backlight_auto is True:
             self.btn_backlight_auto.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-            thread_backlight_auto[0].start()
+            if len(devices_kb) > 0 or len(devices_ms) > 0:
+                thread_backlight_auto[0].start()
 
         if bool_switch_startup_autorun is True:
             self.btn_run_startup.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
@@ -4409,111 +4526,115 @@ class EventHandlerReadFileEvents(QThread):
 
         global thread_g1_notify, thread_g2_notify, thread_g3_notify, thread_g4_notify, thread_g5_notify, thread_g6_notify
 
-        while True:
-            bool_event_notification_g1 = False
-            if bool_switch_event_notification_g1 is True:
-                if os.path.exists('./data/event_notification_g1.dat'):
-                    try:
-                        with open('./data/event_notification_g1.dat', 'r') as fo:
-                            for line in fo:
-                                line = line.strip()
-                                if line == 'True':
-                                    print('-- [EventHandlerReadFileEvents.run] setting bool_event_notification_g1: true')
-                                    bool_event_notification_g1 = True
-                                    break
-                        if bool_event_notification_g1 is True:
-                            open('./data/event_notification_g1.dat', 'w').close()
-                            bool_event_notification_g1 = False
-                            thread_g1_notify[0].start()
-                    except Exception as e:
-                        print('-- [EventHandlerReadFileEvents.run g1] Error:', e)
+        global devices_kb
 
-            if bool_switch_event_notification_g2 is True:
-                if os.path.exists('./data/event_notification_g2.dat'):
-                    try:
-                        with open('./data/event_notification_g2.dat', 'r') as fo:
-                            for line in fo:
-                                line = line.strip()
-                                if line == 'True':
-                                    print('-- [EventHandlerReadFileEvents.run] setting bool_event_notification_g2: true')
-                                    bool_event_notification_g2 = True
-                                    break
-                        if bool_event_notification_g2 is True:
-                            open('./data/event_notification_g2.dat', 'w').close()
-                            bool_event_notification_g2 = False
-                            thread_g2_notify[0].start()
-                    except Exception as e:
-                        print('-- [EventHandlerReadFileEvents.run g2] Error:', e)
+        if len(devices_kb) > 0:
 
-            if bool_switch_event_notification_g3 is True:
-                if os.path.exists('./data/event_notification_g3.dat'):
-                    try:
-                        with open('./data/event_notification_g3.dat', 'r') as fo:
-                            for line in fo:
-                                line = line.strip()
-                                if line == 'True':
-                                    print('-- [EventHandlerReadFileEvents.run] setting bool_event_notification_g3: true')
-                                    bool_event_notification_g3 = True
-                                    break
-                        if bool_event_notification_g3 is True:
-                            open('./data/event_notification_g3.dat', 'w').close()
-                            bool_event_notification_g3 = False
-                            thread_g3_notify[0].start()
-                    except Exception as e:
-                        print('-- [EventHandlerReadFileEvents.run g3] Error:', e)
+            while True:
+                bool_event_notification_g1 = False
+                if bool_switch_event_notification_g1 is True:
+                    if os.path.exists('./data/event_notification_g1.dat'):
+                        try:
+                            with open('./data/event_notification_g1.dat', 'r') as fo:
+                                for line in fo:
+                                    line = line.strip()
+                                    if line == 'True':
+                                        print('-- [EventHandlerReadFileEvents.run] setting bool_event_notification_g1: true')
+                                        bool_event_notification_g1 = True
+                                        break
+                            if bool_event_notification_g1 is True:
+                                open('./data/event_notification_g1.dat', 'w').close()
+                                bool_event_notification_g1 = False
+                                thread_g1_notify[0].start()
+                        except Exception as e:
+                            print('-- [EventHandlerReadFileEvents.run g1] Error:', e)
 
-            if bool_switch_event_notification_g4 is True:
-                if os.path.exists('./data/event_notification_g4.dat'):
-                    try:
-                        with open('./data/event_notification_g4.dat', 'r') as fo:
-                            for line in fo:
-                                line = line.strip()
-                                if line == 'True':
-                                    print('-- [EventHandlerReadFileEvents.run] setting bool_event_notification_g4: true')
-                                    bool_event_notification_g4 = True
-                                    break
-                        if bool_event_notification_g4 is True:
-                            open('./data/event_notification_g4.dat', 'w').close()
-                            bool_event_notification_g4 = False
-                            thread_g4_notify[0].start()
-                    except Exception as e:
-                        print('-- [EventHandlerReadFileEvents.run g4] Error:', e)
+                if bool_switch_event_notification_g2 is True:
+                    if os.path.exists('./data/event_notification_g2.dat'):
+                        try:
+                            with open('./data/event_notification_g2.dat', 'r') as fo:
+                                for line in fo:
+                                    line = line.strip()
+                                    if line == 'True':
+                                        print('-- [EventHandlerReadFileEvents.run] setting bool_event_notification_g2: true')
+                                        bool_event_notification_g2 = True
+                                        break
+                            if bool_event_notification_g2 is True:
+                                open('./data/event_notification_g2.dat', 'w').close()
+                                bool_event_notification_g2 = False
+                                thread_g2_notify[0].start()
+                        except Exception as e:
+                            print('-- [EventHandlerReadFileEvents.run g2] Error:', e)
 
-            if bool_switch_event_notification_g5 is True:
-                if os.path.exists('./data/event_notification_g5.dat'):
-                    try:
-                        with open('./data/event_notification_g5.dat', 'r') as fo:
-                            for line in fo:
-                                line = line.strip()
-                                if line == 'True':
-                                    print('-- [EventHandlerReadFileEvents.run] setting bool_event_notification_g5: true')
-                                    bool_event_notification_g5 = True
-                                    break
-                        if bool_event_notification_g5 is True:
-                            open('./data/event_notification_g5.dat', 'w').close()
-                            bool_event_notification_g5 = False
-                            thread_g5_notify[0].start()
-                    except Exception as e:
-                        print('-- [EventHandlerReadFileEvents.run g5] Error:', e)
+                if bool_switch_event_notification_g3 is True:
+                    if os.path.exists('./data/event_notification_g3.dat'):
+                        try:
+                            with open('./data/event_notification_g3.dat', 'r') as fo:
+                                for line in fo:
+                                    line = line.strip()
+                                    if line == 'True':
+                                        print('-- [EventHandlerReadFileEvents.run] setting bool_event_notification_g3: true')
+                                        bool_event_notification_g3 = True
+                                        break
+                            if bool_event_notification_g3 is True:
+                                open('./data/event_notification_g3.dat', 'w').close()
+                                bool_event_notification_g3 = False
+                                thread_g3_notify[0].start()
+                        except Exception as e:
+                            print('-- [EventHandlerReadFileEvents.run g3] Error:', e)
 
-            if bool_switch_event_notification_g6 is True:
-                if os.path.exists('./data/event_notification_g6.dat'):
-                    try:
-                        with open('./data/event_notification_g6.dat', 'r') as fo:
-                            for line in fo:
-                                line = line.strip()
-                                if line == 'True':
-                                    print('-- [EventHandlerReadFileEvents.run] setting bool_event_notification_g6: true')
-                                    bool_event_notification_g6 = True
-                                    break
-                        if bool_event_notification_g6 is True:
-                            open('./data/event_notification_g6.dat', 'w').close()
-                            bool_event_notification_g6 = False
-                            thread_g6_notify[0].start()
-                    except Exception as e:
-                        print('-- [EventHandlerReadFileEvents.run g6] Error:', e)
+                if bool_switch_event_notification_g4 is True:
+                    if os.path.exists('./data/event_notification_g4.dat'):
+                        try:
+                            with open('./data/event_notification_g4.dat', 'r') as fo:
+                                for line in fo:
+                                    line = line.strip()
+                                    if line == 'True':
+                                        print('-- [EventHandlerReadFileEvents.run] setting bool_event_notification_g4: true')
+                                        bool_event_notification_g4 = True
+                                        break
+                            if bool_event_notification_g4 is True:
+                                open('./data/event_notification_g4.dat', 'w').close()
+                                bool_event_notification_g4 = False
+                                thread_g4_notify[0].start()
+                        except Exception as e:
+                            print('-- [EventHandlerReadFileEvents.run g4] Error:', e)
 
-            time.sleep(1)
+                if bool_switch_event_notification_g5 is True:
+                    if os.path.exists('./data/event_notification_g5.dat'):
+                        try:
+                            with open('./data/event_notification_g5.dat', 'r') as fo:
+                                for line in fo:
+                                    line = line.strip()
+                                    if line == 'True':
+                                        print('-- [EventHandlerReadFileEvents.run] setting bool_event_notification_g5: true')
+                                        bool_event_notification_g5 = True
+                                        break
+                            if bool_event_notification_g5 is True:
+                                open('./data/event_notification_g5.dat', 'w').close()
+                                bool_event_notification_g5 = False
+                                thread_g5_notify[0].start()
+                        except Exception as e:
+                            print('-- [EventHandlerReadFileEvents.run g5] Error:', e)
+
+                if bool_switch_event_notification_g6 is True:
+                    if os.path.exists('./data/event_notification_g6.dat'):
+                        try:
+                            with open('./data/event_notification_g6.dat', 'r') as fo:
+                                for line in fo:
+                                    line = line.strip()
+                                    if line == 'True':
+                                        print('-- [EventHandlerReadFileEvents.run] setting bool_event_notification_g6: true')
+                                        bool_event_notification_g6 = True
+                                        break
+                            if bool_event_notification_g6 is True:
+                                open('./data/event_notification_g6.dat', 'w').close()
+                                bool_event_notification_g6 = False
+                                thread_g6_notify[0].start()
+                        except Exception as e:
+                            print('-- [EventHandlerReadFileEvents.run g6] Error:', e)
+
+                time.sleep(1)
 
     def stop(self):
         print('-- [EventHandlerReadFileEvents.stop]: plugged in')
@@ -4814,7 +4935,7 @@ class CompileDevicesClass(QThread):
         global bool_backend_config_read_complete, bool_switch_startup_exclusive_control
         global thread_backlight_auto, bool_switch_backlight_auto
 
-        if len(devices_kb) >= 1:
+        if len(devices_kb) > 0:
 
             thread_sdk_event_handler[0].start()
             thread_sdk_event_handler_read_file_events[0].start()
@@ -4832,7 +4953,7 @@ class CompileDevicesClass(QThread):
             if bool_switch_startup_net_share_mon:
                 thread_net_share[0].start()
 
-        if len(devices_kb) >= 1 or len(devices_ms) >= 1:
+        if len(devices_kb) > 0 or len(devices_ms) > 0:
             if bool_switch_startup_net_con_ms is True or bool_switch_startup_net_con_kb is True:
                 thread_net_connection[0].start()
 
@@ -4841,7 +4962,7 @@ class CompileDevicesClass(QThread):
             if bool_switch_startup_exclusive_control is False:
                 sdk.release_control()
 
-            if bool_switch_backlight_auto is True and len(devices_kb) >= 1:
+            if bool_switch_backlight_auto is True and len(devices_kb) > 0:
                 thread_backlight_auto[0].start()
 
     def attempt_connect(self):
@@ -6016,7 +6137,7 @@ class PingTestClass(QThread):
 
         if self.ping_bool is True and self.ping_bool != self.ping_bool_prev:
             print('-- [PingTestClass.send_instruction] sending instruction off')
-            self.rgb_key = (0, 255, 0)
+            self.rgb_key = (100, 255, 0)
             self.send_instruction_off()
             time.sleep(0.35)
             self.send_instruction_on()
@@ -6034,7 +6155,7 @@ class PingTestClass(QThread):
         elif self.ping_bool is False and self.ping_bool != self.ping_bool_prev:
             print('-- [PingTestClass.send_instruction] sending instruction on')
             time.sleep(0.1)
-            self.rgb_key = (150, 255, 0)
+            self.rgb_key = (255, 0, 0)
             self.send_instruction_off()
             time.sleep(0.35)
             self.send_instruction_on()
