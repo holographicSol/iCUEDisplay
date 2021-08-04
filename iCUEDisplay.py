@@ -96,7 +96,7 @@ def initialize_priority():
     win32process.SetPriorityClass(handle, priority_classes[4])
     print('-- [initialize_priority]: settings win32process priority class:', priority_classes[4])
 
-ui_feature_page = 0
+
 backlight_time_0 = ''
 backlight_time_1 = ''
 hdd_bytes_type_w = ''
@@ -140,7 +140,6 @@ str_event_notification_run_path_g6 = ''
 
 bool_switch_display_disk_mount = True
 bool_switch_backlight = False
-bool_switch_show_discrete = True
 bool_switch_startup_exclusive_control = False
 bool_switch_startup_autorun = False
 bool_switch_backlight_auto = False
@@ -155,8 +154,6 @@ bool_switch_startup_vram_util = False
 bool_switch_startup_net_traffic = False
 bool_switch_startup_net_share_mon = False
 
-bool_backend_enum_kb = True
-bool_backend_enum_ms = True
 bool_backend_install = False
 bool_backend_allow_display = False
 bool_backend_icue_connected = False
@@ -2509,7 +2506,7 @@ class App(QMainWindow):
         global devices_kb, devices_ms
         global devices_kb_selected, devices_ms_selected
         global corsairled_id_num_ms_complete, corsairled_id_num_kb_complete
-        global sdk_color_backlight, bool_switch_backlight, ui_feature_page, bool_switch_show_discrete, sdk_color_backlight_on
+        global sdk_color_backlight, bool_switch_backlight, sdk_color_backlight_on
 
         global devices_kb, devices_ms
         global thread_net_connection
@@ -2538,7 +2535,7 @@ class App(QMainWindow):
         global devices_kb_selected, devices_ms_selected
         global corsairled_id_num_ms_complete, corsairled_id_num_kb_complete
         global sdk_color_backlight
-        global sdk_color_backlight, bool_switch_backlight, ui_feature_page, bool_switch_show_discrete, sdk_color_backlight_on
+        global sdk_color_backlight, bool_switch_backlight, sdk_color_backlight_on
         global thread_disk_rw
         self.setFocus()
         if self.write_engaged is False:
@@ -2549,8 +2546,6 @@ class App(QMainWindow):
                 bool_switch_backlight = True
                 print('-- [App.btn_bck_light_function] setting bool_switch_backlight:', bool_switch_backlight)
                 self.btn_bck_light.setStyleSheet(self.btn_feature_title_style)
-                if bool_switch_show_discrete is False and ui_feature_page == 5:
-                    self.btn_bck_light.setStyleSheet(self.btn_feature_title_style)
                 self.btn_bck_light.setIcon(QIcon("./image/img_backlight_on.png"))
                 self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
             elif bool_switch_backlight is True:
@@ -2560,8 +2555,6 @@ class App(QMainWindow):
                 bool_switch_backlight = False
                 print('-- [App.btn_bck_light_function] setting bool_switch_backlight:', bool_switch_backlight)
                 self.btn_bck_light.setStyleSheet(self.btn_feature_title_style)
-                if bool_switch_show_discrete is False and ui_feature_page == 5:
-                    self.btn_bck_light.setStyleSheet(self.btn_feature_title_style)
                 self.btn_bck_light.setIcon(QIcon("./image/img_backlight_off.png"))
                 self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
             self.color_all_id()
@@ -2756,7 +2749,7 @@ class App(QMainWindow):
 
     def btn_cpu_mon_function(self):
         print('-- [App.btn_cpu_mon_function]: plugged in')
-        global bool_switch_startup_cpu_util, thread_cpu_util, bool_switch_show_discrete, ui_feature_page
+        global bool_switch_startup_cpu_util, thread_cpu_util
         global devices_kb, devices_ms
         self.setFocus()
 
@@ -2770,8 +2763,6 @@ class App(QMainWindow):
                     bool_switch_startup_cpu_util = False
                     self.btn_feature_page_util.setStyleSheet(self.btn_feature_title_style)
                     self.btn_cpu_mon.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
-                    if bool_switch_show_discrete is False and ui_feature_page == 0:
-                        self.btn_feature_page_util.setStyleSheet(self.btn_feature_title_style)
                     self.write_changes()
 
                 elif bool_switch_startup_cpu_util is False:
@@ -2781,8 +2772,6 @@ class App(QMainWindow):
                     bool_switch_startup_cpu_util = True
                     self.btn_feature_page_util.setStyleSheet(self.btn_feature_title_style)
                     self.btn_cpu_mon.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-                    if bool_switch_show_discrete is False and ui_feature_page == 0:
-                        self.btn_feature_page_util.setStyleSheet(self.btn_feature_title_style)
                     self.write_changes()
 
     def btn_cpu_led_time_on_function(self):
@@ -2836,7 +2825,7 @@ class App(QMainWindow):
 
     def btn_dram_mon_function(self):
         print('-- [App.btn_dram_mon_function]: plugged in')
-        global bool_switch_startup_dram_util, thread_dram_util, bool_switch_show_discrete, ui_feature_page
+        global bool_switch_startup_dram_util, thread_dram_util
         global devices_kb
         self.setFocus()
 
@@ -2910,7 +2899,7 @@ class App(QMainWindow):
 
     def btn_vram_mon_function(self):
         print('-- [App.btn_vram_mon_function]: plugged in')
-        global bool_switch_startup_vram_util, thread_vram_util, bool_switch_show_discrete, ui_feature_page
+        global bool_switch_startup_vram_util, thread_vram_util
         global devices_kb
         self.setFocus()
 
@@ -2984,7 +2973,7 @@ class App(QMainWindow):
 
     def btn_hdd_mon_function(self):
         print('-- [App.btn_hdd_mon_function]: plugged in')
-        global bool_switch_startup_hdd_read_write, thread_disk_rw, bool_switch_show_discrete, ui_feature_page
+        global bool_switch_startup_hdd_read_write, thread_disk_rw
         global devices_kb
         self.setFocus()
 
@@ -2996,8 +2985,6 @@ class App(QMainWindow):
                     self.btn_hdd_mon.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
                     self.write_var = 'hdd_startup: false'
                     self.btn_feature_page_disks.setStyleSheet(self.btn_feature_title_style)
-                    if bool_switch_show_discrete is False and ui_feature_page == 1:
-                        self.btn_feature_page_disks.setStyleSheet(self.btn_feature_title_style)
                     bool_switch_startup_hdd_read_write = False
                     self.write_changes()
                 elif bool_switch_startup_hdd_read_write is False:
@@ -3006,8 +2993,6 @@ class App(QMainWindow):
                     self.btn_hdd_mon.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
                     self.write_var = 'hdd_startup: true'
                     self.btn_feature_page_disks.setStyleSheet(self.btn_feature_title_style)
-                    if bool_switch_show_discrete is False and ui_feature_page == 1:
-                        self.btn_feature_page_disks.setStyleSheet(self.btn_feature_title_style)
                     bool_switch_startup_hdd_read_write = True
                     self.write_changes()
 
@@ -3093,7 +3078,7 @@ class App(QMainWindow):
 
     def btn_network_adapter_function(self):
         print('-- [App.btn_network_adapter_function]: plugged in')
-        global bool_switch_startup_net_traffic, thread_net_traffic, bool_switch_show_discrete, ui_feature_page
+        global bool_switch_startup_net_traffic, thread_net_traffic
         global devices_kb
         self.setFocus()
 
@@ -3171,7 +3156,7 @@ class App(QMainWindow):
     def btn_net_con_mouse_function(self):
         print('-- [App.btn_net_con_mouse_function]: plugged in')
         global bool_switch_startup_net_con_ms, bool_switch_startup_net_con_kb, bool_switch_startup_net_con
-        global thread_net_connection, bool_switch_show_discrete, ui_feature_page, devices_kb, devices_ms
+        global thread_net_connection, devices_kb, devices_ms
         self.setFocus()
 
         if len(devices_kb) > 0 or len(devices_ms) > 0:
@@ -3207,7 +3192,7 @@ class App(QMainWindow):
     def btn_net_con_kb_function(self):
         print('-- [App.btn_net_con_kb_function]: plugged in')
         global bool_switch_startup_net_con_kb, bool_switch_startup_net_con, bool_switch_startup_net_con_ms
-        global thread_net_connection, bool_switch_show_discrete, ui_feature_page, devices_ms, devices_kb
+        global thread_net_connection, devices_ms, devices_kb
         self.setFocus()
 
         if len(devices_kb) > 0 or len(devices_ms) > 0:
@@ -3297,7 +3282,7 @@ class App(QMainWindow):
 
     def btn_defnetshare_function(self):
         print('-- [App.btn_defnetshare_function]: plugged in')
-        global bool_switch_startup_net_share_mon, thread_net_share, bool_switch_show_discrete, ui_feature_page
+        global bool_switch_startup_net_share_mon, thread_net_share
         global devices_ms, devices_kb
         self.setFocus()
 
@@ -4511,7 +4496,6 @@ class CompileDevicesClass(QThread):
 
     def enum_kb(self):
         global sdk
-        global bool_backend_enum_kb
         global devices_kb, devices_kb_name, corsairled_id_num_kb_complete
         # 1. Get Key Names & Key IDs
         led_position = sdk.get_led_positions_by_device_index(self.device_index)
@@ -4534,11 +4518,9 @@ class CompileDevicesClass(QThread):
                 var_1 = var[1].replace('>:', '')
                 corsairled_id_num_kb_complete.append(int(var_1))
             print('-- [CompileDevicesClass.enumerate_device]  corsairled_id_num_kb_complete:', corsairled_id_num_kb_complete)
-            bool_backend_enum_kb = True
 
     def enum_ms(self):
         global sdk
-        global bool_backend_enum_ms
         global devices_ms, devices_ms_name, corsairled_id_num_ms_complete
 
         led_position = sdk.get_led_positions_by_device_index(self.device_index)
@@ -4561,7 +4543,6 @@ class CompileDevicesClass(QThread):
                 var_1 = var[1].replace('>:', '')
                 corsairled_id_num_ms_complete.append(int(var_1))
             print('-- [CompileDevicesClass.enumerate_device]  corsairled_id_num_ms_complete:', corsairled_id_num_ms_complete)
-            bool_backend_enum_ms = True
 
     def stop_all_threads(self):
         print('-- [CompileDevicesClass.stop_all_threads]: plugged in')
@@ -4679,7 +4660,7 @@ class CompileDevicesClass(QThread):
         global devices_kb_selected, devices_ms_selected
         global corsairled_id_num_ms_complete, corsairled_id_num_kb_complete
         global sdk_color_backlight
-        global sdk_color_backlight, bool_switch_backlight, ui_feature_page, bool_switch_show_discrete, sdk_color_backlight_on
+        global sdk_color_backlight, bool_switch_backlight, sdk_color_backlight_on
 
         if len(devices_kb) >= 1:
             for _ in corsairled_id_num_kb_complete:
@@ -4705,9 +4686,7 @@ class CompileDevicesClass(QThread):
 
     def get_devices(self):
         # print('-- [CompileDevicesClass.get_devices]: plugged in')
-        global sdk, devices_previous, bool_backend_enum_kb, bool_backend_enum_ms, devices_kb, devices_ms, devices_kb_name
-        bool_backend_enum_kb = False
-        bool_backend_enum_ms = False
+        global sdk, devices_previous, devices_kb, devices_ms, devices_kb_name
         fresh_start = False
 
         if self.bool_backend_comprehensive_enumeration is True:
@@ -5226,7 +5205,6 @@ class BackLightClass(QThread):
     def run(self):
         print('-- [BackLightClass.run]: plugged in')
         global backlight_time_0, backlight_time_1, bool_switch_backlight, sdk_color_backlight, sdk_color_backlight_on
-        global bool_switch_show_discrete, ui_feature_page
 
         while True:
             date_time_now = str(datetime.datetime.now())
@@ -5254,8 +5232,6 @@ class BackLightClass(QThread):
 
                         bool_switch_backlight = True
                         self.btn_bck_light.setStyleSheet(self.btn_feature_title_style)
-                        if bool_switch_show_discrete is False and ui_feature_page == 5:
-                            self.btn_bck_light.setStyleSheet(self.btn_feature_title_style)
                         self.btn_bck_light.setIcon(QIcon("./image/img_backlight_on.png"))
                         self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
 
@@ -5268,8 +5244,6 @@ class BackLightClass(QThread):
 
                         bool_switch_backlight = False
                         self.btn_bck_light.setStyleSheet(self.btn_feature_title_style)
-                        if bool_switch_show_discrete is False and ui_feature_page == 5:
-                            self.btn_bck_light.setStyleSheet(self.btn_feature_title_style)
                         self.btn_bck_light.setIcon(QIcon("./image/img_backlight_off.png"))
                         self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
@@ -5285,8 +5259,6 @@ class BackLightClass(QThread):
 
                             bool_switch_backlight = True
                             self.btn_bck_light.setStyleSheet(self.btn_feature_title_style)
-                            if bool_switch_show_discrete is False and ui_feature_page == 5:
-                                self.btn_bck_light.setStyleSheet(self.btn_feature_title_style)
                             self.btn_bck_light.setIcon(QIcon("./image/img_backlight_on.png"))
                             self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
 
@@ -5298,8 +5270,6 @@ class BackLightClass(QThread):
 
                             bool_switch_backlight = False
                             self.btn_bck_light.setStyleSheet(self.btn_feature_title_style)
-                            if bool_switch_show_discrete is False and ui_feature_page == 5:
-                                self.btn_bck_light.setStyleSheet(self.btn_feature_title_style)
                             self.btn_bck_light.setIcon(QIcon("./image/img_backlight_off.png"))
                             self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
@@ -5312,8 +5282,6 @@ class BackLightClass(QThread):
 
                             bool_switch_backlight = True
                             self.btn_bck_light.setStyleSheet(self.btn_feature_title_style)
-                            if bool_switch_show_discrete is False and ui_feature_page == 5:
-                                self.btn_bck_light.setStyleSheet(self.btn_feature_title_style)
                             self.btn_bck_light.setIcon(QIcon("./image/img_backlight_on.png"))
                             self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
 
@@ -5325,8 +5293,6 @@ class BackLightClass(QThread):
 
                             bool_switch_backlight = False
                             self.btn_bck_light.setStyleSheet(self.btn_feature_title_style)
-                            if bool_switch_show_discrete is False and ui_feature_page == 5:
-                                self.btn_bck_light.setStyleSheet(self.btn_feature_title_style)
                             self.btn_bck_light.setIcon(QIcon("./image/img_backlight_off.png"))
                             self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
