@@ -208,41 +208,6 @@ corsairled_id_num_netshare = [74, 75, 76, 78]
 corsairled_id_num_kb_complete = []
 corsairled_id_num_ms_complete = []
 
-corsairled_id_name_cpu = ['CorsairLedId.K_Keypad1',
-                          'CorsairLedId.K_Keypad4',
-                          'CorsairLedId.K_Keypad7',
-                          'CorsairLedId.K_NumLock']
-
-corsairled_id_name_dram = ['CorsairLedId.K_Keypad2',
-                           'CorsairLedId.K_Keypad5',
-                           'CorsairLedId.K_Keypad8',
-                           'CorsairLedId.K_KeypadSlash']
-
-corsairled_id_name_vram = ['CorsairLedId.K_Keypad3',
-                           'CorsairLedId.K_Keypad6',
-                           'CorsairLedId.K_Keypad9',
-                           'CorsairLedId.K_KeypadAsterisk']
-
-corsairled_id_name_hddreadwrite = ['CorsairLedId.K_A', 'CorsairLedId.K_B', 'CorsairLedId.K_C', 'CorsairLedId.K_D',
-                                   'CorsairLedId.K_E', 'CorsairLedId.K_F', 'CorsairLedId.K_G', 'CorsairLedId.K_H',
-                                   'CorsairLedId.K_I', 'CorsairLedId.K_J', 'CorsairLedId.K_K', 'CorsairLedId.K_L',
-                                   'CorsairLedId.K_M', 'CorsairLedId.K_N', 'CorsairLedId.K_O', 'CorsairLedId.K_P',
-                                   'CorsairLedId.K_Q', 'CorsairLedId.K_R', 'CorsairLedId.K_S', 'CorsairLedId.K_T',
-                                   'CorsairLedId.K_U', 'CorsairLedId.K_V', 'CorsairLedId.K_W', 'CorsairLedId.K_X',
-                                   'CorsairLedId.K_Y', 'CorsairLedId.K_Z']
-
-corsairled_id_name_netrcv = ['CorsairLedId.K_1', 'CorsairLedId.K_2', 'CorsairLedId.K_3',
-                             'CorsairLedId.K_4', 'CorsairLedId.K_5', 'CorsairLedId.K_6',
-                             'CorsairLedId.K_7', 'CorsairLedId.K_8', 'CorsairLedId.K_9']
-
-corsairled_id_name_netsnt = ['CorsairLedId.K_F1', 'CorsairLedId.K_F2', 'CorsairLedId.K_F3',
-                             'CorsairLedId.K_F4', 'CorsairLedId.K_F5', 'CorsairLedId.K_F6',
-                             'CorsairLedId.K_F7', 'CorsairLedId.K_F8', 'CorsairLedId.K_F9']
-
-corsairled_id_name_netsnt_utype = 'CorsairLedId.K_F10'
-corsairled_id_name_netrcv_utype = 'CorsairLedId.K_0'
-corsairled_id_name_netshare = ['CorsairLedId.K_PrintScreen', 'CorsairLedId.K_ScrollLock', 'CorsairLedId.K_PauseBreak', 'CorsairLedId.K_Home']
-
 alpha_str = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
              'u', 'v', 'w', 'x', 'y', 'z']
 
