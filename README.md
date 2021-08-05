@@ -114,4 +114,4 @@ press (0.75 seconds +) will remove the notification and not run the directed cod
 
 --------------------------------------------------------------------------------------------------------------------------------------------
       BUG REPORTS & FEATURE REQUESTS
-[Bug reports & Feature requests may be submitted to holographic.sol@gmail.com and will gratefully accepted and review]
+[Bug reports & Feature requests may be submitted to holographic.sol@gmail.com and will gratefully accepted and reviewed]
