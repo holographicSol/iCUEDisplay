@@ -338,45 +338,45 @@ def create_new():
                 fo.writelines(_+'\n')
         fo.close()
 
-    if not os.path.exists('./iCUEDisplay.vbs') or not os.path.exists('./iCUEDisplay.bat'):
-        cwd = os.getcwd()
-        print('-- [create_new] current working directory:', cwd)
-        path_for_in_bat = os.path.join('"' + cwd + '\\iCUEDisplay.exe"')
-        path_to_bat = cwd + '\\iCUEDisplay.bat'
-        print('-- [create_new] creating batch file:', path_to_bat)
-        path_for_in_vbs = 'WshShell.Run chr(34) & "' + path_to_bat + '" & Chr(34), 0'
-        print('-- [creating new] creating vbs file: ./iCUEDisplay.vbs')
-        open('./iCUEDisplay.bat', 'w').close()
-        open('./iCUEDisplay.vbs', 'w').close()
-        with open('./iCUEDisplay.bat', 'a') as fo:
-            fo.writelines(path_for_in_bat)
-        fo.close()
-        with open('./iCUEDisplay.vbs', 'a') as fo:
-            fo.writelines('Set WshShell = CreateObject("WScript.Shell")\n')
-            fo.writelines(path_for_in_vbs + '\n')
-            fo.writelines('Set WshShell = Nothing\n')
-        fo.close()
-        try:
-            path = os.path.join(cwd + '\\iCUEDisplay.lnk')
-            target = cwd + '\\iCUEDisplay.vbs'
-            icon = cwd + './icon.ico'
-            shell = win32com.client.Dispatch("WScript.Shell")
-            shortcut = shell.CreateShortCut(path)
-            shortcut.Targetpath = target
-            shortcut.WorkingDirectory = cwd
-            shortcut.IconLocation = icon
-            shortcut.save()
-        except Exception as e:
-            print('-- [create_new] Error:', e)
-        time.sleep(1)
-        print('-- [create_new]: checking existence of created files')
-        if os.path.exists('./iCUEDisplay.exe') and os.path.exists(path_to_bat) and os.path.exists('./iCUEDisplay.vbs'):
-            print('-- [create_new]: files exist')
-            if os.path.exists('./iCUEDisplay.lnk'):
-                print('-- [create_new]: starting program')
-                os.startfile(cwd+'./iCUEDisplay.lnk')
-                time.sleep(2)
-                bool_backend_install = True
+    # if not os.path.exists('./iCUEDisplay.vbs') or not os.path.exists('./iCUEDisplay.bat'):
+    cwd = os.getcwd()
+    print('-- [create_new] current working directory:', cwd)
+    path_for_in_bat = os.path.join('"' + cwd + '\\iCUEDisplay.exe"')
+    path_to_bat = cwd + '\\iCUEDisplay.bat'
+    print('-- [create_new] creating batch file:', path_to_bat)
+    path_for_in_vbs = 'WshShell.Run chr(34) & "' + path_to_bat + '" & Chr(34), 0'
+    print('-- [creating new] creating vbs file: ./iCUEDisplay.vbs')
+    open('./iCUEDisplay.bat', 'w').close()
+    open('./iCUEDisplay.vbs', 'w').close()
+    with open('./iCUEDisplay.bat', 'a') as fo:
+        fo.writelines(path_for_in_bat)
+    fo.close()
+    with open('./iCUEDisplay.vbs', 'a') as fo:
+        fo.writelines('Set WshShell = CreateObject("WScript.Shell")\n')
+        fo.writelines(path_for_in_vbs + '\n')
+        fo.writelines('Set WshShell = Nothing\n')
+    fo.close()
+    try:
+        path = os.path.join(cwd + '\\iCUEDisplay.lnk')
+        target = cwd + '\\iCUEDisplay.vbs'
+        icon = cwd + './icon.ico'
+        shell = win32com.client.Dispatch("WScript.Shell")
+        shortcut = shell.CreateShortCut(path)
+        shortcut.Targetpath = target
+        shortcut.WorkingDirectory = cwd
+        shortcut.IconLocation = icon
+        shortcut.save()
+    except Exception as e:
+        print('-- [create_new] Error:', e)
+    time.sleep(1)
+    print('-- [create_new]: checking existence of created files')
+    if os.path.exists('./iCUEDisplay.exe') and os.path.exists(path_to_bat) and os.path.exists('./iCUEDisplay.vbs'):
+        print('-- [create_new]: files exist')
+        if os.path.exists('./iCUEDisplay.lnk'):
+            print('-- [create_new]: starting program')
+            os.startfile(cwd+'./iCUEDisplay.lnk')
+            time.sleep(2)
+            bool_backend_install = True
 
     distutils.dir_util.mkpath('./data/')
     if not os.path.exists('./data/event_notification_g1.dat'):
@@ -608,7 +608,7 @@ class App(QMainWindow):
         # self.ui_object_complete.append(self.lbl_title)
 
         self.btn_title_logo = QLabel(self)
-        self.btn_title_logo.move(5, -4)
+        self.btn_title_logo.move(2, 2)
         self.btn_title_logo.resize(28, 28)
         pixmap = QPixmap("./image/dev_target_20x20.png")
         self.btn_title_logo.setPixmap(pixmap)
@@ -5731,7 +5731,7 @@ class PingTestClass(QThread):
 
     def __init__(self):
         QThread.__init__(self)
-        self.ping_bool = False
+        self.ping_key = int()
         self.ping_bool_prev = None
         self.ping_fail_i = 0
         self.rgb_key = ()
@@ -5745,7 +5745,7 @@ class PingTestClass(QThread):
                     self.ping_fail_i = 0
                     self.ping()
                     self.send_instruction()
-                    time.sleep(5)
+                    time.sleep(1)
                 else:
                     time.sleep(3)
             except Exception as e:
@@ -5774,14 +5774,14 @@ class PingTestClass(QThread):
         global sdk, devices_ms, devices_ms_selected, corsairled_id_num_ms_complete, ping_test_key_id, corsairled_id_num_netcon_kb
         global corsairled_id_num_netcon_ms, bool_switch_startup_net_con_ms, bool_switch_startup_net_con_kb, devices_kb, devices_kb_selected
         global bool_switch_startup_net_traffic
-        if self.ping_fail_i == 1:
-            self.ping()
         if self.ping_fail_i == 2:
-            self.ping_bool = False
+            self.ping()
+        if self.ping_fail_i == 4:
+            self.ping_key = 0
             self.ping_fail_i = 0
 
-        if self.ping_bool is True and self.ping_bool != self.ping_bool_prev:
-            print('-- [PingTestClass.send_instruction] sending instruction off')
+        if self.ping_key == 1 and self.ping_key != self.ping_bool_prev:
+            print('-- [1] (0% loss)')
             self.rgb_key = (100, 255, 0)
             self.send_instruction_off()
             time.sleep(0.35)
@@ -5794,11 +5794,19 @@ class PingTestClass(QThread):
             self.send_instruction_off()
             time.sleep(0.35)
             self.send_instruction_on()
-            self.ping_bool_prev = True
+            self.ping_bool_prev = 1
             sdk.set_led_colors_flush_buffer()
 
-        elif self.ping_bool is False and self.ping_bool != self.ping_bool_prev:
-            print('-- [PingTestClass.send_instruction] sending instruction on')
+        if self.ping_key == 2 and self.ping_key != self.ping_bool_prev:
+            print('-- [1] intermittent')
+            self.rgb_key = (255, 75, 0)
+            self.send_instruction_on()
+            time.sleep(1)
+            self.ping_bool_prev = 2
+            sdk.set_led_colors_flush_buffer()
+
+        elif self.ping_key == 0 and self.ping_key != self.ping_bool_prev:
+            print('-- [1] Destination host unreachable')
             time.sleep(0.1)
             self.rgb_key = (255, 0, 0)
             self.send_instruction_off()
@@ -5812,24 +5820,29 @@ class PingTestClass(QThread):
             self.send_instruction_off()
             time.sleep(0.35)
             self.send_instruction_on()
-            self.ping_bool_prev = False
+            self.ping_bool_prev = 0
             sdk.set_led_colors_flush_buffer()
 
     def ping(self):
         # print('-- [PingTestClass.ping]: plugged in')
-        self.ping_bool = False
-        cmd = 'ping -n 1 -l 1 8.8.8.8'  # Google
-        if self.ping_fail_i == 1:
-            cmd = 'ping -n 1 -l 1 9.9.9.9'  # Quad9. The free DNS service was co-developed by the Global Cyber Alliance, IBM, and Packet Clearing House.
+        self.ping_key = 0
+        cmd = 'ping -n 2 -l 1 8.8.8.8'  # Google
+        if self.ping_fail_i == 2:
+            cmd = 'ping -n 2 -l 1 9.9.9.9'  # Quad9. The free DNS service was co-developed by the Global Cyber Alliance, IBM, and Packet Clearing House.
         try:
             p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
             stdout, stderror = p.communicate()
             output = stdout.decode('UTF-8')
             lines = output.split(os.linesep)
             for _ in lines:
-                if 'Packets: Sent = 1, Received = 1, Lost = 0 (0% loss)' in _ and 'Destination host unreachable' not in str(lines).strip():
-                    self.ping_bool = True
-                else:
+                if 'Packets: Sent = 2, Received = 2, Lost = 0 (0% loss)' in _ and 'Destination host unreachable.' not in lines:
+                    # print('-- [0] (0% loss)')
+                    self.ping_key = 1
+                elif 'Packets: Sent = 2, Received = 1, Lost = 1 (50% loss)' in _ and 'Destination host unreachable.' not in lines:
+                    # print('-- [0] intermittent')
+                    self.ping_key = 2
+                elif 'Destination host unreachable.' in _ or 'PING: transmit failed. General failure.' in _:
+                    # print('-- [0] Destination host unreachable')
                     self.ping_fail_i += 1
         except Exception as e:
             print('-- [PingTestClass.ping] Error:', e)
