@@ -46,4 +46,7 @@ Threads running designed for keyboard are stopped if keyboard removed while thre
 be restarted automatically when device plugged back in]
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-                                                     FEATURE 0 CPU DRAM & VRAM UTILIZATION
+                                                    FEATURE 0 CPU DRAM & VRAM UTILIZATION
+CPU UTILIZATION: Utilization is displayed in stages of 25% on Numpad 1, 4, 7, NumLock.
+DRAM UTILIZATION: Utilization is displayed in stages of 25% on Numpad 2, 5, 8, ForwardSlash.
+VRAM UTILIZATION: Utilization is displayed in stages of 25% on Numpad 3, 6, 9, Asterisk.
