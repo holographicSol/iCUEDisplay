@@ -52,3 +52,12 @@ be restarted automatically when device plugged back in]
 [DRAM UTILIZATION: Utilization is displayed in stages of 25% on Numpad 2, 5, 8, ForwardSlash.]
 
 [VRAM UTILIZATION: Utilization is displayed in stages of 25% on Numpad 3, 6, 9, Asterisk.]
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+                                                        FEATURE 1 DISKS UTILIZATION
+[DISKS MOUNTED: Displayed in Blue when disk letter is mounted]
+
+[DISK READS: Displayed in Yellow by default]
+
+[DISK WRITES: Displayed in Red by default]
+--------------------------------------------------------------------------------------------------------------------------------------------
