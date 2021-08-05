@@ -96,3 +96,7 @@ be restarted automatically when device plugged back in]
 
 [NON-DEFAULT: Displayed on HOME key when shared]
 
+--------------------------------------------------------------------------------------------------------------------------------------------
+                                                   FEATURE 5 EVENT NOTIFICATION & EVENT RESPONSE
+[Enables slightly advanced users to create small programs that simply write True to any event_notification_gx.dat file in the /data directory
+to receive an event notification (blinking G key) for any possible reason and if requested execute code for event response]
