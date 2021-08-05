@@ -65,7 +65,7 @@ be restarted automatically when device plugged back in]
                                                    FEATURE 2 NETWORKING SENT/RECEIVED BYTES
 [ADAPTER SELECTION: Choose which network adapter to monitor sent/received bytes]
 
-[BYTES SENT: Displayed on keys F1-F10. F1-F9 Displayes number of bytes/KB/MB/GB/TB sent while F10 displayes unit/ten/hundred/thousand+]
+[BYTES SENT: Displayed on keys F1-F10. F1-F9 Displayes number of bytes/KB/MB/GB/TB sent while F10 displays unit/ten/hundred/thousand+]
 
-[BYTES RECEIVED: Displayed on keys 1-0. 1-9 Displayes number of bytes/KB/MB/GB/TB sent while 0 displayes unit/ten/hundred/thousand+]
+[BYTES RECEIVED: Displayed on keys 1-0. 1-9 Displayes number of bytes/KB/MB/GB/TB sent while 0 displays unit/ten/hundred/thousand+]
 
