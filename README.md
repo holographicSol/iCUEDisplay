@@ -10,6 +10,8 @@ Windows 10
 
 Google Drive Early Releases: https://drive.google.com/drive/folders/1xHeI_X5vnpKqQ3vkBz6hw97RnqaPwWNl?usp=sharing
 
+--------------------------------------------------------------------------------------------------------------------------------------------
+
 [FEATURE 0:
 CPU Utilization Monitor
 DRAM Utilization Monitor
@@ -39,3 +41,5 @@ A Backlight When Needed and automatic backlight]
 [OTHER FEATURES (Backend):
 Threads running designed for keyboard are stopped if keyboard removed while threads designed for mouse continue and vis versa. Threads will
 be restarted automatically when device plugged back in]
+
+--------------------------------------------------------------------------------------------------------------------------------------------
