@@ -5819,16 +5819,16 @@ class PingTestClass(QThread):
                         if 'Destination host unreachable.' in liness:
                             foocheck = True
                             break
-                    # print('-- [0] (0% loss)')
                     if foocheck is False:
+                        # print('-- [0] (0% loss)')
                         self.ping_key = 1
                 elif 'Packets: Sent = 2, Received = 1, Lost = 1 (50% loss)' in _:
                     for liness in lines:
                         if 'Destination host unreachable.' in liness:
                             foocheck = True
                             break
-                    # print('-- [0] (0% loss)')
                     if foocheck is False:
+                        # print('-- [0] (0% loss)')
                         self.ping_key = 2
                 elif 'Destination host unreachable.' in _ or 'PING: transmit failed. General failure.' in _:
                     # print('-- [0] Destination host unreachable')
