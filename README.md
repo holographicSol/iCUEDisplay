@@ -1,6 +1,6 @@
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-                                                              iCUEDisplay
+      iCUEDisplay
 
 Converts a Corsair K95 Platinum into a HUD.
 
@@ -13,7 +13,7 @@ Windows 10
 Google Drive Early Releases: https://drive.google.com/drive/folders/1xHeI_X5vnpKqQ3vkBz6hw97RnqaPwWNl?usp=sharing
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-                                                            FEATURE OVERVIEW
+      FEATURE OVERVIEW
 
 [FEATURE 0:
 CPU Utilization Monitor
@@ -46,7 +46,7 @@ Threads running designed for keyboard are stopped if keyboard removed while thre
 be restarted automatically when device plugged back in]
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-                                                    FEATURE 0 CPU DRAM & VRAM UTILIZATION
+      FEATURE 0 CPU DRAM & VRAM UTILIZATION
 [CPU UTILIZATION: Utilization is displayed in stages of 25% on Numpad 1, 4, 7, NumLock.]
 
 [DRAM UTILIZATION: Utilization is displayed in stages of 25% on Numpad 2, 5, 8, ForwardSlash.]
@@ -54,7 +54,7 @@ be restarted automatically when device plugged back in]
 [VRAM UTILIZATION: Utilization is displayed in stages of 25% on Numpad 3, 6, 9, Asterisk.]
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-                                                        FEATURE 1 DISKS UTILIZATION
+      FEATURE 1 DISKS UTILIZATION
 [Displays information accross the alpha keys about disks mounted with a letter. Alpha keys are reserved for this feature]
 
 [DISKS MOUNTED: Displayed in Blue when disk letter is mounted]
@@ -64,7 +64,7 @@ be restarted automatically when device plugged back in]
 [Disk Writes: Displayed in Red by default]
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-                                                  FEATURE 2 NETWORKING SENT/RECEIVED BYTES
+      FEATURE 2 NETWORKING SENT/RECEIVED BYTES
 [ADAPTER SELECTION: Choose which network adapter to monitor sent/received bytes]
 
 [BYTES SENT: Displayed on keys F1-F10. F1-F9 Displayes number of bytes/KB/MB/GB/TB sent while F10 displays unit/ten/hundred/thousand+]
@@ -73,7 +73,7 @@ be restarted automatically when device plugged back in]
 
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-                                                    FEATURE 3 INTERNET CONNECTION STATUS
+      FEATURE 3 INTERNET CONNECTION STATUS
 [KEYBOARD: ESC Key]
 
 [MOUSE: Choose which LED (Tested with Scimitar Elite)]
@@ -87,7 +87,7 @@ be restarted automatically when device plugged back in]
 
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-                                                          FEATURE 4 NETWORK SHARES
+      FEATURE 4 NETWORK SHARES
 [Remote IPC: Dipslayed on PRINTSCREEN key when shared]
 
 [Remote Admin: Displayed on SCROLLLOCK key when shared]
@@ -97,10 +97,10 @@ be restarted automatically when device plugged back in]
 [NON-DEFAULT: Displayed on HOME key when shared]
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-                                                   FEATURE 5 EVENT NOTIFICATION & EVENT RESPONSE
+      FEATURE 5 EVENT NOTIFICATION & EVENT RESPONSE
 [Enables slightly advanced users to create small programs that simply write True to any event_notification_gx.dat file in the /data directory
 to receive an event notification (blinking G key) for any possible reason and if requested execute code for event response]
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-                                                   FEATURE 6 BACKLIGHT AND AUTOMATIC BACKLIGHT
+      FEATURE 6 BACKLIGHT AND AUTOMATIC BACKLIGHT
 [AUTOMATIC BACKLIGHT: User may set a time for the backlight to turn on and off and may optionally enable the backlight manually]
