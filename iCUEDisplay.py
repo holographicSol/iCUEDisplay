@@ -606,6 +606,9 @@ class App(QMainWindow):
             border:0px solid rgb(0, 255, 0);}""")
         print('-- [App.__init__] created:', self.lbl_title)
         # self.ui_object_complete.append(self.lbl_title)
+        # txt = 'foobar'
+        # img = "./image/dev_target_20x20.png"
+        # self.lbl_title.setToolTip('<b>{0}</b><br><img src="{1}">'.format(txt, img))
 
         self.btn_title_logo = QLabel(self)
         self.btn_title_logo.move(2, 2)
@@ -709,7 +712,7 @@ class App(QMainWindow):
         self.btn_feature_page_util.move(0, 60)
         self.btn_feature_page_util.resize(126, 28)
         self.btn_feature_page_util.setFont(self.font_s8b)
-        self.btn_feature_page_util.setText('Utilization')
+        self.btn_feature_page_util.setText('Basic Utilization')
         self.btn_feature_page_util.setStyleSheet(self.btn_feature_title_style)
         self.btn_feature_page_util.clicked.connect(self.feature_pg_util)
         print('-- [App.__init__] created:', self.btn_feature_page_util)
@@ -811,7 +814,7 @@ class App(QMainWindow):
         self.lbl_utilization.move(128 + 4, 30)
         self.lbl_utilization.resize(422, 28)
         self.lbl_utilization.setFont(self.font_s8b)
-        self.lbl_utilization.setText('UTILIZATION')
+        self.lbl_utilization.setText('BASIC UTILIZATION')
         self.lbl_utilization.setAlignment(Qt.AlignCenter)
         self.lbl_utilization.setStyleSheet(self.lbl_data_style_title)
         print('-- [App.__init__] created:', self.lbl_utilization)
@@ -3545,7 +3548,7 @@ class App(QMainWindow):
         network_mon_thread = NetworkMonClass()
         thread_net_traffic.append(network_mon_thread)
 
-        ping_test_thread = PingTestClass()
+        ping_test_thread = InternetConnectionClass()
         thread_net_connection.append(ping_test_thread)
 
         def_netshare_thread = NetShareClass()
@@ -5726,8 +5729,8 @@ class NetworkMonClass(QThread):
         self.terminate()
 
 
-class PingTestClass(QThread):
-    print('-- [PingTestClass]: plugged in')
+class InternetConnectionClass(QThread):
+    print('-- [InternetConnectionClass]: plugged in')
 
     def __init__(self):
         QThread.__init__(self)
@@ -5737,7 +5740,7 @@ class PingTestClass(QThread):
         self.rgb_key = ()
 
     def run(self):
-        print('-- [PingTestClass.run]: plugged in')
+        print('-- [InternetConnectionClass.run]: plugged in')
         global devices_kb
         while True:
             try:
@@ -5745,14 +5748,14 @@ class PingTestClass(QThread):
                     self.ping_fail_i = 0
                     self.ping()
                     self.send_instruction()
-                    time.sleep(2)
+                    time.sleep(1.25)
                 else:
                     time.sleep(3)
             except Exception as e:
-                print('-- [PingTestClass.stop] Error:', e)
+                print('-- [InternetConnectionClass.stop] Error:', e)
 
     def send_instruction_on(self):
-        # print('-- [PingTestClass.send_instruction_on]: plugged in')
+        # print('-- [InternetConnectionClass.send_instruction_on]: plugged in')
         global devices_ms, bool_switch_startup_net_con_ms, corsairled_id_num_netcon_ms, corsairled_id_num_ms_complete, devices_ms_selected, devices_kb, bool_switch_startup_net_con_kb, devices_kb_selected, sdk_color_backlight
         if len(devices_ms) >= 1 and bool_switch_startup_net_con_ms is True:
             if corsairled_id_num_netcon_ms < len(corsairled_id_num_ms_complete):
@@ -5761,7 +5764,7 @@ class PingTestClass(QThread):
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({1: (self.rgb_key)}))
 
     def send_instruction_off(self):
-        # print('-- [PingTestClass.send_instruction_off]: plugged in')
+        # print('-- [InternetConnectionClass.send_instruction_off]: plugged in')
         global devices_ms, bool_switch_startup_net_con_ms, corsairled_id_num_netcon_ms, corsairled_id_num_ms_complete, devices_ms_selected, devices_kb, bool_switch_startup_net_con_kb, devices_kb_selected
         if len(devices_ms) >= 1 and bool_switch_startup_net_con_ms is True:
             if corsairled_id_num_netcon_ms < len(corsairled_id_num_ms_complete):
@@ -5770,7 +5773,7 @@ class PingTestClass(QThread):
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({1: sdk_color_backlight}))
 
     def send_instruction(self):
-        # print('-- [PingTestClass.send_instruction]: plugged in')
+        # print('-- [InternetConnectionClass.send_instruction]: plugged in')
         global sdk, devices_ms, devices_ms_selected, corsairled_id_num_ms_complete, ping_test_key_id, corsairled_id_num_netcon_kb
         global corsairled_id_num_netcon_ms, bool_switch_startup_net_con_ms, bool_switch_startup_net_con_kb, devices_kb, devices_kb_selected
         global bool_switch_startup_net_traffic
@@ -5804,7 +5807,7 @@ class PingTestClass(QThread):
             sdk.set_led_colors_flush_buffer()
 
     def ping(self):
-        # print('-- [PingTestClass.ping]: plugged in')
+        # print('-- [InternetConnectionClass.ping]: plugged in')
         self.ping_key = 0
         cmd = 'ping -n 2 -l 1 8.8.8.8'  # Google
         try:
@@ -5834,24 +5837,24 @@ class PingTestClass(QThread):
                     # print('-- [0] Destination host unreachable')
                     self.ping_key = 0
         except Exception as e:
-            print('-- [PingTestClass.ping] Error:', e)
+            print('-- [InternetConnectionClass.ping] Error:', e)
 
     def stop(self):
-        print('-- [PingTestClass.stop]: plugged in')
+        print('-- [InternetConnectionClass.stop]: plugged in')
         global sdk, devices_kb, devices_kb_selected, corsairled_id_num_ms_complete, corsairled_id_num_netcon_ms
         self.ping_bool_prev = None
         try:
             sdk.set_led_colors_buffer_by_device_index(devices_ms[devices_ms_selected], ({corsairled_id_num_ms_complete[corsairled_id_num_netcon_ms]: sdk_color_backlight}))
             sdk.set_led_colors_flush_buffer()
         except Exception as e:
-            print('-- [PingTestClass.stop] Error:', e)
+            print('-- [InternetConnectionClass.stop] Error:', e)
         try:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({1: sdk_color_backlight}))
             sdk.set_led_colors_flush_buffer()
         except Exception as e:
-            print('-- [PingTestClass.stop] Error:', e)
+            print('-- [InternetConnectionClass.stop] Error:', e)
             sdk.set_led_colors_flush_buffer()
-        print('-- [PingTestClass.stop] terminating')
+        print('-- [InternetConnectionClass.stop] terminating')
         self.terminate()
 
 
