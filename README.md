@@ -20,13 +20,18 @@ Disk Read Monitor (Disks Mounted With Letter A:\ - Z:\)
 Disk Write Monitor (Disks Mounted With Letter A:\ - Z:\)
 Disk Mount Monitor (Disks Mounted With Letter A:\ - Z:\)]
 
+[FEATURE 2:
 Network Sent Bytes to Terabytes (Overkill)
-Network Received Bytes To Terrabytes (Overkill)
+Network Received Bytes To Terrabytes (Overkill)]
 
-Internet Connection Status (Online, Offline, Intermittant)
+[FEATURE 3:
+Internet Connection Status (Online, Offline, Intermittant)]
 
-Network Shares (Remote IPC, Remote Admin, Default share(s), User Defined Shares)
+[FEATURE 4:
+Network Shares (Remote IPC, Remote Admin, Default share(s), User Defined Shares)]
 
-Event Notifiaction & Event Response (Advanced Users)
+[FEATURE 5:
+Event Notifiaction & Event Response (Advanced Users)]
 
-A Backlight When Needed.
+[FEATURE 6:
+A Backlight When Needed.]
