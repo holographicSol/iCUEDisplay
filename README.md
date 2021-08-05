@@ -9,3 +9,23 @@ Latest Python
 Windows 10
 
 Google Drive Early Releases: https://drive.google.com/drive/folders/1xHeI_X5vnpKqQ3vkBz6hw97RnqaPwWNl?usp=sharing
+
+[FEATURES]
+CPU Utilization Monitor
+DRAM Utilization Monitor
+VRAM Utilization Monitor
+
+Disk Read Monitor (Disks Mounted With Letter A:\ - Z:\)
+Disk Write Monitor (Disks Mounted With Letter A:\ - Z:\)
+Disk Mount Monitor (Disks Mounted With Letter A:\ - Z:\)
+
+Network Sent Bytes to Terabytes (Overkill)
+Network Received Bytes To Terrabytes (Overkill)
+
+Internet Connection Status (Online, Offline, Intermittant)
+
+Network Shares (Remote IPC, Remote Admin, Default share(s), User Defined Shares)
+
+Event Notifiaction & Event Response (Advanced Users)
+
+A Backlight When Needed.
