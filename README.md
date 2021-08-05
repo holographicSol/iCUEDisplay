@@ -113,5 +113,5 @@ press (0.75 seconds +) will remove the notification and not run the directed cod
 [AUTOMATIC BACKLIGHT: User may set a time for the backlight to turn on and off and may optionally enable the backlight manually]
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-      BUG REPORTS
-[BUG REPORTS may be submitted to holographic.sol@gmail.com and will gratefully accepted and reveiwed]
+      BUG REPORTS & FEATURE REQUESTS
+[Bug reports & Feature requests may be submitted to holographic.sol@gmail.com and will gratefully accepted and reveiwed]
