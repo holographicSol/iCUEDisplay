@@ -59,4 +59,4 @@ be restarted automatically when device plugged back in]
 
 [DISK READS: Displayed in Yellow by default]
 
-[Disk Writes]
+[Disk Writes: Displayed in Red by default]
