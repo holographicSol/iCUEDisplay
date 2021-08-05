@@ -10,12 +10,12 @@ Windows 10
 
 Google Drive Early Releases: https://drive.google.com/drive/folders/1xHeI_X5vnpKqQ3vkBz6hw97RnqaPwWNl?usp=sharing
 
-[FEATURE 0
+[FEATURE 0:
 CPU Utilization Monitor
 DRAM Utilization Monitor
 VRAM Utilization Monitor]
 
-[FEATURE 1
+[FEATURE 1:
 Disk Read Monitor (Disks Mounted With Letter A:\ - Z:\)
 Disk Write Monitor (Disks Mounted With Letter A:\ - Z:\)
 Disk Mount Monitor (Disks Mounted With Letter A:\ - Z:\)]
