@@ -5745,7 +5745,7 @@ class PingTestClass(QThread):
                     self.ping_fail_i = 0
                     self.ping()
                     self.send_instruction()
-                    time.sleep(1)
+                    time.sleep(3)
                 else:
                     time.sleep(3)
             except Exception as e:
