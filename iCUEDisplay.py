@@ -5745,7 +5745,7 @@ class PingTestClass(QThread):
                     self.ping_fail_i = 0
                     self.ping()
                     self.send_instruction()
-                    time.sleep(3)
+                    time.sleep(2)
                 else:
                     time.sleep(3)
             except Exception as e:
@@ -5828,7 +5828,7 @@ class PingTestClass(QThread):
                             foocheck = True
                             break
                     if foocheck is False:
-                        # print('-- [0] (0% loss)')
+                        # print('-- [0] (50% loss)')
                         self.ping_key = 2
                 elif 'Destination host unreachable.' in _ or 'PING: transmit failed. General failure.' in _:
                     # print('-- [0] Destination host unreachable')
