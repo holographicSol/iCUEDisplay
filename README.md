@@ -72,6 +72,10 @@ be restarted automatically when device plugged back in]
 
 --------------------------------------------------------------------------------------------------------------------------------------------
                                                      FEATURE 3 INTERNET CONNECTION STATUS
+[KEYBOARD: ESC Key]
+
+[MOUSE: Optional LED (Tested with Scimitar Elite)]
+
 [ONLINE: Green]
 
 [INTERMITTENT: Amber]
