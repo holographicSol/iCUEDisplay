@@ -5776,7 +5776,7 @@ class PingTestClass(QThread):
         global bool_switch_startup_net_traffic
         if self.ping_fail_i == 2:
             self.ping()
-        if self.ping_fail_i == 4:
+        if self.ping_fail_i == 6:
             self.ping_key = 0
             self.ping_fail_i = 0
 
@@ -5801,13 +5801,12 @@ class PingTestClass(QThread):
             print('-- [1] intermittent')
             self.rgb_key = (255, 75, 0)
             self.send_instruction_on()
-            time.sleep(1)
+            time.sleep(2)
             self.ping_bool_prev = 2
             sdk.set_led_colors_flush_buffer()
 
         elif self.ping_key == 0 and self.ping_key != self.ping_bool_prev:
             print('-- [1] Destination host unreachable')
-            time.sleep(0.1)
             self.rgb_key = (255, 0, 0)
             self.send_instruction_off()
             time.sleep(0.35)
@@ -5827,7 +5826,7 @@ class PingTestClass(QThread):
         # print('-- [PingTestClass.ping]: plugged in')
         self.ping_key = 0
         cmd = 'ping -n 2 -l 1 8.8.8.8'  # Google
-        if self.ping_fail_i == 2:
+        if self.ping_fail_i == 2 or self.ping_fail_i == 4:
             cmd = 'ping -n 2 -l 1 9.9.9.9'  # Quad9. The free DNS service was co-developed by the Global Cyber Alliance, IBM, and Packet Clearing House.
         try:
             p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
