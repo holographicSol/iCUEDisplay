@@ -34,4 +34,8 @@ Network Shares (Remote IPC, Remote Admin, Default share(s), User Defined Shares)
 Event Notifiaction & Event Response (Advanced Users)]
 
 [FEATURE 6:
-A Backlight When Needed.]
+A Backlight When Needed and automatic backlight]
+
+[OTHER FEATURES (Backend):
+Threads running designed for keyboard are stopped if keyboard removed while threads designed for mouse continue and vis versa. Threads will
+be restarted automatically when device plugged back in]
