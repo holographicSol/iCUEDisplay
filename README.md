@@ -55,6 +55,8 @@ be restarted automatically when device plugged back in]
 
 --------------------------------------------------------------------------------------------------------------------------------------------
                                                         FEATURE 1 DISKS UTILIZATION
+[Displays information accross the alpha keys about disks mounted with a letter. Alpha keys are reserved for this feature]
+
 [DISKS MOUNTED: Displayed in Blue when disk letter is mounted]
 
 [DISK READS: Displayed in Yellow by default]
@@ -62,7 +64,7 @@ be restarted automatically when device plugged back in]
 [Disk Writes: Displayed in Red by default]
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-                                                   FEATURE 2 NETWORKING SENT/RECEIVED BYTES
+                                                  FEATURE 2 NETWORKING SENT/RECEIVED BYTES
 [ADAPTER SELECTION: Choose which network adapter to monitor sent/received bytes]
 
 [BYTES SENT: Displayed on keys F1-F10. F1-F9 Displayes number of bytes/KB/MB/GB/TB sent while F10 displays unit/ten/hundred/thousand+]
@@ -71,7 +73,7 @@ be restarted automatically when device plugged back in]
 
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-                                                     FEATURE 3 INTERNET CONNECTION STATUS
+                                                    FEATURE 3 INTERNET CONNECTION STATUS
 [KEYBOARD: ESC Key]
 
 [MOUSE: Choose which LED (Tested with Scimitar Elite)]
@@ -82,4 +84,15 @@ be restarted automatically when device plugged back in]
 
 [OFFLINE: Red]
 
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+                                                          FEATURE 4 NETWORK SHARES
+[Remote IPC: Dipslayed on PRINTSCREEN key when shared]
+
+[Remote Admin: Displayed on SCROLLLOCK key when shared]
+
+[Default Share: Displayed on PAUSEBREAK key when shared]
+
+[NON-DEFAULT: Displayed on HOME key when shared]
 
