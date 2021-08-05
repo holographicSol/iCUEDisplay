@@ -100,3 +100,7 @@ be restarted automatically when device plugged back in]
                                                    FEATURE 5 EVENT NOTIFICATION & EVENT RESPONSE
 [Enables slightly advanced users to create small programs that simply write True to any event_notification_gx.dat file in the /data directory
 to receive an event notification (blinking G key) for any possible reason and if requested execute code for event response]
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+                                                   FEATURE 6 BACKLIGHT AND AUTOMATIC BACKLIGHT
+[AUTOMATIC BACKLIGHT: User may set a time for the backlight to turn on and off and may optionally enable the backlight manually]
