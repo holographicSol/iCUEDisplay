@@ -30,7 +30,7 @@ Network Sent Bytes to Terabytes (Overkill)
 Network Received Bytes To Terrabytes (Overkill)]
 
 [FEATURE 3:
-Internet Connection Status (Online, Offline, Intermittant)]
+Internet Connection Status (Online, Offline, Intermittent)]
 
 [FEATURE 4:
 Network Shares (Remote IPC, Remote Admin, Default share(s), User Defined Shares)]
@@ -68,4 +68,14 @@ be restarted automatically when device plugged back in]
 [BYTES SENT: Displayed on keys F1-F10. F1-F9 Displayes number of bytes/KB/MB/GB/TB sent while F10 displays unit/ten/hundred/thousand+]
 
 [BYTES RECEIVED: Displayed on keys 1-0. 1-9 Displayes number of bytes/KB/MB/GB/TB sent while 0 displays unit/ten/hundred/thousand+]
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+                                                     FEATURE 3 INTERNET CONNECTION STATUS
+[ONLINE: Green]
+
+[INTERMITTENT: Amber]
+
+[OFFLINE: Red]
+
 
