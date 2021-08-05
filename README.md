@@ -1,6 +1,6 @@
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-                                                             iCUEDisplay
+                                                              iCUEDisplay
 
 Converts a Corsair K95 Platinum into a HUD.
 
@@ -46,3 +46,4 @@ Threads running designed for keyboard are stopped if keyboard removed while thre
 be restarted automatically when device plugged back in]
 
 --------------------------------------------------------------------------------------------------------------------------------------------
+                                                     FEATURE 0 CPU DRAM & VRAM UTILIZATION
