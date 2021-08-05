@@ -5776,7 +5776,7 @@ class PingTestClass(QThread):
         global bool_switch_startup_net_traffic
 
         if self.ping_key == 1 and self.ping_key != self.ping_bool_prev:
-            print('-- [1] (0% loss)')
+            # print('-- [1] (0% loss)')
             self.rgb_key = (100, 255, 0)
 
             self.send_instruction_on()
@@ -5785,7 +5785,7 @@ class PingTestClass(QThread):
             sdk.set_led_colors_flush_buffer()
 
         if self.ping_key == 2 and self.ping_key != self.ping_bool_prev:
-            print('-- [1] intermittent')
+            # print('-- [1] intermittent')
             self.rgb_key = (255, 75, 0)
 
             self.send_instruction_on()
@@ -5795,7 +5795,7 @@ class PingTestClass(QThread):
             sdk.set_led_colors_flush_buffer()
 
         elif self.ping_key == 0 and self.ping_key != self.ping_bool_prev:
-            print('-- [1] Destination host unreachable')
+            # print('-- [1] Destination host unreachable')
             self.rgb_key = (255, 0, 0)
 
             self.send_instruction_on()
