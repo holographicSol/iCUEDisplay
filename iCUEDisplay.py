@@ -3847,9 +3847,12 @@ class App(QMainWindow):
 
     def mouseMoveEvent(self, event):
         # print('-- [App.mouseMoveEvent]: plugged in')
-        delta = QPoint(event.globalPos() - self.prev_pos)
-        self.move(self.x() + delta.x(), self.y() + delta.y())
-        self.prev_pos = event.globalPos()
+        try:
+            delta = QPoint(event.globalPos() - self.prev_pos)
+            self.move(self.x() + delta.x(), self.y() + delta.y())
+            self.prev_pos = event.globalPos()
+        except Exception as e:
+            print('-- [App.mouseMoveEvent]: Error:', e)
 
     def pollCursor(self):
         # print('-- [App.pollCursor]: plugged in')
