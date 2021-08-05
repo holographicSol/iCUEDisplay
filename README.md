@@ -6,6 +6,7 @@ Converts a Corsair K95 Platinum into a HUD.
 
 Project in early development and UI does not necessarliy reflect the final products image. Currently the UI is purely logic and has minimun
 aesthetic design.
+Features being refined and added daily. Existing features may be more complex in coming updates.
 
 Requirements:
 Latest Python
