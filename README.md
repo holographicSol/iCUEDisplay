@@ -56,6 +56,10 @@ be restarted automatically when device plugged back in]
 
 [VRAM UTILIZATION: Utilization is displayed in stages of 25% on Numpad 3, 6, 9, Asterisk.]
 
+[CPU TEMPERATURE: Keypad Minus, Yellow, Amber, Red]
+
+[DRAM TEMPERATURE: Keypad Plus, Yellow, Amber, Red]
+
 --------------------------------------------------------------------------------------------------------------------------------------------
       FEATURE 1 DISKS UTILIZATION
 [Displays information accross the alpha keys about disks mounted with a letter. Alpha keys are reserved for this feature]
