@@ -178,6 +178,7 @@ thread_g4_notify = []
 thread_g5_notify = []
 thread_g6_notify = []
 thread_backlight_auto = []
+thread_temperatures = []
 
 event_filter_self = []
 
@@ -377,6 +378,29 @@ def create_new():
                 os.startfile(cwd + './iCUEDisplay.lnk')
                 time.sleep(2)
                 bool_backend_install = True
+
+    py_config_line = os.path.join(os.getcwd()+'\\py\\temp_sys.dat')
+    open('C:\\py_config.dat', 'w').close()
+    with open('C:\\py_config.dat', 'a') as fo:
+        fo.writelines('PATH: '+py_config_line)
+    fo.close()
+
+    py_temp_mon_bat_line = os.path.join('"'+os.getcwd() + '\\py\\python.exe" "'+(os.getcwd()+'\\py\\temp_mon.py"'))
+    print(py_temp_mon_bat_line)
+    open('./py/temp_mon.bat', 'w').close()
+    with open('./py/temp_mon.bat', 'a') as fo:
+        fo.writelines(py_temp_mon_bat_line)
+    fo.close()
+
+    cwd = os.getcwd()
+    path_to_bat = os.path.join('"' + cwd + '\\py\\temp_mon.bat"')
+    path_for_in_vbs_1 = 'WshShell.Run chr(34) & ' + path_to_bat + ' & Chr(34), 0'
+    open('./py/temp_mon.vbs', 'w').close()
+    with open('./py/temp_mon.vbs', 'a') as fo:
+        fo.writelines('Set WshShell = CreateObject("WScript.Shell")\n')
+        fo.writelines(path_for_in_vbs_1 + '\n')
+        fo.writelines('Set WshShell = Nothing\n')
+    fo.close()
 
     distutils.dir_util.mkpath('./data/')
     if not os.path.exists('./data/event_notification_g1.dat'):
@@ -3533,6 +3557,8 @@ class App(QMainWindow):
 
         global bool_switch_backlight_auto, thread_backlight_auto, backlight_time_0, backlight_time_1
 
+        global thread_temperatures
+
         hdd_mon_thread = HddMonClass()
         thread_disk_rw.append(hdd_mon_thread)
 
@@ -3596,6 +3622,15 @@ class App(QMainWindow):
                                                      self.btn_feature_title_style)
         thread_compile_devices.append(compile_devices_thread)
         thread_compile_devices[0].start()
+
+        # start temp_mon.vbs silently and monitor for foobar.txt for child/parent proc cwd
+        cmd = os.path.join(os.getcwd()+'\\py\\temp_mon.vbs')
+        print('-- [App.initUI] running command:', cmd)
+        xcmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+        temp_thread = TemperatureClass()
+        thread_temperatures.append(temp_thread)
+        thread_temperatures[0].start()
 
         print('-- [App.initUI]: waiting to display application')
         while bool_backend_allow_display is False:
@@ -4563,6 +4598,7 @@ class CompileDevicesClass(QThread):
         global thread_sdk_event_handler_read_file_events
         global thread_backlight_auto
         global devices_kb, devices_ms
+        global thread_temperatures
 
         print('-- [CompileDevicesClass.stop_all_threads] stopping all threads:', )
         if len(devices_kb) >= 1 or len(devices_ms) >= 1:
@@ -4594,6 +4630,10 @@ class CompileDevicesClass(QThread):
                 thread_backlight_auto[0].stop()
             except Exception as e:
                 print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
+            try:
+                thread_temperatures[0].stop()
+            except Exception as e:
+                print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
 
     def start_all_threads(self):
         print('-- [CompileDevicesClass.start_all_threads]: plugged in')
@@ -4603,6 +4643,7 @@ class CompileDevicesClass(QThread):
         global bool_switch_startup_net_share_mon, bool_switch_startup_hdd_read_write
         global bool_backend_config_read_complete, bool_switch_startup_exclusive_control
         global thread_backlight_auto, bool_switch_backlight_auto
+        global thread_temperatures
 
         if len(devices_kb) > 0:
 
@@ -4621,6 +4662,8 @@ class CompileDevicesClass(QThread):
                 thread_net_traffic[0].start()
             if bool_switch_startup_net_share_mon:
                 thread_net_share[0].start()
+
+            thread_temperatures[0].start()
 
         if len(devices_kb) > 0 or len(devices_ms) > 0:
             if bool_switch_startup_net_con_ms is True or bool_switch_startup_net_con_kb is True:
@@ -5195,6 +5238,90 @@ class CompileDevicesClass(QThread):
         print('-- [CompileDevicesClass.stop]: plugged in')
         self.stop_all_threads()
         print('-- [CompileDevicesClass.stop] terminating')
+        self.terminate()
+
+
+class TemperatureClass(QThread):
+    print('-- [TemperatureClass]: plugged in')
+
+    def __init__(self):
+        QThread.__init__(self)
+        self.cpu_pack = ''
+        self.gpu_core = ''
+
+    def send_instruction(self):
+        print('-- [TemperatureClass.send_instruction]: plugged in')
+        if self.cpu_pack != '':
+            self.cpu_pack_0 = self.cpu_pack.split()
+            self.cpu_pack_1 = self.cpu_pack_0[-1]
+            self.cpu_pack_1 = self.cpu_pack_1.split('.')
+            self.cpu_pack_2 = self.cpu_pack_1[0]
+            self.cpu_pack_2 = int(self.cpu_pack_2)
+
+            if self.cpu_pack_2 < 30:
+                self.rgb_cpu_temp = [0, 255, 255]
+
+            elif self.cpu_pack_2 >= 30 and self.cpu_pack_2 < 50:
+                self.rgb_cpu_temp = [255, 255, 0]
+
+            elif self.cpu_pack_2 >= 50 and self.cpu_pack_2 < 70:
+                self.rgb_cpu_temp = [255, 100, 0]
+
+            elif self.cpu_pack_2 >= 70:
+                self.rgb_cpu_temp = [255, 0, 0]
+            try:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({106: self.rgb_cpu_temp}))
+            except Exception as e:
+                print('-- [TemperatureClass.send_instruction] Error:', e)
+
+        if self.gpu_core != '':
+            self.gpu_core_0 = self.gpu_core.split()
+            self.gpu_core_1 = self.gpu_core_0[-1]
+            self.gpu_core_1 = self.gpu_core_1.split('.')
+            self.gpu_core_2 = self.gpu_core_1[0]
+            self.gpu_core_2 = int(self.gpu_core_2)
+
+            if self.gpu_core_2 < 30:
+                self.rgb_gpu_temp = [0, 255, 255]
+
+            elif self.gpu_core_2 >= 30 and self.gpu_core_2 < 50:
+                self.rgb_gpu_temp = [255, 255, 0]
+
+            elif self.gpu_core_2 >= 50 and self.gpu_core_2 < 70:
+                self.rgb_gpu_temp = [255, 100, 0]
+
+            elif self.gpu_core_2 >= 70:
+                self.rgb_gpu_temp = [255, 0, 0]
+            try:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({107: self.rgb_gpu_temp}))
+            except Exception as e:
+                print('-- [TemperatureClass.send_instruction] Error:', e)
+
+        sdk.set_led_colors_flush_buffer()
+
+    def run(self):
+        # print('-- [TemperatureClass.run]: plugged in')
+        while True:
+            time.sleep(3)
+            if os.path.exists('./py/temp_sys.dat'):
+                try:
+                    with open('./py/temp_sys.dat', 'r') as fo:
+                        for line in fo:
+                            line = line.strip()
+                            if 'CPU Package' in line:
+                                self.cpu_pack = line
+                            if 'GPU Core' in line:
+                                self.gpu_core = line
+                    fo.close()
+
+                except Exception as e:
+                    print('-- [TemperatureClass.run] Error:', e)
+            # print('-- [TemperatureClass.run] cpu_pack:', self.cpu_pack)
+            # print('-- [TemperatureClass.run] gpu_core:', self.gpu_core)
+            self.send_instruction()
+
+    def stop(self):
+        print('-- [TemperatureClass.stop]: plugged in')
         self.terminate()
 
 
