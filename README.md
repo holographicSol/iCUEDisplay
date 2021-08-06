@@ -8,11 +8,6 @@ Project in early development and UI does not necessarliy reflect the final produ
 aesthetic design.
 Features being refined and added daily. Existing features may be more complex in coming updates.
 
-Requirements:
-Latest Python.
-Windows 10.
-Run as admin.
-
 Google Drive Early Releases: https://drive.google.com/drive/folders/1xHeI_X5vnpKqQ3vkBz6hw97RnqaPwWNl?usp=sharing
 
 --------------------------------------------------------------------------------------------------------------------------------------------
@@ -122,3 +117,16 @@ press (0.75 seconds +) will remove the notification and not run the directed cod
 --------------------------------------------------------------------------------------------------------------------------------------------
       BUG REPORTS & FEATURE REQUESTS
 [Bug reports & Feature requests may be submitted to holographic.sol@gmail.com and will gratefully accepted and reviewed]
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+      REQUIREMENTS
+[PYTHON: Written in Python 3.9]
+
+[OS: Windows 10]
+
+[NOTES 0: Run as Admin]
+
+[NOTES 1: Right click OpenHardwareMonitor.dll select Properties, General Tab, Click Unblock and apply]
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
