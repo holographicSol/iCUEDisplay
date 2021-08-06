@@ -5250,7 +5250,7 @@ class TemperatureClass(QThread):
         self.gpu_core = ''
 
     def send_instruction(self):
-        print('-- [TemperatureClass.send_instruction]: plugged in')
+        # print('-- [TemperatureClass.send_instruction]: plugged in')
         if self.cpu_pack != '':
             self.cpu_pack_0 = self.cpu_pack.split()
             self.cpu_pack_1 = self.cpu_pack_0[-1]
