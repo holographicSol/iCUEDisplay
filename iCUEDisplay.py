@@ -338,45 +338,45 @@ def create_new():
                 fo.writelines(_+'\n')
         fo.close()
 
-    # if not os.path.exists('./iCUEDisplay.vbs') or not os.path.exists('./iCUEDisplay.bat'):
-    cwd = os.getcwd()
-    print('-- [create_new] current working directory:', cwd)
-    path_for_in_bat = os.path.join('"' + cwd + '\\iCUEDisplay.exe"')
-    path_to_bat = cwd + '\\iCUEDisplay.bat'
-    print('-- [create_new] creating batch file:', path_to_bat)
-    path_for_in_vbs = 'WshShell.Run chr(34) & "' + path_to_bat + '" & Chr(34), 0'
-    print('-- [creating new] creating vbs file: ./iCUEDisplay.vbs')
-    open('./iCUEDisplay.bat', 'w').close()
-    open('./iCUEDisplay.vbs', 'w').close()
-    with open('./iCUEDisplay.bat', 'a') as fo:
-        fo.writelines(path_for_in_bat)
-    fo.close()
-    with open('./iCUEDisplay.vbs', 'a') as fo:
-        fo.writelines('Set WshShell = CreateObject("WScript.Shell")\n')
-        fo.writelines(path_for_in_vbs + '\n')
-        fo.writelines('Set WshShell = Nothing\n')
-    fo.close()
-    try:
-        path = os.path.join(cwd + '\\iCUEDisplay.lnk')
-        target = cwd + '\\iCUEDisplay.vbs'
-        icon = cwd + './icon.ico'
-        shell = win32com.client.Dispatch("WScript.Shell")
-        shortcut = shell.CreateShortCut(path)
-        shortcut.Targetpath = target
-        shortcut.WorkingDirectory = cwd
-        shortcut.IconLocation = icon
-        shortcut.save()
-    except Exception as e:
-        print('-- [create_new] Error:', e)
-    time.sleep(1)
-    print('-- [create_new]: checking existence of created files')
-    if os.path.exists('./iCUEDisplay.exe') and os.path.exists(path_to_bat) and os.path.exists('./iCUEDisplay.vbs'):
-        print('-- [create_new]: files exist')
-        if os.path.exists('./iCUEDisplay.lnk'):
-            print('-- [create_new]: starting program')
-            os.startfile(cwd+'./iCUEDisplay.lnk')
-            time.sleep(2)
-            bool_backend_install = True
+    if not os.path.exists('./iCUEDisplay.vbs') or not os.path.exists('./iCUEDisplay.bat'):
+        cwd = os.getcwd()
+        print('-- [create_new] current working directory:', cwd)
+        path_for_in_bat = os.path.join('"' + cwd + '\\iCUEDisplay.exe"')
+        path_to_bat = cwd + '\\iCUEDisplay.bat'
+        print('-- [create_new] creating batch file:', path_to_bat)
+        path_for_in_vbs = 'WshShell.Run chr(34) & "' + path_to_bat + '" & Chr(34), 0'
+        print('-- [creating new] creating vbs file: ./iCUEDisplay.vbs')
+        open('./iCUEDisplay.bat', 'w').close()
+        open('./iCUEDisplay.vbs', 'w').close()
+        with open('./iCUEDisplay.bat', 'a') as fo:
+            fo.writelines(path_for_in_bat)
+        fo.close()
+        with open('./iCUEDisplay.vbs', 'a') as fo:
+            fo.writelines('Set WshShell = CreateObject("WScript.Shell")\n')
+            fo.writelines(path_for_in_vbs + '\n')
+            fo.writelines('Set WshShell = Nothing\n')
+        fo.close()
+        try:
+            path = os.path.join(cwd + '\\iCUEDisplay.lnk')
+            target = cwd + '\\iCUEDisplay.vbs'
+            icon = cwd + './icon.ico'
+            shell = win32com.client.Dispatch("WScript.Shell")
+            shortcut = shell.CreateShortCut(path)
+            shortcut.Targetpath = target
+            shortcut.WorkingDirectory = cwd
+            shortcut.IconLocation = icon
+            shortcut.save()
+        except Exception as e:
+            print('-- [create_new] Error:', e)
+        time.sleep(1)
+        print('-- [create_new]: checking existence of created files')
+        if os.path.exists('./iCUEDisplay.exe') and os.path.exists(path_to_bat) and os.path.exists('./iCUEDisplay.vbs'):
+            print('-- [create_new]: files exist')
+            if os.path.exists('./iCUEDisplay.lnk'):
+                print('-- [create_new]: starting program')
+                os.startfile(cwd + './iCUEDisplay.lnk')
+                time.sleep(2)
+                bool_backend_install = True
 
     distutils.dir_util.mkpath('./data/')
     if not os.path.exists('./data/event_notification_g1.dat'):
