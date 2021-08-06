@@ -9,8 +9,9 @@ aesthetic design.
 Features being refined and added daily. Existing features may be more complex in coming updates.
 
 Requirements:
-Latest Python
-Windows 10
+Latest Python.
+Windows 10.
+Run as admin.
 
 Google Drive Early Releases: https://drive.google.com/drive/folders/1xHeI_X5vnpKqQ3vkBz6hw97RnqaPwWNl?usp=sharing
 
