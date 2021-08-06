@@ -105,10 +105,13 @@ if __name__ == "__main__":
         try:
             checkIfProcessRunning()
             print('-- attempt dat_file read:', dat_file)
-            if os.path.exists(dat_file):
+            try:
                 open(dat_file, 'w').close()
                 time.sleep(1)
                 fetch_stats(HardwareHandle)
+            except:
+                time.sleep(3)
+                pass
             else:
                 print('-- __name__: could not find dat_file')
         except Exception as e:
