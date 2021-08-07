@@ -296,6 +296,7 @@ config_data = ['sdk_color_cpu_on: 255,255,0',
 def create_new():
     global bool_backend_install
     print('-- [create_new]: started')
+    distutils.dir_util.mkpath(os.path.join(os.path.expanduser('~'), 'AppData\\Local\\iCUEDisplay'))
     config_line_missing = []
     config_line_file = []
     count_missing = 0
@@ -379,9 +380,10 @@ def create_new():
                 time.sleep(2)
                 bool_backend_install = True
 
+    app_data_path = os.path.join(os.path.expanduser('~'), 'AppData\\Local\\iCUEDisplay\\icue_display_py_config.dat')
     py_config_line = os.path.join(os.getcwd()+'\\py\\temp_sys.dat')
-    open('C:\\py_config.dat', 'w').close()
-    with open('C:\\py_config.dat', 'a') as fo:
+    open(app_data_path, 'w').close()
+    with open(app_data_path, 'a') as fo:
         fo.writelines('PATH: '+py_config_line)
     fo.close()
 
