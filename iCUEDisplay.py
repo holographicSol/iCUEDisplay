@@ -14,6 +14,7 @@ import win32process
 import win32com.client
 import datetime
 import subprocess
+import shutil
 import distutils.dir_util
 from cuesdk import CueSdk
 from cuesdk import CueSdk, CorsairEventId
@@ -244,6 +245,49 @@ timing_dram_util = 1.0
 timing_vram_util = 1.0
 timing_hdd_util = 0.0
 timing_net_traffic_util = 0.0
+
+if os.path.exists('./py/bin/OpenHardwareMonitorLib.dll'):
+
+    distutils.dir_util.mkpath(os.path.join(os.path.expanduser('~'), 'AppData\\Local\\iCUEDisplay'))
+
+    try:
+        dll_in = './py/bin/OpenHardwareMonitorLib.dll'
+        dll_out = os.path.join(os.path.expanduser('~'), 'AppData\\Local\\iCUEDisplay\\OpenHardwareMonitorLib.dll')
+        if os.path.exists(dll_in):
+            shutil.copyfile(dll_in, dll_out)
+            cmd = 'powershell Unblock-File '+dll_out
+            print('cmd', cmd)
+            xcmd = subprocess.Popen(cmd, shell=True)
+            if os.path.exists(dll_out):
+                shutil.copyfile(dll_out, dll_in)
+    except Exception as e:
+        print('-- error unblocking OpenHardwareMonitorLib.dll:', e)
+
+    try:
+        dll_in = './bin/CUESDK.x64_2017.dll'
+        dll_out = os.path.join(os.path.expanduser('~'), 'AppData\\Local\\iCUEDisplay\\CUESDK.x64_2017.dll')
+        if os.path.exists(dll_in):
+            shutil.copyfile(dll_in, dll_out)
+            cmd = 'powershell Unblock-File '+dll_out
+            print('cmd', cmd)
+            xcmd = subprocess.Popen(cmd, shell=True)
+            if os.path.exists(dll_out):
+                shutil.copyfile(dll_out, dll_in)
+    except Exception as e:
+        print('-- error unblocking OpenHardwareMonitorLib.dll:', e)
+
+    try:
+        dll_in = './bin/CUESDK_2017.dll'
+        dll_out = os.path.join(os.path.expanduser('~'), 'AppData\\Local\\iCUEDisplay\\CUESDK_2017.dll')
+        if os.path.exists(dll_in):
+            shutil.copyfile(dll_in, dll_out)
+            cmd = 'powershell Unblock-File ' + dll_out
+            print('cmd', cmd)
+            xcmd = subprocess.Popen(cmd, shell=True)
+            if os.path.exists(dll_out):
+                shutil.copyfile(dll_out, dll_in)
+    except Exception as e:
+        print('-- error unblocking OpenHardwareMonitorLib.dll:', e)
 
 config_data = ['sdk_color_cpu_on: 255,255,0',
                'timing_cpu_util: 0.1',
@@ -6220,6 +6264,7 @@ class HddMonClass(QThread):
                             if os.path.exists(str(disk_letter_0)+':/'):
                                 self.dwps = int(objItem.DiskWriteBytesPersec)
                                 self.drps = int(objItem.DiskReadBytesPersec)
+                                # print(disk_letter_0, self.dwps, self.drps)
 
                                 """ # Uncomment to use convert_bytes function if more data required
                                 if int(objItem.DiskWriteBytesPersec) > 0:
