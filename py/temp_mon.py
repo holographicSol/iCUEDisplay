@@ -15,25 +15,6 @@ openhardwaremonitor_sensortypes = ['Voltage','Clock','Temperature','Load','Fan',
 cputhermometer_sensortypes = ['Voltage','Clock','Temperature','Load','Fan','Flow','Control','Level']
 
 dat_file = ''
-keep_alive = True
-
-
-def checkIfProcessRunning():
-    global keep_alive
-
-    proc_item = []
-
-    for proc in psutil.process_iter():
-        try:
-            proc_item.append(proc.name().lower())
-            print('-- [checkIfProcessRunning]:', proc.name().lower())
-        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
-            pass
-
-    if 'icuedisplay.exe'.lower() not in proc_item:
-        print('-- process not found: icuedisplay.exe')
-        print('-- [checkIfProcessRunning]: false')
-        keep_alive = False
 
 
 def config():
@@ -99,20 +80,11 @@ def parse_sensor(sensor):
             fo.close()
 
 
-if __name__ == "__main__":
-    config()
+config()
+HardwareHandle = initialize_openhardwaremonitor()
+try:
+    open(dat_file, 'w').close()
     time.sleep(1)
-    HardwareHandle = initialize_openhardwaremonitor()
-    while keep_alive is True:
-        try:
-            checkIfProcessRunning()
-            try:
-                open(dat_file, 'w').close()
-                time.sleep(1)
-                fetch_stats(HardwareHandle)
-            except:
-                time.sleep(3)
-                pass
-        except Exception as e:
-            print(e)
-        time.sleep(3)
+    fetch_stats(HardwareHandle)
+except Exception as e:
+    print('error:', e)
