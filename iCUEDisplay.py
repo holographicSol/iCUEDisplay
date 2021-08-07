@@ -5466,7 +5466,6 @@ class TemperatureClass(QThread):
                 elif self.gpu_core_2 >= 70:
                     self.rgb_gpu_temp = [255, 0, 0]
                 sdk_color_vram_on = self.rgb_gpu_temp
-        sdk.set_led_colors_flush_buffer()
 
     def run(self):
         # print('-- [TemperatureClass.run]: plugged in')
@@ -6267,7 +6266,7 @@ class HddMonClass(QThread):
                                             self.send_write_instruction_1()
                                         self.i_w += 1
     
-                                if self.dwps > 0:
+                                elif self.dwps > 0 or self.drps > 0:
                                     if self.dwps >= self.drps:
                                         self.bool_dwps_greater = True
                                         self.i_w = 0
@@ -6275,15 +6274,15 @@ class HddMonClass(QThread):
                                             if canonical_caseless(disk_letter_0) == canonical_caseless(alpha_str[self.i_w]):
                                                 self.send_write_instruction()
                                             self.i_w += 1
-    
-                                elif self.drps >= 0:
-                                    if self.dwps < self.drps:
+
+                                    elif self.dwps < self.drps:
                                         self.bool_dwps_greater = False
                                         self.i_r = 0
                                         for _ in alpha_str:
                                             if canonical_caseless(disk_letter_0) == canonical_caseless(alpha_str[self.i_r]):
                                                 self.send_read_instruction()
                                             self.i_r += 1
+
             self.i_umount = 0
             for _ in alpha_str:
                 if _.upper() not in self.disk_letter_complete:
@@ -6357,13 +6356,9 @@ class CpuMonClass(QThread):
             cpu_i = 0
             for _ in corsairled_id_num_cpu:
                 if self.cpu_key[cpu_i] is True:
-                    # itm = [{_: sdk_color_cpu_on}]
-                    # sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], itm[0])
                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_cpu[cpu_i]: sdk_color_cpu_on}))
                     self.cpu_key_prev[cpu_i] = True
                 elif self.cpu_key[cpu_i] is False:
-                    # itm = [{_: sdk_color_backlight}]
-                    # sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], itm[0])
                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_cpu[cpu_i]: sdk_color_backlight}))
                     self.cpu_key_prev[cpu_i] = False
                 cpu_i += 1
