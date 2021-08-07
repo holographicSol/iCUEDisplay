@@ -103,6 +103,9 @@ hdd_bytes_type_w = ''
 hdd_bytes_type_r = ''
 hdd_bytes_str = ''
 
+bool_cpu_temperature = False
+bool_vram_temperature = False
+
 bool_event_notification_g1 = False
 bool_event_notification_g2 = False
 bool_event_notification_g3 = False
@@ -290,7 +293,9 @@ config_data = ['sdk_color_cpu_on: 255,255,0',
                'str_event_notification_run_path_g3: ',
                'str_event_notification_run_path_g4: ',
                'str_event_notification_run_path_g5: ',
-               'str_event_notification_run_path_g6: ']
+               'str_event_notification_run_path_g6: ',
+               'bool_cpu_temperature: False',
+               'bool_vram_temperature: False']
 
 
 def create_new():
@@ -887,6 +892,25 @@ class App(QMainWindow):
         self.object_interaction_readonly.append(self.qle_cpu_led_time_on)
         self.ui_object_complete.append(self.qle_cpu_led_time_on)
 
+        self.lbl_cpu_mon_temp = QLabel(self)
+        self.lbl_cpu_mon_temp.move(self.scroll_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4, 60)
+        self.lbl_cpu_mon_temp.resize(100, self.monitor_btn_h)
+        self.lbl_cpu_mon_temp.setFont(self.font_s8b)
+        self.lbl_cpu_mon_temp.setText('TEMPERATURE')
+        self.lbl_cpu_mon_temp.setStyleSheet(self.lbl_feature_title_style)
+        print('-- [App.__init__] created:', self.lbl_cpu_mon_temp)
+        self.ui_object_complete.append(self.lbl_cpu_mon_temp)
+
+        self.btn_cpu_mon_temp = QPushButton(self)
+        self.btn_cpu_mon_temp.move(self.scroll_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 100 + 4, 60)
+        self.btn_cpu_mon_temp.resize(28, 28)
+        self.btn_cpu_mon_temp.setStyleSheet(self.btn_tog_switch_style)
+        self.btn_cpu_mon_temp.setIconSize(self.tog_switch_ico_sz)
+        self.btn_cpu_mon_temp.clicked.connect(self.btn_cpu_mon_temp_function)
+        print('-- [App.__init__] created:', self.btn_cpu_mon_temp)
+        self.object_interaction_enabled.append(self.btn_cpu_mon_temp)
+        self.ui_object_complete.append(self.btn_cpu_mon_temp)
+
         self.lbl_dram_mon = QLabel(self)
         self.lbl_dram_mon.move(self.scroll_w + 2, 60 + 28 + 4)
         self.lbl_dram_mon.resize(100, self.monitor_btn_h)
@@ -968,6 +992,25 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.qle_vram_led_time_on)
         self.object_interaction_readonly.append(self.qle_vram_led_time_on)
         self.ui_object_complete.append(self.qle_vram_led_time_on)
+
+        self.lbl_vram_mon_temp = QLabel(self)
+        self.lbl_vram_mon_temp.move(self.scroll_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4, 60 + 28 + 4 + 28 + 4)
+        self.lbl_vram_mon_temp.resize(100, self.monitor_btn_h)
+        self.lbl_vram_mon_temp.setFont(self.font_s8b)
+        self.lbl_vram_mon_temp.setText('TEMPERATURE')
+        self.lbl_vram_mon_temp.setStyleSheet(self.lbl_feature_title_style)
+        print('-- [App.__init__] created:', self.lbl_vram_mon_temp)
+        self.ui_object_complete.append(self.lbl_vram_mon_temp)
+
+        self.btn_vram_mon_temp = QPushButton(self)
+        self.btn_vram_mon_temp.move(self.scroll_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 100 + 4, 60 + 28 + 4 + 28 + 4)
+        self.btn_vram_mon_temp.resize(28, 28)
+        self.btn_vram_mon_temp.setStyleSheet(self.btn_tog_switch_style)
+        self.btn_vram_mon_temp.setIconSize(self.tog_switch_ico_sz)
+        self.btn_vram_mon_temp.clicked.connect(self.btn_vram_mon_temp_function)
+        print('-- [App.__init__] created:', self.btn_vram_mon_temp)
+        self.object_interaction_enabled.append(self.btn_vram_mon_temp)
+        self.ui_object_complete.append(self.btn_vram_mon_temp)
 
         self.lbl_hdd_mon = QLabel(self)
         self.lbl_hdd_mon.move(128 + 4, 30)
@@ -1816,6 +1859,63 @@ class App(QMainWindow):
 
         self.initUI()
 
+    def btn_cpu_mon_temp_function(self):
+        print('-- [App.btn_cpu_mon_temp_function]: plugged in')
+        global thread_temperatures
+        global bool_cpu_temperature, bool_vram_temperature
+        self.setFocus()
+        thread_temperatures[0].stop()
+
+        if bool_cpu_temperature is True:
+            if self.write_engaged is False:
+                print('-- [App.btn_cpu_mon_temp_function] changing bool_cpu_temperature:', bool_cpu_temperature)
+                self.write_var = 'bool_cpu_temperature: false'
+                self.write_changes()
+            self.btn_cpu_mon_temp.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            bool_cpu_temperature = False
+
+        elif bool_cpu_temperature is False:
+            if self.write_engaged is False:
+                print('-- [App.btn_cpu_mon_temp_function] changing bool_cpu_temperature:', bool_cpu_temperature)
+                self.write_var = 'bool_cpu_temperature: true'
+                self.write_changes()
+            self.btn_cpu_mon_temp.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            bool_cpu_temperature = True
+
+        if bool_vram_temperature is True or bool_cpu_temperature is True:
+            print('-- [App.btn_cpu_mon_temp_function]: starting thread_temperatures')
+            thread_temperatures[0].start()
+        else:
+            print('-- [App.btn_cpu_mon_temp_function]: bool_cpu_temperature, bool_vram_temperature', bool_cpu_temperature, bool_vram_temperature)
+
+    def btn_vram_mon_temp_function(self):
+        print('-- [App.btn_vram_mon_temp_function]: plugged in')
+        global thread_temperatures
+        global bool_vram_temperature, bool_cpu_temperature
+        thread_temperatures[0].stop()
+
+        if bool_vram_temperature is True:
+            if self.write_engaged is False:
+                print('-- [App.btn_vram_mon_temp_function] changing bool_vram_temperature:', bool_vram_temperature)
+                self.write_var = 'bool_vram_temperature: false'
+                self.write_changes()
+            self.btn_vram_mon_temp.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            bool_vram_temperature = False
+
+        elif bool_vram_temperature is False:
+            if self.write_engaged is False:
+                print('-- [App.btn_vram_mon_temp_function] changing bool_vram_temperature:', bool_vram_temperature)
+                self.write_var = 'bool_vram_temperature: true'
+                self.write_changes()
+            self.btn_vram_mon_temp.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            bool_vram_temperature = True
+
+        if bool_vram_temperature is True or bool_cpu_temperature is True:
+            print('-- [App.btn_cpu_mon_temp_function]: starting thread_temperatures')
+            thread_temperatures[0].start()
+        else:
+            print('-- [App.btn_cpu_mon_temp_function]: bool_cpu_temperature, bool_vram_temperature', bool_cpu_temperature, bool_vram_temperature)
+
     def openFileNameDialogG1(self):
         global str_event_notification_run_path_g1, devices_kb
         print('-- [App.openFileNameDialogG1]: plugged in')
@@ -2235,6 +2335,11 @@ class App(QMainWindow):
             self.btn_vram_mon.show()
             self.qle_vram_mon_rgb_on.show()
             self.qle_vram_led_time_on.show()
+
+            self.lbl_cpu_mon_temp.show()
+            self.lbl_vram_mon_temp.show()
+            self.btn_cpu_mon_temp.show()
+            self.btn_vram_mon_temp.show()
         except Exception as e:
             print(e)
 
@@ -3561,6 +3666,8 @@ class App(QMainWindow):
 
         global thread_temperatures
 
+        global bool_cpu_temperature, bool_vram_temperature
+
         hdd_mon_thread = HddMonClass()
         thread_disk_rw.append(hdd_mon_thread)
 
@@ -3626,13 +3733,12 @@ class App(QMainWindow):
         thread_compile_devices[0].start()
 
         # start temp_mon.vbs silently and monitor for foobar.txt for child/parent proc cwd
-        cmd = os.path.join(os.getcwd()+'\\py\\temp_mon.vbs')
-        print('-- [App.initUI] running command:', cmd)
-        xcmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        # cmd = os.path.join(os.getcwd()+'\\py\\temp_mon.vbs')
+        # print('-- [App.initUI] running command:', cmd)
+        # xcmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
         temp_thread = TemperatureClass()
         thread_temperatures.append(temp_thread)
-        thread_temperatures[0].start()
 
         print('-- [App.initUI]: waiting to display application')
         while bool_backend_allow_display is False:
@@ -3806,6 +3912,16 @@ class App(QMainWindow):
         if len(str_event_notification_run_path_g6) > 0:
             self.lbl_event_notification_fpath_g6.setText(str_event_notification_run_path_g6)
             self.lbl_event_notification_fpath_g6.setAlignment(Qt.AlignLeft | Qt.AlignTrailing)
+
+        if bool_cpu_temperature is True:
+            self.btn_cpu_mon_temp.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+        elif bool_cpu_temperature is False:
+            self.btn_cpu_mon_temp.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+
+        if bool_vram_temperature is True:
+            self.btn_vram_mon_temp.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+        elif bool_vram_temperature is False:
+            self.btn_vram_mon_temp.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
         self.btn_backlight_auto_time_0_str = str(backlight_time_0).strip()
         self.btn_backlight_auto_time_0.setText(backlight_time_0)
@@ -4645,7 +4761,7 @@ class CompileDevicesClass(QThread):
         global bool_switch_startup_net_share_mon, bool_switch_startup_hdd_read_write
         global bool_backend_config_read_complete, bool_switch_startup_exclusive_control
         global thread_backlight_auto, bool_switch_backlight_auto
-        global thread_temperatures
+        global thread_temperatures, bool_cpu_temperature, bool_vram_temperature
 
         if len(devices_kb) > 0:
 
@@ -4665,7 +4781,8 @@ class CompileDevicesClass(QThread):
             if bool_switch_startup_net_share_mon:
                 thread_net_share[0].start()
 
-            thread_temperatures[0].start()
+            if bool_cpu_temperature is True or bool_vram_temperature is True:
+                thread_temperatures[0].start()
 
         if len(devices_kb) > 0 or len(devices_ms) > 0:
             if bool_switch_startup_net_con_ms is True or bool_switch_startup_net_con_kb is True:
@@ -4837,6 +4954,8 @@ class CompileDevicesClass(QThread):
         global bool_switch_startup_minimized, bool_switch_startup_autorun, bool_switch_startup_exclusive_control
 
         global bool_backend_allow_display, bool_backend_icue_connected, bool_backend_config_read_complete
+
+        global bool_cpu_temperature, bool_vram_temperature
 
         startup_loc = '/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/iCUEDisplay.lnk'
         bool_backend_valid_network_adapter_name = False
@@ -5160,6 +5279,15 @@ class CompileDevicesClass(QThread):
                 elif line.startswith('str_event_notification_run_path_g6: '):
                     str_event_notification_run_path_g6 = line.replace('str_event_notification_run_path_g6: ', '')
 
+                if line == 'bool_cpu_temperature: false':
+                    bool_cpu_temperature = False
+                elif line == 'bool_cpu_temperature: true':
+                    bool_cpu_temperature = True
+                if line == 'bool_vram_temperature: false':
+                    bool_vram_temperature = False
+                elif line == 'bool_vram_temperature: true':
+                    bool_vram_temperature = True
+
         print('-- [ConfigCompile.config_read] bool_switch_event_notification_g1:', bool_switch_event_notification_g1)
         print('-- [ConfigCompile.read_config] bool_switch_event_notification_g2:', bool_switch_event_notification_g2)
         print('-- [ConfigCompile.read_config] bool_switch_event_notification_g3:', bool_switch_event_notification_g3)
@@ -5212,6 +5340,9 @@ class CompileDevicesClass(QThread):
         print('-- [ConfigCompile.read_config] bool_switch_startup_autorun:', bool_switch_startup_autorun)
         print('-- [ConfigCompile.read_config] bool_switch_startup_exclusive_control:', bool_switch_startup_exclusive_control)
 
+        print('-- [ConfigCompile.read_config] bool_cpu_temperature:', bool_cpu_temperature)
+        print('-- [ConfigCompile.read_config] bool_vram_temperature:', bool_vram_temperature)
+
         bool_backend_config_read_complete = True
 
     def run(self):
@@ -5252,59 +5383,65 @@ class TemperatureClass(QThread):
         self.gpu_core = ''
 
     def send_instruction(self):
+        global sdk, devices_kb, devices_kb_selected
+        global bool_cpu_temperature, bool_vram_temperature
         # print('-- [TemperatureClass.send_instruction]: plugged in')
-        if self.cpu_pack != '':
-            self.cpu_pack_0 = self.cpu_pack.split()
-            self.cpu_pack_1 = self.cpu_pack_0[-1]
-            self.cpu_pack_1 = self.cpu_pack_1.split('.')
-            self.cpu_pack_2 = self.cpu_pack_1[0]
-            self.cpu_pack_2 = int(self.cpu_pack_2)
+        if bool_cpu_temperature is True:
+            if self.cpu_pack != '':
+                self.cpu_pack_0 = self.cpu_pack.split()
+                self.cpu_pack_1 = self.cpu_pack_0[-1]
+                self.cpu_pack_1 = self.cpu_pack_1.split('.')
+                self.cpu_pack_2 = self.cpu_pack_1[0]
+                self.cpu_pack_2 = int(self.cpu_pack_2)
 
-            if self.cpu_pack_2 < 30:
-                self.rgb_cpu_temp = [0, 255, 255]
+                if self.cpu_pack_2 < 30:
+                    self.rgb_cpu_temp = [0, 255, 255]
 
-            elif self.cpu_pack_2 >= 30 and self.cpu_pack_2 < 50:
-                self.rgb_cpu_temp = [255, 255, 0]
+                elif self.cpu_pack_2 >= 30 and self.cpu_pack_2 < 50:
+                    self.rgb_cpu_temp = [255, 255, 0]
 
-            elif self.cpu_pack_2 >= 50 and self.cpu_pack_2 < 70:
-                self.rgb_cpu_temp = [255, 100, 0]
+                elif self.cpu_pack_2 >= 50 and self.cpu_pack_2 < 70:
+                    self.rgb_cpu_temp = [255, 100, 0]
 
-            elif self.cpu_pack_2 >= 70:
-                self.rgb_cpu_temp = [255, 0, 0]
-            try:
-                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({106: self.rgb_cpu_temp}))
-            except Exception as e:
-                print('-- [TemperatureClass.send_instruction] Error:', e)
+                elif self.cpu_pack_2 >= 70:
+                    self.rgb_cpu_temp = [255, 0, 0]
+                try:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({106: self.rgb_cpu_temp}))
+                except Exception as e:
+                    print('-- [TemperatureClass.send_instruction] Error:', e)
 
-        if self.gpu_core != '':
-            self.gpu_core_0 = self.gpu_core.split()
-            self.gpu_core_1 = self.gpu_core_0[-1]
-            self.gpu_core_1 = self.gpu_core_1.split('.')
-            self.gpu_core_2 = self.gpu_core_1[0]
-            self.gpu_core_2 = int(self.gpu_core_2)
+        if bool_vram_temperature is True:
+            if self.gpu_core != '':
+                self.gpu_core_0 = self.gpu_core.split()
+                self.gpu_core_1 = self.gpu_core_0[-1]
+                self.gpu_core_1 = self.gpu_core_1.split('.')
+                self.gpu_core_2 = self.gpu_core_1[0]
+                self.gpu_core_2 = int(self.gpu_core_2)
 
-            if self.gpu_core_2 < 30:
-                self.rgb_gpu_temp = [0, 255, 255]
+                if self.gpu_core_2 < 30:
+                    self.rgb_gpu_temp = [0, 255, 255]
 
-            elif self.gpu_core_2 >= 30 and self.gpu_core_2 < 50:
-                self.rgb_gpu_temp = [255, 255, 0]
+                elif self.gpu_core_2 >= 30 and self.gpu_core_2 < 50:
+                    self.rgb_gpu_temp = [255, 255, 0]
 
-            elif self.gpu_core_2 >= 50 and self.gpu_core_2 < 70:
-                self.rgb_gpu_temp = [255, 100, 0]
+                elif self.gpu_core_2 >= 50 and self.gpu_core_2 < 70:
+                    self.rgb_gpu_temp = [255, 100, 0]
 
-            elif self.gpu_core_2 >= 70:
-                self.rgb_gpu_temp = [255, 0, 0]
-            try:
-                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({107: self.rgb_gpu_temp}))
-            except Exception as e:
-                print('-- [TemperatureClass.send_instruction] Error:', e)
+                elif self.gpu_core_2 >= 70:
+                    self.rgb_gpu_temp = [255, 0, 0]
+                try:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({107: self.rgb_gpu_temp}))
+                except Exception as e:
+                    print('-- [TemperatureClass.send_instruction] Error:', e)
 
         sdk.set_led_colors_flush_buffer()
 
     def run(self):
         # print('-- [TemperatureClass.run]: plugged in')
         while True:
-            time.sleep(3)
+            cmd = os.path.join(os.getcwd() + '\\py\\temp_mon.vbs')
+            xcmd = subprocess.Popen(cmd, shell=True)
+
             if os.path.exists('./py/temp_sys.dat'):
                 try:
                     with open('./py/temp_sys.dat', 'r') as fo:
@@ -5318,12 +5455,20 @@ class TemperatureClass(QThread):
 
                 except Exception as e:
                     print('-- [TemperatureClass.run] Error:', e)
-            # print('-- [TemperatureClass.run] cpu_pack:', self.cpu_pack)
-            # print('-- [TemperatureClass.run] gpu_core:', self.gpu_core)
             self.send_instruction()
+            time.sleep(3)
 
     def stop(self):
         print('-- [TemperatureClass.stop]: plugged in')
+        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
+        try:
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({106: sdk_color_backlight}))
+        except Exception as e:
+            print('-- [TemperatureClass.stop]: Error:', e)
+        try:
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({107: sdk_color_backlight}))
+        except Exception as e:
+            print('-- [TemperatureClass.stop]: Error:', e)
         self.terminate()
 
 
