@@ -5423,12 +5423,15 @@ class TemperatureClass(QThread):
 
     def __init__(self):
         QThread.__init__(self)
+        global sdk_color_cpu_on, sdk_color_vram_on
         self.cpu_pack = ''
         self.gpu_core = ''
+        self.stored_cpu_color = sdk_color_cpu_on
+        self.stored_vram_color = sdk_color_vram_on
 
     def send_instruction(self):
         global sdk, devices_kb, devices_kb_selected
-        global bool_cpu_temperature, bool_vram_temperature
+        global bool_cpu_temperature, bool_vram_temperature, sdk_color_cpu_on, sdk_color_vram_on
         # print('-- [TemperatureClass.send_instruction]: plugged in')
         if bool_cpu_temperature is True:
             if self.cpu_pack != '':
@@ -5437,22 +5440,15 @@ class TemperatureClass(QThread):
                 self.cpu_pack_1 = self.cpu_pack_1.split('.')
                 self.cpu_pack_2 = self.cpu_pack_1[0]
                 self.cpu_pack_2 = int(self.cpu_pack_2)
-
                 if self.cpu_pack_2 < 30:
                     self.rgb_cpu_temp = [0, 255, 255]
-
                 elif self.cpu_pack_2 >= 30 and self.cpu_pack_2 < 50:
                     self.rgb_cpu_temp = [255, 255, 0]
-
                 elif self.cpu_pack_2 >= 50 and self.cpu_pack_2 < 70:
                     self.rgb_cpu_temp = [255, 100, 0]
-
                 elif self.cpu_pack_2 >= 70:
                     self.rgb_cpu_temp = [255, 0, 0]
-                try:
-                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({106: self.rgb_cpu_temp}))
-                except Exception as e:
-                    print('-- [TemperatureClass.send_instruction] Error:', e)
+                sdk_color_cpu_on = self.rgb_cpu_temp
 
         if bool_vram_temperature is True:
             if self.gpu_core != '':
@@ -5461,23 +5457,15 @@ class TemperatureClass(QThread):
                 self.gpu_core_1 = self.gpu_core_1.split('.')
                 self.gpu_core_2 = self.gpu_core_1[0]
                 self.gpu_core_2 = int(self.gpu_core_2)
-
                 if self.gpu_core_2 < 30:
                     self.rgb_gpu_temp = [0, 255, 255]
-
                 elif self.gpu_core_2 >= 30 and self.gpu_core_2 < 50:
                     self.rgb_gpu_temp = [255, 255, 0]
-
                 elif self.gpu_core_2 >= 50 and self.gpu_core_2 < 70:
                     self.rgb_gpu_temp = [255, 100, 0]
-
                 elif self.gpu_core_2 >= 70:
                     self.rgb_gpu_temp = [255, 0, 0]
-                try:
-                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({107: self.rgb_gpu_temp}))
-                except Exception as e:
-                    print('-- [TemperatureClass.send_instruction] Error:', e)
-
+                sdk_color_vram_on = self.rgb_gpu_temp
         sdk.set_led_colors_flush_buffer()
 
     def run(self):
@@ -5504,15 +5492,10 @@ class TemperatureClass(QThread):
 
     def stop(self):
         print('-- [TemperatureClass.stop]: plugged in')
-        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
-        try:
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({106: sdk_color_backlight}))
-        except Exception as e:
-            print('-- [TemperatureClass.stop]: Error:', e)
-        try:
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({107: sdk_color_backlight}))
-        except Exception as e:
-            print('-- [TemperatureClass.stop]: Error:', e)
+        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, sdk_color_cpu_on, sdk_color_vram_on
+        sdk.set_led_colors_flush_buffer()
+        sdk_color_cpu_on = self.stored_cpu_color
+        sdk_color_vram_on = self.stored_vram_color
         self.terminate()
 
 
