@@ -38,10 +38,11 @@ def checkIfProcessRunning():
 
 def config():
     global dat_file
+    app_data_path = os.path.join(os.path.expanduser('~'), 'AppData\\Local\\iCUEDisplay\\icue_display_py_config.dat')
     print('-- [config]: plugged in')
-    if os.path.exists('C:\\py_config.dat'):   # here
+    if os.path.exists(app_data_path):   # here
         print('-- [config]: exists')
-        with open('C:\\py_config.dat', 'r') as fo:
+        with open(app_data_path, 'r') as fo:
             for line in fo:
                 line = line.strip()
                 print('-- [config]: raw config data:', line)
