@@ -38,10 +38,11 @@ def checkIfProcessRunning():
 
 def config():
     global dat_file
+    app_data_path = os.path.join(os.path.expanduser('~'), 'AppData\\Local\\iCUEDisplay\\icue_display_py_config.dat')
     print('-- [config]: plugged in')
-    if os.path.exists('C:\\py_config.dat'):   # here
+    if os.path.exists(app_data_path):   # here
         print('-- [config]: exists')
-        with open('C:\\py_config.dat', 'r') as fo:
+        with open(app_data_path, 'r') as fo:
             for line in fo:
                 line = line.strip()
                 print('-- [config]: raw config data:', line)
@@ -99,12 +100,12 @@ def parse_sensor(sensor):
 
 
 if __name__ == "__main__":
-    HardwareHandle = initialize_openhardwaremonitor()
     config()
+    time.sleep(1)
+    HardwareHandle = initialize_openhardwaremonitor()
     while keep_alive is True:
         try:
             checkIfProcessRunning()
-            print('-- attempt dat_file read:', dat_file)
             try:
                 open(dat_file, 'w').close()
                 time.sleep(1)
@@ -112,8 +113,6 @@ if __name__ == "__main__":
             except:
                 time.sleep(3)
                 pass
-            else:
-                print('-- __name__: could not find dat_file')
         except Exception as e:
             print(e)
         time.sleep(3)
