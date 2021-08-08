@@ -472,11 +472,16 @@ def create_new():
         open('./data/event_notification_g6.dat', 'w').close()
     time.sleep(2)
 
+first_load = True
+obj_geo_item = []
+prev_multiplier_w = int()
+prev_multiplier_h = int()
+
 
 class ObjEveFilter(QObject):
 
     def eventFilter(self, obj, event):
-        global event_filter_self, avail_w, avail_h, ui_object_complete, event_filter_self
+        global event_filter_self, avail_w, avail_h, ui_object_complete, event_filter_self, first_load, obj_geo_item, prev_multiplier_w, prev_multiplier_h
         obj_eve = obj, event
 
         # Uncomment This Line To See All Object Events
@@ -487,66 +492,86 @@ class ObjEveFilter(QObject):
         should not compensate permanently for Qt objects being placed inside a Qt layout or alternatively by doing
         ones own calculations to re-scale the application when scaling is changed. 
         """
-        if str(obj_eve[1]).startswith('<PyQt5.QtGui.QResizeEvent'):
+        if str(obj_eve[1]).startswith('<PyQt5.QtGui.QResizeEvent') or str(obj_eve[1]).startswith('<PyQt5.QtGui.QMoveEvent'):
             print('-- [ObjEveFilter]: Handling resize event')
 
-            print("previous width:", avail_w)
-            print("previous height:", avail_h)
+            if first_load is True:
+                first_load = False
+                for _ in ui_object_complete:
+                    obj_geo_width = _.geometry().width()
+                    obj_geo_height = _.geometry().height()
+                    obj_geo_pos_w = _.geometry().x()
+                    obj_geo_pos_h = _.geometry().y()
+                    # print('[object geometry]', _, obj_geo_width, obj_geo_height, obj_geo_pos_w, obj_geo_pos_h)
+                    var = obj_geo_width, obj_geo_height, obj_geo_pos_w, obj_geo_pos_h
+                    obj_geo_item.append(var)
+            print(obj_geo_item)
+
+            initialize_scaling_dpi()
+
+            # print("previous width:", avail_w)
+            # print("previous height:", avail_h)
 
             new_avail_w = QDesktopWidget().availableGeometry().width()
             new_avail_h = QDesktopWidget().availableGeometry().height()
-            print("new width:", new_avail_w)
-            print("new height:", new_avail_h)
+            # print("new width:", new_avail_w)
+            # print("new height:", new_avail_h)
 
-            ratio_w = avail_w / new_avail_w
-            ratio_h = avail_h / new_avail_h
+            multiplier_w = str(new_avail_w)[0]
+            multiplier_h = str(new_avail_h)[0]
+            multiplier_w = int(multiplier_w)
+            multiplier_h = int(multiplier_h)
+            # print('multiplier_w:', multiplier_w)
+            # print('multiplier_h:', multiplier_h)
 
-            print('ratio_w:', ratio_w)
-            print('ratio_h:', ratio_h)
+            if prev_multiplier_w != multiplier_w or prev_multiplier_h != multiplier_h or new_avail_w != avail_w or new_avail_h != avail_h:
 
-            if int(ratio_w) == 1:
-                ratio_w = int(ratio_w)
-                ratio_h = int(ratio_h)
-                main_w = 560 * ratio_w
-                main_h = 224 * ratio_h
-                pos_w = ((QDesktopWidget().availableGeometry().width() / 2) - (main_w / 2))
-                pos_h = ((QDesktopWidget().availableGeometry().height() / 2) - (main_h / 2))
-                event_filter_self[0].setGeometry(int(pos_w), int(pos_h), main_w, main_h)
+                prev_multiplier_w = multiplier_w
+                prev_multiplier_h = multiplier_h
+                avail_h = new_avail_h
+                avail_w = new_avail_w
+
+                app_width = 560 * multiplier_w
+                app_height = 224 * multiplier_h
+
+                pos_w = ((QDesktopWidget().availableGeometry().width() / 2) - (app_width / 2))
+                pos_h = ((QDesktopWidget().availableGeometry().height() / 2) - (app_height / 2))
+                event_filter_self[0].setGeometry(int(pos_w), int(pos_h), app_width, app_height)
+
+                i = 0
                 for _ in ui_object_complete:
-                    obj_geo_width = _.geometry().width()
-                    obj_geo_height = _.geometry().height()
-                    obj_geo_pos_w = _.geometry().x()
-                    obj_geo_pos_h = _.geometry().y()
-                    print('[object geometry]', _, obj_geo_width, obj_geo_height, obj_geo_pos_w, obj_geo_pos_h)
-                    new_obj_geo_width = obj_geo_width * ratio_w
-                    new_obj_geo_height = obj_geo_height * ratio_h
-                    new_obj_geo_pos_w = obj_geo_pos_w * ratio_w
-                    new_obj_geo_pos_h = obj_geo_pos_h * ratio_h
-                    _.move(new_obj_geo_pos_w, new_obj_geo_pos_h)
-                    _.resize(new_obj_geo_width, new_obj_geo_height)
 
-            elif int(ratio_w) == 2:
-                ratio_w = int(ratio_w / 2)
-                ratio_h = int(ratio_h / 2)
-                main_w = 560 * ratio_w
-                main_h = 224 * ratio_h
-                pos_w = ((QDesktopWidget().availableGeometry().width() / 2) - (main_w / 2))
-                pos_h = ((QDesktopWidget().availableGeometry().height() / 2) - (main_h / 2))
-                event_filter_self[0].setGeometry(int(pos_w), int(pos_h), main_w, main_h)
-                for _ in ui_object_complete:
-                    obj_geo_width = _.geometry().width()
-                    obj_geo_height = _.geometry().height()
-                    obj_geo_pos_w = _.geometry().x()
-                    obj_geo_pos_h = _.geometry().y()
-                    print('[object geometry]', _, obj_geo_width, obj_geo_height, obj_geo_pos_w, obj_geo_pos_h)
-                    new_obj_geo_width = obj_geo_width * ratio_w
-                    new_obj_geo_height = obj_geo_height * ratio_h
-                    new_obj_geo_pos_w = obj_geo_pos_w * ratio_w
-                    new_obj_geo_pos_h = obj_geo_pos_h * ratio_h
-                    _.move(new_obj_geo_pos_w, new_obj_geo_pos_h)
-                    _.resize(new_obj_geo_width, new_obj_geo_height)
+                    # Default Width
+                    obj_w = obj_geo_item[i]
+                    obj_w = obj_w[0]
 
-            initialize_scaling_dpi()
+                    # Default Height
+                    obj_h = obj_geo_item[i]
+                    obj_h = obj_h[1]
+
+                    # Default Position Width
+                    obj_pos_w = obj_geo_item[i]
+                    obj_pos_w = obj_pos_w[2]
+
+                    # Default Position Height
+                    obj_pos_h = obj_geo_item[i]
+                    obj_pos_h = obj_pos_h[3]
+
+                    print('Default Geometry:', obj_w, obj_h, obj_pos_w, obj_pos_h)
+
+                    new_obj_w = obj_w * multiplier_w
+                    new_obj_h = obj_h * multiplier_h
+                    new_obj_pos_w = obj_pos_w * multiplier_w
+                    new_obj_pos_h = obj_pos_h * multiplier_h
+
+                    print('New Geometry:', new_obj_w, new_obj_h, new_obj_pos_w, new_obj_pos_h)
+
+                    _.move(new_obj_pos_w, new_obj_pos_h)
+                    _.resize(new_obj_w, new_obj_h)
+
+                    i += 1
+
+                initialize_scaling_dpi()
         return False
 
 
