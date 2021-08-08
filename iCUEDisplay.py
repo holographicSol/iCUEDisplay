@@ -70,19 +70,19 @@ def canonical_caseless(text):
 
 
 def initialize_scaling_dpi():
-    print('-- [initialize_scaling_dpi]: initializing:')
+    # print('-- [initialize_scaling_dpi]: initializing:')
     os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
-    print('-- [initialize_scaling_dpi]: QT_AUTO_SCREEN_SCALE_FACTOR = 1')
+    # print('-- [initialize_scaling_dpi]: QT_AUTO_SCREEN_SCALE_FACTOR = 1')
     if hasattr(Qt, 'AA_EnableHighDpiScaling'):
         QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
-        print('-- [initialize_scaling_dpi]: AA_EnableHighDpiScaling: True')
-    elif not hasattr(Qt, 'AA_EnableHighDpiScaling'):
-        print('-- [initialize_scaling_dpi]: AA_EnableHighDpiScaling: False')
+        # print('-- [initialize_scaling_dpi]: AA_EnableHighDpiScaling: True')
+    # elif not hasattr(Qt, 'AA_EnableHighDpiScaling'):
+        # print('-- [initialize_scaling_dpi]: AA_EnableHighDpiScaling: False')
     if hasattr(Qt, 'AA_UseHighDpiPixmaps'):
         QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
-        print('-- [initialize_scaling_dpi]: AA_UseHighDpiPixmaps: True')
-    elif not hasattr(Qt, 'AA_UseHighDpiPixmaps'):
-        print('-- [initialize_scaling_dpi]: AA_UseHighDpiPixmaps: False')
+        # print('-- [initialize_scaling_dpi]: AA_UseHighDpiPixmaps: True')
+    # elif not hasattr(Qt, 'AA_UseHighDpiPixmaps'):
+        # print('-- [initialize_scaling_dpi]: AA_UseHighDpiPixmaps: False')
 
 
 def initialize_priority():
@@ -561,14 +561,14 @@ class ObjEveFilter(QObject):
                     obj_pos_h = obj_geo_item[i]
                     obj_pos_h = obj_pos_h[3]
 
-                    print('Default Geometry:', obj_w, obj_h, obj_pos_w, obj_pos_h)
+                    print('-- [ObjEveFilter.eventFilter] default geometry:', obj_w, obj_h, obj_pos_w, obj_pos_h)
 
                     new_obj_w = obj_w * multiplier_w
                     new_obj_h = obj_h * multiplier_h
                     new_obj_pos_w = obj_pos_w * multiplier_w
                     new_obj_pos_h = obj_pos_h * multiplier_h
 
-                    print('New Geometry:', new_obj_w, new_obj_h, new_obj_pos_w, new_obj_pos_h)
+                    print('-- [ObjEveFilter.eventFilter] new geometry:', new_obj_w, new_obj_h, new_obj_pos_w, new_obj_pos_h)
 
                     _.move(new_obj_pos_w, new_obj_pos_h)
                     _.resize(new_obj_w, new_obj_h)
@@ -591,6 +591,8 @@ class ObjEveFilter(QObject):
 
                 for _ in ui_object_font_list_s10b:
                     _.setFont(font_s10b)
+
+                # ToDo --> rescale images by multiplier (after finalizing layout)
 
                 initialize_scaling_dpi()
         return False
