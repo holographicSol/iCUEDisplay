@@ -511,7 +511,7 @@ class ObjEveFilter(QObject):
                     obj_geo_item.append(var)
             # print(obj_geo_item)
 
-            initialize_scaling_dpi()
+            # initialize_scaling_dpi()
 
             # print("previous width:", avail_w)
             # print("previous height:", avail_h)
