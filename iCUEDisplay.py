@@ -16,6 +16,7 @@ import datetime
 import subprocess
 import shutil
 import distutils.dir_util
+from win32api import GetMonitorInfo, MonitorFromPoint, GetSystemMetrics
 from cuesdk import CueSdk
 from cuesdk import CueSdk, CorsairEventId
 from PyQt5 import QtCore
@@ -97,6 +98,9 @@ def initialize_priority():
     win32process.SetPriorityClass(handle, priority_classes[4])
     print('-- [initialize_priority]: settings win32process priority class:', priority_classes[4])
 
+avail_w = ()
+avail_h = ()
+ui_object_complete = []
 
 backlight_time_0 = ''
 backlight_time_1 = ''
@@ -472,7 +476,7 @@ def create_new():
 class ObjEveFilter(QObject):
 
     def eventFilter(self, obj, event):
-        global event_filter_self
+        global event_filter_self, avail_w, avail_h, ui_object_complete, event_filter_self
         obj_eve = obj, event
 
         # Uncomment This Line To See All Object Events
@@ -485,6 +489,64 @@ class ObjEveFilter(QObject):
         """
         if str(obj_eve[1]).startswith('<PyQt5.QtGui.QResizeEvent'):
             print('-- [ObjEveFilter]: Handling resize event')
+
+            print("previous width:", avail_w)
+            print("previous height:", avail_h)
+
+            new_avail_w = QDesktopWidget().availableGeometry().width()
+            new_avail_h = QDesktopWidget().availableGeometry().height()
+            print("new width:", new_avail_w)
+            print("new height:", new_avail_h)
+
+            ratio_w = avail_w / new_avail_w
+            ratio_h = avail_h / new_avail_h
+
+            print('ratio_w:', ratio_w)
+            print('ratio_h:', ratio_h)
+
+            if int(ratio_w) == 1:
+                ratio_w = int(ratio_w)
+                ratio_h = int(ratio_h)
+                main_w = 560 * ratio_w
+                main_h = 224 * ratio_h
+                pos_w = ((QDesktopWidget().availableGeometry().width() / 2) - (main_w / 2))
+                pos_h = ((QDesktopWidget().availableGeometry().height() / 2) - (main_h / 2))
+                event_filter_self[0].setGeometry(int(pos_w), int(pos_h), main_w, main_h)
+                for _ in ui_object_complete:
+                    obj_geo_width = _.geometry().width()
+                    obj_geo_height = _.geometry().height()
+                    obj_geo_pos_w = _.geometry().x()
+                    obj_geo_pos_h = _.geometry().y()
+                    print('[object geometry]', _, obj_geo_width, obj_geo_height, obj_geo_pos_w, obj_geo_pos_h)
+                    new_obj_geo_width = obj_geo_width * ratio_w
+                    new_obj_geo_height = obj_geo_height * ratio_h
+                    new_obj_geo_pos_w = obj_geo_pos_w * ratio_w
+                    new_obj_geo_pos_h = obj_geo_pos_h * ratio_h
+                    _.move(new_obj_geo_pos_w, new_obj_geo_pos_h)
+                    _.resize(new_obj_geo_width, new_obj_geo_height)
+
+            elif int(ratio_w) == 2:
+                ratio_w = int(ratio_w / 2)
+                ratio_h = int(ratio_h / 2)
+                main_w = 560 * ratio_w
+                main_h = 224 * ratio_h
+                pos_w = ((QDesktopWidget().availableGeometry().width() / 2) - (main_w / 2))
+                pos_h = ((QDesktopWidget().availableGeometry().height() / 2) - (main_h / 2))
+                event_filter_self[0].setGeometry(int(pos_w), int(pos_h), main_w, main_h)
+                for _ in ui_object_complete:
+                    obj_geo_width = _.geometry().width()
+                    obj_geo_height = _.geometry().height()
+                    obj_geo_pos_w = _.geometry().x()
+                    obj_geo_pos_h = _.geometry().y()
+                    print('[object geometry]', _, obj_geo_width, obj_geo_height, obj_geo_pos_w, obj_geo_pos_h)
+                    new_obj_geo_width = obj_geo_width * ratio_w
+                    new_obj_geo_height = obj_geo_height * ratio_h
+                    new_obj_geo_pos_w = obj_geo_pos_w * ratio_w
+                    new_obj_geo_pos_h = obj_geo_pos_h * ratio_h
+                    _.move(new_obj_geo_pos_w, new_obj_geo_pos_h)
+                    _.resize(new_obj_geo_width, new_obj_geo_height)
+
+            initialize_scaling_dpi()
         return False
 
 
@@ -493,7 +555,13 @@ class App(QMainWindow):
 
     def __init__(self):
         super(App, self).__init__()
-        global bool_backend_install, event_filter_self
+        global bool_backend_install, event_filter_self, avail_w, avail_h, ui_object_complete
+
+        avail_w = QDesktopWidget().availableGeometry().width()
+        avail_h = QDesktopWidget().availableGeometry().height()
+        print("width:", avail_w)
+        print("height:", avail_h)
+
         create_new()
         if bool_backend_install is True:
             sys.exit()
@@ -501,7 +569,7 @@ class App(QMainWindow):
         initialize_scaling_dpi()
         initialize_priority()
 
-        self.ui_object_complete = []
+        # ui_object_complete = []
         self.object_interaction_enabled = []
         self.object_interaction_readonly = []
 
@@ -680,7 +748,8 @@ class App(QMainWindow):
             color: rgb(230, 230, 230);
             border:0px solid rgb(0, 255, 0);}""")
         print('-- [App.__init__] created:', self.lbl_title)
-        # self.ui_object_complete.append(self.lbl_title)
+        ui_object_complete.append(self.lbl_title)
+        print('self.lbl_title.geometry():', self.lbl_title.geometry())
         # txt = 'foobar'
         # img = "./image/dev_target_20x20.png"
         # self.lbl_title.setToolTip('<b>{0}</b><br><img src="{1}">'.format(txt, img))
@@ -695,7 +764,7 @@ class App(QMainWindow):
                border:0px solid rgb(0, 255, 255);}"""
         )
         print('-- [App.__init__] created:', self.btn_title_logo)
-        self.ui_object_complete.append(self.btn_title_logo)
+        ui_object_complete.append(self.btn_title_logo)
 
         self.btn_quit = QPushButton(self)
         self.btn_quit.move((self.width - 28), 0)
@@ -708,7 +777,7 @@ class App(QMainWindow):
                border:0px solid rgb(0, 0, 0);}"""
         )
         print('-- [App.__init__] created:', self.btn_quit)
-        # self.ui_object_complete.append(self.btn_quit)
+        ui_object_complete.append(self.btn_quit)
 
         self.btn_minimize = QPushButton(self)
         self.btn_minimize.move((self.width - 56), 0)
@@ -721,7 +790,7 @@ class App(QMainWindow):
                border:0px solid rgb(0, 0, 0);}"""
         )
         print('-- [App.__init__] created:', self.btn_minimize)
-        # self.ui_object_complete.append(self.btn_minimize)
+        ui_object_complete.append(self.btn_minimize)
 
         self.lbl_con_stat_name = QLabel(self)
         self.lbl_con_stat_name.move(2, self.anchor_status_h + self.inner_group_spacing_h)
@@ -732,7 +801,7 @@ class App(QMainWindow):
         self.lbl_con_stat_name.setStyleSheet(self.lbl_stat_con_style_sub)
         print('-- [App.__init__] created:', self.lbl_con_stat_name)
         self.lbl_con_stat_name.hide()
-        self.ui_object_complete.append(self.lbl_con_stat_name)
+        ui_object_complete.append(self.lbl_con_stat_name)
 
         self.hotbar_btn_w = 36
         self.hotbar_btn_h = 36
@@ -744,7 +813,7 @@ class App(QMainWindow):
         self.lbl_settings_border.setStyleSheet(self.lbl_settings_border_style)
         print('-- [App.__init__] created:', self.lbl_settings_border)
         self.lbl_con_stat_name.hide()
-        self.ui_object_complete.append(self.lbl_settings_border)
+        ui_object_complete.append(self.lbl_settings_border)
 
         self.btn_refresh_recompile = QPushButton(self)
         self.btn_refresh_recompile.move((self.width - self.hotbar_btn_w) - (self.inner_group_spacing_hotbar_w) - 4, self.anchor_status_h + self.inner_group_spacing_h)
@@ -757,7 +826,7 @@ class App(QMainWindow):
         self.btn_refresh_recompile.clicked.connect(self.recompile)
         print('-- [App.__init__] created:', self.btn_refresh_recompile)
         self.object_interaction_enabled.append(self.btn_refresh_recompile)
-        self.ui_object_complete.append(self.btn_refresh_recompile)
+        ui_object_complete.append(self.btn_refresh_recompile)
 
         self.btn_bck_light = QPushButton(self)
         self.btn_bck_light.move((self.width - self.hotbar_btn_w * 2) - (self.inner_group_spacing_hotbar_w * 2) - 4, self.anchor_status_h + self.inner_group_spacing_h)
@@ -770,7 +839,7 @@ class App(QMainWindow):
         self.btn_bck_light.clicked.connect(self.btn_bck_light_function)
         print('-- [App.__init__] created:', self.btn_bck_light)
         self.object_interaction_enabled.append(self.btn_bck_light)
-        self.ui_object_complete.append(self.btn_bck_light)
+        ui_object_complete.append(self.btn_bck_light)
 
         self.btn_feature_page_home = QPushButton(self)
         self.btn_feature_page_home.move(0, 28)
@@ -781,7 +850,7 @@ class App(QMainWindow):
         self.btn_feature_page_home.clicked.connect(self.feature_pg_home)
         print('-- [App.__init__] created:', self.btn_feature_page_home)
         self.object_interaction_enabled.append(self.btn_feature_page_home)
-        self.ui_object_complete.append(self.btn_feature_page_home)
+        ui_object_complete.append(self.btn_feature_page_home)
 
         self.btn_feature_page_util = QPushButton(self)
         self.btn_feature_page_util.move(0, 60)
@@ -792,7 +861,7 @@ class App(QMainWindow):
         self.btn_feature_page_util.clicked.connect(self.feature_pg_util)
         print('-- [App.__init__] created:', self.btn_feature_page_util)
         self.object_interaction_enabled.append(self.btn_feature_page_util)
-        self.ui_object_complete.append(self.btn_feature_page_util)
+        ui_object_complete.append(self.btn_feature_page_util)
 
         self.btn_feature_page_disks = QPushButton(self)
         self.btn_feature_page_disks.move(0, 92)
@@ -803,7 +872,7 @@ class App(QMainWindow):
         self.btn_feature_page_disks.clicked.connect(self.btn_feature_page_disk_util)
         print('-- [App.__init__] created:', self.btn_feature_page_disks)
         self.object_interaction_enabled.append(self.btn_feature_page_disks)
-        self.ui_object_complete.append(self.btn_feature_page_disks)
+        ui_object_complete.append(self.btn_feature_page_disks)
 
         self.btn_feature_page_networking = QPushButton(self)
         self.btn_feature_page_networking.move(0, 124)
@@ -814,7 +883,7 @@ class App(QMainWindow):
         self.btn_feature_page_networking.clicked.connect(self.btn_feature_page_networking_function)
         print('-- [App.__init__] created:', self.btn_feature_page_networking)
         self.object_interaction_enabled.append(self.btn_feature_page_networking)
-        self.ui_object_complete.append(self.btn_feature_page_networking)
+        ui_object_complete.append(self.btn_feature_page_networking)
 
         self.btn_feature_page_event_notification = QPushButton(self)
         self.btn_feature_page_event_notification.move(0, 156)
@@ -825,7 +894,7 @@ class App(QMainWindow):
         self.btn_feature_page_event_notification.clicked.connect(self.btn_feature_page_event_notification_function)
         print('-- [App.__init__] created:', self.btn_feature_page_event_notification)
         self.object_interaction_enabled.append(self.btn_feature_page_event_notification)
-        self.ui_object_complete.append(self.btn_feature_page_event_notification)
+        ui_object_complete.append(self.btn_feature_page_event_notification)
 
         self.btn_feature_page_settings = QPushButton(self)
         self.btn_feature_page_settings.move(0, 188)
@@ -836,7 +905,7 @@ class App(QMainWindow):
         self.btn_feature_page_settings.clicked.connect(self.btn_feature_page_settings_function)
         print('-- [App.__init__] created:', self.btn_feature_page_settings)
         self.object_interaction_enabled.append(self.btn_feature_page_settings)
-        self.ui_object_complete.append(self.btn_feature_page_settings)
+        ui_object_complete.append(self.btn_feature_page_settings)
 
         self.btn_stat_w = 36
         self.btn_stat_h = 36
@@ -853,7 +922,7 @@ class App(QMainWindow):
         self.lbl_con_stat_kb_img.setStyleSheet(self.btn_stat_img_style)
         print('-- [App.__init__] created:', self.lbl_con_stat_kb_img)
         self.object_interaction_enabled.append(self.lbl_con_stat_kb_img)
-        self.ui_object_complete.append(self.lbl_con_stat_kb_img)
+        ui_object_complete.append(self.lbl_con_stat_kb_img)
 
         self.lbl_con_stat_kb = QLabel(self)
         self.lbl_con_stat_kb.move(128 + 4 + 36, 28)
@@ -862,7 +931,7 @@ class App(QMainWindow):
         self.lbl_con_stat_kb.setText('')
         self.lbl_con_stat_kb.setStyleSheet(self.lbl_stat_con_style_sub)
         print('-- [App.__init__] created:', self.lbl_con_stat_kb)
-        self.ui_object_complete.append(self.lbl_con_stat_kb)
+        ui_object_complete.append(self.lbl_con_stat_kb)
 
         self.lbl_con_stat_ms_img = QPushButton(self)
         self.lbl_con_stat_ms_img.move(128 + 4 + 36 + 150, 28)
@@ -874,7 +943,7 @@ class App(QMainWindow):
         self.lbl_con_stat_ms_img.setStyleSheet(self.btn_stat_img_style)
         print('-- [App.__init__] created:', self.lbl_con_stat_ms_img)
         self.object_interaction_enabled.append(self.lbl_con_stat_ms_img)
-        self.ui_object_complete.append(self.lbl_con_stat_ms_img)
+        ui_object_complete.append(self.lbl_con_stat_ms_img)
 
         self.lbl_con_stat_mouse = QLabel(self)
         self.lbl_con_stat_mouse.move(128 + 4 + 36 + 150 + 36, 28)
@@ -883,7 +952,7 @@ class App(QMainWindow):
         self.lbl_con_stat_mouse.setText('')
         self.lbl_con_stat_mouse.setStyleSheet(self.lbl_stat_con_style_sub)
         print('-- [App.__init__] created:', self.lbl_con_stat_mouse)
-        self.ui_object_complete.append(self.lbl_con_stat_mouse)
+        ui_object_complete.append(self.lbl_con_stat_mouse)
 
         self.lbl_utilization = QLabel(self)
         self.lbl_utilization.move(128 + 4, 30)
@@ -893,7 +962,7 @@ class App(QMainWindow):
         self.lbl_utilization.setAlignment(Qt.AlignCenter)
         self.lbl_utilization.setStyleSheet(self.lbl_data_style_title)
         print('-- [App.__init__] created:', self.lbl_utilization)
-        self.ui_object_complete.append(self.lbl_utilization)
+        ui_object_complete.append(self.lbl_utilization)
 
         self.lbl_cpu_mon = QLabel(self)
         self.lbl_cpu_mon.move(self.scroll_w + 2, 60)
@@ -902,7 +971,7 @@ class App(QMainWindow):
         self.lbl_cpu_mon.setText('CPU MONITOR')
         self.lbl_cpu_mon.setStyleSheet(self.lbl_feature_title_style)
         print('-- [App.__init__] created:', self.lbl_cpu_mon)
-        self.ui_object_complete.append(self.lbl_cpu_mon)
+        ui_object_complete.append(self.lbl_cpu_mon)
 
         self.btn_cpu_mon = QPushButton(self)
         self.btn_cpu_mon.move(self.scroll_w + 2 + 100 + 4, 60)
@@ -912,7 +981,7 @@ class App(QMainWindow):
         self.btn_cpu_mon.clicked.connect(self.btn_cpu_mon_function)
         print('-- [App.__init__] created:', self.btn_cpu_mon)
         self.object_interaction_enabled.append(self.btn_cpu_mon)
-        self.ui_object_complete.append(self.btn_cpu_mon)
+        ui_object_complete.append(self.btn_cpu_mon)
 
         self.qle_cpu_mon_rgb_on = QLineEdit(self)
         self.qle_cpu_mon_rgb_on.resize(self.monitor_btn_w, self.monitor_btn_h)
@@ -923,7 +992,7 @@ class App(QMainWindow):
         self.qle_cpu_mon_rgb_on.setAlignment(Qt.AlignCenter)
         print('-- [App.__init__] created:', self.qle_cpu_mon_rgb_on)
         self.object_interaction_readonly.append(self.qle_cpu_mon_rgb_on)
-        self.ui_object_complete.append(self.qle_cpu_mon_rgb_on)
+        ui_object_complete.append(self.qle_cpu_mon_rgb_on)
 
         self.qle_cpu_led_time_on = QLineEdit(self)
         self.qle_cpu_led_time_on.resize(24, self.monitor_btn_h)
@@ -934,7 +1003,7 @@ class App(QMainWindow):
         self.qle_cpu_led_time_on.setAlignment(Qt.AlignCenter)
         print('-- [App.__init__] created:', self.qle_cpu_led_time_on)
         self.object_interaction_readonly.append(self.qle_cpu_led_time_on)
-        self.ui_object_complete.append(self.qle_cpu_led_time_on)
+        ui_object_complete.append(self.qle_cpu_led_time_on)
 
         self.lbl_cpu_mon_temp = QLabel(self)
         self.lbl_cpu_mon_temp.move(self.scroll_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4, 60)
@@ -943,7 +1012,7 @@ class App(QMainWindow):
         self.lbl_cpu_mon_temp.setText('TEMPERATURE')
         self.lbl_cpu_mon_temp.setStyleSheet(self.lbl_feature_title_style)
         print('-- [App.__init__] created:', self.lbl_cpu_mon_temp)
-        self.ui_object_complete.append(self.lbl_cpu_mon_temp)
+        ui_object_complete.append(self.lbl_cpu_mon_temp)
 
         self.btn_cpu_mon_temp = QPushButton(self)
         self.btn_cpu_mon_temp.move(self.scroll_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 100 + 4, 60)
@@ -953,7 +1022,7 @@ class App(QMainWindow):
         self.btn_cpu_mon_temp.clicked.connect(self.btn_cpu_mon_temp_function)
         print('-- [App.__init__] created:', self.btn_cpu_mon_temp)
         self.object_interaction_enabled.append(self.btn_cpu_mon_temp)
-        self.ui_object_complete.append(self.btn_cpu_mon_temp)
+        ui_object_complete.append(self.btn_cpu_mon_temp)
 
         self.lbl_dram_mon = QLabel(self)
         self.lbl_dram_mon.move(self.scroll_w + 2, 60 + 28 + 4)
@@ -962,7 +1031,7 @@ class App(QMainWindow):
         self.lbl_dram_mon.setText('DRAM MONITOR')
         self.lbl_dram_mon.setStyleSheet(self.lbl_feature_title_style)
         print('-- [App.__init__] created:', self.lbl_dram_mon)
-        self.ui_object_complete.append(self.lbl_dram_mon)
+        ui_object_complete.append(self.lbl_dram_mon)
 
         self.btn_dram_mon = QPushButton(self)
         self.btn_dram_mon.move(self.scroll_w + 2 + 100 + 4, 60 + 28 + 4)
@@ -972,7 +1041,7 @@ class App(QMainWindow):
         self.btn_dram_mon.clicked.connect(self.btn_dram_mon_function)
         print('-- [App.__init__] created:', self.btn_dram_mon)
         self.object_interaction_enabled.append(self.btn_dram_mon)
-        self.ui_object_complete.append(self.btn_dram_mon)
+        ui_object_complete.append(self.btn_dram_mon)
 
         self.qle_dram_mon_rgb_on = QLineEdit(self)
         self.qle_dram_mon_rgb_on.resize(self.monitor_btn_w, self.monitor_btn_h)
@@ -983,7 +1052,7 @@ class App(QMainWindow):
         self.qle_dram_mon_rgb_on.setAlignment(Qt.AlignCenter)
         print('-- [App.__init__] created:', self.qle_dram_mon_rgb_on)
         self.object_interaction_readonly.append(self.qle_dram_mon_rgb_on)
-        self.ui_object_complete.append(self.qle_dram_mon_rgb_on)
+        ui_object_complete.append(self.qle_dram_mon_rgb_on)
 
         self.qle_dram_led_time_on = QLineEdit(self)
         self.qle_dram_led_time_on.resize(24, self.monitor_btn_h)
@@ -994,7 +1063,7 @@ class App(QMainWindow):
         self.qle_dram_led_time_on.setAlignment(Qt.AlignCenter)
         print('-- [App.__init__] created:', self.qle_dram_led_time_on)
         self.object_interaction_readonly.append(self.qle_dram_led_time_on)
-        self.ui_object_complete.append(self.qle_dram_led_time_on)
+        ui_object_complete.append(self.qle_dram_led_time_on)
 
         self.lbl_vram_mon = QLabel(self)
         self.lbl_vram_mon.move(self.scroll_w + 2, 60 + 28 + 4 + 28 + 4)
@@ -1003,7 +1072,7 @@ class App(QMainWindow):
         self.lbl_vram_mon.setText('VRAM MONITOR')
         self.lbl_vram_mon.setStyleSheet(self.lbl_feature_title_style)
         print('-- [App.__init__] created:', self.lbl_vram_mon)
-        self.ui_object_complete.append(self.lbl_vram_mon)
+        ui_object_complete.append(self.lbl_vram_mon)
 
         self.btn_vram_mon = QPushButton(self)
         self.btn_vram_mon.move(self.scroll_w + 2 + 100 + 4, 60 + 28 + 4 + 28 + 4)
@@ -1013,7 +1082,7 @@ class App(QMainWindow):
         self.btn_vram_mon.clicked.connect(self.btn_vram_mon_function)
         print('-- [App.__init__] created:', self.btn_vram_mon)
         self.object_interaction_enabled.append(self.btn_vram_mon)
-        self.ui_object_complete.append(self.btn_vram_mon)
+        ui_object_complete.append(self.btn_vram_mon)
 
         self.qle_vram_mon_rgb_on = QLineEdit(self)
         self.qle_vram_mon_rgb_on.resize(self.monitor_btn_w, self.monitor_btn_h)
@@ -1024,7 +1093,7 @@ class App(QMainWindow):
         self.qle_vram_mon_rgb_on.setAlignment(Qt.AlignCenter)
         print('-- [App.__init__] created:', self.qle_vram_mon_rgb_on)
         self.object_interaction_readonly.append(self.qle_vram_mon_rgb_on)
-        self.ui_object_complete.append(self.qle_vram_mon_rgb_on)
+        ui_object_complete.append(self.qle_vram_mon_rgb_on)
 
         self.qle_vram_led_time_on = QLineEdit(self)
         self.qle_vram_led_time_on.resize(24, self.monitor_btn_h)
@@ -1035,7 +1104,7 @@ class App(QMainWindow):
         self.qle_vram_led_time_on.setAlignment(Qt.AlignCenter)
         print('-- [App.__init__] created:', self.qle_vram_led_time_on)
         self.object_interaction_readonly.append(self.qle_vram_led_time_on)
-        self.ui_object_complete.append(self.qle_vram_led_time_on)
+        ui_object_complete.append(self.qle_vram_led_time_on)
 
         self.lbl_vram_mon_temp = QLabel(self)
         self.lbl_vram_mon_temp.move(self.scroll_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4, 60 + 28 + 4 + 28 + 4)
@@ -1044,7 +1113,7 @@ class App(QMainWindow):
         self.lbl_vram_mon_temp.setText('TEMPERATURE')
         self.lbl_vram_mon_temp.setStyleSheet(self.lbl_feature_title_style)
         print('-- [App.__init__] created:', self.lbl_vram_mon_temp)
-        self.ui_object_complete.append(self.lbl_vram_mon_temp)
+        ui_object_complete.append(self.lbl_vram_mon_temp)
 
         self.btn_vram_mon_temp = QPushButton(self)
         self.btn_vram_mon_temp.move(self.scroll_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 100 + 4, 60 + 28 + 4 + 28 + 4)
@@ -1054,7 +1123,7 @@ class App(QMainWindow):
         self.btn_vram_mon_temp.clicked.connect(self.btn_vram_mon_temp_function)
         print('-- [App.__init__] created:', self.btn_vram_mon_temp)
         self.object_interaction_enabled.append(self.btn_vram_mon_temp)
-        self.ui_object_complete.append(self.btn_vram_mon_temp)
+        ui_object_complete.append(self.btn_vram_mon_temp)
 
         self.lbl_hdd_mon = QLabel(self)
         self.lbl_hdd_mon.move(128 + 4, 30)
@@ -1064,7 +1133,7 @@ class App(QMainWindow):
         self.lbl_hdd_mon.setAlignment(Qt.AlignCenter)
         self.lbl_hdd_mon.setStyleSheet(self.lbl_data_style_title)
         print('-- [App.__init__] created:', self.lbl_hdd_mon)
-        self.ui_object_complete.append(self.lbl_hdd_mon)
+        ui_object_complete.append(self.lbl_hdd_mon)
 
         self.lbl_hdd_mon_sub = QLabel(self)
         self.lbl_hdd_mon_sub.move(self.scroll_w + 2, 60)
@@ -1074,7 +1143,7 @@ class App(QMainWindow):
         self.lbl_hdd_mon_sub.setAlignment(Qt.AlignCenter)
         self.lbl_hdd_mon_sub.setStyleSheet(self.lbl_feature_title_style)
         print('-- [App.__init__] created:', self.lbl_hdd_mon_sub)
-        self.ui_object_complete.append(self.lbl_hdd_mon_sub)
+        ui_object_complete.append(self.lbl_hdd_mon_sub)
 
         self.btn_hdd_mon = QPushButton(self)
         self.btn_hdd_mon.move(self.scroll_w + 2 + 88 + 4, 60)
@@ -1084,7 +1153,7 @@ class App(QMainWindow):
         self.btn_hdd_mon.clicked.connect(self.btn_hdd_mon_function)
         print('-- [App.__init__] created:', self.btn_hdd_mon)
         self.object_interaction_enabled.append(self.btn_hdd_mon)
-        self.ui_object_complete.append(self.btn_hdd_mon)
+        ui_object_complete.append(self.btn_hdd_mon)
 
         self.lbl_hdd_write_mon = QLabel(self)
         self.lbl_hdd_write_mon.move(self.scroll_w + 2 + 88 + 4 + 28 + 4, 60)
@@ -1093,7 +1162,7 @@ class App(QMainWindow):
         self.lbl_hdd_write_mon.setText('WRITES')
         self.lbl_hdd_write_mon.setStyleSheet(self.lbl_feature_title_style)
         print('-- [App.__init__] created:', self.lbl_hdd_write_mon)
-        self.ui_object_complete.append(self.lbl_hdd_write_mon)
+        ui_object_complete.append(self.lbl_hdd_write_mon)
 
         self.qle_hdd_mon_rgb_on = QLineEdit(self)
         self.qle_hdd_mon_rgb_on.resize(self.monitor_btn_w, self.monitor_btn_h)
@@ -1104,7 +1173,7 @@ class App(QMainWindow):
         self.qle_hdd_mon_rgb_on.setAlignment(Qt.AlignCenter)
         print('-- [App.__init__] created:', self.qle_hdd_mon_rgb_on)
         self.object_interaction_readonly.append(self.qle_hdd_mon_rgb_on)
-        self.ui_object_complete.append(self.qle_hdd_mon_rgb_on)
+        ui_object_complete.append(self.qle_hdd_mon_rgb_on)
 
         self.lbl_hdd_read_mon = QLabel(self)
         self.lbl_hdd_read_mon.move(self.scroll_w + 2 + 88 + 4 + 52 + 4 + 28 + 4 + self.monitor_btn_w + 4, 60)
@@ -1113,7 +1182,7 @@ class App(QMainWindow):
         self.lbl_hdd_read_mon.setText('READS')
         self.lbl_hdd_read_mon.setStyleSheet(self.lbl_feature_title_style)
         print('-- [App.__init__] created:', self.lbl_hdd_read_mon)
-        self.ui_object_complete.append(self.lbl_hdd_read_mon)
+        ui_object_complete.append(self.lbl_hdd_read_mon)
 
         self.qle_hdd_read_mon_rgb_on = QLineEdit(self)
         self.qle_hdd_read_mon_rgb_on.resize(self.monitor_btn_w, self.monitor_btn_h)
@@ -1124,7 +1193,7 @@ class App(QMainWindow):
         self.qle_hdd_read_mon_rgb_on.setAlignment(Qt.AlignCenter)
         print('-- [App.__init__] created:', self.qle_hdd_read_mon_rgb_on)
         self.object_interaction_readonly.append(self.qle_hdd_read_mon_rgb_on)
-        self.ui_object_complete.append(self.qle_hdd_read_mon_rgb_on)
+        ui_object_complete.append(self.qle_hdd_read_mon_rgb_on)
 
         self.qle_hdd_led_time_on = QLineEdit(self)
         self.qle_hdd_led_time_on.resize(24, self.monitor_btn_h)
@@ -1135,7 +1204,7 @@ class App(QMainWindow):
         self.qle_hdd_led_time_on.setAlignment(Qt.AlignCenter)
         print('-- [App.__init__] created:', self.qle_hdd_led_time_on)
         self.object_interaction_readonly.append(self.qle_hdd_led_time_on)
-        self.ui_object_complete.append(self.qle_hdd_led_time_on)
+        ui_object_complete.append(self.qle_hdd_led_time_on)
 
         self.lbl_network_traffic = QLabel(self)
         self.lbl_network_traffic.move(128 + 4, 30)
@@ -1145,7 +1214,7 @@ class App(QMainWindow):
         self.lbl_network_traffic.setAlignment(Qt.AlignCenter)
         self.lbl_network_traffic.setStyleSheet(self.lbl_data_style_title)
         print('-- [App.__init__] created:', self.lbl_network_traffic)
-        self.ui_object_complete.append(self.lbl_network_traffic)
+        ui_object_complete.append(self.lbl_network_traffic)
 
         self.lbl_network_adapter = QLabel(self)
         self.lbl_network_adapter.move(self.scroll_w + 2, 60)
@@ -1154,7 +1223,7 @@ class App(QMainWindow):
         self.lbl_network_adapter.setText('ADAPTER')
         self.lbl_network_adapter.setStyleSheet(self.lbl_feature_title_style)
         print('-- [App.__init__] created:', self.lbl_network_adapter)
-        self.ui_object_complete.append(self.lbl_network_adapter)
+        ui_object_complete.append(self.lbl_network_adapter)
 
         self.cmb_network_adapter_name = QComboBox(self)
         self.cmb_network_adapter_name.resize(224, self.monitor_btn_h)
@@ -1164,7 +1233,7 @@ class App(QMainWindow):
         self.cmb_network_adapter_name.activated[str].connect(self.cmb_network_adapter_name_function)
         print('-- [App.__init__] created:', self.cmb_network_adapter_name)
         self.object_interaction_enabled.append(self.cmb_network_adapter_name)
-        self.ui_object_complete.append(self.cmb_network_adapter_name)
+        ui_object_complete.append(self.cmb_network_adapter_name)
 
         self.btn_network_adapter_refresh = QPushButton(self)
         self.btn_network_adapter_refresh.move(self.scroll_w + 2 + 72 + 4 + 224 + 4, 60)
@@ -1175,7 +1244,7 @@ class App(QMainWindow):
         self.btn_network_adapter_refresh.clicked.connect(self.btn_network_adapter_refresh_function)
         print('-- [App.__init__] created:', self.btn_network_adapter_refresh)
         self.object_interaction_enabled.append(self.btn_network_adapter_refresh)
-        self.ui_object_complete.append(self.btn_network_adapter_refresh)
+        ui_object_complete.append(self.btn_network_adapter_refresh)
 
         self.btn_network_adapter = QPushButton(self)
         self.btn_network_adapter.move(self.scroll_w + 2 + 72 + 4 + 224 + 4 + 28 + 4, 60)
@@ -1185,7 +1254,7 @@ class App(QMainWindow):
         self.btn_network_adapter.clicked.connect(self.btn_network_adapter_function)
         print('-- [App.__init__] created:', self.btn_network_adapter)
         self.object_interaction_enabled.append(self.btn_network_adapter)
-        self.ui_object_complete.append(self.btn_network_adapter)
+        ui_object_complete.append(self.btn_network_adapter)
 
         self.qle_network_adapter_led_time_on = QLineEdit(self)
         self.qle_network_adapter_led_time_on.resize(24, 28)
@@ -1196,7 +1265,7 @@ class App(QMainWindow):
         self.qle_network_adapter_led_time_on.setAlignment(Qt.AlignCenter)
         print('-- [App.__init__] created:', self.qle_network_adapter_led_time_on)
         self.object_interaction_readonly.append(self.qle_network_adapter_led_time_on)
-        self.ui_object_complete.append(self.qle_network_adapter_led_time_on)
+        ui_object_complete.append(self.qle_network_adapter_led_time_on)
 
         self.lbl_net_con_mouse = QLabel(self)
         self.lbl_net_con_mouse.move(self.scroll_w + 2, 60 + 28 + 4)
@@ -1205,7 +1274,7 @@ class App(QMainWindow):
         self.lbl_net_con_mouse.setText('DISPLAY INTERNET CONNECTION (MOUSE)')
         self.lbl_net_con_mouse.setStyleSheet(self.lbl_feature_title_style)
         print('-- [App.__init__] created:', self.lbl_net_con_mouse)
-        self.ui_object_complete.append(self.lbl_net_con_mouse)
+        ui_object_complete.append(self.lbl_net_con_mouse)
 
         self.btn_net_con_mouse = QPushButton(self)
         self.btn_net_con_mouse.move(self.scroll_w + 2 + 240 + 4, 60 + 28 + 4)
@@ -1215,7 +1284,7 @@ class App(QMainWindow):
         self.btn_net_con_mouse.clicked.connect(self.btn_net_con_mouse_function)
         print('-- [App.__init__] created:', self.btn_net_con_mouse)
         self.object_interaction_enabled.append(self.btn_net_con_mouse)
-        self.ui_object_complete.append(self.btn_net_con_mouse)
+        ui_object_complete.append(self.btn_net_con_mouse)
 
         self.btn_net_con_mouse_led_selected_prev = QPushButton(self)
         self.btn_net_con_mouse_led_selected_prev.move(self.scroll_w + 2 + 240 + 4 + 28 + 4, 60 + 28 + 4)
@@ -1226,7 +1295,7 @@ class App(QMainWindow):
         self.btn_net_con_mouse_led_selected_prev.clicked.connect(self.btn_net_con_mouse_led_selected_prev_function)
         print('-- [App.__init__] created:', self.btn_net_con_mouse_led_selected_prev)
         self.object_interaction_enabled.append(self.btn_net_con_mouse_led_selected_prev)
-        self.ui_object_complete.append(self.btn_net_con_mouse_led_selected_prev)
+        ui_object_complete.append(self.btn_net_con_mouse_led_selected_prev)
 
         self.lbl_net_con_mouse_led_selected = QLabel(self)
         self.lbl_net_con_mouse_led_selected.move(self.scroll_w + 2 + 240 + 4 + 28 + 4 + 20 + 4, 60 + 28 + 4)
@@ -1235,7 +1304,7 @@ class App(QMainWindow):
         self.lbl_net_con_mouse_led_selected.setStyleSheet(self.lbl_feature_title_style)
         self.lbl_net_con_mouse_led_selected.setAlignment(Qt.AlignCenter)
         print('-- [App.__init__] created:', self.lbl_net_con_mouse_led_selected)
-        self.ui_object_complete.append(self.lbl_net_con_mouse_led_selected)
+        ui_object_complete.append(self.lbl_net_con_mouse_led_selected)
 
         self.btn_net_con_mouse_led_selected_next = QPushButton(self)
         self.btn_net_con_mouse_led_selected_next.move(self.scroll_w + 2 + 240 + 4 + 28 + 4 + 20 + 4 + 28 + 4, 60 + 28 + 4)
@@ -1246,7 +1315,7 @@ class App(QMainWindow):
         self.btn_net_con_mouse_led_selected_next.clicked.connect(self.btn_net_con_mouse_led_selected_next_function)
         print('-- [App.__init__] created:', self.btn_net_con_mouse_led_selected_next)
         self.object_interaction_enabled.append(self.btn_net_con_mouse_led_selected_next)
-        self.ui_object_complete.append(self.btn_net_con_mouse_led_selected_next)
+        ui_object_complete.append(self.btn_net_con_mouse_led_selected_next)
 
         self.lbl_net_con_kb = QLabel(self)
         self.lbl_net_con_kb.move(self.scroll_w + 2, 60 + 28 + 4 + 28 + 4)
@@ -1255,7 +1324,7 @@ class App(QMainWindow):
         self.lbl_net_con_kb.setText('DISPLAY INTERNET CONNECTION (KEYBOARD)')
         self.lbl_net_con_kb.setStyleSheet(self.lbl_feature_title_style)
         print('-- [App.__init__] created:', self.lbl_net_con_kb)
-        self.ui_object_complete.append(self.lbl_net_con_kb)
+        ui_object_complete.append(self.lbl_net_con_kb)
 
         self.btn_net_con_kb = QPushButton(self)
         self.btn_net_con_kb.move(self.scroll_w + 2 + 280 + 4, 60 + 28 + 4 + 28 + 4)
@@ -1265,7 +1334,7 @@ class App(QMainWindow):
         self.btn_net_con_kb.clicked.connect(self.btn_net_con_kb_function)
         print('-- [App.__init__] created:', self.btn_net_con_kb)
         self.object_interaction_enabled.append(self.btn_net_con_kb)
-        self.ui_object_complete.append(self.btn_net_con_kb)
+        ui_object_complete.append(self.btn_net_con_kb)
 
         self.lbl_netshare_mon = QLabel(self)
         self.lbl_netshare_mon.move(self.scroll_w + 2, 60 + 28 + 4 + 28 + 4 + 28 + 4)
@@ -1274,7 +1343,7 @@ class App(QMainWindow):
         self.lbl_netshare_mon.setText('NETWORK SHARES')
         self.lbl_netshare_mon.setStyleSheet(self.lbl_feature_title_style)
         print('-- [App.__init__] created:', self.lbl_netshare_mon)
-        self.ui_object_complete.append(self.lbl_netshare_mon)
+        ui_object_complete.append(self.lbl_netshare_mon)
 
         self.btn_netshare_mon = QPushButton(self)
         self.btn_netshare_mon.move(self.scroll_w + 2 + 126 + 4, 60 + 28 + 4 + 28 + 4 + 28 + 4)
@@ -1284,7 +1353,7 @@ class App(QMainWindow):
         self.btn_netshare_mon.clicked.connect(self.btn_defnetshare_function)
         print('-- [App.__init__] created:', self.btn_netshare_mon)
         self.object_interaction_enabled.append(self.btn_netshare_mon)
-        self.ui_object_complete.append(self.btn_netshare_mon)
+        ui_object_complete.append(self.btn_netshare_mon)
 
         self.qle_netshare_mon_rgb_on = QLineEdit(self)
         self.qle_netshare_mon_rgb_on.resize(self.monitor_btn_w, self.monitor_btn_h)
@@ -1295,7 +1364,7 @@ class App(QMainWindow):
         self.qle_netshare_mon_rgb_on.setAlignment(Qt.AlignCenter)
         print('-- [App.__init__] created:', self.qle_netshare_mon_rgb_on)
         self.object_interaction_readonly.append(self.qle_netshare_mon_rgb_on)
-        self.ui_object_complete.append(self.qle_netshare_mon_rgb_on)
+        ui_object_complete.append(self.qle_netshare_mon_rgb_on)
 
         self.lbl_settings = QLabel(self)
         self.lbl_settings.move(128 + 4, 30)
@@ -1305,7 +1374,7 @@ class App(QMainWindow):
         self.lbl_settings.setAlignment(Qt.AlignCenter)
         self.lbl_settings.setStyleSheet(self.lbl_data_style_title)
         print('-- [App.__init__] created:', self.lbl_settings)
-        self.ui_object_complete.append(self.lbl_settings)
+        ui_object_complete.append(self.lbl_settings)
 
         self.lbl_exclusive_con = QLabel(self)
         self.lbl_exclusive_con.move(self.scroll_w + 2, 60)
@@ -1314,7 +1383,7 @@ class App(QMainWindow):
         self.lbl_exclusive_con.setText('EXCLUSIVE CONTROL')
         self.lbl_exclusive_con.setStyleSheet(self.lbl_feature_title_style)
         print('-- [App.__init__] created:', self.lbl_exclusive_con)
-        self.ui_object_complete.append(self.lbl_exclusive_con)
+        ui_object_complete.append(self.lbl_exclusive_con)
 
         self.btn_exclusive_con = QPushButton(self)
         self.btn_exclusive_con.move(self.scroll_w + 2 + 126, 60)
@@ -1324,7 +1393,7 @@ class App(QMainWindow):
         self.btn_exclusive_con.clicked.connect(self.btn_exclusive_con_function)
         print('-- [App.__init__] created:', self.btn_exclusive_con)
         self.object_interaction_enabled.append(self.btn_exclusive_con)
-        self.ui_object_complete.append(self.btn_exclusive_con)
+        ui_object_complete.append(self.btn_exclusive_con)
 
         self.lbl_run_startup = QLabel(self)
         self.lbl_run_startup.move(self.scroll_w + 2, 60 + 28 + 4)
@@ -1333,7 +1402,7 @@ class App(QMainWindow):
         self.lbl_run_startup.setText('AUTOMATIC STARTUP')
         self.lbl_run_startup.setStyleSheet(self.lbl_feature_title_style)
         print('-- [App.__init__] created:', self.lbl_run_startup)
-        self.ui_object_complete.append(self.lbl_run_startup)
+        ui_object_complete.append(self.lbl_run_startup)
 
         self.btn_run_startup = QPushButton(self)
         self.btn_run_startup.move(self.scroll_w + 2 + 126 + 4, 60 + 28 + 4)
@@ -1343,7 +1412,7 @@ class App(QMainWindow):
         self.btn_run_startup.clicked.connect(self.btn_run_startup_function)
         print('-- [App.__init__] created:', self.btn_run_startup)
         self.object_interaction_enabled.append(self.btn_run_startup)
-        self.ui_object_complete.append(self.btn_run_startup)
+        ui_object_complete.append(self.btn_run_startup)
 
         self.lbl_start_minimized = QLabel(self)
         self.lbl_start_minimized.move(self.scroll_w + 2, 60 + 28 + 4 + 28 + 4)
@@ -1352,7 +1421,7 @@ class App(QMainWindow):
         self.lbl_start_minimized.setText('START MINIMIZED')
         self.lbl_start_minimized.setStyleSheet(self.lbl_feature_title_style)
         print('-- [App.__init__] created:', self.lbl_start_minimized)
-        self.ui_object_complete.append(self.lbl_start_minimized)
+        ui_object_complete.append(self.lbl_start_minimized)
 
         self.btn_start_minimized = QPushButton(self)
         self.btn_start_minimized.move(self.scroll_w + 2 + 126 + 4, 60 + 28 + 4 + 28 + 4)
@@ -1362,7 +1431,7 @@ class App(QMainWindow):
         self.btn_start_minimized.clicked.connect(self.btn_start_minimized_function)
         print('-- [App.__init__] created:', self.btn_start_minimized)
         self.object_interaction_enabled.append(self.btn_start_minimized)
-        self.ui_object_complete.append(self.btn_start_minimized)
+        ui_object_complete.append(self.btn_start_minimized)
 
         self.lbl_backlight_sub = QLabel(self)
         self.lbl_backlight_sub.move(self.scroll_w + 2, 60 + 28 + 4 + 28 + 4 + 28 + 4 + 28 + 4)
@@ -1371,7 +1440,7 @@ class App(QMainWindow):
         self.lbl_backlight_sub.setText('BACKLIGHT')
         self.lbl_backlight_sub.setStyleSheet(self.lbl_feature_title_style)
         print('-- [App.__init__] created:', self.lbl_backlight_sub)
-        self.ui_object_complete.append(self.lbl_backlight_sub)
+        ui_object_complete.append(self.lbl_backlight_sub)
 
         self.btn_backlight_sub = QPushButton(self)
         self.btn_backlight_sub.move(self.scroll_w + 2 + 86 + 4, 60 + 28 + 4 + 28 + 4 + 28 + 4 + 28 + 4)
@@ -1381,7 +1450,7 @@ class App(QMainWindow):
         self.btn_backlight_sub.clicked.connect(self.btn_bck_light_function)
         print('-- [App.__init__] created:', self.btn_backlight_sub)
         self.object_interaction_enabled.append(self.btn_backlight_sub)
-        self.ui_object_complete.append(self.btn_backlight_sub)
+        ui_object_complete.append(self.btn_backlight_sub)
 
         self.qle_backlight_rgb_on = QLineEdit(self)
         self.qle_backlight_rgb_on.resize(self.monitor_btn_w, self.monitor_btn_h)
@@ -1392,7 +1461,7 @@ class App(QMainWindow):
         self.qle_backlight_rgb_on.setAlignment(Qt.AlignCenter)
         print('-- [App.__init__] created:', self.qle_backlight_rgb_on)
         self.object_interaction_readonly.append(self.qle_backlight_rgb_on)
-        self.ui_object_complete.append(self.qle_backlight_rgb_on)
+        ui_object_complete.append(self.qle_backlight_rgb_on)
 
         self.lbl_backlight_auto = QLabel(self)
         self.lbl_backlight_auto.move(self.scroll_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4, 60 + 28 + 4 + 28 + 4 + 28 + 4 + 28 + 4)
@@ -1401,7 +1470,7 @@ class App(QMainWindow):
         self.lbl_backlight_auto.setText('AUTOMATIC')
         self.lbl_backlight_auto.setStyleSheet(self.lbl_feature_title_style)
         print('-- [App.__init__] created:', self.lbl_backlight_auto)
-        self.ui_object_complete.append(self.lbl_backlight_auto)
+        ui_object_complete.append(self.lbl_backlight_auto)
 
         self.btn_backlight_auto = QPushButton(self)
         self.btn_backlight_auto.move(self.scroll_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 92 + 4, 60 + 28 + 4 + 28 + 4 + 28 + 4 + 28 + 4)
@@ -1411,7 +1480,7 @@ class App(QMainWindow):
         self.btn_backlight_auto.clicked.connect(self.backlight_auto_function)
         print('-- [App.__init__] created:', self.btn_backlight_auto)
         self.object_interaction_enabled.append(self.btn_backlight_auto)
-        self.ui_object_complete.append(self.btn_backlight_auto)
+        ui_object_complete.append(self.btn_backlight_auto)
 
         self.lbl_backlight_auto_time_0 = QLabel(self)
         self.lbl_backlight_auto_time_0.move(self.scroll_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 92 + 4 + 28 + 4, 60 + 28 + 4 + 28 + 4 + 28 + 4 + 18)
@@ -1420,7 +1489,7 @@ class App(QMainWindow):
         self.lbl_backlight_auto_time_0.setText('Time 0:')
         self.lbl_backlight_auto_time_0.setStyleSheet(self.lbl_white_txt_black_bg_style)
         print('-- [App.__init__] created:', self.lbl_backlight_auto_time_0)
-        self.ui_object_complete.append(self.lbl_backlight_auto_time_0)
+        ui_object_complete.append(self.lbl_backlight_auto_time_0)
 
         self.btn_backlight_auto_time_0 = QLineEdit(self)
         self.btn_backlight_auto_time_0.resize(42, self.monitor_btn_h)
@@ -1433,7 +1502,7 @@ class App(QMainWindow):
         self.btn_backlight_auto_time_0.setToolTip(
             'Automatic Backlight Time On\n\nAccepts only 24h Format.\n\nExample 1: 0000\nExample 2: 0030\nExample 3: 0900')
         self.object_interaction_readonly.append(self.btn_backlight_auto_time_0)
-        self.ui_object_complete.append(self.btn_backlight_auto_time_0)
+        ui_object_complete.append(self.btn_backlight_auto_time_0)
 
         self.lbl_backlight_auto_time_1 = QLabel(self)
         self.lbl_backlight_auto_time_1.move(self.scroll_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 92 + 4 + 28 + 4 + 42 + 4, 60 + 28 + 4 + 28 + 4 + 28 + 4 + 18)
@@ -1442,7 +1511,7 @@ class App(QMainWindow):
         self.lbl_backlight_auto_time_1.setText('Time 1:')
         self.lbl_backlight_auto_time_1.setStyleSheet(self.lbl_white_txt_black_bg_style)
         print('-- [App.__init__] created:', self.lbl_backlight_auto_time_1)
-        self.ui_object_complete.append(self.lbl_backlight_auto_time_1)
+        ui_object_complete.append(self.lbl_backlight_auto_time_1)
 
         self.btn_backlight_auto_time_1 = QLineEdit(self)
         self.btn_backlight_auto_time_1.resize(42, self.monitor_btn_h)
@@ -1454,7 +1523,7 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.btn_backlight_auto_time_1)
         self.btn_backlight_auto_time_1.setToolTip('Automatic Backlight Time Off\n\nAccepts only 24h Format.\n\nExample 1: 0000\nExample 2: 0030\nExample 3: 0900')
         self.object_interaction_readonly.append(self.btn_backlight_auto_time_1)
-        self.ui_object_complete.append(self.btn_backlight_auto_time_1)
+        ui_object_complete.append(self.btn_backlight_auto_time_1)
 
         self.lbl_event_notification = QLabel(self)
         self.lbl_event_notification.move(128 + 4, 30)
@@ -1477,7 +1546,7 @@ class App(QMainWindow):
                                                '2. Event response (Run) will only work when notification of event is active (LED is blinking).\n'
                                                '3. Event response can be triggered only once per notification by pressing the G key while G key is showing the notification.\n\n'
                                                'This feature is for advanced users.')
-        self.ui_object_complete.append(self.lbl_event_notification)
+        ui_object_complete.append(self.lbl_event_notification)
 
         self.lbl_event_notification_g1 = QLabel(self)
         self.lbl_event_notification_g1.move(self.scroll_w + 2, 60)
@@ -1486,7 +1555,7 @@ class App(QMainWindow):
         self.lbl_event_notification_g1.setText('G1 Notify')
         self.lbl_event_notification_g1.setStyleSheet(self.lbl_feature_title_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_g1)
-        self.ui_object_complete.append(self.lbl_event_notification_g1)
+        ui_object_complete.append(self.lbl_event_notification_g1)
 
         self.btn_event_notification_g1 = QPushButton(self)
         self.btn_event_notification_g1.move(self.scroll_w + 2 + 60 + 4, 60)
@@ -1496,7 +1565,7 @@ class App(QMainWindow):
         self.btn_event_notification_g1.clicked.connect(self.btn_event_notification_g1_function)
         print('-- [App.__init__] created:', self.btn_event_notification_g1)
         self.object_interaction_enabled.append(self.btn_event_notification_g1)
-        self.ui_object_complete.append(self.btn_event_notification_g1)
+        ui_object_complete.append(self.btn_event_notification_g1)
 
         self.lbl_event_notification_run_g1 = QLabel(self)
         self.lbl_event_notification_run_g1.move(self.scroll_w + 2 + 60 + 4 + 20 + 4, 60)
@@ -1505,7 +1574,7 @@ class App(QMainWindow):
         self.lbl_event_notification_run_g1.setText('Run')
         self.lbl_event_notification_run_g1.setStyleSheet(self.lbl_feature_title_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_run_g1)
-        self.ui_object_complete.append(self.lbl_event_notification_run_g1)
+        ui_object_complete.append(self.lbl_event_notification_run_g1)
 
         self.btn_event_notification_run_g1 = QPushButton(self)
         self.btn_event_notification_run_g1.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4, 60)
@@ -1515,7 +1584,7 @@ class App(QMainWindow):
         self.btn_event_notification_run_g1.clicked.connect(self.btn_event_notification_run_g1_function)
         print('-- [App.__init__] created:', self.btn_event_notification_run_g1)
         self.object_interaction_enabled.append(self.btn_event_notification_run_g1)
-        self.ui_object_complete.append(self.btn_event_notification_run_g1)
+        ui_object_complete.append(self.btn_event_notification_run_g1)
 
         self.lbl_event_notification_fpath_g1 = QLabel(self)
         self.lbl_event_notification_fpath_g1.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4, 60)
@@ -1524,7 +1593,7 @@ class App(QMainWindow):
         self.lbl_event_notification_fpath_g1.setText('')
         self.lbl_event_notification_fpath_g1.setStyleSheet(self.lbl_white_txt_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_fpath_g1)
-        self.ui_object_complete.append(self.lbl_event_notification_fpath_g1)
+        ui_object_complete.append(self.lbl_event_notification_fpath_g1)
 
         self.btn_event_notification_select_file_g1 = QPushButton(self)
         self.btn_event_notification_select_file_g1.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4 + 240 + 4, 60)
@@ -1535,7 +1604,7 @@ class App(QMainWindow):
         self.btn_event_notification_select_file_g1.clicked.connect(self.openFileNameDialogG1)
         print('-- [App.__init__] created:', self.btn_event_notification_select_file_g1)
         self.object_interaction_enabled.append(self.btn_event_notification_select_file_g1)
-        self.ui_object_complete.append(self.btn_event_notification_select_file_g1)
+        ui_object_complete.append(self.btn_event_notification_select_file_g1)
 
         self.lbl_event_notification_g2 = QLabel(self)
         self.lbl_event_notification_g2.move(self.scroll_w + 2, 60 + 20 + 4)
@@ -1544,7 +1613,7 @@ class App(QMainWindow):
         self.lbl_event_notification_g2.setText('G2 Notify')
         self.lbl_event_notification_g2.setStyleSheet(self.lbl_feature_title_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_g2)
-        self.ui_object_complete.append(self.lbl_event_notification_g2)
+        ui_object_complete.append(self.lbl_event_notification_g2)
 
         self.btn_event_notification_g2 = QPushButton(self)
         self.btn_event_notification_g2.move(self.scroll_w + 2 + 60 + 4, 60 + 20 + 4)
@@ -1554,7 +1623,7 @@ class App(QMainWindow):
         self.btn_event_notification_g2.clicked.connect(self.btn_event_notification_g2_function)
         print('-- [App.__init__] created:', self.btn_event_notification_g2)
         self.object_interaction_enabled.append(self.btn_event_notification_g2)
-        self.ui_object_complete.append(self.btn_event_notification_g2)
+        ui_object_complete.append(self.btn_event_notification_g2)
 
         self.lbl_event_notification_run_g2 = QLabel(self)
         self.lbl_event_notification_run_g2.move(self.scroll_w + 2 + 60 + 4 + 20 + 4, 60 + 20 + 4)
@@ -1563,7 +1632,7 @@ class App(QMainWindow):
         self.lbl_event_notification_run_g2.setText('Run')
         self.lbl_event_notification_run_g2.setStyleSheet(self.lbl_feature_title_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_run_g2)
-        self.ui_object_complete.append(self.lbl_event_notification_run_g2)
+        ui_object_complete.append(self.lbl_event_notification_run_g2)
 
         self.btn_event_notification_run_g2 = QPushButton(self)
         self.btn_event_notification_run_g2.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4, 60 + 20 + 4)
@@ -1573,7 +1642,7 @@ class App(QMainWindow):
         self.btn_event_notification_run_g2.clicked.connect(self.btn_event_notification_run_g2_function)
         print('-- [App.__init__] created:', self.btn_event_notification_run_g2)
         self.object_interaction_enabled.append(self.btn_event_notification_run_g2)
-        self.ui_object_complete.append(self.btn_event_notification_run_g2)
+        ui_object_complete.append(self.btn_event_notification_run_g2)
 
         self.lbl_event_notification_fpath_g2 = QLabel(self)
         self.lbl_event_notification_fpath_g2.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4, 60 + 20 + 4)
@@ -1582,7 +1651,7 @@ class App(QMainWindow):
         self.lbl_event_notification_fpath_g2.setText('')
         self.lbl_event_notification_fpath_g2.setStyleSheet(self.lbl_white_txt_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_fpath_g2)
-        self.ui_object_complete.append(self.lbl_event_notification_fpath_g2)
+        ui_object_complete.append(self.lbl_event_notification_fpath_g2)
 
         self.btn_event_notification_select_file_g2 = QPushButton(self)
         self.btn_event_notification_select_file_g2.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4 + 240 + 4, 60 + 20 + 4)
@@ -1593,7 +1662,7 @@ class App(QMainWindow):
         self.btn_event_notification_select_file_g2.clicked.connect(self.openFileNameDialogG2)
         print('-- [App.__init__] created:', self.btn_event_notification_select_file_g2)
         self.object_interaction_enabled.append(self.btn_event_notification_select_file_g2)
-        self.ui_object_complete.append(self.btn_event_notification_select_file_g2)
+        ui_object_complete.append(self.btn_event_notification_select_file_g2)
 
         self.lbl_event_notification_g3 = QLabel(self)
         self.lbl_event_notification_g3.move(self.scroll_w + 2, 60 + 20 + 4 + 20 + 4)
@@ -1602,7 +1671,7 @@ class App(QMainWindow):
         self.lbl_event_notification_g3.setText('G3 Notify')
         self.lbl_event_notification_g3.setStyleSheet(self.lbl_feature_title_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_g3)
-        self.ui_object_complete.append(self.lbl_event_notification_g3)
+        ui_object_complete.append(self.lbl_event_notification_g3)
 
         self.btn_event_notification_g3 = QPushButton(self)
         self.btn_event_notification_g3.move(self.scroll_w + 2 + 60 + 4, 60 + 20 + 4 + 20 + 4)
@@ -1612,7 +1681,7 @@ class App(QMainWindow):
         self.btn_event_notification_g3.clicked.connect(self.btn_event_notification_g3_function)
         print('-- [App.__init__] created:', self.btn_event_notification_g3)
         self.object_interaction_enabled.append(self.btn_event_notification_g3)
-        self.ui_object_complete.append(self.btn_event_notification_g3)
+        ui_object_complete.append(self.btn_event_notification_g3)
 
         self.lbl_event_notification_run_g3 = QLabel(self)
         self.lbl_event_notification_run_g3.move(self.scroll_w + 2 + 60 + 4 + 20 + 4, 60 + 20 + 4 + 20 + 4)
@@ -1621,7 +1690,7 @@ class App(QMainWindow):
         self.lbl_event_notification_run_g3.setText('Run')
         self.lbl_event_notification_run_g3.setStyleSheet(self.lbl_feature_title_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_run_g3)
-        self.ui_object_complete.append(self.lbl_event_notification_run_g3)
+        ui_object_complete.append(self.lbl_event_notification_run_g3)
 
         self.btn_event_notification_run_g3 = QPushButton(self)
         self.btn_event_notification_run_g3.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4, 60 + 20 + 4 + 20 + 4)
@@ -1631,7 +1700,7 @@ class App(QMainWindow):
         self.btn_event_notification_run_g3.clicked.connect(self.btn_event_notification_run_g3_function)
         print('-- [App.__init__] created:', self.btn_event_notification_run_g3)
         self.object_interaction_enabled.append(self.btn_event_notification_run_g3)
-        self.ui_object_complete.append(self.btn_event_notification_run_g3)
+        ui_object_complete.append(self.btn_event_notification_run_g3)
 
         self.lbl_event_notification_fpath_g3 = QLabel(self)
         self.lbl_event_notification_fpath_g3.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4, 60 + 20 + 4 + 20 + 4)
@@ -1640,7 +1709,7 @@ class App(QMainWindow):
         self.lbl_event_notification_fpath_g3.setText('')
         self.lbl_event_notification_fpath_g3.setStyleSheet(self.lbl_white_txt_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_fpath_g3)
-        self.ui_object_complete.append(self.lbl_event_notification_fpath_g3)
+        ui_object_complete.append(self.lbl_event_notification_fpath_g3)
 
         self.btn_event_notification_select_file_g3 = QPushButton(self)
         self.btn_event_notification_select_file_g3.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4 + 240 + 4, 60 + 20 + 4 + 20 + 4)
@@ -1651,7 +1720,7 @@ class App(QMainWindow):
         self.btn_event_notification_select_file_g3.clicked.connect(self.openFileNameDialogG3)
         print('-- [App.__init__] created:', self.btn_event_notification_select_file_g3)
         self.object_interaction_enabled.append(self.btn_event_notification_select_file_g3)
-        self.ui_object_complete.append(self.btn_event_notification_select_file_g3)
+        ui_object_complete.append(self.btn_event_notification_select_file_g3)
 
         self.lbl_event_notification_g4 = QLabel(self)
         self.lbl_event_notification_g4.move(self.scroll_w + 2, 60 + 20 + 4 + 20 + 4 + 20 + 4)
@@ -1660,7 +1729,7 @@ class App(QMainWindow):
         self.lbl_event_notification_g4.setText('G4 Notify')
         self.lbl_event_notification_g4.setStyleSheet(self.lbl_feature_title_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_g4)
-        self.ui_object_complete.append(self.lbl_event_notification_g4)
+        ui_object_complete.append(self.lbl_event_notification_g4)
 
         self.btn_event_notification_g4 = QPushButton(self)
         self.btn_event_notification_g4.move(self.scroll_w + 2 + 60 + 4, 60 + 20 + 4 + 20 + 4 + 20 + 4)
@@ -1670,7 +1739,7 @@ class App(QMainWindow):
         self.btn_event_notification_g4.clicked.connect(self.btn_event_notification_g4_function)
         print('-- [App.__init__] created:', self.btn_event_notification_g4)
         self.object_interaction_enabled.append(self.btn_event_notification_g4)
-        self.ui_object_complete.append(self.btn_event_notification_g4)
+        ui_object_complete.append(self.btn_event_notification_g4)
 
         self.lbl_event_notification_run_g4 = QLabel(self)
         self.lbl_event_notification_run_g4.move(self.scroll_w + 2 + 60 + 4 + 20 + 4, 60 + 20 + 4 + 20 + 4 + 20 + 4)
@@ -1679,7 +1748,7 @@ class App(QMainWindow):
         self.lbl_event_notification_run_g4.setText('Run')
         self.lbl_event_notification_run_g4.setStyleSheet(self.lbl_feature_title_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_run_g4)
-        self.ui_object_complete.append(self.lbl_event_notification_run_g4)
+        ui_object_complete.append(self.lbl_event_notification_run_g4)
 
         self.btn_event_notification_run_g4 = QPushButton(self)
         self.btn_event_notification_run_g4.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4, 60 + 20 + 4 + 20 + 4 + 20 + 4)
@@ -1689,7 +1758,7 @@ class App(QMainWindow):
         self.btn_event_notification_run_g4.clicked.connect(self.btn_event_notification_run_g4_function)
         print('-- [App.__init__] created:', self.btn_event_notification_run_g4)
         self.object_interaction_enabled.append(self.btn_event_notification_run_g4)
-        self.ui_object_complete.append(self.btn_event_notification_run_g4)
+        ui_object_complete.append(self.btn_event_notification_run_g4)
 
         self.lbl_event_notification_fpath_g4 = QLabel(self)
         self.lbl_event_notification_fpath_g4.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4,
@@ -1699,7 +1768,7 @@ class App(QMainWindow):
         self.lbl_event_notification_fpath_g4.setText('')
         self.lbl_event_notification_fpath_g4.setStyleSheet(self.lbl_white_txt_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_fpath_g4)
-        self.ui_object_complete.append(self.lbl_event_notification_fpath_g4)
+        ui_object_complete.append(self.lbl_event_notification_fpath_g4)
 
         self.btn_event_notification_select_file_g4 = QPushButton(self)
         self.btn_event_notification_select_file_g4.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4 + 240 + 4, 60 + 20 + 4 + 20 + 4 + 20 + 4)
@@ -1710,7 +1779,7 @@ class App(QMainWindow):
         self.btn_event_notification_select_file_g4.clicked.connect(self.openFileNameDialogG4)
         print('-- [App.__init__] created:', self.btn_event_notification_select_file_g4)
         self.object_interaction_enabled.append(self.btn_event_notification_select_file_g4)
-        self.ui_object_complete.append(self.btn_event_notification_select_file_g4)
+        ui_object_complete.append(self.btn_event_notification_select_file_g4)
 
         self.lbl_event_notification_g5 = QLabel(self)
         self.lbl_event_notification_g5.move(self.scroll_w + 2, 60 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4)
@@ -1719,7 +1788,7 @@ class App(QMainWindow):
         self.lbl_event_notification_g5.setText('G5 Notify')
         self.lbl_event_notification_g5.setStyleSheet(self.lbl_feature_title_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_g5)
-        self.ui_object_complete.append(self.lbl_event_notification_g5)
+        ui_object_complete.append(self.lbl_event_notification_g5)
 
         self.btn_event_notification_g5 = QPushButton(self)
         self.btn_event_notification_g5.move(self.scroll_w + 2 + 60 + 4, 60 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4)
@@ -1729,7 +1798,7 @@ class App(QMainWindow):
         self.btn_event_notification_g5.clicked.connect(self.btn_event_notification_g5_function)
         print('-- [App.__init__] created:', self.btn_event_notification_g5)
         self.object_interaction_enabled.append(self.btn_event_notification_g5)
-        self.ui_object_complete.append(self.btn_event_notification_g5)
+        ui_object_complete.append(self.btn_event_notification_g5)
 
         self.lbl_event_notification_run_g5 = QLabel(self)
         self.lbl_event_notification_run_g5.move(self.scroll_w + 2 + 60 + 4 + 20 + 4, 60 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4)
@@ -1738,7 +1807,7 @@ class App(QMainWindow):
         self.lbl_event_notification_run_g5.setText('Run')
         self.lbl_event_notification_run_g5.setStyleSheet(self.lbl_feature_title_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_run_g5)
-        self.ui_object_complete.append(self.lbl_event_notification_run_g5)
+        ui_object_complete.append(self.lbl_event_notification_run_g5)
 
         self.btn_event_notification_run_g5 = QPushButton(self)
         self.btn_event_notification_run_g5.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4, 60 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4)
@@ -1748,7 +1817,7 @@ class App(QMainWindow):
         self.btn_event_notification_run_g5.clicked.connect(self.btn_event_notification_run_g5_function)
         print('-- [App.__init__] created:', self.btn_event_notification_run_g5)
         self.object_interaction_enabled.append(self.btn_event_notification_run_g5)
-        self.ui_object_complete.append(self.btn_event_notification_run_g5)
+        ui_object_complete.append(self.btn_event_notification_run_g5)
 
         self.lbl_event_notification_fpath_g5 = QLabel(self)
         self.lbl_event_notification_fpath_g5.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4,
@@ -1758,7 +1827,7 @@ class App(QMainWindow):
         self.lbl_event_notification_fpath_g5.setText('')
         self.lbl_event_notification_fpath_g5.setStyleSheet(self.lbl_white_txt_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_fpath_g5)
-        self.ui_object_complete.append(self.lbl_event_notification_fpath_g5)
+        ui_object_complete.append(self.lbl_event_notification_fpath_g5)
 
         self.btn_event_notification_select_file_g5 = QPushButton(self)
         self.btn_event_notification_select_file_g5.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4 + 240 + 4, 60 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4)
@@ -1769,7 +1838,7 @@ class App(QMainWindow):
         self.btn_event_notification_select_file_g5.clicked.connect(self.openFileNameDialogG5)
         print('-- [App.__init__] created:', self.btn_event_notification_select_file_g5)
         self.object_interaction_enabled.append(self.btn_event_notification_select_file_g5)
-        self.ui_object_complete.append(self.btn_event_notification_select_file_g5)
+        ui_object_complete.append(self.btn_event_notification_select_file_g5)
 
         self.lbl_event_notification_g6 = QLabel(self)
         self.lbl_event_notification_g6.move(self.scroll_w + 2, 60 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4)
@@ -1778,7 +1847,7 @@ class App(QMainWindow):
         self.lbl_event_notification_g6.setText('G6 Notify')
         self.lbl_event_notification_g6.setStyleSheet(self.lbl_feature_title_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_g6)
-        self.ui_object_complete.append(self.lbl_event_notification_g6)
+        ui_object_complete.append(self.lbl_event_notification_g6)
 
         self.btn_event_notification_g6 = QPushButton(self)
         self.btn_event_notification_g6.move(self.scroll_w + 2 + 60 + 4, 60 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4)
@@ -1788,7 +1857,7 @@ class App(QMainWindow):
         self.btn_event_notification_g6.clicked.connect(self.btn_event_notification_g6_function)
         print('-- [App.__init__] created:', self.btn_event_notification_g6)
         self.object_interaction_enabled.append(self.btn_event_notification_g6)
-        self.ui_object_complete.append(self.btn_event_notification_g6)
+        ui_object_complete.append(self.btn_event_notification_g6)
 
         self.lbl_event_notification_run_g6 = QLabel(self)
         self.lbl_event_notification_run_g6.move(self.scroll_w + 2 + 60 + 4 + 20 + 4, 60 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4)
@@ -1797,7 +1866,7 @@ class App(QMainWindow):
         self.lbl_event_notification_run_g6.setText('Run')
         self.lbl_event_notification_run_g6.setStyleSheet(self.lbl_feature_title_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_run_g6)
-        self.ui_object_complete.append(self.lbl_event_notification_run_g6)
+        ui_object_complete.append(self.lbl_event_notification_run_g6)
 
         self.btn_event_notification_run_g6 = QPushButton(self)
         self.btn_event_notification_run_g6.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4, 60 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4)
@@ -1807,7 +1876,7 @@ class App(QMainWindow):
         self.btn_event_notification_run_g6.clicked.connect(self.btn_event_notification_run_g6_function)
         print('-- [App.__init__] created:', self.btn_event_notification_run_g6)
         self.object_interaction_enabled.append(self.btn_event_notification_run_g6)
-        self.ui_object_complete.append(self.btn_event_notification_run_g6)
+        ui_object_complete.append(self.btn_event_notification_run_g6)
 
         self.lbl_event_notification_fpath_g6 = QLabel(self)
         self.lbl_event_notification_fpath_g6.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4,
@@ -1817,7 +1886,7 @@ class App(QMainWindow):
         self.lbl_event_notification_fpath_g6.setText('')
         self.lbl_event_notification_fpath_g6.setStyleSheet(self.lbl_white_txt_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_fpath_g6)
-        self.ui_object_complete.append(self.lbl_event_notification_fpath_g6)
+        ui_object_complete.append(self.lbl_event_notification_fpath_g6)
 
         self.btn_event_notification_select_file_g6 = QPushButton(self)
         self.btn_event_notification_select_file_g6.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4 + 240 + 4, 60 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4)
@@ -1828,7 +1897,7 @@ class App(QMainWindow):
         self.btn_event_notification_select_file_g6.clicked.connect(self.openFileNameDialogG6)
         print('-- [App.__init__] created:', self.btn_event_notification_select_file_g6)
         self.object_interaction_enabled.append(self.btn_event_notification_select_file_g6)
-        self.ui_object_complete.append(self.btn_event_notification_select_file_g6)
+        ui_object_complete.append(self.btn_event_notification_select_file_g6)
 
         self.btn_cpu_mon.setToolTip('CPU Utilization Monitor\n\nEnables/Disables CPU utilization monitor.')
         self.lbl_cpu_mon.setToolTip('CPU Utilization Monitor\n\nKeypad 1:       0-25%\nKeypad 4:       25-50%\nKeypad 7:       50-75%\nNumlock:       75-100%.')
@@ -2073,7 +2142,7 @@ class App(QMainWindow):
         print('-- [App.btn_event_notification_g1_function]: plugged in')
         global bool_switch_event_notification_g1, devices_kb
         self.setFocus()
-        
+
         if len(devices_kb) > 0:
             if self.write_engaged is False:
 
@@ -2344,12 +2413,16 @@ class App(QMainWindow):
 
     def hide_all_features(self):
         print('-- [App.hide_all_features]: plugged in')
+        global ui_object_complete
         try:
             self.setFocus()
 
-            for _ in self.ui_object_complete:
+            for _ in ui_object_complete:
                 _.hide()
 
+            self.lbl_title.show()
+            self.btn_minimize.show()
+            self.btn_quit.show()
             self.btn_feature_page_home.show()
             self.btn_feature_page_util.show()
             self.btn_feature_page_disks.show()
@@ -6258,14 +6331,14 @@ class HddMonClass(QThread):
                                     hdd_bytes_type_r = self.convert_bytes(self.drps)
                                     print('reads:', disk_letter_0, self.drps, hdd_bytes_type_r, hdd_bytes_str)
                                 """
-    
+
                                 if self.dwps == 0 or self.drps == 0:
                                     self.i_w = 0
                                     for _ in alpha_str:
                                         if canonical_caseless(disk_letter_0) == canonical_caseless(alpha_str[self.i_w]):
                                             self.send_write_instruction_1()
                                         self.i_w += 1
-    
+
                                 elif self.dwps > 0 or self.drps > 0:
                                     if self.dwps >= self.drps:
                                         self.bool_dwps_greater = True
