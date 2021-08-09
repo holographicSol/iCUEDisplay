@@ -23,11 +23,13 @@ from PyQt5 import QtCore
 from PyQt5.QtGui import QIcon, QCursor, QFont, QPixmap
 from PyQt5.QtCore import Qt, QThread, QSize, QPoint, QCoreApplication, QTimer, QEvent, QObject
 from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QDesktopWidget, QLineEdit, QComboBox, QFileDialog
+import win32gui
 
 info = subprocess.STARTUPINFO()
 info.dwFlags = 1
 info.wShowWindow = 0
 
+main_pid = int()
 sdk = ''
 
 print('-- [CueSdk] searching for CueSDK in: bin\\CUESDK.x64_2017.dll')
@@ -86,15 +88,16 @@ def initialize_scaling_dpi():
 
 
 def initialize_priority():
+    global main_pid
     priority_classes = [win32process.IDLE_PRIORITY_CLASS,
                         win32process.BELOW_NORMAL_PRIORITY_CLASS,
                         win32process.NORMAL_PRIORITY_CLASS,
                         win32process.ABOVE_NORMAL_PRIORITY_CLASS,
                         win32process.HIGH_PRIORITY_CLASS,
                         win32process.REALTIME_PRIORITY_CLASS]
-    pid = win32api.GetCurrentProcessId()
-    print('-- [initialize_priority] pid:', pid)
-    handle = win32api.OpenProcess(win32con.PROCESS_ALL_ACCESS, True, pid)
+    main_pid = win32api.GetCurrentProcessId()
+    print('-- [initialize_priority] main_pid:', main_pid)
+    handle = win32api.OpenProcess(win32con.PROCESS_ALL_ACCESS, True, main_pid)
     win32process.SetPriorityClass(handle, priority_classes[4])
     print('-- [initialize_priority]: settings win32process priority class:', priority_classes[4])
 
@@ -486,6 +489,7 @@ class ObjEveFilter(QObject):
     def eventFilter(self, obj, event):
         global event_filter_self, avail_w, avail_h, ui_object_complete, event_filter_self, first_load, obj_geo_item, prev_multiplier_w, prev_multiplier_h
         global ui_object_font_list_s7b, ui_object_font_list_s8b, ui_object_font_list_s10b
+        global main_pid
         obj_eve = obj, event
 
         # Uncomment This Line To See All Object Events
@@ -506,15 +510,13 @@ class ObjEveFilter(QObject):
                     obj_geo_item.append(var)
             # print(obj_geo_item)
 
-            initialize_scaling_dpi()
-
-            print("previous width:", avail_w)
-            print("previous height:", avail_h)
+            # print("previous width:", avail_w)
+            # print("previous height:", avail_h)
 
             new_avail_w = QDesktopWidget().availableGeometry().width()
             new_avail_h = QDesktopWidget().availableGeometry().height()
-            print("new width:", new_avail_w)
-            print("new height:", new_avail_h)
+            # print("new width:", new_avail_w)
+            # print("new height:", new_avail_h)
 
             multiplier_w = int()
             multiplier_h = int()
@@ -524,8 +526,8 @@ class ObjEveFilter(QObject):
                 multiplier_h = str(new_avail_h)[0]
                 multiplier_w = int(multiplier_w)
                 multiplier_h = int(multiplier_h)
-                print('multiplier_w:', multiplier_w)
-                print('multiplier_h:', multiplier_h)
+                # print('multiplier_w:', multiplier_w)
+                # print('multiplier_h:', multiplier_h)
 
             elif new_avail_w < 1000 and new_avail_h < 1000:
                 multiplier_w = 1
@@ -601,7 +603,8 @@ class ObjEveFilter(QObject):
 
                 # ToDo --> rescale images by multiplier (after finalizing layout)
 
-                initialize_scaling_dpi()
+                # ToDo -->  Geometry set Above. Finalize by displaying the new geometry automatically without user needing to click/move the app for the changes to visibly take effect
+
         return False
 
 
@@ -653,9 +656,9 @@ class App(QMainWindow):
         print('-- [App.__init__] setting window position:', self.pos_w, self.pos_h)
         self.setGeometry(int(self.pos_w), int(self.pos_h), self.width, self.height)
 
-        event_filter_self.append(self)
-        self.filter = ObjEveFilter()
-        self.installEventFilter(self.filter)
+        # event_filter_self.append(self)
+        # self.filter = ObjEveFilter()
+        # self.installEventFilter(self.filter)
 
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.black)
@@ -835,6 +838,8 @@ class App(QMainWindow):
         )
         print('-- [App.__init__] created:', self.btn_title_logo)
         ui_object_complete.append(self.btn_title_logo)
+        self.btn_title_logo.show()
+        print('hide', self.btn_title_logo.isVisible())
 
         self.btn_quit = QPushButton(self)
         self.btn_quit.move((self.width - 28), 0)
@@ -2112,6 +2117,12 @@ class App(QMainWindow):
         self.hide_all_features()
         self.feature_pg_home()
 
+        time.sleep(3)
+
+        event_filter_self.append(self)
+        self.filter = ObjEveFilter()
+        self.installEventFilter(self.filter)
+
         self.initUI()
 
     def btn_cpu_mon_temp_function(self):
@@ -2556,6 +2567,7 @@ class App(QMainWindow):
     def hide_all_features(self):
         print('-- [App.hide_all_features]: plugged in')
         global ui_object_complete
+
         try:
             self.setFocus()
 
@@ -2563,14 +2575,23 @@ class App(QMainWindow):
                 _.hide()
 
             self.lbl_title.show()
+
             self.btn_minimize.show()
+
             self.btn_quit.show()
+
             self.btn_feature_page_home.show()
+
             self.btn_feature_page_util.show()
+
             self.btn_feature_page_disks.show()
+
             self.btn_feature_page_networking.show()
+
             self.btn_feature_page_event_notification.show()
+
             self.btn_feature_page_settings.show()
+
             self.lbl_settings_border.show()
 
         except Exception as e:
@@ -2582,22 +2603,37 @@ class App(QMainWindow):
             self.btn_feature_page_util.show()
 
             self.lbl_utilization.show()
+
             self.lbl_cpu_mon.show()
+
             self.btn_cpu_mon.show()
+
             self.qle_cpu_mon_rgb_on.show()
+
             self.qle_cpu_led_time_on.show()
+
             self.lbl_dram_mon.show()
+
             self.btn_dram_mon.show()
+
             self.qle_dram_mon_rgb_on.show()
+
             self.qle_dram_led_time_on.show()
+
             self.lbl_vram_mon.show()
+
             self.btn_vram_mon.show()
+
             self.qle_vram_mon_rgb_on.show()
+
             self.qle_vram_led_time_on.show()
 
             self.lbl_cpu_mon_temp.show()
+
             self.lbl_vram_mon_temp.show()
+
             self.btn_cpu_mon_temp.show()
+
             self.btn_vram_mon_temp.show()
         except Exception as e:
             print(e)
@@ -2731,6 +2767,7 @@ class App(QMainWindow):
 
     def feature_pg_home(self):
         self.hide_all_features()
+
         self.lbl_con_stat_kb_img.show()
         self.lbl_con_stat_kb.show()
         self.lbl_con_stat_ms_img.show()
@@ -5615,9 +5652,10 @@ class CompileDevicesClass(QThread):
             if bool_backend_config_read_complete is False:
                 self.read_config()
             elif bool_backend_config_read_complete is True:
+                bool_backend_allow_display = True
                 self.attempt_connect()
-                if bool_backend_allow_display is False:
-                    bool_backend_allow_display = True
+                # if bool_backend_allow_display is False:
+                #     bool_backend_allow_display = True
             else:
                 print('-- [CompileDevicesClass.run] bool_backend_config_read_complete:', bool_backend_config_read_complete)
             time.sleep(1)
