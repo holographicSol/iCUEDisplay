@@ -758,6 +758,13 @@ class App(QMainWindow):
                                            border-top:2px solid rgb(20, 20, 20);
                                            border-left:2px solid rgb(20, 20, 20);}"""
 
+        self.btn_feature_title_style_1 = """QPushButton{background-color: rgb(10, 10, 10);
+                                                   color: rgb(200, 200, 200);
+                                                   border-bottom:2px solid rgb(15, 15, 15);
+                                                   border-right:2px solid rgb(15, 15, 15);
+                                                   border-top:2px solid rgb(15, 15, 15);
+                                                   border-left:2px solid rgb(15, 15, 15);}"""
+
         self.lbl_feature_title_style = """QLabel{background-color: rgb(15, 15, 15);
                                                    color: rgb(255, 255, 255);
                                                    border-bottom:2px solid rgb(15, 15, 15);
@@ -810,18 +817,6 @@ class App(QMainWindow):
         ui_object_complete.append(self.lbl_title)
         print('self.lbl_title.geometry():', self.lbl_title.geometry())
         ui_object_font_list_s10b.append(self.lbl_title)
-
-        # getting font metrics
-        f_metrics = self.lbl_title.fontMetrics()
-
-        # text
-        text = self.lbl_title.text()
-
-        # getting the size object
-        value = f_metrics.size(0, text)
-
-        # setting text to the label
-        print("Size : " + str(value))
 
         # txt = 'foobar'
         # img = "./image/dev_target_20x20.png"
@@ -932,7 +927,7 @@ class App(QMainWindow):
         self.btn_feature_page_util.resize(126, 28)
         self.btn_feature_page_util.setFont(self.font_s8b)
         self.btn_feature_page_util.setText('Basic Utilization')
-        self.btn_feature_page_util.setStyleSheet(self.btn_feature_title_style)
+        self.btn_feature_page_util.setStyleSheet(self.btn_feature_title_style_1)
         self.btn_feature_page_util.clicked.connect(self.feature_pg_util)
         print('-- [App.__init__] created:', self.btn_feature_page_util)
         self.object_interaction_enabled.append(self.btn_feature_page_util)
@@ -944,7 +939,7 @@ class App(QMainWindow):
         self.btn_feature_page_disks.resize(126, 28)
         self.btn_feature_page_disks.setFont(self.font_s8b)
         self.btn_feature_page_disks.setText('Disks Utilization')
-        self.btn_feature_page_disks.setStyleSheet(self.btn_feature_title_style)
+        self.btn_feature_page_disks.setStyleSheet(self.btn_feature_title_style_1)
         self.btn_feature_page_disks.clicked.connect(self.btn_feature_page_disk_util)
         print('-- [App.__init__] created:', self.btn_feature_page_disks)
         self.object_interaction_enabled.append(self.btn_feature_page_disks)
@@ -956,7 +951,7 @@ class App(QMainWindow):
         self.btn_feature_page_networking.resize(126, 28)
         self.btn_feature_page_networking.setFont(self.font_s8b)
         self.btn_feature_page_networking.setText('Networking')
-        self.btn_feature_page_networking.setStyleSheet(self.btn_feature_title_style)
+        self.btn_feature_page_networking.setStyleSheet(self.btn_feature_title_style_1)
         self.btn_feature_page_networking.clicked.connect(self.btn_feature_page_networking_function)
         print('-- [App.__init__] created:', self.btn_feature_page_networking)
         self.object_interaction_enabled.append(self.btn_feature_page_networking)
@@ -968,7 +963,7 @@ class App(QMainWindow):
         self.btn_feature_page_event_notification.resize(126, 28)
         self.btn_feature_page_event_notification.setFont(self.font_s8b)
         self.btn_feature_page_event_notification.setText('Event Notification')
-        self.btn_feature_page_event_notification.setStyleSheet(self.btn_feature_title_style)
+        self.btn_feature_page_event_notification.setStyleSheet(self.btn_feature_title_style_1)
         self.btn_feature_page_event_notification.clicked.connect(self.btn_feature_page_event_notification_function)
         print('-- [App.__init__] created:', self.btn_feature_page_event_notification)
         self.object_interaction_enabled.append(self.btn_feature_page_event_notification)
@@ -980,7 +975,7 @@ class App(QMainWindow):
         self.btn_feature_page_settings.resize(126, 28)
         self.btn_feature_page_settings.setFont(self.font_s8b)
         self.btn_feature_page_settings.setText('Settings')
-        self.btn_feature_page_settings.setStyleSheet(self.btn_feature_title_style)
+        self.btn_feature_page_settings.setStyleSheet(self.btn_feature_title_style_1)
         self.btn_feature_page_settings.clicked.connect(self.btn_feature_page_settings_function)
         print('-- [App.__init__] created:', self.btn_feature_page_settings)
         self.object_interaction_enabled.append(self.btn_feature_page_settings)
@@ -2114,7 +2109,7 @@ class App(QMainWindow):
         self.write_var_key = -1
         self.write_engaged = False
 
-        self.hide_all_features()
+        # self.hide_all_features()
         self.feature_pg_home()
 
         time.sleep(3)
@@ -2575,22 +2570,26 @@ class App(QMainWindow):
                 _.hide()
 
             self.lbl_title.show()
-
             self.btn_minimize.show()
-
             self.btn_quit.show()
 
             self.btn_feature_page_home.show()
+            self.btn_feature_page_home.setStyleSheet(self.btn_feature_title_style_1)
 
             self.btn_feature_page_util.show()
+            self.btn_feature_page_util.setStyleSheet(self.btn_feature_title_style_1)
 
             self.btn_feature_page_disks.show()
+            self.btn_feature_page_disks.setStyleSheet(self.btn_feature_title_style_1)
 
             self.btn_feature_page_networking.show()
+            self.btn_feature_page_networking.setStyleSheet(self.btn_feature_title_style_1)
 
             self.btn_feature_page_event_notification.show()
+            self.btn_feature_page_event_notification.setStyleSheet(self.btn_feature_title_style_1)
 
             self.btn_feature_page_settings.show()
+            self.btn_feature_page_settings.setStyleSheet(self.btn_feature_title_style_1)
 
             self.lbl_settings_border.show()
 
@@ -2601,39 +2600,24 @@ class App(QMainWindow):
         print('-- [App.show_utilization]: plugged in')
         try:
             self.btn_feature_page_util.show()
-
             self.lbl_utilization.show()
-
             self.lbl_cpu_mon.show()
-
             self.btn_cpu_mon.show()
-
             self.qle_cpu_mon_rgb_on.show()
-
             self.qle_cpu_led_time_on.show()
 
             self.lbl_dram_mon.show()
-
             self.btn_dram_mon.show()
-
             self.qle_dram_mon_rgb_on.show()
-
             self.qle_dram_led_time_on.show()
-
             self.lbl_vram_mon.show()
-
             self.btn_vram_mon.show()
-
             self.qle_vram_mon_rgb_on.show()
-
             self.qle_vram_led_time_on.show()
 
             self.lbl_cpu_mon_temp.show()
-
             self.lbl_vram_mon_temp.show()
-
             self.btn_cpu_mon_temp.show()
-
             self.btn_vram_mon_temp.show()
         except Exception as e:
             print(e)
@@ -2767,6 +2751,7 @@ class App(QMainWindow):
 
     def feature_pg_home(self):
         self.hide_all_features()
+        self.btn_feature_page_home.setStyleSheet(self.btn_feature_title_style)
 
         self.lbl_con_stat_kb_img.show()
         self.lbl_con_stat_kb.show()
@@ -2775,24 +2760,29 @@ class App(QMainWindow):
 
     def feature_pg_util(self):
         self.hide_all_features()
+        self.btn_feature_page_util.setStyleSheet(self.btn_feature_title_style)
         self.show_utilization()
 
     def btn_feature_page_disk_util(self):
         self.hide_all_features()
+        self.btn_feature_page_disks.setStyleSheet(self.btn_feature_title_style)
         self.show_disks()
 
     def btn_feature_page_networking_function(self):
         self.hide_all_features()
+        self.btn_feature_page_networking.setStyleSheet(self.btn_feature_title_style)
         self.show_net_traffic()
         self.show_net_con()
         self.show_net_share()
 
     def btn_feature_page_event_notification_function(self):
         self.hide_all_features()
+        self.btn_feature_page_event_notification.setStyleSheet(self.btn_feature_title_style)
         self.show_event_notification()
 
     def btn_feature_page_settings_function(self):
         self.hide_all_features()
+        self.btn_feature_page_settings.setStyleSheet(self.btn_feature_title_style)
         self.show_set()
         self.show_backlight()
 
@@ -3414,7 +3404,6 @@ class App(QMainWindow):
                     thread_disk_rw[0].stop()
                     self.btn_hdd_mon.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
                     self.write_var = 'hdd_startup: false'
-                    self.btn_feature_page_disks.setStyleSheet(self.btn_feature_title_style)
                     bool_switch_startup_hdd_read_write = False
                     self.write_changes()
                 elif bool_switch_startup_hdd_read_write is False:
@@ -3422,7 +3411,6 @@ class App(QMainWindow):
                     thread_disk_rw[0].start()
                     self.btn_hdd_mon.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
                     self.write_var = 'hdd_startup: true'
-                    self.btn_feature_page_disks.setStyleSheet(self.btn_feature_title_style)
                     bool_switch_startup_hdd_read_write = True
                     self.write_changes()
 
@@ -3964,7 +3952,7 @@ class App(QMainWindow):
 
         global bool_cpu_temperature, bool_vram_temperature
 
-        hdd_mon_thread = HddMonClass()
+        hdd_mon_thread = HddMonClass( )
         thread_disk_rw.append(hdd_mon_thread)
 
         cpu_mon_thread = CpuMonClass()
@@ -4018,13 +4006,11 @@ class App(QMainWindow):
 
         backlight_auto = BackLightClass(self.color_all_id,
                                         self.btn_bck_light,
-                                        self.btn_feature_title_style,
                                         self.btn_backlight_sub)
         thread_backlight_auto.append(backlight_auto)
 
         compile_devices_thread = CompileDevicesClass(self.lbl_con_stat_name, self.lbl_con_stat_kb,
-                                                     self.lbl_con_stat_mouse, self.btn_refresh_recompile,
-                                                     self.btn_feature_title_style)
+                                                     self.lbl_con_stat_mouse, self.btn_refresh_recompile)
         thread_compile_devices.append(compile_devices_thread)
         thread_compile_devices[0].start()
 
@@ -4060,10 +4046,8 @@ class App(QMainWindow):
             self.btn_start_minimized.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
         if bool_switch_startup_cpu_util is True:
-            self.btn_feature_page_util.setStyleSheet(self.btn_feature_title_style)
             self.btn_cpu_mon.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
         elif bool_switch_startup_cpu_util is False:
-            self.btn_feature_page_util.setStyleSheet(self.btn_feature_title_style)
             self.btn_cpu_mon.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
         if bool_switch_startup_dram_util is True:
@@ -4077,10 +4061,8 @@ class App(QMainWindow):
             self.btn_vram_mon.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
         if bool_switch_startup_hdd_read_write is True:
-            self.btn_feature_page_disks.setStyleSheet(self.btn_feature_title_style)
             self.btn_hdd_mon.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
         elif bool_switch_startup_hdd_read_write is False:
-            self.btn_feature_page_disks.setStyleSheet(self.btn_feature_title_style)
             self.btn_hdd_mon.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
         if bool_switch_startup_exclusive_control is True:
@@ -4117,12 +4099,10 @@ class App(QMainWindow):
 
         if bool_switch_backlight is True:
             self.btn_bck_light.setIcon(QIcon("./image/img_backlight_on.png"))
-            self.btn_bck_light.setStyleSheet(self.btn_feature_title_style)
             self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
             self.color_all_id()
         elif bool_switch_backlight is False:
             self.btn_bck_light.setIcon(QIcon("./image/img_backlight_off.png"))
-            self.btn_bck_light.setStyleSheet(self.btn_feature_title_style)
             self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
         if bool_switch_event_notification_g1 is False:
@@ -4937,14 +4917,13 @@ class SdkEventHandlerClass(QThread):
 class CompileDevicesClass(QThread):
     print('-- [CompileDevicesClass]: plugged in')
 
-    def __init__(self, lbl_con_stat_name, lbl_con_stat_kb, lbl_con_stat_mouse, btn_refresh_compile, btn_feature_title_style):
+    def __init__(self, lbl_con_stat_name, lbl_con_stat_kb, lbl_con_stat_mouse, btn_refresh_compile):
         QThread.__init__(self)
         global sdk_color_hddread_on, sdk_color_backlight, sdk_color_backlight_on
         self.lbl_con_stat_name = lbl_con_stat_name
         self.lbl_con_stat_kb = lbl_con_stat_kb
         self.lbl_con_stat_mouse = lbl_con_stat_mouse
         self.btn_refresh_recompile = btn_refresh_compile
-        self.btn_feature_title_style = btn_feature_title_style
         self.device_str = ''
         self.device_index = ()
         self.bool_backend_comprehensive_enumeration = True
@@ -5165,7 +5144,6 @@ class CompileDevicesClass(QThread):
                         devices_kb = []
                         devices_ms = []
                     fresh_start = True
-                    self.btn_refresh_recompile.setStyleSheet(self.btn_feature_title_style)
                     try:
                         self.enum_kb()
                     except Exception as e:
@@ -5175,7 +5153,6 @@ class CompileDevicesClass(QThread):
                     except Exception as e:
                         print(e)
                     time.sleep(0.5)
-                    self.btn_refresh_recompile.setStyleSheet(self.btn_feature_title_style)
                 device_i += 1
 
             if fresh_start is True:
@@ -5754,11 +5731,10 @@ class TemperatureClass(QThread):
 class BackLightClass(QThread):
     print('-- [BackLightClass]: plugged in')
 
-    def __init__(self, color_all_id, btn_bck_light, btn_feature_title_style, btn_backlight_sub):
+    def __init__(self, color_all_id, btn_bck_light, btn_backlight_sub):
         QThread.__init__(self)
         self.color_all_id = color_all_id
         self.btn_bck_light = btn_bck_light
-        self.btn_feature_title_style = btn_feature_title_style
         self.btn_backlight_sub = btn_backlight_sub
 
     def run(self):
@@ -5790,7 +5766,6 @@ class BackLightClass(QThread):
                         print('-- [BackLightClass.run] auto backlight: turning on')
 
                         bool_switch_backlight = True
-                        self.btn_bck_light.setStyleSheet(self.btn_feature_title_style)
                         self.btn_bck_light.setIcon(QIcon("./image/img_backlight_on.png"))
                         self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
 
@@ -5802,7 +5777,6 @@ class BackLightClass(QThread):
                         print('-- [BackLightClass.run] auto backlight: turning off')
 
                         bool_switch_backlight = False
-                        self.btn_bck_light.setStyleSheet(self.btn_feature_title_style)
                         self.btn_bck_light.setIcon(QIcon("./image/img_backlight_off.png"))
                         self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
@@ -5817,7 +5791,6 @@ class BackLightClass(QThread):
                             print('-- [BackLightClass.run] auto backlight: turning on')
 
                             bool_switch_backlight = True
-                            self.btn_bck_light.setStyleSheet(self.btn_feature_title_style)
                             self.btn_bck_light.setIcon(QIcon("./image/img_backlight_on.png"))
                             self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
 
@@ -5828,7 +5801,6 @@ class BackLightClass(QThread):
                             print('-- [BackLightClass.run] auto backlight: turning off')
 
                             bool_switch_backlight = False
-                            self.btn_bck_light.setStyleSheet(self.btn_feature_title_style)
                             self.btn_bck_light.setIcon(QIcon("./image/img_backlight_off.png"))
                             self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
@@ -5840,7 +5812,6 @@ class BackLightClass(QThread):
                             print('-- [BackLightClass.run] auto backlight: turning on')
 
                             bool_switch_backlight = True
-                            self.btn_bck_light.setStyleSheet(self.btn_feature_title_style)
                             self.btn_bck_light.setIcon(QIcon("./image/img_backlight_on.png"))
                             self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
 
@@ -5851,7 +5822,6 @@ class BackLightClass(QThread):
                             print('-- [BackLightClass.run] auto backlight: turning off')
 
                             bool_switch_backlight = False
-                            self.btn_bck_light.setStyleSheet(self.btn_feature_title_style)
                             self.btn_bck_light.setIcon(QIcon("./image/img_backlight_off.png"))
                             self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
