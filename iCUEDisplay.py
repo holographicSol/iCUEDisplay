@@ -491,11 +491,6 @@ class ObjEveFilter(QObject):
         # Uncomment This Line To See All Object Events
         # print('-- ObjEveFilter(QObject).eventFilter(self, obj, event):', obj_eve)
 
-        """There is no Qt Layout for Qt objects and with everything made, I am trying to break the program.
-        Re-scaling will need to occur when windows scaling is changed. The following code is a temporary solution &
-        should not compensate permanently for Qt objects being placed inside a Qt layout or alternatively by doing
-        ones own calculations to re-scale the application when scaling is changed. 
-        """
         if str(obj_eve[1]).startswith('<PyQt5.QtGui.QResizeEvent') or str(obj_eve[1]).startswith('<PyQt5.QtGui.QMoveEvent'):
             # print('-- [ObjEveFilter]: Handling resize event')
 
@@ -511,22 +506,34 @@ class ObjEveFilter(QObject):
                     obj_geo_item.append(var)
             # print(obj_geo_item)
 
-            # initialize_scaling_dpi()
+            initialize_scaling_dpi()
 
-            # print("previous width:", avail_w)
-            # print("previous height:", avail_h)
+            print("previous width:", avail_w)
+            print("previous height:", avail_h)
 
             new_avail_w = QDesktopWidget().availableGeometry().width()
             new_avail_h = QDesktopWidget().availableGeometry().height()
-            # print("new width:", new_avail_w)
-            # print("new height:", new_avail_h)
+            print("new width:", new_avail_w)
+            print("new height:", new_avail_h)
 
-            multiplier_w = str(new_avail_w)[0]
-            multiplier_h = str(new_avail_h)[0]
-            multiplier_w = int(multiplier_w)
-            multiplier_h = int(multiplier_h)
-            # print('multiplier_w:', multiplier_w)
-            # print('multiplier_h:', multiplier_h)
+            multiplier_w = int()
+            multiplier_h = int()
+
+            if new_avail_w >= 1000 and new_avail_h >= 1000:
+                multiplier_w = str(new_avail_w)[0]
+                multiplier_h = str(new_avail_h)[0]
+                multiplier_w = int(multiplier_w)
+                multiplier_h = int(multiplier_h)
+                print('multiplier_w:', multiplier_w)
+                print('multiplier_h:', multiplier_h)
+
+            elif new_avail_w < 1000 and new_avail_h < 1000:
+                multiplier_w = 1
+                multiplier_h = 1
+
+            else:
+                multiplier_w = 1
+                multiplier_h = 1
 
             if prev_multiplier_w != multiplier_w or prev_multiplier_h != multiplier_h or new_avail_w != avail_w or new_avail_h != avail_h:
 
