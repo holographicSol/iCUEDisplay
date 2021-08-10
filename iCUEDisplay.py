@@ -477,19 +477,20 @@ def create_new():
 
 first_load = True
 obj_geo_item = []
-prev_multiplier_w = int()
-prev_multiplier_h = int()
+prev_multiplier_w = int(1)
+prev_multiplier_h = int(1)
+ui_object_font_list_s6b = []
 ui_object_font_list_s7b = []
 ui_object_font_list_s8b = []
-ui_object_font_list_s10b = []
+ui_object_font_list_s9b = []
 
 
 class ObjEveFilter(QObject):
 
     def eventFilter(self, obj, event):
         global event_filter_self, avail_w, avail_h, ui_object_complete, event_filter_self, first_load, obj_geo_item, prev_multiplier_w, prev_multiplier_h
-        global ui_object_font_list_s7b, ui_object_font_list_s8b, ui_object_font_list_s10b
-        global main_pid
+        global ui_object_font_list_s6b, ui_object_font_list_s7b, ui_object_font_list_s8b, ui_object_font_list_s9b
+        global main_pid, first_pass
         obj_eve = obj, event
 
         # Uncomment This Line To See All Object Events
@@ -526,8 +527,6 @@ class ObjEveFilter(QObject):
                 multiplier_h = str(new_avail_h)[0]
                 multiplier_w = int(multiplier_w)
                 multiplier_h = int(multiplier_h)
-                # print('multiplier_w:', multiplier_w)
-                # print('multiplier_h:', multiplier_h)
 
             elif new_avail_w < 1000 and new_avail_h < 1000:
                 multiplier_w = 1
@@ -537,8 +536,22 @@ class ObjEveFilter(QObject):
                 multiplier_w = 1
                 multiplier_h = 1
 
-            if prev_multiplier_w != multiplier_w or prev_multiplier_h != multiplier_h or new_avail_w != avail_w or new_avail_h != avail_h:
+            # print('multiplier_w:', multiplier_w)
+            # print('multiplier_h:', multiplier_h)
 
+            ratio_w = int()
+            ratio_h = int()
+
+            if multiplier_w > prev_multiplier_w:
+                ratio_w = new_avail_w / prev_multiplier_w
+                ratio_h = new_avail_h / prev_multiplier_h
+
+            elif multiplier_w < prev_multiplier_w:
+                ratio_w = prev_multiplier_w / new_avail_w
+                ratio_h = prev_multiplier_h / new_avail_h
+
+            if prev_multiplier_w != multiplier_w or prev_multiplier_h != multiplier_h or new_avail_w != avail_w or new_avail_h != avail_h:
+                first_pass = False
                 prev_multiplier_w = multiplier_w
                 prev_multiplier_h = multiplier_h
                 avail_h = new_avail_h
@@ -584,13 +597,18 @@ class ObjEveFilter(QObject):
 
                     i += 1
 
-                font_size_7b = 7 * multiplier_h
-                font_size_8b = 8 * multiplier_h
-                font_size_10b = 10 * multiplier_h
+                font_size_6b = int(6 * multiplier_h)
+                font_size_7b = int(7 * multiplier_h)
+                font_size_8b = int(8 * multiplier_h)
+                font_size_9b = int(9 * multiplier_h)
 
+                font_s6b = QFont("Segoe UI", (font_size_6b), QFont.Bold)
                 font_s7b = QFont("Segoe UI", (font_size_7b), QFont.Bold)
                 font_s8b = QFont("Segoe UI", (font_size_8b), QFont.Bold)
-                font_s10b = QFont("Segoe UI", (font_size_10b), QFont.Bold)
+                font_s9b = QFont("Segoe UI", (font_size_9b), QFont.Bold)
+
+                for _ in ui_object_font_list_s6b:
+                    _.setFont(font_s6b)
 
                 for _ in ui_object_font_list_s7b:
                     _.setFont(font_s7b)
@@ -598,8 +616,8 @@ class ObjEveFilter(QObject):
                 for _ in ui_object_font_list_s8b:
                     _.setFont(font_s8b)
 
-                for _ in ui_object_font_list_s10b:
-                    _.setFont(font_s10b)
+                for _ in ui_object_font_list_s9b:
+                    _.setFont(font_s9b)
 
                 # ToDo --> rescale images by multiplier (after finalizing layout)
 
@@ -614,7 +632,7 @@ class App(QMainWindow):
     def __init__(self):
         super(App, self).__init__()
         global bool_backend_install, event_filter_self, avail_w, avail_h, ui_object_complete
-        global ui_object_font_list_s7b, ui_object_font_list_s8b, ui_object_font_list_s10b
+        global ui_object_font_list_s6b, ui_object_font_list_s7b, ui_object_font_list_s8b, ui_object_font_list_s9b
 
         avail_w = QDesktopWidget().availableGeometry().width()
         avail_h = QDesktopWidget().availableGeometry().height()
@@ -665,9 +683,10 @@ class App(QMainWindow):
         self.setWindowFlags(Qt.Window | Qt.FramelessWindowHint)
         self.setPalette(p)
 
+        self.font_s6b = QFont("Segoe UI", 6, QFont.Bold)
         self.font_s7b = QFont("Segoe UI", 7, QFont.Bold)
         self.font_s8b = QFont("Segoe UI", 8, QFont.Bold)
-        self.font_s10b = QFont("Segoe UI", 10, QFont.Bold)
+        self.font_s9b = QFont("Segoe UI", 9, QFont.Bold)
 
         self.tooltip_style = """QToolTip {background-color: rgb(35, 35, 35);
                            color: rgb(200, 200, 200);
@@ -819,19 +838,6 @@ class App(QMainWindow):
         self.tog_switch_ico_sz = QSize(40, 20)
         self.tog_switch_ico_sz_x2h = QSize(18, 44)
 
-        self.lbl_title = QLabel(self)
-        self.lbl_title.move(37, 3)
-        self.lbl_title.resize(self.width, 20)
-        self.lbl_title.setFont(self.font_s10b)
-        self.lbl_title.setText('iCUE Display')
-        self.lbl_title.setStyleSheet("""QLabel {background-color: rgb(0, 0, 0);
-            color: rgb(230, 230, 230);
-            border:0px solid rgb(0, 255, 0);}""")
-        print('-- [App.__init__] created:', self.lbl_title)
-        ui_object_complete.append(self.lbl_title)
-        print('self.lbl_title.geometry():', self.lbl_title.geometry())
-        ui_object_font_list_s10b.append(self.lbl_title)
-
         # txt = 'foobar'
         # img = "./image/dev_target_20x20.png"
         # self.lbl_title.setToolTip('<b>{0}</b><br><img src="{1}">'.format(txt, img))
@@ -847,8 +853,20 @@ class App(QMainWindow):
         )
         print('-- [App.__init__] created:', self.btn_title_logo)
         ui_object_complete.append(self.btn_title_logo)
-        self.btn_title_logo.show()
-        print('hide', self.btn_title_logo.isVisible())
+
+        self.lbl_title = QLabel(self)
+        self.lbl_title.move(0, 3)
+        self.lbl_title.resize(126, 20)
+        self.lbl_title.setFont(self.font_s8b)
+        self.lbl_title.setText('iCUE Display')
+        self.lbl_title.setStyleSheet("""QLabel {background-color: rgb(0, 0, 0);
+                    color: rgb(230, 230, 230);
+                    border:0px solid rgb(0, 255, 0);}""")
+        print('-- [App.__init__] created:', self.lbl_title)
+        self.lbl_title.setAlignment(Qt.AlignCenter)
+        ui_object_complete.append(self.lbl_title)
+        print('self.lbl_title.geometry():', self.lbl_title.geometry())
+        ui_object_font_list_s8b.append(self.lbl_title)
 
         self.btn_quit = QPushButton(self)
         self.btn_quit.move((self.width - 28), 0)
@@ -912,14 +930,14 @@ class App(QMainWindow):
         self.btn_bck_light = QPushButton(self)
         self.btn_bck_light.move(126 + 4, 6)
         self.btn_bck_light.resize(64, 20)
-        self.btn_bck_light.setFont(self.font_s7b)
+        self.btn_bck_light.setFont(self.font_s6b)
         self.btn_bck_light.setText('BACKLIGHT')
         self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_1)
         self.btn_bck_light.clicked.connect(self.btn_bck_light_function)
         print('-- [App.__init__] created:', self.btn_bck_light)
         self.object_interaction_enabled.append(self.btn_bck_light)
         ui_object_complete.append(self.btn_bck_light)
-        ui_object_font_list_s7b.append(self.btn_bck_light)
+        ui_object_font_list_s6b.append(self.btn_bck_light)
 
         self.btn_feature_page_home = QPushButton(self)
         self.btn_feature_page_home.move(0, 28)
@@ -1400,14 +1418,12 @@ class App(QMainWindow):
         self.btn_net_con_mouse_led_selected_prev = QPushButton(self)
         self.btn_net_con_mouse_led_selected_prev.move(self.scroll_w + 2 + 240 + 4 + 28 + 4, 60 + 28 + 4)
         self.btn_net_con_mouse_led_selected_prev.resize(20, 28)
-        self.btn_net_con_mouse_led_selected_prev.setFont(self.font_s10b)
         self.btn_net_con_mouse_led_selected_prev.setIcon(QIcon("./image/img_minus.png"))
         self.btn_net_con_mouse_led_selected_prev.setStyleSheet(self.btn_settings_style)
         self.btn_net_con_mouse_led_selected_prev.clicked.connect(self.btn_net_con_mouse_led_selected_prev_function)
         print('-- [App.__init__] created:', self.btn_net_con_mouse_led_selected_prev)
         self.object_interaction_enabled.append(self.btn_net_con_mouse_led_selected_prev)
         ui_object_complete.append(self.btn_net_con_mouse_led_selected_prev)
-        ui_object_font_list_s10b.append(self.btn_net_con_mouse_led_selected_prev)
 
         self.lbl_net_con_mouse_led_selected = QLabel(self)
         self.lbl_net_con_mouse_led_selected.move(self.scroll_w + 2 + 240 + 4 + 28 + 4 + 20 + 4, 60 + 28 + 4)
@@ -1422,14 +1438,12 @@ class App(QMainWindow):
         self.btn_net_con_mouse_led_selected_next = QPushButton(self)
         self.btn_net_con_mouse_led_selected_next.move(self.scroll_w + 2 + 240 + 4 + 28 + 4 + 20 + 4 + 28 + 4, 60 + 28 + 4)
         self.btn_net_con_mouse_led_selected_next.resize(20, self.monitor_btn_h)
-        self.btn_net_con_mouse_led_selected_next.setFont(self.font_s10b)
         self.btn_net_con_mouse_led_selected_next.setIcon(QIcon("./image/img_plus.png"))
         self.btn_net_con_mouse_led_selected_next.setStyleSheet(self.btn_settings_style)
         self.btn_net_con_mouse_led_selected_next.clicked.connect(self.btn_net_con_mouse_led_selected_next_function)
         print('-- [App.__init__] created:', self.btn_net_con_mouse_led_selected_next)
         self.object_interaction_enabled.append(self.btn_net_con_mouse_led_selected_next)
         ui_object_complete.append(self.btn_net_con_mouse_led_selected_next)
-        ui_object_font_list_s10b.append(self.btn_net_con_mouse_led_selected_next)
 
         self.lbl_net_con_kb = QLabel(self)
         self.lbl_net_con_kb.move(self.scroll_w + 2, 60 + 28 + 4 + 28 + 4)
@@ -1730,14 +1744,12 @@ class App(QMainWindow):
         self.btn_event_notification_select_file_g1 = QPushButton(self)
         self.btn_event_notification_select_file_g1.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4 + 240 + 4, 60)
         self.btn_event_notification_select_file_g1.resize(20, 20)
-        self.btn_event_notification_select_file_g1.setFont(self.font_s10b)
         self.btn_event_notification_select_file_g1.setIcon(QIcon("./image/img_plus.png"))
         self.btn_event_notification_select_file_g1.setStyleSheet(self.btn_settings_style)
         self.btn_event_notification_select_file_g1.clicked.connect(self.openFileNameDialogG1)
         print('-- [App.__init__] created:', self.btn_event_notification_select_file_g1)
         self.object_interaction_enabled.append(self.btn_event_notification_select_file_g1)
         ui_object_complete.append(self.btn_event_notification_select_file_g1)
-        ui_object_font_list_s10b.append(self.btn_event_notification_select_file_g1)
 
         self.lbl_event_notification_g2 = QLabel(self)
         self.lbl_event_notification_g2.move(self.scroll_w + 2, 60 + 20 + 4)
@@ -1792,14 +1804,12 @@ class App(QMainWindow):
         self.btn_event_notification_select_file_g2 = QPushButton(self)
         self.btn_event_notification_select_file_g2.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4 + 240 + 4, 60 + 20 + 4)
         self.btn_event_notification_select_file_g2.resize(20, 20)
-        self.btn_event_notification_select_file_g2.setFont(self.font_s10b)
         self.btn_event_notification_select_file_g2.setIcon(QIcon("./image/img_plus.png"))
         self.btn_event_notification_select_file_g2.setStyleSheet(self.btn_settings_style)
         self.btn_event_notification_select_file_g2.clicked.connect(self.openFileNameDialogG2)
         print('-- [App.__init__] created:', self.btn_event_notification_select_file_g2)
         self.object_interaction_enabled.append(self.btn_event_notification_select_file_g2)
         ui_object_complete.append(self.btn_event_notification_select_file_g2)
-        ui_object_font_list_s10b.append(self.btn_event_notification_select_file_g2)
 
         self.lbl_event_notification_g3 = QLabel(self)
         self.lbl_event_notification_g3.move(self.scroll_w + 2, 60 + 20 + 4 + 20 + 4)
@@ -1854,14 +1864,12 @@ class App(QMainWindow):
         self.btn_event_notification_select_file_g3 = QPushButton(self)
         self.btn_event_notification_select_file_g3.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4 + 240 + 4, 60 + 20 + 4 + 20 + 4)
         self.btn_event_notification_select_file_g3.resize(20, 20)
-        self.btn_event_notification_select_file_g3.setFont(self.font_s10b)
         self.btn_event_notification_select_file_g3.setIcon(QIcon("./image/img_plus.png"))
         self.btn_event_notification_select_file_g3.setStyleSheet(self.btn_settings_style)
         self.btn_event_notification_select_file_g3.clicked.connect(self.openFileNameDialogG3)
         print('-- [App.__init__] created:', self.btn_event_notification_select_file_g3)
         self.object_interaction_enabled.append(self.btn_event_notification_select_file_g3)
         ui_object_complete.append(self.btn_event_notification_select_file_g3)
-        ui_object_font_list_s10b.append(self.btn_event_notification_select_file_g3)
 
         self.lbl_event_notification_g4 = QLabel(self)
         self.lbl_event_notification_g4.move(self.scroll_w + 2, 60 + 20 + 4 + 20 + 4 + 20 + 4)
@@ -1917,14 +1925,12 @@ class App(QMainWindow):
         self.btn_event_notification_select_file_g4 = QPushButton(self)
         self.btn_event_notification_select_file_g4.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4 + 240 + 4, 60 + 20 + 4 + 20 + 4 + 20 + 4)
         self.btn_event_notification_select_file_g4.resize(20, 20)
-        self.btn_event_notification_select_file_g4.setFont(self.font_s10b)
         self.btn_event_notification_select_file_g4.setIcon(QIcon("./image/img_plus.png"))
         self.btn_event_notification_select_file_g4.setStyleSheet(self.btn_settings_style)
         self.btn_event_notification_select_file_g4.clicked.connect(self.openFileNameDialogG4)
         print('-- [App.__init__] created:', self.btn_event_notification_select_file_g4)
         self.object_interaction_enabled.append(self.btn_event_notification_select_file_g4)
         ui_object_complete.append(self.btn_event_notification_select_file_g4)
-        ui_object_font_list_s10b.append(self.btn_event_notification_select_file_g4)
 
         self.lbl_event_notification_g5 = QLabel(self)
         self.lbl_event_notification_g5.move(self.scroll_w + 2, 60 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4)
@@ -1980,14 +1986,12 @@ class App(QMainWindow):
         self.btn_event_notification_select_file_g5 = QPushButton(self)
         self.btn_event_notification_select_file_g5.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4 + 240 + 4, 60 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4)
         self.btn_event_notification_select_file_g5.resize(20, 20)
-        self.btn_event_notification_select_file_g5.setFont(self.font_s10b)
         self.btn_event_notification_select_file_g5.setIcon(QIcon("./image/img_plus.png"))
         self.btn_event_notification_select_file_g5.setStyleSheet(self.btn_settings_style)
         self.btn_event_notification_select_file_g5.clicked.connect(self.openFileNameDialogG5)
         print('-- [App.__init__] created:', self.btn_event_notification_select_file_g5)
         self.object_interaction_enabled.append(self.btn_event_notification_select_file_g5)
         ui_object_complete.append(self.btn_event_notification_select_file_g5)
-        ui_object_font_list_s10b.append(self.btn_event_notification_select_file_g5)
 
         self.lbl_event_notification_g6 = QLabel(self)
         self.lbl_event_notification_g6.move(self.scroll_w + 2, 60 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4)
@@ -2043,14 +2047,12 @@ class App(QMainWindow):
         self.btn_event_notification_select_file_g6 = QPushButton(self)
         self.btn_event_notification_select_file_g6.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4 + 240 + 4, 60 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4)
         self.btn_event_notification_select_file_g6.resize(20, 20)
-        self.btn_event_notification_select_file_g6.setFont(self.font_s10b)
         self.btn_event_notification_select_file_g6.setIcon(QIcon("./image/img_plus.png"))
         self.btn_event_notification_select_file_g6.setStyleSheet(self.btn_settings_style)
         self.btn_event_notification_select_file_g6.clicked.connect(self.openFileNameDialogG6)
         print('-- [App.__init__] created:', self.btn_event_notification_select_file_g6)
         self.object_interaction_enabled.append(self.btn_event_notification_select_file_g6)
         ui_object_complete.append(self.btn_event_notification_select_file_g6)
-        ui_object_font_list_s10b.append(self.btn_event_notification_select_file_g6)
 
         self.btn_cpu_mon.setToolTip('CPU Utilization Monitor\n\nEnables/Disables CPU utilization monitor.')
         self.lbl_cpu_mon.setToolTip('CPU Utilization Monitor\n\nKeypad 1:       0-25%\nKeypad 4:       25-50%\nKeypad 7:       50-75%\nNumlock:       75-100%.')
