@@ -765,6 +765,20 @@ class App(QMainWindow):
                                                    border-top:2px solid rgb(15, 15, 15);
                                                    border-left:2px solid rgb(15, 15, 15);}"""
 
+        self.btn_title_bar_style_0 = """QPushButton{background-color: rgb(15, 15, 15);
+                                                   color: rgb(255, 255, 255);
+                                                   border-bottom:2px solid rgb(20, 20, 20);
+                                                   border-right:2px solid rgb(20, 20, 20);
+                                                   border-top:2px solid rgb(20, 20, 20);
+                                                   border-left:2px solid rgb(20, 20, 20);}"""
+
+        self.btn_title_bar_style_1 = """QPushButton{background-color: rgb(10, 10, 10);
+                                                   color: rgb(200, 200, 200);
+                                                   border-bottom:2px solid rgb(15, 15, 15);
+                                                   border-right:2px solid rgb(15, 15, 15);
+                                                   border-top:2px solid rgb(15, 15, 15);
+                                                   border-left:2px solid rgb(15, 15, 15);}"""
+
         self.lbl_feature_title_style = """QLabel{background-color: rgb(15, 15, 15);
                                                    color: rgb(255, 255, 255);
                                                    border-bottom:2px solid rgb(15, 15, 15);
@@ -862,18 +876,6 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.btn_minimize)
         ui_object_complete.append(self.btn_minimize)
 
-        self.lbl_con_stat_name = QLabel(self)
-        self.lbl_con_stat_name.move(2, self.anchor_status_h + self.inner_group_spacing_h)
-        self.lbl_con_stat_name.resize(self.width - 4, self.monitor_btn_h)
-        self.lbl_con_stat_name.setFont(self.font_s8b)
-        self.lbl_con_stat_name.setText(' Connected: ')
-        self.lbl_con_stat_name.setAlignment(Qt.AlignCenter)
-        self.lbl_con_stat_name.setStyleSheet(self.lbl_stat_con_style_sub)
-        print('-- [App.__init__] created:', self.lbl_con_stat_name)
-        self.lbl_con_stat_name.hide()
-        ui_object_complete.append(self.lbl_con_stat_name)
-        ui_object_font_list_s8b.append(self.lbl_con_stat_name)
-
         self.hotbar_btn_w = 36
         self.hotbar_btn_h = 36
         self.inner_group_spacing_hotbar_w = 2
@@ -883,32 +885,41 @@ class App(QMainWindow):
         self.lbl_settings_border.resize(426, 194)
         self.lbl_settings_border.setStyleSheet(self.lbl_settings_border_style)
         print('-- [App.__init__] created:', self.lbl_settings_border)
-        self.lbl_con_stat_name.hide()
         ui_object_complete.append(self.lbl_settings_border)
 
+        self.btn_con_stat_name = QPushButton(self)
+        self.btn_con_stat_name.move(self.width - 36 - 6, 28)
+        self.btn_con_stat_name.resize(36, 36)
+        self.icon_sz_18_18 = QSize(28, 28)
+        self.btn_con_stat_name.setIconSize(self.icon_sz_18_18)
+        self.btn_con_stat_name.setStyleSheet(self.btn_title_bar_style_1)
+        print('-- [App.__init__] created:', self.btn_con_stat_name)
+        ui_object_complete.append(self.btn_con_stat_name)
+        ui_object_font_list_s8b.append(self.btn_con_stat_name)
+
         self.btn_refresh_recompile = QPushButton(self)
-        self.btn_refresh_recompile.move((self.width - self.hotbar_btn_w) - (self.inner_group_spacing_hotbar_w) - 4, self.anchor_status_h + self.inner_group_spacing_h)
-        self.btn_refresh_recompile.resize(self.hotbar_btn_w, self.hotbar_btn_h)
+        self.btn_refresh_recompile.move(126 + 4 + 64 + 4, 6)
+        self.btn_refresh_recompile.resize(64, 20)
         self.btn_refresh_recompile.setIcon(QIcon("./image/img_refresh.png"))
-        self.icon_sz_18_18 = QSize(20, 20)
+        self.icon_sz_18_18 = QSize(15, 15)
         self.btn_refresh_recompile.setIconSize(self.icon_sz_18_18)
-        self.btn_refresh_recompile.setStyleSheet(self.btn_feature_title_style)
+        self.btn_refresh_recompile.setStyleSheet(self.btn_title_bar_style_1)
         self.btn_refresh_recompile.clicked.connect(self.recompile)
         print('-- [App.__init__] created:', self.btn_refresh_recompile)
         self.object_interaction_enabled.append(self.btn_refresh_recompile)
         ui_object_complete.append(self.btn_refresh_recompile)
 
         self.btn_bck_light = QPushButton(self)
-        self.btn_bck_light.move((self.width - self.hotbar_btn_w * 2) - (self.inner_group_spacing_hotbar_w * 2) - 4, self.anchor_status_h + self.inner_group_spacing_h)
-        self.btn_bck_light.resize(self.hotbar_btn_w, self.hotbar_btn_h)
-        self.btn_bck_light.setIcon(QIcon("./image/img_backlight_on.png"))
-        self.icon_sz_18_18 = QSize(36, 36)
-        self.btn_bck_light.setIconSize(self.icon_sz_18_18)
-        self.btn_bck_light.setStyleSheet(self.btn_feature_title_style)
+        self.btn_bck_light.move(126 + 4, 6)
+        self.btn_bck_light.resize(64, 20)
+        self.btn_bck_light.setFont(self.font_s7b)
+        self.btn_bck_light.setText('BACKLIGHT')
+        self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_1)
         self.btn_bck_light.clicked.connect(self.btn_bck_light_function)
         print('-- [App.__init__] created:', self.btn_bck_light)
         self.object_interaction_enabled.append(self.btn_bck_light)
         ui_object_complete.append(self.btn_bck_light)
+        ui_object_font_list_s7b.append(self.btn_bck_light)
 
         self.btn_feature_page_home = QPushButton(self)
         self.btn_feature_page_home.move(0, 28)
@@ -2593,6 +2604,10 @@ class App(QMainWindow):
 
             self.lbl_settings_border.show()
 
+            self.btn_bck_light.show()
+
+            self.btn_refresh_recompile.show()
+
         except Exception as e:
             print(e)
 
@@ -2752,11 +2767,14 @@ class App(QMainWindow):
     def feature_pg_home(self):
         self.hide_all_features()
         self.btn_feature_page_home.setStyleSheet(self.btn_feature_title_style)
+        self.btn_con_stat_name.show()
 
-        self.lbl_con_stat_kb_img.show()
-        self.lbl_con_stat_kb.show()
-        self.lbl_con_stat_ms_img.show()
-        self.lbl_con_stat_mouse.show()
+        if len(devices_kb) > 0:
+            self.lbl_con_stat_kb_img.show()
+            self.lbl_con_stat_kb.show()
+        if len(devices_ms) > 0:
+            self.lbl_con_stat_ms_img.show()
+            self.lbl_con_stat_mouse.show()
 
     def feature_pg_util(self):
         self.hide_all_features()
@@ -2965,8 +2983,7 @@ class App(QMainWindow):
                 sdk_color_backlight = sdk_color_backlight_on
                 bool_switch_backlight = True
                 print('-- [App.btn_bck_light_function] setting bool_switch_backlight:', bool_switch_backlight)
-                self.btn_bck_light.setStyleSheet(self.btn_feature_title_style)
-                self.btn_bck_light.setIcon(QIcon("./image/img_backlight_on.png"))
+                self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_0)
                 self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
             elif bool_switch_backlight is True:
                 self.write_var = 'bool_switch_backlight: false'
@@ -2974,8 +2991,7 @@ class App(QMainWindow):
                 sdk_color_backlight = (0, 0, 0)
                 bool_switch_backlight = False
                 print('-- [App.btn_bck_light_function] setting bool_switch_backlight:', bool_switch_backlight)
-                self.btn_bck_light.setStyleSheet(self.btn_feature_title_style)
-                self.btn_bck_light.setIcon(QIcon("./image/img_backlight_off.png"))
+                self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_1)
                 self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
             self.color_all_id()
 
@@ -4009,8 +4025,8 @@ class App(QMainWindow):
                                         self.btn_backlight_sub)
         thread_backlight_auto.append(backlight_auto)
 
-        compile_devices_thread = CompileDevicesClass(self.lbl_con_stat_name, self.lbl_con_stat_kb,
-                                                     self.lbl_con_stat_mouse, self.btn_refresh_recompile)
+        compile_devices_thread = CompileDevicesClass(self.btn_con_stat_name, self.lbl_con_stat_kb, self.lbl_con_stat_mouse, self.lbl_con_stat_ms_img, self.lbl_con_stat_kb_img,
+                                                     self.btn_refresh_recompile, self.btn_title_bar_style_0, self.btn_title_bar_style_1)
         thread_compile_devices.append(compile_devices_thread)
         thread_compile_devices[0].start()
 
@@ -4071,9 +4087,9 @@ class App(QMainWindow):
             self.btn_exclusive_con.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
         if bool_backend_icue_connected is False:
-            self.lbl_con_stat_name.setText(' Connected:  False')
+            self.btn_con_stat_name.setIcon(QIcon("./image/icue_logo_connected_0.png"))
         elif bool_backend_icue_connected is True:
-            self.lbl_con_stat_name.setText(' Connected:  True')
+            self.btn_con_stat_name.setIcon(QIcon("./image/icue_logo_connected_1.png"))
 
         if bool_switch_startup_net_traffic is False:
             self.btn_network_adapter.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
@@ -4098,11 +4114,11 @@ class App(QMainWindow):
         self.lbl_net_con_mouse_led_selected.setText(str(corsairled_id_num_netcon_ms))
 
         if bool_switch_backlight is True:
-            self.btn_bck_light.setIcon(QIcon("./image/img_backlight_on.png"))
+            self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_0)
             self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
             self.color_all_id()
         elif bool_switch_backlight is False:
-            self.btn_bck_light.setIcon(QIcon("./image/img_backlight_off.png"))
+            self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_1)
             self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
         if bool_switch_event_notification_g1 is False:
@@ -4917,13 +4933,17 @@ class SdkEventHandlerClass(QThread):
 class CompileDevicesClass(QThread):
     print('-- [CompileDevicesClass]: plugged in')
 
-    def __init__(self, lbl_con_stat_name, lbl_con_stat_kb, lbl_con_stat_mouse, btn_refresh_compile):
+    def __init__(self, btn_con_stat_name, lbl_con_stat_kb, lbl_con_stat_mouse, lbl_con_stat_ms_img, lbl_con_stat_kb_img, btn_refresh_recompile, btn_title_bar_style_0, btn_title_bar_style_1):
         QThread.__init__(self)
         global sdk_color_hddread_on, sdk_color_backlight, sdk_color_backlight_on
-        self.lbl_con_stat_name = lbl_con_stat_name
+        self.btn_con_stat_name = btn_con_stat_name
         self.lbl_con_stat_kb = lbl_con_stat_kb
         self.lbl_con_stat_mouse = lbl_con_stat_mouse
-        self.btn_refresh_recompile = btn_refresh_compile
+        self.lbl_con_stat_ms_img = lbl_con_stat_ms_img
+        self.lbl_con_stat_kb_img = lbl_con_stat_kb_img
+        self.btn_refresh_recompile = btn_refresh_recompile
+        self.btn_title_bar_style_0 = btn_title_bar_style_0
+        self.btn_title_bar_style_1 = btn_title_bar_style_1
         self.device_str = ''
         self.device_index = ()
         self.bool_backend_comprehensive_enumeration = True
@@ -5083,8 +5103,11 @@ class CompileDevicesClass(QThread):
                 bool_backend_icue_connected_previous = bool_backend_icue_connected
                 self.stop_all_threads()
             devices_previous = []
-            self.lbl_con_stat_name.setText('Connected:  False')
-            self.lbl_con_stat_name.setAlignment(Qt.AlignCenter)
+            self.btn_con_stat_name.setIcon(QIcon("./image/icue_logo_connected_0.png"))
+            self.lbl_con_stat_mouse.hide()
+            self.lbl_con_stat_kb.hide()
+            self.lbl_con_stat_ms_img.hide()
+            self.lbl_con_stat_kb_img.hide()
             time.sleep(2)
             self.attempt_connect()
 
@@ -5092,8 +5115,7 @@ class CompileDevicesClass(QThread):
             sdk.request_control()
             bool_backend_icue_connected = True
             # print('-- [CompileDevicesClass.attempt_connect] bool_backend_icue_connected:', bool_backend_icue_connected)
-            self.lbl_con_stat_name.setText('Connected:  True')
-            self.lbl_con_stat_name.setAlignment(Qt.AlignCenter)
+            self.btn_con_stat_name.setIcon(QIcon("./image/icue_logo_connected_1.png"))
             self.get_devices()
 
     def entry_sequence(self):
@@ -5157,14 +5179,23 @@ class CompileDevicesClass(QThread):
 
             if fresh_start is True:
                 print('-- [CompileDevicesClass.get_devices] fresh start: True')
-                if len(devices_kb) >= 1:
+                if len(devices_kb) > 0:
                     self.lbl_con_stat_kb.setText(str(devices_kb_name[0]))
+                    self.lbl_con_stat_kb.show()
+                    self.lbl_con_stat_kb_img.show()
                 elif len(devices_kb) < 1:
                     self.lbl_con_stat_kb.setText('')
-                if len(devices_ms) >= 1:
+                    self.lbl_con_stat_kb.hide()
+                    self.lbl_con_stat_kb_img.hide()
+
+                if len(devices_ms) > 0:
                     self.lbl_con_stat_mouse.setText(str(devices_ms_name[0]))
+                    self.lbl_con_stat_mouse.show()
+                    self.lbl_con_stat_ms_img.show()
                 elif len(devices_ms) < 1:
                     self.lbl_con_stat_mouse.setText('')
+                    self.lbl_con_stat_mouse.hide()
+                    self.lbl_con_stat_ms_img.hide()
 
                 if len(devices_kb) >= 1 or len(devices_ms) >= 1:
                     self.entry_sequence()
@@ -5624,21 +5655,26 @@ class CompileDevicesClass(QThread):
         bool_backend_config_read_complete = False
         bool_backend_allow_display = False
 
-        while True:
-            # try:
-            if bool_backend_config_read_complete is False:
-                self.read_config()
-            elif bool_backend_config_read_complete is True:
-                bool_backend_allow_display = True
-                self.attempt_connect()
-                # if bool_backend_allow_display is False:
-                #     bool_backend_allow_display = True
-            else:
-                print('-- [CompileDevicesClass.run] bool_backend_config_read_complete:', bool_backend_config_read_complete)
-            time.sleep(1)
+        self.btn_refresh_recompile.setStyleSheet(self.btn_title_bar_style_0)
+        self.lbl_con_stat_mouse.hide()
+        self.lbl_con_stat_kb.hide()
+        self.lbl_con_stat_ms_img.hide()
+        self.lbl_con_stat_kb_img.hide()
 
-            # except Exception as e:
-            #     print('[-- [CompileDevicesClass.run] Error:', e)
+        while True:
+            try:
+                if bool_backend_config_read_complete is False:
+                    self.read_config()
+                elif bool_backend_config_read_complete is True:
+                    bool_backend_allow_display = True
+                    self.btn_refresh_recompile.setStyleSheet(self.btn_title_bar_style_1)
+                    self.attempt_connect()
+                else:
+                    print('-- [CompileDevicesClass.run] bool_backend_config_read_complete:', bool_backend_config_read_complete)
+                time.sleep(1)
+
+            except Exception as e:
+                print('[-- [CompileDevicesClass.run] Error:', e)
             time.sleep(3)
 
     def stop(self):
@@ -5766,7 +5802,7 @@ class BackLightClass(QThread):
                         print('-- [BackLightClass.run] auto backlight: turning on')
 
                         bool_switch_backlight = True
-                        self.btn_bck_light.setIcon(QIcon("./image/img_backlight_on.png"))
+                        self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_0)
                         self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
 
                         sdk_color_backlight = sdk_color_backlight_on
@@ -5777,7 +5813,7 @@ class BackLightClass(QThread):
                         print('-- [BackLightClass.run] auto backlight: turning off')
 
                         bool_switch_backlight = False
-                        self.btn_bck_light.setIcon(QIcon("./image/img_backlight_off.png"))
+                        self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_1)
                         self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
                         sdk_color_backlight = (0, 0, 0)
@@ -5791,7 +5827,7 @@ class BackLightClass(QThread):
                             print('-- [BackLightClass.run] auto backlight: turning on')
 
                             bool_switch_backlight = True
-                            self.btn_bck_light.setIcon(QIcon("./image/img_backlight_on.png"))
+                            self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_0)
                             self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
 
                             sdk_color_backlight = sdk_color_backlight_on
@@ -5801,7 +5837,7 @@ class BackLightClass(QThread):
                             print('-- [BackLightClass.run] auto backlight: turning off')
 
                             bool_switch_backlight = False
-                            self.btn_bck_light.setIcon(QIcon("./image/img_backlight_off.png"))
+                            self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_1)
                             self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
                             sdk_color_backlight = (0, 0, 0)
@@ -5812,7 +5848,7 @@ class BackLightClass(QThread):
                             print('-- [BackLightClass.run] auto backlight: turning on')
 
                             bool_switch_backlight = True
-                            self.btn_bck_light.setIcon(QIcon("./image/img_backlight_on.png"))
+                            self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_0)
                             self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
 
                             sdk_color_backlight = sdk_color_backlight_on
@@ -5822,7 +5858,7 @@ class BackLightClass(QThread):
                             print('-- [BackLightClass.run] auto backlight: turning off')
 
                             bool_switch_backlight = False
-                            self.btn_bck_light.setIcon(QIcon("./image/img_backlight_off.png"))
+                            self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_1)
                             self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
                             sdk_color_backlight = (0, 0, 0)
