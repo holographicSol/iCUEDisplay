@@ -2533,10 +2533,14 @@ class App(QMainWindow):
             self.btn_minimize.show()
             self.btn_quit.show()
 
-            self.btn_con_stat_kb_img.show()
-            self.btn_con_stat_ms_img.show()
-            self.lbl_con_stat_kb.show()
-            self.lbl_con_stat_mouse.show()
+            if len(devices_kb) > 0:
+                self.btn_con_stat_kb_img.show()
+                self.lbl_con_stat_kb.show()
+
+            if len(devices_ms) > 0:
+                self.btn_con_stat_ms_img.show()
+                self.lbl_con_stat_mouse.show()
+
             self.btn_con_stat_name.show()
 
             self.btn_feature_page_home.show()
@@ -4244,6 +4248,8 @@ class App(QMainWindow):
         self.netshare_mon_rgb_on_str = self.netshare_mon_rgb_on_str.replace(']', '')
         self.qle_netshare_mon_rgb_on.setText(self.netshare_mon_rgb_on_str)
 
+        self.sanitize_passed = False
+
         self.show()
 
     def changeEvent(self, event):
@@ -4965,6 +4971,7 @@ class CompileDevicesClass(QThread):
                 var_0 = var_0.replace(':', '')
                 var_1 = var[1].replace('>:', '')
                 corsairled_id_num_ms_complete.append(int(var_1))
+            corsairled_id_num_ms_complete.sort()
             print('-- [CompileDevicesClass.enumerate_device]  corsairled_id_num_ms_complete:', corsairled_id_num_ms_complete)
 
     def stop_all_threads(self):
