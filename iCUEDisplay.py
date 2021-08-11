@@ -650,7 +650,6 @@ class App(QMainWindow):
         initialize_scaling_dpi()
         initialize_priority()
 
-        # ui_object_complete = []
         self.object_interaction_enabled = []
         self.object_interaction_readonly = []
 
@@ -678,10 +677,6 @@ class App(QMainWindow):
         print('-- [App.__init__] setting window position:', self.pos_w, self.pos_h)
         self.setGeometry(int(self.pos_w), int(self.pos_h), self.width, self.height)
 
-        # event_filter_self.append(self)
-        # self.filter = ObjEveFilter()
-        # self.installEventFilter(self.filter)
-
         p = self.palette()
         p.setColor(self.backgroundRole(), Qt.black)
         self.setWindowFlags(Qt.Window | Qt.FramelessWindowHint)
@@ -692,143 +687,101 @@ class App(QMainWindow):
         self.font_s8b = QFont("Segoe UI", 8, QFont.Bold)
         self.font_s9b = QFont("Segoe UI", 9, QFont.Bold)
 
+        """ Tooltip """
         self.tooltip_style = """QToolTip {background-color: rgb(35, 35, 35);
                            color: rgb(200, 200, 200);
                            border-top:0px solid rgb(35, 35, 35);
                            border-bottom:0px solid rgb(35, 35, 35);
                            border-right:0px solid rgb(0, 0, 0);
                            border-left:0px solid rgb(0, 0, 0);}"""
-        self.cmb_style = """QComboBox {background-color: rgb(15, 15, 15);
-                   color: rgb(200, 200, 200);
-                   border-top:2px solid rgb(15, 15, 15);
-                   border-bottom:2px solid rgb(15, 15, 15);
-                   border-right:2px solid rgb(15, 15, 15);
-                   border-left:2px solid rgb(15, 15, 15);}"""
 
-        self.lbl_stat_con_style_sub = """QLabel {background-color: rgb(0, 0, 0);
-                   color: rgb(200, 200, 200);
-                   border-top:2px solid rgb(15, 15, 15);
-                   border-bottom:2px solid rgb(15, 15, 15);
-                   border-right:2px solid rgb(15, 15, 15);
-                   border-left:2px solid rgb(15, 15, 15);}"""
-
-        self.lbl_data_style_title = """QLabel {background-color: rgb(15, 15, 15);
-                                                   color: rgb(255, 255, 255);
-                                                   border-bottom:2px solid rgb(0, 0, 0);
-                                                   border-right:2px solid rgb(0, 0, 0);
-                                                   border-top:2px solid rgb(0, 0, 0);
-                                                   border-left:2px solid rgb(0, 0, 0);}"""
-
-        self.lbl_settings_border_style = """QLabel {background-color: rgb(0, 0, 0);
-                           color: rgb(0, 0, 0);
-                           border-top:2px solid rgb(15, 15, 15);
-                           border-bottom:2px solid rgb(15, 15, 15);
-                           border-right:2px solid rgb(15, 15, 15);
-                           border-left:2px solid rgb(15, 15, 15);}"""
-
-        self.lbl_data_style_sep = """QLabel {background-color: rgb(33, 33, 33);
-                           color: rgb(220, 220, 220);
-                           border-top:0px solid rgb(0, 0, 0);
-                           border-bottom:0px solid rgb(0, 0, 0);
-                           border-right:0px solid rgb(0, 0, 0);
-                           border-left:0px solid rgb(0, 0, 0);}"""
-
-        self.btn_tog_switch_style = """QPushButton{background-color: rgb(0, 0, 0);
-                           color: rgb(0, 0, 0);
-                           border-bottom:0px solid rgb(0, 0, 0);
-                           border-right:0px solid rgb(0, 0, 0);
-                           border-top:0px solid rgb(0, 0, 0);
-                           border-left:0px solid rgb(0, 0, 0);}"""
-
-        self.btn_stat_img_style = """QPushButton{background-color: rgb(15, 15, 15);
-                                   color: rgb(0, 0, 0);
-                                   border-bottom:0px solid rgb(0, 0, 0);
-                                   border-right:0px solid rgb(0, 0, 0);
-                                   border-top:0px solid rgb(0, 0, 0);
-                                   border-left:0px solid rgb(0, 0, 0);}"""
-
-        self.lbl_white_txt_style = """QLabel {background-color: rgb(15, 15, 15);
-                   color: rgb(200, 200, 200);
-                   border-bottom:2px solid rgb(15, 15, 15);
-                   border-right:2px solid rgb(15, 15, 15);
-                   border-top:2px solid rgb(15, 15, 15);
-                   border-left:2px solid rgb(15, 15, 15);}"""
-
-        self.lbl_white_txt_black_bg_style = """QLabel {background-color: rgb(0, 0, 0);
-                           color: rgb(255, 255, 255);
-                           border-bottom:0px solid rgb(0, 0, 0);
-                           border-right:0px solid rgb(0, 0, 0);
-                           border-top:0px solid rgb(0, 0, 0);
-                           border-left:0px solid rgb(0, 0, 0);}"""
-
-        self.lbl_visually_combine_left_to_right = """QLabel {background-color: rgb(10, 10, 10);
-                           color: rgb(200, 200, 200);
-                           border-bottom:2px solid rgb(15, 15, 15);
-                           border-right:2px solid rgb(15, 15, 15);
-                           border-top:2px solid rgb(15, 15, 15);
-                           border-left:2px solid rgb(15, 15, 15);}"""
-
-        self.btn_settings_style = """QPushButton{background-color: rgb(15, 15, 15);
-                           color: rgb(0, 0, 0);
-                           border-bottom:2px solid rgb(15, 15, 15);
-                           border-right:2px solid rgb(15, 15, 15);
-                           border-top:2px solid rgb(15, 15, 15);}"""
-
-        self.btn_feature_title_style = """QPushButton{background-color: rgb(15, 15, 15);
-                                           color: rgb(255, 255, 255);
-                                           border-bottom:2px solid rgb(20, 20, 20);
-                                           border-right:2px solid rgb(20, 20, 20);
-                                           border-top:2px solid rgb(20, 20, 20);
-                                           border-left:2px solid rgb(20, 20, 20);}"""
-
-        self.btn_feature_title_style_1 = """QPushButton{background-color: rgb(10, 10, 10);
-                                                   color: rgb(200, 200, 200);
-                                                   border-bottom:2px solid rgb(15, 15, 15);
-                                                   border-right:2px solid rgb(15, 15, 15);
-                                                   border-top:2px solid rgb(15, 15, 15);
-                                                   border-left:2px solid rgb(15, 15, 15);}"""
-
+        """ Title Bar """
         self.btn_title_bar_style_0 = """QPushButton{background-color: rgb(15, 15, 15);
-                                                   color: rgb(255, 255, 255);
-                                                   border-bottom:0px solid rgb(20, 20, 20);
-                                                   border-right:2px solid rgb(20, 20, 20);
-                                                   border-top:0px solid rgb(20, 20, 20);
-                                                   border-left:2px solid rgb(20, 20, 20);}"""
+                                                           color: rgb(255, 255, 255);
+                                                           border-bottom:0px solid rgb(20, 20, 20);
+                                                           border-right:2px solid rgb(20, 20, 20);
+                                                           border-top:0px solid rgb(20, 20, 20);
+                                                           border-left:2px solid rgb(20, 20, 20);}"""
 
         self.btn_title_bar_style_1 = """QPushButton{background-color: rgb(10, 10, 10);
-                                                   color: rgb(200, 200, 200);
-                                                   border-bottom:0px solid rgb(15, 15, 15);
-                                                   border-right:2px solid rgb(15, 15, 15);
-                                                   border-top:0px solid rgb(15, 15, 15);
-                                                   border-left:2px solid rgb(15, 15, 15);}"""
+                                                           color: rgb(200, 200, 200);
+                                                           border-bottom:0px solid rgb(15, 15, 15);
+                                                           border-right:2px solid rgb(15, 15, 15);
+                                                           border-top:0px solid rgb(15, 15, 15);
+                                                           border-left:2px solid rgb(15, 15, 15);}"""
 
-        self.btn_icue_con_stat_style = """QPushButton{background-color: rgb(10, 10, 10);
+        """ Status """
+        self.btn_status_style = """QPushButton{background-color: rgb(0, 0, 0);
+                                                                   color: rgb(200, 200, 200);
+                                                                   border-bottom:2px solid rgb(0, 0, 0);
+                                                                   border-right:2px solid rgb(0, 0, 0);
+                                                                   border-top:2px solid rgb(0, 0, 0);
+                                                                   border-left:2px solid rgb(0, 0, 0);}"""
+
+        self.lbl_status_style = """QLabel {background-color: rgb(0, 0, 0);
+                           color: rgb(200, 200, 200);
+                           border-top:2px solid rgb(0, 0, 0);
+                           border-bottom:2px solid rgb(0, 0, 0);
+                           border-right:2px solid rgb(0, 0, 0);
+                           border-left:2px solid rgb(0, 0, 0);}"""
+
+        """ Side Menu """
+        self.btn_side_menu_style = """QPushButton{background-color: rgb(15, 15, 15);
+                                                   color: rgb(255, 255, 255);
+                                                   border-bottom:2px solid rgb(20, 20, 20);
+                                                   border-right:2px solid rgb(20, 20, 20);
+                                                   border-top:2px solid rgb(20, 20, 20);
+                                                   border-left:2px solid rgb(0, 0, 0);}"""
+
+        self.btn_side_menu_style_1 = """QPushButton{background-color: rgb(10, 10, 10);
                                                            color: rgb(200, 200, 200);
                                                            border-bottom:2px solid rgb(15, 15, 15);
                                                            border-right:2px solid rgb(15, 15, 15);
                                                            border-top:2px solid rgb(15, 15, 15);
-                                                           border-left:2px solid rgb(15, 15, 15);}"""
+                                                           border-left:2px solid rgb(0, 0, 0);}"""
 
-        self.lbl_feature_title_style = """QLabel{background-color: rgb(15, 15, 15);
-                                                   color: rgb(255, 255, 255);
-                                                   border-bottom:2px solid rgb(15, 15, 15);
-                                                   border-right:2px solid rgb(15, 15, 15);
-                                                   border-top:2px solid rgb(15, 15, 15);
-                                                   border-left:2px solid rgb(20, 20, 20);}"""
+        """ Menu """
+        self.lbl_menu_background_style = """QLabel {background-color: rgb(8, 8, 8);
+                                   color: rgb(5, 5, 5);
+                                   border-top:0px solid rgb(5, 5, 5);
+                                   border-bottom:0px solid rgb(5, 5, 5);
+                                   border-right:0px solid rgb(5, 5, 5);
+                                   border-left:0px solid rgb(5, 5, 5);}"""
 
-        self.btn_scroll_style = """QPushButton{background-color: rgb(15, 15, 15);
-                                   color: rgb(30, 30, 30);
-                                   border-bottom:2px solid rgb(15, 15, 15);
-                                   border-right:2px solid rgb(15, 15, 15);
-                                   border-top:2px solid rgb(15, 15, 15);
-                                   border-left:2px solid rgb(15, 15, 15);}"""
+        self.cmb_menu_style = """QComboBox {background-color: rgb(15, 15, 15);
+                   color: rgb(200, 200, 200);
+                   border-top:2px solid rgb(10, 10, 10);
+                   border-bottom:2px solid rgb(10, 10, 10);
+                   border-right:2px solid rgb(10, 10, 10);
+                   border-left:2px solid rgb(10, 10, 10);}"""
 
-        self.qle_unselected = """QLineEdit{background-color: rgb(15, 15, 15);
-                                                   color: rgb(255, 255, 255);
-                                                   border-bottom:2px solid rgb(15, 15, 15);
-                                                   border-right:2px solid rgb(15, 15, 15);
-                                                   border-top:2px solid rgb(15, 15, 15);
-                                                   border-left:2px solid rgb(15, 15, 15);}"""
+        self.btn_menu_style = """QPushButton{background-color: rgb(15, 15, 15);
+                           color: rgb(0, 0, 0);
+                           border-bottom:0px solid rgb(0, 0, 0);
+                           border-right:0px solid rgb(0, 0, 0);
+                           border-top:0px solid rgb(0, 0, 0);
+                           border-left:0px solid rgb(0, 0, 0);}"""
+
+        self.lbl_menu_description_style = """QLabel {background-color: rgb(15, 15, 15);
+                   color: rgb(200, 200, 200);
+                   border-bottom:2px solid rgb(8, 8, 8);
+                   border-right:2px solid rgb(8, 8, 8);
+                   border-top:2px solid rgb(8, 8, 8);
+                   border-left:2px solid rgb(8, 8, 8);}"""
+
+        self.lbl_menu_style = """QLabel{background-color: rgb(15, 15, 15);
+                                                   color: rgb(197, 197, 197);
+                                                   border-bottom:0px solid rgb(15, 15, 15);
+                                                   border-right:0px solid rgb(15, 15, 15);
+                                                   border-top:0px solid rgb(15, 15, 15);
+                                                   border-left:4px solid rgb(15, 15, 15);}"""
+
+        self.qle_menu_style = """QLineEdit{background-color: rgb(15, 15, 15);
+                                                   color: rgb(197, 197, 197);
+                                                   border-bottom:0px solid rgb(15, 15, 15);
+                                                   border-right:0px solid rgb(15, 15, 15);
+                                                   border-top:0px solid rgb(15, 15, 15);
+                                                   border-left:0px solid rgb(15, 15, 15);}"""
 
         self.setStyleSheet(self.tooltip_style)
 
@@ -909,19 +862,12 @@ class App(QMainWindow):
         self.hotbar_btn_h = 36
         self.inner_group_spacing_hotbar_w = 2
 
-        self.lbl_settings_border = QLabel(self)
-        self.lbl_settings_border.move(130, 28)
-        self.lbl_settings_border.resize(426, 194)
-        self.lbl_settings_border.setStyleSheet(self.lbl_settings_border_style)
-        print('-- [App.__init__] created:', self.lbl_settings_border)
-        ui_object_complete.append(self.lbl_settings_border)
-
         self.btn_con_stat_name = QPushButton(self)
         self.btn_con_stat_name.move(self.width - 36 - 6, 28)
         self.btn_con_stat_name.resize(36, 36)
         self.icon_sz_18_18 = QSize(28, 28)
         self.btn_con_stat_name.setIconSize(self.icon_sz_18_18)
-        self.btn_con_stat_name.setStyleSheet(self.btn_icue_con_stat_style)
+        self.btn_con_stat_name.setStyleSheet(self.btn_status_style)
         print('-- [App.__init__] created:', self.btn_con_stat_name)
         ui_object_complete.append(self.btn_con_stat_name)
         ui_object_font_list_s8b.append(self.btn_con_stat_name)
@@ -955,7 +901,7 @@ class App(QMainWindow):
         self.btn_feature_page_home.resize(126, 28)
         self.btn_feature_page_home.setFont(self.font_s8b)
         self.btn_feature_page_home.setText('Home')
-        self.btn_feature_page_home.setStyleSheet(self.btn_feature_title_style)
+        self.btn_feature_page_home.setStyleSheet(self.btn_side_menu_style)
         self.btn_feature_page_home.clicked.connect(self.feature_pg_home)
         print('-- [App.__init__] created:', self.btn_feature_page_home)
         self.object_interaction_enabled.append(self.btn_feature_page_home)
@@ -967,7 +913,7 @@ class App(QMainWindow):
         self.btn_feature_page_util.resize(126, 28)
         self.btn_feature_page_util.setFont(self.font_s8b)
         self.btn_feature_page_util.setText('Basic Utilization')
-        self.btn_feature_page_util.setStyleSheet(self.btn_feature_title_style_1)
+        self.btn_feature_page_util.setStyleSheet(self.btn_side_menu_style_1)
         self.btn_feature_page_util.clicked.connect(self.feature_pg_util)
         print('-- [App.__init__] created:', self.btn_feature_page_util)
         self.object_interaction_enabled.append(self.btn_feature_page_util)
@@ -979,7 +925,7 @@ class App(QMainWindow):
         self.btn_feature_page_disks.resize(126, 28)
         self.btn_feature_page_disks.setFont(self.font_s8b)
         self.btn_feature_page_disks.setText('Disks Utilization')
-        self.btn_feature_page_disks.setStyleSheet(self.btn_feature_title_style_1)
+        self.btn_feature_page_disks.setStyleSheet(self.btn_side_menu_style_1)
         self.btn_feature_page_disks.clicked.connect(self.btn_feature_page_disk_util)
         print('-- [App.__init__] created:', self.btn_feature_page_disks)
         self.object_interaction_enabled.append(self.btn_feature_page_disks)
@@ -991,7 +937,7 @@ class App(QMainWindow):
         self.btn_feature_page_networking.resize(126, 28)
         self.btn_feature_page_networking.setFont(self.font_s8b)
         self.btn_feature_page_networking.setText('Networking')
-        self.btn_feature_page_networking.setStyleSheet(self.btn_feature_title_style_1)
+        self.btn_feature_page_networking.setStyleSheet(self.btn_side_menu_style_1)
         self.btn_feature_page_networking.clicked.connect(self.btn_feature_page_networking_function)
         print('-- [App.__init__] created:', self.btn_feature_page_networking)
         self.object_interaction_enabled.append(self.btn_feature_page_networking)
@@ -1003,7 +949,7 @@ class App(QMainWindow):
         self.btn_feature_page_event_notification.resize(126, 28)
         self.btn_feature_page_event_notification.setFont(self.font_s8b)
         self.btn_feature_page_event_notification.setText('Event Notification')
-        self.btn_feature_page_event_notification.setStyleSheet(self.btn_feature_title_style_1)
+        self.btn_feature_page_event_notification.setStyleSheet(self.btn_side_menu_style_1)
         self.btn_feature_page_event_notification.clicked.connect(self.btn_feature_page_event_notification_function)
         print('-- [App.__init__] created:', self.btn_feature_page_event_notification)
         self.object_interaction_enabled.append(self.btn_feature_page_event_notification)
@@ -1015,7 +961,7 @@ class App(QMainWindow):
         self.btn_feature_page_settings.resize(126, 28)
         self.btn_feature_page_settings.setFont(self.font_s8b)
         self.btn_feature_page_settings.setText('Settings')
-        self.btn_feature_page_settings.setStyleSheet(self.btn_feature_title_style_1)
+        self.btn_feature_page_settings.setStyleSheet(self.btn_side_menu_style_1)
         self.btn_feature_page_settings.clicked.connect(self.btn_feature_page_settings_function)
         print('-- [App.__init__] created:', self.btn_feature_page_settings)
         self.object_interaction_enabled.append(self.btn_feature_page_settings)
@@ -1033,7 +979,7 @@ class App(QMainWindow):
         self.btn_con_stat_kb_img.setIcon(QIcon("./image/kb_corsair_k95_platinum.png"))
         self.icon_sz_18_18 = QSize(36, 36)
         self.btn_con_stat_kb_img.setIconSize(self.icon_sz_18_18)
-        self.btn_con_stat_kb_img.setStyleSheet(self.btn_stat_img_style)
+        self.btn_con_stat_kb_img.setStyleSheet(self.btn_status_style)
         self.btn_con_stat_kb_img.clicked.connect(self.btn_con_stat_kb_img_function)
         print('-- [App.__init__] created:', self.btn_con_stat_kb_img)
         self.object_interaction_enabled.append(self.btn_con_stat_kb_img)
@@ -1044,7 +990,7 @@ class App(QMainWindow):
         self.lbl_con_stat_kb.resize(150, 36)
         self.lbl_con_stat_kb.setFont(self.font_s8b)
         self.lbl_con_stat_kb.setText('')
-        self.lbl_con_stat_kb.setStyleSheet(self.lbl_stat_con_style_sub)
+        self.lbl_con_stat_kb.setStyleSheet(self.lbl_status_style)
         print('-- [App.__init__] created:', self.lbl_con_stat_kb)
         ui_object_complete.append(self.lbl_con_stat_kb)
         ui_object_font_list_s8b.append(self.lbl_con_stat_kb)
@@ -1055,7 +1001,7 @@ class App(QMainWindow):
         self.btn_con_stat_ms_img.setIcon(QIcon("./image/ms_corsair_scimitar_rgb_elite.png"))
         self.icon_sz_18_18 = QSize(36, 36)
         self.btn_con_stat_ms_img.setIconSize(self.icon_sz_18_18)
-        self.btn_con_stat_ms_img.setStyleSheet(self.btn_stat_img_style)
+        self.btn_con_stat_ms_img.setStyleSheet(self.btn_status_style)
         self.btn_con_stat_ms_img.clicked.connect(self.btn_con_stat_ms_img_function)
         print('-- [App.__init__] created:', self.btn_con_stat_ms_img)
         self.object_interaction_enabled.append(self.btn_con_stat_ms_img)
@@ -1066,36 +1012,33 @@ class App(QMainWindow):
         self.lbl_con_stat_mouse.resize(150, 36)
         self.lbl_con_stat_mouse.setFont(self.font_s8b)
         self.lbl_con_stat_mouse.setText('')
-        self.lbl_con_stat_mouse.setStyleSheet(self.lbl_stat_con_style_sub)
+        self.lbl_con_stat_mouse.setStyleSheet(self.lbl_status_style)
         print('-- [App.__init__] created:', self.lbl_con_stat_mouse)
         ui_object_complete.append(self.lbl_con_stat_mouse)
         ui_object_font_list_s8b.append(self.lbl_con_stat_mouse)
 
-        self.lbl_utilization = QLabel(self)
-        self.lbl_utilization.move(128 + 4, 30)
-        self.lbl_utilization.resize(422, 28)
-        self.lbl_utilization.setFont(self.font_s8b)
-        self.lbl_utilization.setText('BASIC UTILIZATION')
-        self.lbl_utilization.setAlignment(Qt.AlignCenter)
-        self.lbl_utilization.setStyleSheet(self.lbl_data_style_title)
-        print('-- [App.__init__] created:', self.lbl_utilization)
-        ui_object_complete.append(self.lbl_utilization)
-        ui_object_font_list_s8b.append(self.lbl_utilization)
+        self.lbl_settings_bg = QLabel(self)
+        self.lbl_settings_bg.move(130, 68)
+        self.lbl_settings_bg.resize(426, self.height - 68)
+        self.lbl_settings_bg.setStyleSheet(self.lbl_menu_background_style)
+        print('-- [App.__init__] created:', self.lbl_settings_bg)
+        ui_object_complete.append(self.lbl_settings_bg)
+        ui_object_font_list_s8b.append(self.lbl_settings_bg)
 
         self.lbl_cpu_mon = QLabel(self)
-        self.lbl_cpu_mon.move(self.scroll_w + 2, 60)
+        self.lbl_cpu_mon.move(self.scroll_w + 2, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.lbl_cpu_mon.resize(100, self.monitor_btn_h)
         self.lbl_cpu_mon.setFont(self.font_s8b)
         self.lbl_cpu_mon.setText('CPU MONITOR')
-        self.lbl_cpu_mon.setStyleSheet(self.lbl_feature_title_style)
+        self.lbl_cpu_mon.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_cpu_mon)
         ui_object_complete.append(self.lbl_cpu_mon)
         ui_object_font_list_s8b.append(self.lbl_cpu_mon)
 
         self.btn_cpu_mon = QPushButton(self)
-        self.btn_cpu_mon.move(self.scroll_w + 2 + 100 + 4, 60)
+        self.btn_cpu_mon.move(self.scroll_w + 2 + 100 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.btn_cpu_mon.resize(28, 28)
-        self.btn_cpu_mon.setStyleSheet(self.btn_tog_switch_style)
+        self.btn_cpu_mon.setStyleSheet(self.btn_menu_style)
         self.btn_cpu_mon.setIconSize(self.tog_switch_ico_sz)
         self.btn_cpu_mon.clicked.connect(self.btn_cpu_mon_function)
         print('-- [App.__init__] created:', self.btn_cpu_mon)
@@ -1104,10 +1047,10 @@ class App(QMainWindow):
 
         self.qle_cpu_mon_rgb_on = QLineEdit(self)
         self.qle_cpu_mon_rgb_on.resize(self.monitor_btn_w, self.monitor_btn_h)
-        self.qle_cpu_mon_rgb_on.move(self.scroll_w + 2 + 100 + 4 + 28 + 4, 60)
+        self.qle_cpu_mon_rgb_on.move(self.scroll_w + 2 + 100 + 4 + 28 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.qle_cpu_mon_rgb_on.setFont(self.font_s8b)
         self.qle_cpu_mon_rgb_on.returnPressed.connect(self.btn_cpu_mon_rgb_on_function)
-        self.qle_cpu_mon_rgb_on.setStyleSheet(self.qle_unselected)
+        self.qle_cpu_mon_rgb_on.setStyleSheet(self.qle_menu_style)
         self.qle_cpu_mon_rgb_on.setAlignment(Qt.AlignCenter)
         print('-- [App.__init__] created:', self.qle_cpu_mon_rgb_on)
         self.object_interaction_readonly.append(self.qle_cpu_mon_rgb_on)
@@ -1116,10 +1059,10 @@ class App(QMainWindow):
 
         self.qle_cpu_led_time_on = QLineEdit(self)
         self.qle_cpu_led_time_on.resize(24, self.monitor_btn_h)
-        self.qle_cpu_led_time_on.move(self.scroll_w + 2 + 100 + 4 + 28 + 4 + 72 + 4, 60)
+        self.qle_cpu_led_time_on.move(self.scroll_w + 2 + 100 + 4 + 28 + 4 + 72 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.qle_cpu_led_time_on.setFont(self.font_s8b)
         self.qle_cpu_led_time_on.returnPressed.connect(self.btn_cpu_led_time_on_function)
-        self.qle_cpu_led_time_on.setStyleSheet(self.qle_unselected)
+        self.qle_cpu_led_time_on.setStyleSheet(self.qle_menu_style)
         self.qle_cpu_led_time_on.setAlignment(Qt.AlignCenter)
         print('-- [App.__init__] created:', self.qle_cpu_led_time_on)
         self.object_interaction_readonly.append(self.qle_cpu_led_time_on)
@@ -1127,19 +1070,19 @@ class App(QMainWindow):
         ui_object_font_list_s8b.append(self.qle_cpu_led_time_on)
 
         self.lbl_cpu_mon_temp = QLabel(self)
-        self.lbl_cpu_mon_temp.move(self.scroll_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4, 60)
+        self.lbl_cpu_mon_temp.move(self.scroll_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.lbl_cpu_mon_temp.resize(100, self.monitor_btn_h)
         self.lbl_cpu_mon_temp.setFont(self.font_s8b)
         self.lbl_cpu_mon_temp.setText('TEMPERATURE')
-        self.lbl_cpu_mon_temp.setStyleSheet(self.lbl_feature_title_style)
+        self.lbl_cpu_mon_temp.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_cpu_mon_temp)
         ui_object_complete.append(self.lbl_cpu_mon_temp)
         ui_object_font_list_s8b.append(self.lbl_cpu_mon_temp)
 
         self.btn_cpu_mon_temp = QPushButton(self)
-        self.btn_cpu_mon_temp.move(self.scroll_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 100 + 4, 60)
+        self.btn_cpu_mon_temp.move(self.scroll_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 100 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.btn_cpu_mon_temp.resize(28, 28)
-        self.btn_cpu_mon_temp.setStyleSheet(self.btn_tog_switch_style)
+        self.btn_cpu_mon_temp.setStyleSheet(self.btn_menu_style)
         self.btn_cpu_mon_temp.setIconSize(self.tog_switch_ico_sz)
         self.btn_cpu_mon_temp.clicked.connect(self.btn_cpu_mon_temp_function)
         print('-- [App.__init__] created:', self.btn_cpu_mon_temp)
@@ -1147,19 +1090,19 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_cpu_mon_temp)
 
         self.lbl_dram_mon = QLabel(self)
-        self.lbl_dram_mon.move(self.scroll_w + 2, 60 + 28 + 4)
+        self.lbl_dram_mon.move(self.scroll_w + 2, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.lbl_dram_mon.resize(100, self.monitor_btn_h)
         self.lbl_dram_mon.setFont(self.font_s8b)
         self.lbl_dram_mon.setText('DRAM MONITOR')
-        self.lbl_dram_mon.setStyleSheet(self.lbl_feature_title_style)
+        self.lbl_dram_mon.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_dram_mon)
         ui_object_complete.append(self.lbl_dram_mon)
         ui_object_font_list_s8b.append(self.lbl_dram_mon)
 
         self.btn_dram_mon = QPushButton(self)
-        self.btn_dram_mon.move(self.scroll_w + 2 + 100 + 4, 60 + 28 + 4)
+        self.btn_dram_mon.move(self.scroll_w + 2 + 100 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.btn_dram_mon.resize(28, 28)
-        self.btn_dram_mon.setStyleSheet(self.btn_tog_switch_style)
+        self.btn_dram_mon.setStyleSheet(self.btn_menu_style)
         self.btn_dram_mon.setIconSize(self.tog_switch_ico_sz)
         self.btn_dram_mon.clicked.connect(self.btn_dram_mon_function)
         print('-- [App.__init__] created:', self.btn_dram_mon)
@@ -1168,10 +1111,10 @@ class App(QMainWindow):
 
         self.qle_dram_mon_rgb_on = QLineEdit(self)
         self.qle_dram_mon_rgb_on.resize(self.monitor_btn_w, self.monitor_btn_h)
-        self.qle_dram_mon_rgb_on.move(self.scroll_w + 2 + 100 + 4 + 28 + 4, 60 + 28 + 4)
+        self.qle_dram_mon_rgb_on.move(self.scroll_w + 2 + 100 + 4 + 28 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.qle_dram_mon_rgb_on.setFont(self.font_s8b)
         self.qle_dram_mon_rgb_on.returnPressed.connect(self.btn_dram_mon_rgb_on_function)
-        self.qle_dram_mon_rgb_on.setStyleSheet(self.qle_unselected)
+        self.qle_dram_mon_rgb_on.setStyleSheet(self.qle_menu_style)
         self.qle_dram_mon_rgb_on.setAlignment(Qt.AlignCenter)
         print('-- [App.__init__] created:', self.qle_dram_mon_rgb_on)
         self.object_interaction_readonly.append(self.qle_dram_mon_rgb_on)
@@ -1180,10 +1123,10 @@ class App(QMainWindow):
 
         self.qle_dram_led_time_on = QLineEdit(self)
         self.qle_dram_led_time_on.resize(24, self.monitor_btn_h)
-        self.qle_dram_led_time_on.move(self.scroll_w + 2 + 100 + 4 + 28 + 4 + 72 + 4, 60 + 28 + 4)
+        self.qle_dram_led_time_on.move(self.scroll_w + 2 + 100 + 4 + 28 + 4 + 72 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.qle_dram_led_time_on.setFont(self.font_s8b)
         self.qle_dram_led_time_on.returnPressed.connect(self.btn_dram_led_time_on_function)
-        self.qle_dram_led_time_on.setStyleSheet(self.qle_unselected)
+        self.qle_dram_led_time_on.setStyleSheet(self.qle_menu_style)
         self.qle_dram_led_time_on.setAlignment(Qt.AlignCenter)
         print('-- [App.__init__] created:', self.qle_dram_led_time_on)
         self.object_interaction_readonly.append(self.qle_dram_led_time_on)
@@ -1191,20 +1134,20 @@ class App(QMainWindow):
         ui_object_font_list_s8b.append(self.qle_dram_led_time_on)
 
         self.lbl_vram_mon = QLabel(self)
-        self.lbl_vram_mon.move(self.scroll_w + 2, 60 + 28 + 4 + 28 + 4)
+        self.lbl_vram_mon.move(self.scroll_w + 2, self.height - 8 - self.monitor_btn_h)
         self.lbl_vram_mon.resize(100, self.monitor_btn_h)
         self.lbl_vram_mon.setFont(self.font_s8b)
         self.lbl_vram_mon.setText('VRAM MONITOR')
-        self.lbl_vram_mon.setStyleSheet(self.lbl_feature_title_style)
+        self.lbl_vram_mon.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_vram_mon)
         ui_object_complete.append(self.lbl_vram_mon)
         ui_object_font_list_s8b.append(self.lbl_vram_mon)
 
         self.btn_vram_mon = QPushButton(self)
-        self.btn_vram_mon.move(self.scroll_w + 2 + 100 + 4, 60 + 28 + 4 + 28 + 4)
+        self.btn_vram_mon.move(self.scroll_w + 2 + 100 + 4, self.height - 8 - self.monitor_btn_h)
         self.btn_vram_mon.resize(28, 28)
         self.btn_vram_mon.setIconSize(self.tog_switch_ico_sz)
-        self.btn_vram_mon.setStyleSheet(self.btn_tog_switch_style)
+        self.btn_vram_mon.setStyleSheet(self.btn_menu_style)
         self.btn_vram_mon.clicked.connect(self.btn_vram_mon_function)
         print('-- [App.__init__] created:', self.btn_vram_mon)
         self.object_interaction_enabled.append(self.btn_vram_mon)
@@ -1212,10 +1155,10 @@ class App(QMainWindow):
 
         self.qle_vram_mon_rgb_on = QLineEdit(self)
         self.qle_vram_mon_rgb_on.resize(self.monitor_btn_w, self.monitor_btn_h)
-        self.qle_vram_mon_rgb_on.move(self.scroll_w + 2 + 100 + 4 + 28 + 4, 60 + 28 + 4 + 28 + 4)
+        self.qle_vram_mon_rgb_on.move(self.scroll_w + 2 + 100 + 4 + 28 + 4, self.height - 8 - self.monitor_btn_h)
         self.qle_vram_mon_rgb_on.setFont(self.font_s8b)
         self.qle_vram_mon_rgb_on.returnPressed.connect(self.btn_vram_mon_rgb_on_function)
-        self.qle_vram_mon_rgb_on.setStyleSheet(self.qle_unselected)
+        self.qle_vram_mon_rgb_on.setStyleSheet(self.qle_menu_style)
         self.qle_vram_mon_rgb_on.setAlignment(Qt.AlignCenter)
         print('-- [App.__init__] created:', self.qle_vram_mon_rgb_on)
         self.object_interaction_readonly.append(self.qle_vram_mon_rgb_on)
@@ -1224,10 +1167,10 @@ class App(QMainWindow):
 
         self.qle_vram_led_time_on = QLineEdit(self)
         self.qle_vram_led_time_on.resize(24, self.monitor_btn_h)
-        self.qle_vram_led_time_on.move(self.scroll_w + 2 + 100 + 4 + 28 + 4 + 72 + 4, 60 + 28 + 4 + 28 + 4)
+        self.qle_vram_led_time_on.move(self.scroll_w + 2 + 100 + 4 + 28 + 4 + 72 + 4, self.height - 8 - self.monitor_btn_h)
         self.qle_vram_led_time_on.setFont(self.font_s8b)
         self.qle_vram_led_time_on.returnPressed.connect(self.btn_vram_led_time_on_function)
-        self.qle_vram_led_time_on.setStyleSheet(self.qle_unselected)
+        self.qle_vram_led_time_on.setStyleSheet(self.qle_menu_style)
         self.qle_vram_led_time_on.setAlignment(Qt.AlignCenter)
         print('-- [App.__init__] created:', self.qle_vram_led_time_on)
         self.object_interaction_readonly.append(self.qle_vram_led_time_on)
@@ -1235,19 +1178,19 @@ class App(QMainWindow):
         ui_object_font_list_s8b.append(self.qle_vram_led_time_on)
 
         self.lbl_vram_mon_temp = QLabel(self)
-        self.lbl_vram_mon_temp.move(self.scroll_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4, 60 + 28 + 4 + 28 + 4)
+        self.lbl_vram_mon_temp.move(self.scroll_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4, self.height - 8 - self.monitor_btn_h)
         self.lbl_vram_mon_temp.resize(100, self.monitor_btn_h)
         self.lbl_vram_mon_temp.setFont(self.font_s8b)
         self.lbl_vram_mon_temp.setText('TEMPERATURE')
-        self.lbl_vram_mon_temp.setStyleSheet(self.lbl_feature_title_style)
+        self.lbl_vram_mon_temp.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_vram_mon_temp)
         ui_object_complete.append(self.lbl_vram_mon_temp)
         ui_object_font_list_s8b.append(self.lbl_vram_mon_temp)
 
         self.btn_vram_mon_temp = QPushButton(self)
-        self.btn_vram_mon_temp.move(self.scroll_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 100 + 4, 60 + 28 + 4 + 28 + 4)
+        self.btn_vram_mon_temp.move(self.scroll_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 100 + 4, self.height - 8 - self.monitor_btn_h)
         self.btn_vram_mon_temp.resize(28, 28)
-        self.btn_vram_mon_temp.setStyleSheet(self.btn_tog_switch_style)
+        self.btn_vram_mon_temp.setStyleSheet(self.btn_menu_style)
         self.btn_vram_mon_temp.setIconSize(self.tog_switch_ico_sz)
         self.btn_vram_mon_temp.clicked.connect(self.btn_vram_mon_temp_function)
         print('-- [App.__init__] created:', self.btn_vram_mon_temp)
@@ -1255,32 +1198,21 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_vram_mon_temp)
         ui_object_font_list_s8b.append(self.btn_vram_mon_temp)
 
-        self.lbl_hdd_mon = QLabel(self)
-        self.lbl_hdd_mon.move(128 + 4, 30)
-        self.lbl_hdd_mon.resize(422, 28)
-        self.lbl_hdd_mon.setFont(self.font_s8b)
-        self.lbl_hdd_mon.setText('DISK READ/WRITE & MOUNT MONITOR')
-        self.lbl_hdd_mon.setAlignment(Qt.AlignCenter)
-        self.lbl_hdd_mon.setStyleSheet(self.lbl_data_style_title)
-        print('-- [App.__init__] created:', self.lbl_hdd_mon)
-        ui_object_complete.append(self.lbl_hdd_mon)
-        ui_object_font_list_s8b.append(self.lbl_hdd_mon)
-
         self.lbl_hdd_mon_sub = QLabel(self)
-        self.lbl_hdd_mon_sub.move(self.scroll_w + 2, 60)
+        self.lbl_hdd_mon_sub.move(self.scroll_w + 2, self.height - 8 - self.monitor_btn_h)
         self.lbl_hdd_mon_sub.resize(88, 28)
         self.lbl_hdd_mon_sub.setFont(self.font_s8b)
         self.lbl_hdd_mon_sub.setText('DISK MONITOR')
         self.lbl_hdd_mon_sub.setAlignment(Qt.AlignCenter)
-        self.lbl_hdd_mon_sub.setStyleSheet(self.lbl_feature_title_style)
+        self.lbl_hdd_mon_sub.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_hdd_mon_sub)
         ui_object_complete.append(self.lbl_hdd_mon_sub)
         ui_object_font_list_s8b.append(self.lbl_hdd_mon_sub)
 
         self.btn_hdd_mon = QPushButton(self)
-        self.btn_hdd_mon.move(self.scroll_w + 2 + 88 + 4, 60)
+        self.btn_hdd_mon.move(self.scroll_w + 2 + 88 + 4, self.height - 8 - self.monitor_btn_h)
         self.btn_hdd_mon.resize(28, 28)
-        self.btn_hdd_mon.setStyleSheet(self.btn_tog_switch_style)
+        self.btn_hdd_mon.setStyleSheet(self.btn_menu_style)
         self.btn_hdd_mon.setIconSize(self.tog_switch_ico_sz)
         self.btn_hdd_mon.clicked.connect(self.btn_hdd_mon_function)
         print('-- [App.__init__] created:', self.btn_hdd_mon)
@@ -1288,21 +1220,21 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_hdd_mon)
 
         self.lbl_hdd_write_mon = QLabel(self)
-        self.lbl_hdd_write_mon.move(self.scroll_w + 2 + 88 + 4 + 28 + 4, 60)
+        self.lbl_hdd_write_mon.move(self.scroll_w + 2 + 88 + 4 + 28 + 4, self.height - 8 - self.monitor_btn_h)
         self.lbl_hdd_write_mon.resize(52, self.monitor_btn_h)
         self.lbl_hdd_write_mon.setFont(self.font_s8b)
         self.lbl_hdd_write_mon.setText('WRITES')
-        self.lbl_hdd_write_mon.setStyleSheet(self.lbl_feature_title_style)
+        self.lbl_hdd_write_mon.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_hdd_write_mon)
         ui_object_complete.append(self.lbl_hdd_write_mon)
         ui_object_font_list_s8b.append(self.lbl_hdd_write_mon)
 
         self.qle_hdd_mon_rgb_on = QLineEdit(self)
         self.qle_hdd_mon_rgb_on.resize(self.monitor_btn_w, self.monitor_btn_h)
-        self.qle_hdd_mon_rgb_on.move(self.scroll_w + 2 + 88 + 4 + 52 + 4 + 28 + 4, 60)
+        self.qle_hdd_mon_rgb_on.move(self.scroll_w + 2 + 88 + 4 + 52 + 4 + 28 + 4, self.height - 8 - self.monitor_btn_h)
         self.qle_hdd_mon_rgb_on.setFont(self.font_s8b)
         self.qle_hdd_mon_rgb_on.returnPressed.connect(self.btn_hdd_mon_rgb_on_function)
-        self.qle_hdd_mon_rgb_on.setStyleSheet(self.qle_unselected)
+        self.qle_hdd_mon_rgb_on.setStyleSheet(self.qle_menu_style)
         self.qle_hdd_mon_rgb_on.setAlignment(Qt.AlignCenter)
         print('-- [App.__init__] created:', self.qle_hdd_mon_rgb_on)
         self.object_interaction_readonly.append(self.qle_hdd_mon_rgb_on)
@@ -1310,21 +1242,21 @@ class App(QMainWindow):
         ui_object_font_list_s8b.append(self.qle_hdd_mon_rgb_on)
 
         self.lbl_hdd_read_mon = QLabel(self)
-        self.lbl_hdd_read_mon.move(self.scroll_w + 2 + 88 + 4 + 52 + 4 + 28 + 4 + self.monitor_btn_w + 4, 60)
+        self.lbl_hdd_read_mon.move(self.scroll_w + 2 + 88 + 4 + 52 + 4 + 28 + 4 + self.monitor_btn_w + 4, self.height - 8 - self.monitor_btn_h)
         self.lbl_hdd_read_mon.resize(52, self.monitor_btn_h)
         self.lbl_hdd_read_mon.setFont(self.font_s8b)
         self.lbl_hdd_read_mon.setText('READS')
-        self.lbl_hdd_read_mon.setStyleSheet(self.lbl_feature_title_style)
+        self.lbl_hdd_read_mon.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_hdd_read_mon)
         ui_object_complete.append(self.lbl_hdd_read_mon)
         ui_object_font_list_s8b.append(self.lbl_hdd_read_mon)
 
         self.qle_hdd_read_mon_rgb_on = QLineEdit(self)
         self.qle_hdd_read_mon_rgb_on.resize(self.monitor_btn_w, self.monitor_btn_h)
-        self.qle_hdd_read_mon_rgb_on.move(self.scroll_w + 2 + 88 + 4 + 52 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 52 + 4, 60)
+        self.qle_hdd_read_mon_rgb_on.move(self.scroll_w + 2 + 88 + 4 + 52 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 52 + 4, self.height - 8 - self.monitor_btn_h)
         self.qle_hdd_read_mon_rgb_on.setFont(self.font_s8b)
         self.qle_hdd_read_mon_rgb_on.returnPressed.connect(self.btn_hdd_read_mon_rgb_on_function)
-        self.qle_hdd_read_mon_rgb_on.setStyleSheet(self.qle_unselected)
+        self.qle_hdd_read_mon_rgb_on.setStyleSheet(self.qle_menu_style)
         self.qle_hdd_read_mon_rgb_on.setAlignment(Qt.AlignCenter)
         print('-- [App.__init__] created:', self.qle_hdd_read_mon_rgb_on)
         self.object_interaction_readonly.append(self.qle_hdd_read_mon_rgb_on)
@@ -1333,41 +1265,30 @@ class App(QMainWindow):
 
         self.qle_hdd_led_time_on = QLineEdit(self)
         self.qle_hdd_led_time_on.resize(24, self.monitor_btn_h)
-        self.qle_hdd_led_time_on.move(self.scroll_w + 2 + 88 + 4 + 52 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 52 + 4 + self.monitor_btn_w + 4, 60)
+        self.qle_hdd_led_time_on.move(self.scroll_w + 2 + 88 + 4 + 52 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 52 + 4 + self.monitor_btn_w + 4, self.height - 8 - self.monitor_btn_h)
         self.qle_hdd_led_time_on.setFont(self.font_s8b)
         self.qle_hdd_led_time_on.returnPressed.connect(self.btn_hdd_led_time_on_function)
-        self.qle_hdd_led_time_on.setStyleSheet(self.qle_unselected)
+        self.qle_hdd_led_time_on.setStyleSheet(self.qle_menu_style)
         self.qle_hdd_led_time_on.setAlignment(Qt.AlignCenter)
         print('-- [App.__init__] created:', self.qle_hdd_led_time_on)
         self.object_interaction_readonly.append(self.qle_hdd_led_time_on)
         ui_object_complete.append(self.qle_hdd_led_time_on)
         ui_object_font_list_s8b.append(self.qle_hdd_led_time_on)
 
-        self.lbl_network_traffic = QLabel(self)
-        self.lbl_network_traffic.move(128 + 4, 30)
-        self.lbl_network_traffic.resize(422, 28)
-        self.lbl_network_traffic.setFont(self.font_s8b)
-        self.lbl_network_traffic.setText('NETWORKING')
-        self.lbl_network_traffic.setAlignment(Qt.AlignCenter)
-        self.lbl_network_traffic.setStyleSheet(self.lbl_data_style_title)
-        print('-- [App.__init__] created:', self.lbl_network_traffic)
-        ui_object_complete.append(self.lbl_network_traffic)
-        ui_object_font_list_s8b.append(self.lbl_network_traffic)
-
         self.lbl_network_adapter = QLabel(self)
-        self.lbl_network_adapter.move(self.scroll_w + 2, 60)
+        self.lbl_network_adapter.move(self.scroll_w + 2, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.lbl_network_adapter.resize(72, self.monitor_btn_h)
         self.lbl_network_adapter.setFont(self.font_s8b)
         self.lbl_network_adapter.setText('ADAPTER')
-        self.lbl_network_adapter.setStyleSheet(self.lbl_feature_title_style)
+        self.lbl_network_adapter.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_network_adapter)
         ui_object_complete.append(self.lbl_network_adapter)
         ui_object_font_list_s8b.append(self.lbl_network_adapter)
 
         self.cmb_network_adapter_name = QComboBox(self)
         self.cmb_network_adapter_name.resize(224, self.monitor_btn_h)
-        self.cmb_network_adapter_name.move(self.scroll_w + 2 + 72 + 4, 60)
-        self.cmb_network_adapter_name.setStyleSheet(self.cmb_style)
+        self.cmb_network_adapter_name.move(self.scroll_w + 2 + 72 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.cmb_network_adapter_name.setStyleSheet(self.cmb_menu_style)
         self.cmb_network_adapter_name.setFont(self.font_s8b)
         self.cmb_network_adapter_name.activated[str].connect(self.cmb_network_adapter_name_function)
         print('-- [App.__init__] created:', self.cmb_network_adapter_name)
@@ -1376,20 +1297,20 @@ class App(QMainWindow):
         ui_object_font_list_s8b.append(self.cmb_network_adapter_name)
 
         self.btn_network_adapter_refresh = QPushButton(self)
-        self.btn_network_adapter_refresh.move(self.scroll_w + 2 + 72 + 4 + 224 + 4, 60)
+        self.btn_network_adapter_refresh.move(self.scroll_w + 2 + 72 + 4 + 224 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.btn_network_adapter_refresh.resize(28, 28)
         self.btn_network_adapter_refresh.setIcon(QIcon("./image/baseline_refresh_white_24dp.png"))
         self.btn_network_adapter_refresh.setIconSize(QSize(14, 14))
-        self.btn_network_adapter_refresh.setStyleSheet(self.btn_settings_style)
+        self.btn_network_adapter_refresh.setStyleSheet(self.btn_menu_style)
         self.btn_network_adapter_refresh.clicked.connect(self.btn_network_adapter_refresh_function)
         print('-- [App.__init__] created:', self.btn_network_adapter_refresh)
         self.object_interaction_enabled.append(self.btn_network_adapter_refresh)
         ui_object_complete.append(self.btn_network_adapter_refresh)
 
         self.btn_network_adapter = QPushButton(self)
-        self.btn_network_adapter.move(self.scroll_w + 2 + 72 + 4 + 224 + 4 + 28 + 4, 60)
+        self.btn_network_adapter.move(self.scroll_w + 2 + 72 + 4 + 224 + 4 + 28 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.btn_network_adapter.resize(28, 28)
-        self.btn_network_adapter.setStyleSheet(self.btn_tog_switch_style)
+        self.btn_network_adapter.setStyleSheet(self.btn_menu_style)
         self.btn_network_adapter.setIconSize(self.tog_switch_ico_sz)
         self.btn_network_adapter.clicked.connect(self.btn_network_adapter_function)
         print('-- [App.__init__] created:', self.btn_network_adapter)
@@ -1398,10 +1319,10 @@ class App(QMainWindow):
 
         self.qle_network_adapter_led_time_on = QLineEdit(self)
         self.qle_network_adapter_led_time_on.resize(24, 28)
-        self.qle_network_adapter_led_time_on.move(self.scroll_w + 2 + 72 + 4 + 224 + 4 + 28 + 4 + 28 + 4, 60)
+        self.qle_network_adapter_led_time_on.move(self.scroll_w + 2 + 72 + 4 + 224 + 4 + 28 + 4 + 28 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.qle_network_adapter_led_time_on.setFont(self.font_s8b)
         self.qle_network_adapter_led_time_on.returnPressed.connect(self.btn_network_adapter_led_time_on_function)
-        self.qle_network_adapter_led_time_on.setStyleSheet(self.qle_unselected)
+        self.qle_network_adapter_led_time_on.setStyleSheet(self.qle_menu_style)
         self.qle_network_adapter_led_time_on.setAlignment(Qt.AlignCenter)
         print('-- [App.__init__] created:', self.qle_network_adapter_led_time_on)
         self.object_interaction_readonly.append(self.qle_network_adapter_led_time_on)
@@ -1409,19 +1330,19 @@ class App(QMainWindow):
         ui_object_font_list_s8b.append(self.qle_network_adapter_led_time_on)
 
         self.lbl_net_con_mouse = QLabel(self)
-        self.lbl_net_con_mouse.move(self.scroll_w + 2, 60 + 28 + 4)
+        self.lbl_net_con_mouse.move(self.scroll_w + 2, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.lbl_net_con_mouse.resize(240, self.monitor_btn_h)
         self.lbl_net_con_mouse.setFont(self.font_s8b)
         self.lbl_net_con_mouse.setText('DISPLAY INTERNET CONNECTION (MOUSE)')
-        self.lbl_net_con_mouse.setStyleSheet(self.lbl_feature_title_style)
+        self.lbl_net_con_mouse.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_net_con_mouse)
         ui_object_complete.append(self.lbl_net_con_mouse)
         ui_object_font_list_s8b.append(self.lbl_net_con_mouse)
 
         self.btn_net_con_mouse = QPushButton(self)
-        self.btn_net_con_mouse.move(self.scroll_w + 2 + 240 + 4, 60 + 28 + 4)
+        self.btn_net_con_mouse.move(self.scroll_w + 2 + 240 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.btn_net_con_mouse.resize(28, 28)
-        self.btn_net_con_mouse.setStyleSheet(self.btn_tog_switch_style)
+        self.btn_net_con_mouse.setStyleSheet(self.btn_menu_style)
         self.btn_net_con_mouse.setIconSize(self.tog_switch_ico_sz)
         self.btn_net_con_mouse.clicked.connect(self.btn_net_con_mouse_function)
         print('-- [App.__init__] created:', self.btn_net_con_mouse)
@@ -1429,49 +1350,49 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_net_con_mouse)
 
         self.btn_net_con_mouse_led_selected_prev = QPushButton(self)
-        self.btn_net_con_mouse_led_selected_prev.move(self.scroll_w + 2 + 240 + 4 + 28 + 4, 60 + 28 + 4)
+        self.btn_net_con_mouse_led_selected_prev.move(self.scroll_w + 2 + 240 + 4 + 28 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.btn_net_con_mouse_led_selected_prev.resize(20, 28)
         self.btn_net_con_mouse_led_selected_prev.setIcon(QIcon("./image/img_minus.png"))
-        self.btn_net_con_mouse_led_selected_prev.setStyleSheet(self.btn_settings_style)
+        self.btn_net_con_mouse_led_selected_prev.setStyleSheet(self.btn_menu_style)
         self.btn_net_con_mouse_led_selected_prev.clicked.connect(self.btn_net_con_mouse_led_selected_prev_function)
         print('-- [App.__init__] created:', self.btn_net_con_mouse_led_selected_prev)
         self.object_interaction_enabled.append(self.btn_net_con_mouse_led_selected_prev)
         ui_object_complete.append(self.btn_net_con_mouse_led_selected_prev)
 
         self.lbl_net_con_mouse_led_selected = QLabel(self)
-        self.lbl_net_con_mouse_led_selected.move(self.scroll_w + 2 + 240 + 4 + 28 + 4 + 20 + 4, 60 + 28 + 4)
+        self.lbl_net_con_mouse_led_selected.move(self.scroll_w + 2 + 240 + 4 + 28 + 4 + 20 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.lbl_net_con_mouse_led_selected.resize(28, self.monitor_btn_h)
         self.lbl_net_con_mouse_led_selected.setFont(self.font_s8b)
-        self.lbl_net_con_mouse_led_selected.setStyleSheet(self.lbl_feature_title_style)
+        self.lbl_net_con_mouse_led_selected.setStyleSheet(self.lbl_menu_style)
         self.lbl_net_con_mouse_led_selected.setAlignment(Qt.AlignCenter)
         print('-- [App.__init__] created:', self.lbl_net_con_mouse_led_selected)
         ui_object_complete.append(self.lbl_net_con_mouse_led_selected)
         ui_object_font_list_s8b.append(self.lbl_net_con_mouse_led_selected)
 
         self.btn_net_con_mouse_led_selected_next = QPushButton(self)
-        self.btn_net_con_mouse_led_selected_next.move(self.scroll_w + 2 + 240 + 4 + 28 + 4 + 20 + 4 + 28 + 4, 60 + 28 + 4)
+        self.btn_net_con_mouse_led_selected_next.move(self.scroll_w + 2 + 240 + 4 + 28 + 4 + 20 + 4 + 28 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.btn_net_con_mouse_led_selected_next.resize(20, self.monitor_btn_h)
         self.btn_net_con_mouse_led_selected_next.setIcon(QIcon("./image/img_plus.png"))
-        self.btn_net_con_mouse_led_selected_next.setStyleSheet(self.btn_settings_style)
+        self.btn_net_con_mouse_led_selected_next.setStyleSheet(self.btn_menu_style)
         self.btn_net_con_mouse_led_selected_next.clicked.connect(self.btn_net_con_mouse_led_selected_next_function)
         print('-- [App.__init__] created:', self.btn_net_con_mouse_led_selected_next)
         self.object_interaction_enabled.append(self.btn_net_con_mouse_led_selected_next)
         ui_object_complete.append(self.btn_net_con_mouse_led_selected_next)
 
         self.lbl_net_con_kb = QLabel(self)
-        self.lbl_net_con_kb.move(self.scroll_w + 2, 60 + 28 + 4 + 28 + 4)
+        self.lbl_net_con_kb.move(self.scroll_w + 2, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.lbl_net_con_kb.resize(280, self.monitor_btn_h)
         self.lbl_net_con_kb.setFont(self.font_s8b)
         self.lbl_net_con_kb.setText('DISPLAY INTERNET CONNECTION (KEYBOARD)')
-        self.lbl_net_con_kb.setStyleSheet(self.lbl_feature_title_style)
+        self.lbl_net_con_kb.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_net_con_kb)
         ui_object_complete.append(self.lbl_net_con_kb)
         ui_object_font_list_s8b.append(self.lbl_net_con_kb)
 
         self.btn_net_con_kb = QPushButton(self)
-        self.btn_net_con_kb.move(self.scroll_w + 2 + 280 + 4, 60 + 28 + 4 + 28 + 4)
+        self.btn_net_con_kb.move(self.scroll_w + 2 + 280 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.btn_net_con_kb.resize(28, 28)
-        self.btn_net_con_kb.setStyleSheet(self.btn_tog_switch_style)
+        self.btn_net_con_kb.setStyleSheet(self.btn_menu_style)
         self.btn_net_con_kb.setIconSize(self.tog_switch_ico_sz)
         self.btn_net_con_kb.clicked.connect(self.btn_net_con_kb_function)
         print('-- [App.__init__] created:', self.btn_net_con_kb)
@@ -1479,19 +1400,19 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_net_con_kb)
 
         self.lbl_netshare_mon = QLabel(self)
-        self.lbl_netshare_mon.move(self.scroll_w + 2, 60 + 28 + 4 + 28 + 4 + 28 + 4)
+        self.lbl_netshare_mon.move(self.scroll_w + 2, self.height - 8 - self.monitor_btn_h)
         self.lbl_netshare_mon.resize(126, self.monitor_btn_h)
         self.lbl_netshare_mon.setFont(self.font_s8b)
         self.lbl_netshare_mon.setText('NETWORK SHARES')
-        self.lbl_netshare_mon.setStyleSheet(self.lbl_feature_title_style)
+        self.lbl_netshare_mon.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_netshare_mon)
         ui_object_complete.append(self.lbl_netshare_mon)
         ui_object_font_list_s8b.append(self.lbl_netshare_mon)
 
         self.btn_netshare_mon = QPushButton(self)
-        self.btn_netshare_mon.move(self.scroll_w + 2 + 126 + 4, 60 + 28 + 4 + 28 + 4 + 28 + 4)
+        self.btn_netshare_mon.move(self.scroll_w + 2 + 126 + 4, self.height - 8 - self.monitor_btn_h)
         self.btn_netshare_mon.resize(28, 28)
-        self.btn_netshare_mon.setStyleSheet(self.btn_tog_switch_style)
+        self.btn_netshare_mon.setStyleSheet(self.btn_menu_style)
         self.btn_netshare_mon.setIconSize(self.tog_switch_ico_sz)
         self.btn_netshare_mon.clicked.connect(self.btn_defnetshare_function)
         print('-- [App.__init__] created:', self.btn_netshare_mon)
@@ -1500,41 +1421,30 @@ class App(QMainWindow):
 
         self.qle_netshare_mon_rgb_on = QLineEdit(self)
         self.qle_netshare_mon_rgb_on.resize(self.monitor_btn_w, self.monitor_btn_h)
-        self.qle_netshare_mon_rgb_on.move(self.scroll_w + 2 + 126 + 4 + 28 + 4, 60 + 28 + 4 + 28 + 4 + 28 + 4)
+        self.qle_netshare_mon_rgb_on.move(self.scroll_w + 2 + 126 + 4 + 28 + 4, self.height - 8 - self.monitor_btn_h)
         self.qle_netshare_mon_rgb_on.setFont(self.font_s8b)
         self.qle_netshare_mon_rgb_on.returnPressed.connect(self.netshare_active_rgb_function)
-        self.qle_netshare_mon_rgb_on.setStyleSheet(self.qle_unselected)
+        self.qle_netshare_mon_rgb_on.setStyleSheet(self.qle_menu_style)
         self.qle_netshare_mon_rgb_on.setAlignment(Qt.AlignCenter)
         print('-- [App.__init__] created:', self.qle_netshare_mon_rgb_on)
         self.object_interaction_readonly.append(self.qle_netshare_mon_rgb_on)
         ui_object_complete.append(self.qle_netshare_mon_rgb_on)
         ui_object_font_list_s8b.append(self.qle_netshare_mon_rgb_on)
 
-        self.lbl_settings = QLabel(self)
-        self.lbl_settings.move(128 + 4, 30)
-        self.lbl_settings.resize(422, 28)
-        self.lbl_settings.setFont(self.font_s8b)
-        self.lbl_settings.setText('SETTINGS')
-        self.lbl_settings.setAlignment(Qt.AlignCenter)
-        self.lbl_settings.setStyleSheet(self.lbl_data_style_title)
-        print('-- [App.__init__] created:', self.lbl_settings)
-        ui_object_complete.append(self.lbl_settings)
-        ui_object_font_list_s8b.append(self.lbl_settings)
-
         self.lbl_exclusive_con = QLabel(self)
-        self.lbl_exclusive_con.move(self.scroll_w + 2, 60)
+        self.lbl_exclusive_con.move(self.scroll_w + 2, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.lbl_exclusive_con.resize(126, self.monitor_btn_h)
         self.lbl_exclusive_con.setFont(self.font_s8b)
         self.lbl_exclusive_con.setText('EXCLUSIVE CONTROL')
-        self.lbl_exclusive_con.setStyleSheet(self.lbl_feature_title_style)
+        self.lbl_exclusive_con.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_exclusive_con)
         ui_object_complete.append(self.lbl_exclusive_con)
         ui_object_font_list_s8b.append(self.lbl_exclusive_con)
 
         self.btn_exclusive_con = QPushButton(self)
-        self.btn_exclusive_con.move(self.scroll_w + 2 + 126, 60)
+        self.btn_exclusive_con.move(self.scroll_w + 2 + 126 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.btn_exclusive_con.resize(28, 28)
-        self.btn_exclusive_con.setStyleSheet(self.btn_tog_switch_style)
+        self.btn_exclusive_con.setStyleSheet(self.btn_menu_style)
         self.btn_exclusive_con.setIconSize(self.tog_switch_ico_sz)
         self.btn_exclusive_con.clicked.connect(self.btn_exclusive_con_function)
         print('-- [App.__init__] created:', self.btn_exclusive_con)
@@ -1542,19 +1452,19 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_exclusive_con)
 
         self.lbl_run_startup = QLabel(self)
-        self.lbl_run_startup.move(self.scroll_w + 2, 60 + 28 + 4)
+        self.lbl_run_startup.move(self.scroll_w + 2, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.lbl_run_startup.resize(126, self.monitor_btn_h)
         self.lbl_run_startup.setFont(self.font_s8b)
         self.lbl_run_startup.setText('AUTOMATIC STARTUP')
-        self.lbl_run_startup.setStyleSheet(self.lbl_feature_title_style)
+        self.lbl_run_startup.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_run_startup)
         ui_object_complete.append(self.lbl_run_startup)
         ui_object_font_list_s8b.append(self.lbl_run_startup)
 
         self.btn_run_startup = QPushButton(self)
-        self.btn_run_startup.move(self.scroll_w + 2 + 126 + 4, 60 + 28 + 4)
+        self.btn_run_startup.move(self.scroll_w + 2 + 126 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.btn_run_startup.resize(28, 28)
-        self.btn_run_startup.setStyleSheet(self.btn_tog_switch_style)
+        self.btn_run_startup.setStyleSheet(self.btn_menu_style)
         self.btn_run_startup.setIconSize(self.tog_switch_ico_sz)
         self.btn_run_startup.clicked.connect(self.btn_run_startup_function)
         print('-- [App.__init__] created:', self.btn_run_startup)
@@ -1562,19 +1472,19 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_run_startup)
 
         self.lbl_start_minimized = QLabel(self)
-        self.lbl_start_minimized.move(self.scroll_w + 2, 60 + 28 + 4 + 28 + 4)
+        self.lbl_start_minimized.move(self.scroll_w + 2, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.lbl_start_minimized.resize(126, self.monitor_btn_h)
         self.lbl_start_minimized.setFont(self.font_s8b)
         self.lbl_start_minimized.setText('START MINIMIZED')
-        self.lbl_start_minimized.setStyleSheet(self.lbl_feature_title_style)
+        self.lbl_start_minimized.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_start_minimized)
         ui_object_complete.append(self.lbl_start_minimized)
         ui_object_font_list_s8b.append(self.lbl_start_minimized)
 
         self.btn_start_minimized = QPushButton(self)
-        self.btn_start_minimized.move(self.scroll_w + 2 + 126 + 4, 60 + 28 + 4 + 28 + 4)
+        self.btn_start_minimized.move(self.scroll_w + 2 + 126 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.btn_start_minimized.resize(28, 28)
-        self.btn_start_minimized.setStyleSheet(self.btn_tog_switch_style)
+        self.btn_start_minimized.setStyleSheet(self.btn_menu_style)
         self.btn_start_minimized.setIconSize(self.tog_switch_ico_sz)
         self.btn_start_minimized.clicked.connect(self.btn_start_minimized_function)
         print('-- [App.__init__] created:', self.btn_start_minimized)
@@ -1586,7 +1496,7 @@ class App(QMainWindow):
         self.lbl_backlight_sub.resize(86, 28)
         self.lbl_backlight_sub.setFont(self.font_s8b)
         self.lbl_backlight_sub.setText('BACKLIGHT')
-        self.lbl_backlight_sub.setStyleSheet(self.lbl_feature_title_style)
+        self.lbl_backlight_sub.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_backlight_sub)
         ui_object_complete.append(self.lbl_backlight_sub)
         ui_object_font_list_s8b.append(self.lbl_backlight_sub)
@@ -1594,7 +1504,7 @@ class App(QMainWindow):
         self.btn_backlight_sub = QPushButton(self)
         self.btn_backlight_sub.move(self.scroll_w + 2 + 86 + 4, 60 + 28 + 4 + 28 + 4 + 28 + 4 + 28 + 4)
         self.btn_backlight_sub.resize(28, 28)
-        self.btn_backlight_sub.setStyleSheet(self.btn_tog_switch_style)
+        self.btn_backlight_sub.setStyleSheet(self.btn_menu_style)
         self.btn_backlight_sub.setIconSize(self.tog_switch_ico_sz)
         self.btn_backlight_sub.clicked.connect(self.btn_bck_light_function)
         print('-- [App.__init__] created:', self.btn_backlight_sub)
@@ -1606,7 +1516,7 @@ class App(QMainWindow):
         self.qle_backlight_rgb_on.move(self.scroll_w + 2 + 86 + 4 + 28 + 4, 60 + 28 + 4 + 28 + 4 + 28 + 4 + 28 + 4)
         self.qle_backlight_rgb_on.setFont(self.font_s8b)
         self.qle_backlight_rgb_on.returnPressed.connect(self.btn_backlight_rgb_on_function)
-        self.qle_backlight_rgb_on.setStyleSheet(self.qle_unselected)
+        self.qle_backlight_rgb_on.setStyleSheet(self.qle_menu_style)
         self.qle_backlight_rgb_on.setAlignment(Qt.AlignCenter)
         print('-- [App.__init__] created:', self.qle_backlight_rgb_on)
         self.object_interaction_readonly.append(self.qle_backlight_rgb_on)
@@ -1618,7 +1528,7 @@ class App(QMainWindow):
         self.lbl_backlight_auto.resize(92, self.monitor_btn_h)
         self.lbl_backlight_auto.setFont(self.font_s8b)
         self.lbl_backlight_auto.setText('AUTOMATIC')
-        self.lbl_backlight_auto.setStyleSheet(self.lbl_feature_title_style)
+        self.lbl_backlight_auto.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_backlight_auto)
         ui_object_complete.append(self.lbl_backlight_auto)
         ui_object_font_list_s8b.append(self.lbl_backlight_auto)
@@ -1626,7 +1536,7 @@ class App(QMainWindow):
         self.btn_backlight_auto = QPushButton(self)
         self.btn_backlight_auto.move(self.scroll_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 92 + 4, 60 + 28 + 4 + 28 + 4 + 28 + 4 + 28 + 4)
         self.btn_backlight_auto.resize(28, 28)
-        self.btn_backlight_auto.setStyleSheet(self.btn_tog_switch_style)
+        self.btn_backlight_auto.setStyleSheet(self.btn_menu_style)
         self.btn_backlight_auto.setIconSize(self.tog_switch_ico_sz)
         self.btn_backlight_auto.clicked.connect(self.backlight_auto_function)
         print('-- [App.__init__] created:', self.btn_backlight_auto)
@@ -1638,7 +1548,7 @@ class App(QMainWindow):
         self.lbl_backlight_auto_time_0.resize(42, 14)
         self.lbl_backlight_auto_time_0.setFont(self.font_s7b)
         self.lbl_backlight_auto_time_0.setText('Time 0:')
-        self.lbl_backlight_auto_time_0.setStyleSheet(self.lbl_white_txt_black_bg_style)
+        self.lbl_backlight_auto_time_0.setStyleSheet(self.lbl_menu_description_style)
         print('-- [App.__init__] created:', self.lbl_backlight_auto_time_0)
         ui_object_complete.append(self.lbl_backlight_auto_time_0)
         ui_object_font_list_s7b.append(self.lbl_backlight_auto_time_0)
@@ -1648,7 +1558,7 @@ class App(QMainWindow):
         self.btn_backlight_auto_time_0.move(self.scroll_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 92 + 4 + 28 + 4, 60 + 28 + 4 + 28 + 4 + 28 + 4 + 28 + 4)
         self.btn_backlight_auto_time_0.setFont(self.font_s8b)
         self.btn_backlight_auto_time_0.returnPressed.connect(self.btn_backlight_auto_time_0_function)
-        self.btn_backlight_auto_time_0.setStyleSheet(self.qle_unselected)
+        self.btn_backlight_auto_time_0.setStyleSheet(self.qle_menu_style)
         self.btn_backlight_auto_time_0.setAlignment(Qt.AlignCenter)
         print('-- [App.__init__] created:', self.btn_backlight_auto_time_0)
         self.btn_backlight_auto_time_0.setToolTip(
@@ -1662,7 +1572,7 @@ class App(QMainWindow):
         self.lbl_backlight_auto_time_1.resize(42, 14)
         self.lbl_backlight_auto_time_1.setFont(self.font_s7b)
         self.lbl_backlight_auto_time_1.setText('Time 1:')
-        self.lbl_backlight_auto_time_1.setStyleSheet(self.lbl_white_txt_black_bg_style)
+        self.lbl_backlight_auto_time_1.setStyleSheet(self.lbl_menu_description_style)
         print('-- [App.__init__] created:', self.lbl_backlight_auto_time_1)
         ui_object_complete.append(self.lbl_backlight_auto_time_1)
         ui_object_font_list_s7b.append(self.lbl_backlight_auto_time_1)
@@ -1672,7 +1582,7 @@ class App(QMainWindow):
         self.btn_backlight_auto_time_1.move(self.scroll_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 92 + 4 + 28 + 4 + 42 + 4, 60 + 28 + 4 + 28 + 4 + 28 + 4 + 28 + 4)
         self.btn_backlight_auto_time_1.setFont(self.font_s8b)
         self.btn_backlight_auto_time_1.returnPressed.connect(self.btn_backlight_auto_time_1_function)
-        self.btn_backlight_auto_time_1.setStyleSheet(self.qle_unselected)
+        self.btn_backlight_auto_time_1.setStyleSheet(self.qle_menu_style)
         self.btn_backlight_auto_time_1.setAlignment(Qt.AlignCenter)
         print('-- [App.__init__] created:', self.btn_backlight_auto_time_1)
         self.btn_backlight_auto_time_1.setToolTip('Automatic Backlight Time Off\n\nAccepts only 24h Format.\n\nExample 1: 0000\nExample 2: 0030\nExample 3: 0900')
@@ -1680,44 +1590,20 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_backlight_auto_time_1)
         ui_object_font_list_s8b.append(self.btn_backlight_auto_time_1)
 
-        self.lbl_event_notification = QLabel(self)
-        self.lbl_event_notification.move(128 + 4, 30)
-        self.lbl_event_notification.resize(422, 28)
-        self.lbl_event_notification.setFont(self.font_s8b)
-        self.lbl_event_notification.setText('EVENT NOTIFICATION (ADVANCED USERS ONLY)')
-        self.lbl_event_notification.setAlignment(Qt.AlignCenter)
-        self.lbl_event_notification.setStyleSheet(self.lbl_data_style_title)
-        print('-- [App.__init__] created:', self.lbl_event_notification)
-        self.lbl_event_notification.setToolTip('EVENT NOTIFICATION\n\n'
-                                               'Enables notifications to be displayed via a G key led and has the option to run a file when the pertaining G key is short pressed.\n\n'
-                                               'USE:\nShort Press G Key (0-0.75 Seconds): Turns off notification LED and if enabled runs a program/file.\n'
-                                               'Long Press G Key (0.75+ Seconds): Turns off Notification LED (ignores the notification).\n\n'
-                                               'REQUIREMENTS:\n'
-                                               '1. A K95 Platinum keyboard or similar with G1-G6 keys.\n'
-                                               '2. True must be written to any of the event_notification_gx.dat files to trigger a notification event.\n\n'
-                                               'EXAMPLES:\n[Example 1] G1 Notify On with G1 Run Off: Event Notification\n'
-                                               '[Example 2] G1 Notify On with G1 Run On: Event Notification + Event Response\n\n'
-                                               'NOTE:\n1. G Notify must be enabled for G Run to function.\n'
-                                               '2. Event response (Run) will only work when notification of event is active (LED is blinking).\n'
-                                               '3. Event response can be triggered only once per notification by pressing the G key while G key is showing the notification.\n\n'
-                                               'This feature is for advanced users.')
-        ui_object_complete.append(self.lbl_event_notification)
-        ui_object_font_list_s8b.append(self.lbl_event_notification)
-
         self.lbl_event_notification_g1 = QLabel(self)
-        self.lbl_event_notification_g1.move(self.scroll_w + 2, 60)
+        self.lbl_event_notification_g1.move(self.scroll_w + 2, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20)
         self.lbl_event_notification_g1.resize(60, 20)
         self.lbl_event_notification_g1.setFont(self.font_s8b)
         self.lbl_event_notification_g1.setText('G1 Notify')
-        self.lbl_event_notification_g1.setStyleSheet(self.lbl_feature_title_style)
+        self.lbl_event_notification_g1.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_g1)
         ui_object_complete.append(self.lbl_event_notification_g1)
         ui_object_font_list_s8b.append(self.lbl_event_notification_g1)
 
         self.btn_event_notification_g1 = QPushButton(self)
-        self.btn_event_notification_g1.move(self.scroll_w + 2 + 60 + 4, 60)
+        self.btn_event_notification_g1.move(self.scroll_w + 2 + 60 + 4, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20)
         self.btn_event_notification_g1.resize(20, 20)
-        self.btn_event_notification_g1.setStyleSheet(self.btn_tog_switch_style)
+        self.btn_event_notification_g1.setStyleSheet(self.btn_menu_style)
         self.btn_event_notification_g1.setIconSize(self.tog_switch_ico_sz)
         self.btn_event_notification_g1.clicked.connect(self.btn_event_notification_g1_function)
         print('-- [App.__init__] created:', self.btn_event_notification_g1)
@@ -1725,19 +1611,19 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_event_notification_g1)
 
         self.lbl_event_notification_run_g1 = QLabel(self)
-        self.lbl_event_notification_run_g1.move(self.scroll_w + 2 + 60 + 4 + 20 + 4, 60)
+        self.lbl_event_notification_run_g1.move(self.scroll_w + 2 + 60 + 4 + 20 + 4, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20)
         self.lbl_event_notification_run_g1.resize(30, 20)
         self.lbl_event_notification_run_g1.setFont(self.font_s8b)
         self.lbl_event_notification_run_g1.setText('Run')
-        self.lbl_event_notification_run_g1.setStyleSheet(self.lbl_feature_title_style)
+        self.lbl_event_notification_run_g1.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_run_g1)
         ui_object_complete.append(self.lbl_event_notification_run_g1)
         ui_object_font_list_s8b.append(self.lbl_event_notification_run_g1)
 
         self.btn_event_notification_run_g1 = QPushButton(self)
-        self.btn_event_notification_run_g1.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4, 60)
+        self.btn_event_notification_run_g1.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20)
         self.btn_event_notification_run_g1.resize(20, 20)
-        self.btn_event_notification_run_g1.setStyleSheet(self.btn_tog_switch_style)
+        self.btn_event_notification_run_g1.setStyleSheet(self.btn_menu_style)
         self.btn_event_notification_run_g1.setIconSize(self.tog_switch_ico_sz)
         self.btn_event_notification_run_g1.clicked.connect(self.btn_event_notification_run_g1_function)
         print('-- [App.__init__] created:', self.btn_event_notification_run_g1)
@@ -1745,39 +1631,39 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_event_notification_run_g1)
 
         self.lbl_event_notification_fpath_g1 = QLabel(self)
-        self.lbl_event_notification_fpath_g1.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4, 60)
+        self.lbl_event_notification_fpath_g1.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20)
         self.lbl_event_notification_fpath_g1.resize(240, 20)
         self.lbl_event_notification_fpath_g1.setFont(self.font_s8b)
         self.lbl_event_notification_fpath_g1.setText('')
-        self.lbl_event_notification_fpath_g1.setStyleSheet(self.lbl_white_txt_style)
+        self.lbl_event_notification_fpath_g1.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_fpath_g1)
         ui_object_complete.append(self.lbl_event_notification_fpath_g1)
         ui_object_font_list_s8b.append(self.lbl_event_notification_fpath_g1)
 
         self.btn_event_notification_select_file_g1 = QPushButton(self)
-        self.btn_event_notification_select_file_g1.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4 + 240 + 4, 60)
+        self.btn_event_notification_select_file_g1.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4 + 240 + 4, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20)
         self.btn_event_notification_select_file_g1.resize(20, 20)
         self.btn_event_notification_select_file_g1.setIcon(QIcon("./image/img_plus.png"))
-        self.btn_event_notification_select_file_g1.setStyleSheet(self.btn_settings_style)
+        self.btn_event_notification_select_file_g1.setStyleSheet(self.btn_menu_style)
         self.btn_event_notification_select_file_g1.clicked.connect(self.openFileNameDialogG1)
         print('-- [App.__init__] created:', self.btn_event_notification_select_file_g1)
         self.object_interaction_enabled.append(self.btn_event_notification_select_file_g1)
         ui_object_complete.append(self.btn_event_notification_select_file_g1)
 
         self.lbl_event_notification_g2 = QLabel(self)
-        self.lbl_event_notification_g2.move(self.scroll_w + 2, 60 + 20 + 4)
+        self.lbl_event_notification_g2.move(self.scroll_w + 2, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20)
         self.lbl_event_notification_g2.resize(60, 20)
         self.lbl_event_notification_g2.setFont(self.font_s8b)
         self.lbl_event_notification_g2.setText('G2 Notify')
-        self.lbl_event_notification_g2.setStyleSheet(self.lbl_feature_title_style)
+        self.lbl_event_notification_g2.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_g2)
         ui_object_complete.append(self.lbl_event_notification_g2)
         ui_object_font_list_s8b.append(self.lbl_event_notification_g2)
 
         self.btn_event_notification_g2 = QPushButton(self)
-        self.btn_event_notification_g2.move(self.scroll_w + 2 + 60 + 4, 60 + 20 + 4)
+        self.btn_event_notification_g2.move(self.scroll_w + 2 + 60 + 4, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20)
         self.btn_event_notification_g2.resize(20, 20)
-        self.btn_event_notification_g2.setStyleSheet(self.btn_tog_switch_style)
+        self.btn_event_notification_g2.setStyleSheet(self.btn_menu_style)
         self.btn_event_notification_g2.setIconSize(self.tog_switch_ico_sz)
         self.btn_event_notification_g2.clicked.connect(self.btn_event_notification_g2_function)
         print('-- [App.__init__] created:', self.btn_event_notification_g2)
@@ -1785,19 +1671,19 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_event_notification_g2)
 
         self.lbl_event_notification_run_g2 = QLabel(self)
-        self.lbl_event_notification_run_g2.move(self.scroll_w + 2 + 60 + 4 + 20 + 4, 60 + 20 + 4)
+        self.lbl_event_notification_run_g2.move(self.scroll_w + 2 + 60 + 4 + 20 + 4, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20)
         self.lbl_event_notification_run_g2.resize(30, 20)
         self.lbl_event_notification_run_g2.setFont(self.font_s8b)
         self.lbl_event_notification_run_g2.setText('Run')
-        self.lbl_event_notification_run_g2.setStyleSheet(self.lbl_feature_title_style)
+        self.lbl_event_notification_run_g2.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_run_g2)
         ui_object_complete.append(self.lbl_event_notification_run_g2)
         ui_object_font_list_s8b.append(self.lbl_event_notification_run_g2)
 
         self.btn_event_notification_run_g2 = QPushButton(self)
-        self.btn_event_notification_run_g2.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4, 60 + 20 + 4)
+        self.btn_event_notification_run_g2.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20)
         self.btn_event_notification_run_g2.resize(20, 20)
-        self.btn_event_notification_run_g2.setStyleSheet(self.btn_tog_switch_style)
+        self.btn_event_notification_run_g2.setStyleSheet(self.btn_menu_style)
         self.btn_event_notification_run_g2.setIconSize(self.tog_switch_ico_sz)
         self.btn_event_notification_run_g2.clicked.connect(self.btn_event_notification_run_g2_function)
         print('-- [App.__init__] created:', self.btn_event_notification_run_g2)
@@ -1805,59 +1691,59 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_event_notification_run_g2)
 
         self.lbl_event_notification_fpath_g2 = QLabel(self)
-        self.lbl_event_notification_fpath_g2.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4, 60 + 20 + 4)
+        self.lbl_event_notification_fpath_g2.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20)
         self.lbl_event_notification_fpath_g2.resize(240, 20)
         self.lbl_event_notification_fpath_g2.setFont(self.font_s8b)
         self.lbl_event_notification_fpath_g2.setText('')
-        self.lbl_event_notification_fpath_g2.setStyleSheet(self.lbl_white_txt_style)
+        self.lbl_event_notification_fpath_g2.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_fpath_g2)
         ui_object_complete.append(self.lbl_event_notification_fpath_g2)
         ui_object_font_list_s8b.append(self.lbl_event_notification_fpath_g2)
 
         self.btn_event_notification_select_file_g2 = QPushButton(self)
-        self.btn_event_notification_select_file_g2.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4 + 240 + 4, 60 + 20 + 4)
+        self.btn_event_notification_select_file_g2.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4 + 240 + 4, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20)
         self.btn_event_notification_select_file_g2.resize(20, 20)
         self.btn_event_notification_select_file_g2.setIcon(QIcon("./image/img_plus.png"))
-        self.btn_event_notification_select_file_g2.setStyleSheet(self.btn_settings_style)
+        self.btn_event_notification_select_file_g2.setStyleSheet(self.btn_menu_style)
         self.btn_event_notification_select_file_g2.clicked.connect(self.openFileNameDialogG2)
         print('-- [App.__init__] created:', self.btn_event_notification_select_file_g2)
         self.object_interaction_enabled.append(self.btn_event_notification_select_file_g2)
         ui_object_complete.append(self.btn_event_notification_select_file_g2)
 
         self.lbl_event_notification_g3 = QLabel(self)
-        self.lbl_event_notification_g3.move(self.scroll_w + 2, 60 + 20 + 4 + 20 + 4)
+        self.lbl_event_notification_g3.move(self.scroll_w + 2, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20)
         self.lbl_event_notification_g3.resize(60, 20)
         self.lbl_event_notification_g3.setFont(self.font_s8b)
         self.lbl_event_notification_g3.setText('G3 Notify')
-        self.lbl_event_notification_g3.setStyleSheet(self.lbl_feature_title_style)
+        self.lbl_event_notification_g3.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_g3)
         ui_object_complete.append(self.lbl_event_notification_g3)
         ui_object_font_list_s8b.append(self.lbl_event_notification_g3)
 
         self.btn_event_notification_g3 = QPushButton(self)
-        self.btn_event_notification_g3.move(self.scroll_w + 2 + 60 + 4, 60 + 20 + 4 + 20 + 4)
+        self.btn_event_notification_g3.move(self.scroll_w + 2 + 60 + 4, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20)
         self.btn_event_notification_g3.resize(20, 20)
         self.btn_event_notification_g3.setIconSize(self.tog_switch_ico_sz)
-        self.btn_event_notification_g3.setStyleSheet(self.btn_tog_switch_style)
+        self.btn_event_notification_g3.setStyleSheet(self.btn_menu_style)
         self.btn_event_notification_g3.clicked.connect(self.btn_event_notification_g3_function)
         print('-- [App.__init__] created:', self.btn_event_notification_g3)
         self.object_interaction_enabled.append(self.btn_event_notification_g3)
         ui_object_complete.append(self.btn_event_notification_g3)
 
         self.lbl_event_notification_run_g3 = QLabel(self)
-        self.lbl_event_notification_run_g3.move(self.scroll_w + 2 + 60 + 4 + 20 + 4, 60 + 20 + 4 + 20 + 4)
+        self.lbl_event_notification_run_g3.move(self.scroll_w + 2 + 60 + 4 + 20 + 4, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20)
         self.lbl_event_notification_run_g3.resize(30, 20)
         self.lbl_event_notification_run_g3.setFont(self.font_s8b)
         self.lbl_event_notification_run_g3.setText('Run')
-        self.lbl_event_notification_run_g3.setStyleSheet(self.lbl_feature_title_style)
+        self.lbl_event_notification_run_g3.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_run_g3)
         ui_object_complete.append(self.lbl_event_notification_run_g3)
         ui_object_font_list_s8b.append(self.lbl_event_notification_run_g3)
 
         self.btn_event_notification_run_g3 = QPushButton(self)
-        self.btn_event_notification_run_g3.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4, 60 + 20 + 4 + 20 + 4)
+        self.btn_event_notification_run_g3.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20)
         self.btn_event_notification_run_g3.resize(20, 20)
-        self.btn_event_notification_run_g3.setStyleSheet(self.btn_tog_switch_style)
+        self.btn_event_notification_run_g3.setStyleSheet(self.btn_menu_style)
         self.btn_event_notification_run_g3.setIconSize(self.tog_switch_ico_sz)
         self.btn_event_notification_run_g3.clicked.connect(self.btn_event_notification_run_g3_function)
         print('-- [App.__init__] created:', self.btn_event_notification_run_g3)
@@ -1865,39 +1751,39 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_event_notification_run_g3)
 
         self.lbl_event_notification_fpath_g3 = QLabel(self)
-        self.lbl_event_notification_fpath_g3.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4, 60 + 20 + 4 + 20 + 4)
+        self.lbl_event_notification_fpath_g3.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20)
         self.lbl_event_notification_fpath_g3.resize(240, 20)
         self.lbl_event_notification_fpath_g3.setFont(self.font_s8b)
         self.lbl_event_notification_fpath_g3.setText('')
-        self.lbl_event_notification_fpath_g3.setStyleSheet(self.lbl_white_txt_style)
+        self.lbl_event_notification_fpath_g3.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_fpath_g3)
         ui_object_complete.append(self.lbl_event_notification_fpath_g3)
         ui_object_font_list_s8b.append(self.lbl_event_notification_fpath_g3)
 
         self.btn_event_notification_select_file_g3 = QPushButton(self)
-        self.btn_event_notification_select_file_g3.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4 + 240 + 4, 60 + 20 + 4 + 20 + 4)
+        self.btn_event_notification_select_file_g3.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4 + 240 + 4, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20)
         self.btn_event_notification_select_file_g3.resize(20, 20)
         self.btn_event_notification_select_file_g3.setIcon(QIcon("./image/img_plus.png"))
-        self.btn_event_notification_select_file_g3.setStyleSheet(self.btn_settings_style)
+        self.btn_event_notification_select_file_g3.setStyleSheet(self.btn_menu_style)
         self.btn_event_notification_select_file_g3.clicked.connect(self.openFileNameDialogG3)
         print('-- [App.__init__] created:', self.btn_event_notification_select_file_g3)
         self.object_interaction_enabled.append(self.btn_event_notification_select_file_g3)
         ui_object_complete.append(self.btn_event_notification_select_file_g3)
 
         self.lbl_event_notification_g4 = QLabel(self)
-        self.lbl_event_notification_g4.move(self.scroll_w + 2, 60 + 20 + 4 + 20 + 4 + 20 + 4)
+        self.lbl_event_notification_g4.move(self.scroll_w + 2, self.height - 8 - 20 - 4 - 20 - 4 - 20)
         self.lbl_event_notification_g4.resize(60, 20)
         self.lbl_event_notification_g4.setFont(self.font_s8b)
         self.lbl_event_notification_g4.setText('G4 Notify')
-        self.lbl_event_notification_g4.setStyleSheet(self.lbl_feature_title_style)
+        self.lbl_event_notification_g4.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_g4)
         ui_object_complete.append(self.lbl_event_notification_g4)
         ui_object_font_list_s8b.append(self.lbl_event_notification_g4)
 
         self.btn_event_notification_g4 = QPushButton(self)
-        self.btn_event_notification_g4.move(self.scroll_w + 2 + 60 + 4, 60 + 20 + 4 + 20 + 4 + 20 + 4)
+        self.btn_event_notification_g4.move(self.scroll_w + 2 + 60 + 4, self.height - 8 - 20 - 4 - 20 - 4 - 20)
         self.btn_event_notification_g4.resize(20, 20)
-        self.btn_event_notification_g4.setStyleSheet(self.btn_tog_switch_style)
+        self.btn_event_notification_g4.setStyleSheet(self.btn_menu_style)
         self.btn_event_notification_g4.setIconSize(self.tog_switch_ico_sz)
         self.btn_event_notification_g4.clicked.connect(self.btn_event_notification_g4_function)
         print('-- [App.__init__] created:', self.btn_event_notification_g4)
@@ -1905,19 +1791,19 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_event_notification_g4)
 
         self.lbl_event_notification_run_g4 = QLabel(self)
-        self.lbl_event_notification_run_g4.move(self.scroll_w + 2 + 60 + 4 + 20 + 4, 60 + 20 + 4 + 20 + 4 + 20 + 4)
+        self.lbl_event_notification_run_g4.move(self.scroll_w + 2 + 60 + 4 + 20 + 4, self.height - 8 - 20 - 4 - 20 - 4 - 20)
         self.lbl_event_notification_run_g4.resize(30, 20)
         self.lbl_event_notification_run_g4.setFont(self.font_s8b)
         self.lbl_event_notification_run_g4.setText('Run')
-        self.lbl_event_notification_run_g4.setStyleSheet(self.lbl_feature_title_style)
+        self.lbl_event_notification_run_g4.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_run_g4)
         ui_object_complete.append(self.lbl_event_notification_run_g4)
         ui_object_font_list_s8b.append(self.lbl_event_notification_run_g4)
 
         self.btn_event_notification_run_g4 = QPushButton(self)
-        self.btn_event_notification_run_g4.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4, 60 + 20 + 4 + 20 + 4 + 20 + 4)
+        self.btn_event_notification_run_g4.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4, self.height - 8 - 20 - 4 - 20 - 4 - 20)
         self.btn_event_notification_run_g4.resize(20, 20)
-        self.btn_event_notification_run_g4.setStyleSheet(self.btn_tog_switch_style)
+        self.btn_event_notification_run_g4.setStyleSheet(self.btn_menu_style)
         self.btn_event_notification_run_g4.setIconSize(self.tog_switch_ico_sz)
         self.btn_event_notification_run_g4.clicked.connect(self.btn_event_notification_run_g4_function)
         print('-- [App.__init__] created:', self.btn_event_notification_run_g4)
@@ -1925,40 +1811,39 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_event_notification_run_g4)
 
         self.lbl_event_notification_fpath_g4 = QLabel(self)
-        self.lbl_event_notification_fpath_g4.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4,
-                                                  60 + 20 + 4 + 20 + 4 + 20 + 4)
+        self.lbl_event_notification_fpath_g4.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4, self.height - 8 - 20 - 4 - 20 - 4 - 20)
         self.lbl_event_notification_fpath_g4.resize(240, 20)
         self.lbl_event_notification_fpath_g4.setFont(self.font_s8b)
         self.lbl_event_notification_fpath_g4.setText('')
-        self.lbl_event_notification_fpath_g4.setStyleSheet(self.lbl_white_txt_style)
+        self.lbl_event_notification_fpath_g4.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_fpath_g4)
         ui_object_complete.append(self.lbl_event_notification_fpath_g4)
         ui_object_font_list_s8b.append(self.lbl_event_notification_fpath_g4)
 
         self.btn_event_notification_select_file_g4 = QPushButton(self)
-        self.btn_event_notification_select_file_g4.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4 + 240 + 4, 60 + 20 + 4 + 20 + 4 + 20 + 4)
+        self.btn_event_notification_select_file_g4.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4 + 240 + 4, self.height - 8 - 20 - 4 - 20 - 4 - 20)
         self.btn_event_notification_select_file_g4.resize(20, 20)
         self.btn_event_notification_select_file_g4.setIcon(QIcon("./image/img_plus.png"))
-        self.btn_event_notification_select_file_g4.setStyleSheet(self.btn_settings_style)
+        self.btn_event_notification_select_file_g4.setStyleSheet(self.btn_menu_style)
         self.btn_event_notification_select_file_g4.clicked.connect(self.openFileNameDialogG4)
         print('-- [App.__init__] created:', self.btn_event_notification_select_file_g4)
         self.object_interaction_enabled.append(self.btn_event_notification_select_file_g4)
         ui_object_complete.append(self.btn_event_notification_select_file_g4)
 
         self.lbl_event_notification_g5 = QLabel(self)
-        self.lbl_event_notification_g5.move(self.scroll_w + 2, 60 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4)
+        self.lbl_event_notification_g5.move(self.scroll_w + 2, self.height - 8 - 20 - 4 - 20)
         self.lbl_event_notification_g5.resize(60, 20)
         self.lbl_event_notification_g5.setFont(self.font_s8b)
         self.lbl_event_notification_g5.setText('G5 Notify')
-        self.lbl_event_notification_g5.setStyleSheet(self.lbl_feature_title_style)
+        self.lbl_event_notification_g5.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_g5)
         ui_object_complete.append(self.lbl_event_notification_g5)
         ui_object_font_list_s8b.append(self.lbl_event_notification_g5)
 
         self.btn_event_notification_g5 = QPushButton(self)
-        self.btn_event_notification_g5.move(self.scroll_w + 2 + 60 + 4, 60 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4)
+        self.btn_event_notification_g5.move(self.scroll_w + 2 + 60 + 4, self.height - 8 - 20 - 4 - 20)
         self.btn_event_notification_g5.resize(20, 20)
-        self.btn_event_notification_g5.setStyleSheet(self.btn_tog_switch_style)
+        self.btn_event_notification_g5.setStyleSheet(self.btn_menu_style)
         self.btn_event_notification_g5.setIconSize(self.tog_switch_ico_sz)
         self.btn_event_notification_g5.clicked.connect(self.btn_event_notification_g5_function)
         print('-- [App.__init__] created:', self.btn_event_notification_g5)
@@ -1966,19 +1851,19 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_event_notification_g5)
 
         self.lbl_event_notification_run_g5 = QLabel(self)
-        self.lbl_event_notification_run_g5.move(self.scroll_w + 2 + 60 + 4 + 20 + 4, 60 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4)
+        self.lbl_event_notification_run_g5.move(self.scroll_w + 2 + 60 + 4 + 20 + 4, self.height - 8 - 20 - 4 - 20)
         self.lbl_event_notification_run_g5.resize(30, 20)
         self.lbl_event_notification_run_g5.setFont(self.font_s8b)
         self.lbl_event_notification_run_g5.setText('Run')
-        self.lbl_event_notification_run_g5.setStyleSheet(self.lbl_feature_title_style)
+        self.lbl_event_notification_run_g5.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_run_g5)
         ui_object_complete.append(self.lbl_event_notification_run_g5)
         ui_object_font_list_s8b.append(self.lbl_event_notification_run_g5)
 
         self.btn_event_notification_run_g5 = QPushButton(self)
-        self.btn_event_notification_run_g5.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4, 60 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4)
+        self.btn_event_notification_run_g5.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4, self.height - 8 - 20 - 4 - 20)
         self.btn_event_notification_run_g5.resize(20, 20)
-        self.btn_event_notification_run_g5.setStyleSheet(self.btn_tog_switch_style)
+        self.btn_event_notification_run_g5.setStyleSheet(self.btn_menu_style)
         self.btn_event_notification_run_g5.setIconSize(self.tog_switch_ico_sz)
         self.btn_event_notification_run_g5.clicked.connect(self.btn_event_notification_run_g5_function)
         print('-- [App.__init__] created:', self.btn_event_notification_run_g5)
@@ -1986,82 +1871,80 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_event_notification_run_g5)
 
         self.lbl_event_notification_fpath_g5 = QLabel(self)
-        self.lbl_event_notification_fpath_g5.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4,
-                                                  60 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4)
+        self.lbl_event_notification_fpath_g5.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4, self.height - 8 - 20 - 4 - 20)
         self.lbl_event_notification_fpath_g5.resize(240, 20)
         self.lbl_event_notification_fpath_g5.setFont(self.font_s8b)
         self.lbl_event_notification_fpath_g5.setText('')
-        self.lbl_event_notification_fpath_g5.setStyleSheet(self.lbl_white_txt_style)
+        self.lbl_event_notification_fpath_g5.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_fpath_g5)
         ui_object_complete.append(self.lbl_event_notification_fpath_g5)
         ui_object_font_list_s8b.append(self.lbl_event_notification_fpath_g5)
 
         self.btn_event_notification_select_file_g5 = QPushButton(self)
-        self.btn_event_notification_select_file_g5.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4 + 240 + 4, 60 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4)
+        self.btn_event_notification_select_file_g5.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4 + 240 + 4, self.height - 8 - 20 - 4 - 20)
         self.btn_event_notification_select_file_g5.resize(20, 20)
         self.btn_event_notification_select_file_g5.setIcon(QIcon("./image/img_plus.png"))
-        self.btn_event_notification_select_file_g5.setStyleSheet(self.btn_settings_style)
+        self.btn_event_notification_select_file_g5.setStyleSheet(self.btn_menu_style)
         self.btn_event_notification_select_file_g5.clicked.connect(self.openFileNameDialogG5)
         print('-- [App.__init__] created:', self.btn_event_notification_select_file_g5)
         self.object_interaction_enabled.append(self.btn_event_notification_select_file_g5)
         ui_object_complete.append(self.btn_event_notification_select_file_g5)
 
         self.lbl_event_notification_g6 = QLabel(self)
-        self.lbl_event_notification_g6.move(self.scroll_w + 2, 60 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4)
+        self.lbl_event_notification_g6.move(self.scroll_w + 2, self.height - 8 - 20)
         self.lbl_event_notification_g6.resize(60, 20)
         self.lbl_event_notification_g6.setFont(self.font_s8b)
         self.lbl_event_notification_g6.setText('G6 Notify')
-        self.lbl_event_notification_g6.setStyleSheet(self.lbl_feature_title_style)
+        self.lbl_event_notification_g6.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_g6)
         ui_object_complete.append(self.lbl_event_notification_g6)
         ui_object_font_list_s8b.append(self.lbl_event_notification_g6)
 
         self.btn_event_notification_g6 = QPushButton(self)
-        self.btn_event_notification_g6.move(self.scroll_w + 2 + 60 + 4, 60 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4)
+        self.btn_event_notification_g6.move(self.scroll_w + 2 + 60 + 4, self.height - 8 - 20)
         self.btn_event_notification_g6.resize(20, 20)
         self.btn_event_notification_g6.setIconSize(self.tog_switch_ico_sz)
-        self.btn_event_notification_g6.setStyleSheet(self.btn_tog_switch_style)
+        self.btn_event_notification_g6.setStyleSheet(self.btn_menu_style)
         self.btn_event_notification_g6.clicked.connect(self.btn_event_notification_g6_function)
         print('-- [App.__init__] created:', self.btn_event_notification_g6)
         self.object_interaction_enabled.append(self.btn_event_notification_g6)
         ui_object_complete.append(self.btn_event_notification_g6)
 
         self.lbl_event_notification_run_g6 = QLabel(self)
-        self.lbl_event_notification_run_g6.move(self.scroll_w + 2 + 60 + 4 + 20 + 4, 60 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4)
+        self.lbl_event_notification_run_g6.move(self.scroll_w + 2 + 60 + 4 + 20 + 4, self.height - 8 - 20)
         self.lbl_event_notification_run_g6.resize(30, 20)
         self.lbl_event_notification_run_g6.setFont(self.font_s8b)
         self.lbl_event_notification_run_g6.setText('Run')
-        self.lbl_event_notification_run_g6.setStyleSheet(self.lbl_feature_title_style)
+        self.lbl_event_notification_run_g6.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_run_g6)
         ui_object_complete.append(self.lbl_event_notification_run_g6)
         ui_object_font_list_s8b.append(self.lbl_event_notification_run_g6)
 
         self.btn_event_notification_run_g6 = QPushButton(self)
-        self.btn_event_notification_run_g6.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4, 60 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4)
+        self.btn_event_notification_run_g6.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4, self.height - 8 - 20)
         self.btn_event_notification_run_g6.resize(20, 20)
         self.btn_event_notification_run_g6.setIconSize(self.tog_switch_ico_sz)
-        self.btn_event_notification_run_g6.setStyleSheet(self.btn_tog_switch_style)
+        self.btn_event_notification_run_g6.setStyleSheet(self.btn_menu_style)
         self.btn_event_notification_run_g6.clicked.connect(self.btn_event_notification_run_g6_function)
         print('-- [App.__init__] created:', self.btn_event_notification_run_g6)
         self.object_interaction_enabled.append(self.btn_event_notification_run_g6)
         ui_object_complete.append(self.btn_event_notification_run_g6)
 
         self.lbl_event_notification_fpath_g6 = QLabel(self)
-        self.lbl_event_notification_fpath_g6.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4,
-                                                  60 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4)
+        self.lbl_event_notification_fpath_g6.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4, self.height - 8 - 20)
         self.lbl_event_notification_fpath_g6.resize(240, 20)
         self.lbl_event_notification_fpath_g6.setFont(self.font_s8b)
         self.lbl_event_notification_fpath_g6.setText('')
-        self.lbl_event_notification_fpath_g6.setStyleSheet(self.lbl_white_txt_style)
+        self.lbl_event_notification_fpath_g6.setStyleSheet(self.lbl_menu_style)
         print('-- [App.__init__] created:', self.lbl_event_notification_fpath_g6)
         ui_object_complete.append(self.lbl_event_notification_fpath_g6)
         ui_object_font_list_s8b.append(self.lbl_event_notification_fpath_g6)
 
         self.btn_event_notification_select_file_g6 = QPushButton(self)
-        self.btn_event_notification_select_file_g6.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4 + 240 + 4, 60 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4 + 20 + 4)
+        self.btn_event_notification_select_file_g6.move(self.scroll_w + 2 + 60 + 4 + 20 + 4 + 30 + 4 + 20 + 4 + 240 + 4, self.height - 8 - 20)
         self.btn_event_notification_select_file_g6.resize(20, 20)
         self.btn_event_notification_select_file_g6.setIcon(QIcon("./image/img_plus.png"))
-        self.btn_event_notification_select_file_g6.setStyleSheet(self.btn_settings_style)
+        self.btn_event_notification_select_file_g6.setStyleSheet(self.btn_menu_style)
         self.btn_event_notification_select_file_g6.clicked.connect(self.openFileNameDialogG6)
         print('-- [App.__init__] created:', self.btn_event_notification_select_file_g6)
         self.object_interaction_enabled.append(self.btn_event_notification_select_file_g6)
@@ -2638,25 +2521,29 @@ class App(QMainWindow):
             self.btn_minimize.show()
             self.btn_quit.show()
 
+            self.btn_con_stat_kb_img.show()
+            self.btn_con_stat_ms_img.show()
+            self.lbl_con_stat_kb.show()
+            self.lbl_con_stat_mouse.show()
+            self.btn_con_stat_name.show()
+
             self.btn_feature_page_home.show()
-            self.btn_feature_page_home.setStyleSheet(self.btn_feature_title_style_1)
+            self.btn_feature_page_home.setStyleSheet(self.btn_side_menu_style_1)
 
             self.btn_feature_page_util.show()
-            self.btn_feature_page_util.setStyleSheet(self.btn_feature_title_style_1)
+            self.btn_feature_page_util.setStyleSheet(self.btn_side_menu_style_1)
 
             self.btn_feature_page_disks.show()
-            self.btn_feature_page_disks.setStyleSheet(self.btn_feature_title_style_1)
+            self.btn_feature_page_disks.setStyleSheet(self.btn_side_menu_style_1)
 
             self.btn_feature_page_networking.show()
-            self.btn_feature_page_networking.setStyleSheet(self.btn_feature_title_style_1)
+            self.btn_feature_page_networking.setStyleSheet(self.btn_side_menu_style_1)
 
             self.btn_feature_page_event_notification.show()
-            self.btn_feature_page_event_notification.setStyleSheet(self.btn_feature_title_style_1)
+            self.btn_feature_page_event_notification.setStyleSheet(self.btn_side_menu_style_1)
 
             self.btn_feature_page_settings.show()
-            self.btn_feature_page_settings.setStyleSheet(self.btn_feature_title_style_1)
-
-            self.lbl_settings_border.show()
+            self.btn_feature_page_settings.setStyleSheet(self.btn_side_menu_style_1)
 
             self.btn_bck_light.show()
 
@@ -2668,8 +2555,6 @@ class App(QMainWindow):
     def show_utilization(self):
         print('-- [App.show_utilization]: plugged in')
         try:
-            self.btn_feature_page_util.show()
-            self.lbl_utilization.show()
             self.lbl_cpu_mon.show()
             self.btn_cpu_mon.show()
             self.qle_cpu_mon_rgb_on.show()
@@ -2694,10 +2579,7 @@ class App(QMainWindow):
     def show_disks(self):
         print('-- [App.show_disks]: plugged in')
         try:
-
-            # self.lbl_hdd_led_time_on_vis_combine.show()
             self.lbl_hdd_mon_sub.show()
-            self.lbl_hdd_mon.show()
             self.lbl_hdd_write_mon.show()
             self.btn_hdd_mon.show()
             self.qle_hdd_mon_rgb_on.show()
@@ -2710,7 +2592,6 @@ class App(QMainWindow):
     def show_net_traffic(self):
         print('-- [App.show_net_traffic]: plugged in')
         try:
-            self.lbl_network_traffic.show()
             self.lbl_network_adapter.show()
             self.cmb_network_adapter_name.show()
             self.btn_network_adapter_refresh.show()
@@ -2761,7 +2642,6 @@ class App(QMainWindow):
     def show_set(self):
         print('-- [App.show_set]: plugged in')
         try:
-            self.lbl_settings.show()
             self.lbl_exclusive_con.show()
             self.btn_exclusive_con.show()
             self.lbl_run_startup.show()
@@ -2773,7 +2653,6 @@ class App(QMainWindow):
 
     def show_event_notification(self):
         print('-- [App.show_event_notification]: plugged in')
-        self.lbl_event_notification.show()
         self.lbl_event_notification_g1.show()
         self.btn_event_notification_g1.show()
         self.lbl_event_notification_g2.show()
@@ -2820,7 +2699,8 @@ class App(QMainWindow):
 
     def feature_pg_home(self):
         self.hide_all_features()
-        self.btn_feature_page_home.setStyleSheet(self.btn_feature_title_style)
+
+        self.btn_feature_page_home.setStyleSheet(self.btn_side_menu_style)
         self.btn_con_stat_name.show()
 
         if len(devices_kb) > 0:
@@ -2832,29 +2712,39 @@ class App(QMainWindow):
 
     def feature_pg_util(self):
         self.hide_all_features()
-        self.btn_feature_page_util.setStyleSheet(self.btn_feature_title_style)
+        self.lbl_settings_bg.show()
+
+        self.btn_feature_page_util.setStyleSheet(self.btn_side_menu_style)
         self.show_utilization()
 
     def btn_feature_page_disk_util(self):
         self.hide_all_features()
-        self.btn_feature_page_disks.setStyleSheet(self.btn_feature_title_style)
+        self.lbl_settings_bg.show()
+
+        self.btn_feature_page_disks.setStyleSheet(self.btn_side_menu_style)
         self.show_disks()
 
     def btn_feature_page_networking_function(self):
         self.hide_all_features()
-        self.btn_feature_page_networking.setStyleSheet(self.btn_feature_title_style)
+        self.lbl_settings_bg.show()
+
+        self.btn_feature_page_networking.setStyleSheet(self.btn_side_menu_style)
         self.show_net_traffic()
         self.show_net_con()
         self.show_net_share()
 
     def btn_feature_page_event_notification_function(self):
         self.hide_all_features()
-        self.btn_feature_page_event_notification.setStyleSheet(self.btn_feature_title_style)
+        self.lbl_settings_bg.show()
+
+        self.btn_feature_page_event_notification.setStyleSheet(self.btn_side_menu_style)
         self.show_event_notification()
 
     def btn_feature_page_settings_function(self):
         self.hide_all_features()
-        self.btn_feature_page_settings.setStyleSheet(self.btn_feature_title_style)
+        self.lbl_settings_bg.show()
+
+        self.btn_feature_page_settings.setStyleSheet(self.btn_side_menu_style)
         self.show_set()
         self.show_backlight()
 
@@ -3251,7 +3141,6 @@ class App(QMainWindow):
                     thread_cpu_util[0].stop()
                     self.write_var = 'cpu_startup: false'
                     bool_switch_startup_cpu_util = False
-                    self.btn_feature_page_util.setStyleSheet(self.btn_feature_title_style)
                     self.btn_cpu_mon.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
                     self.write_changes()
 
@@ -3260,7 +3149,6 @@ class App(QMainWindow):
                     thread_cpu_util[0].start()
                     self.write_var = 'cpu_startup: true'
                     bool_switch_startup_cpu_util = True
-                    self.btn_feature_page_util.setStyleSheet(self.btn_feature_title_style)
                     self.btn_cpu_mon.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
                     self.write_changes()
 
