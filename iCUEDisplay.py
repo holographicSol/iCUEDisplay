@@ -110,6 +110,8 @@ backlight_time_1 = ''
 hdd_bytes_type_w = ''
 hdd_bytes_type_r = ''
 hdd_bytes_str = ''
+str_path_kb_img = ''
+str_path_ms_img = ''
 
 bool_cpu_temperature = False
 bool_vram_temperature = False
@@ -346,7 +348,9 @@ config_data = ['sdk_color_cpu_on: 255,255,0',
                'str_event_notification_run_path_g5: ',
                'str_event_notification_run_path_g6: ',
                'bool_cpu_temperature: False',
-               'bool_vram_temperature: False']
+               'bool_vram_temperature: False',
+               'str_path_kb_img: ',
+               'str_path_ms_img: ']
 
 
 def create_new():
@@ -786,17 +790,24 @@ class App(QMainWindow):
 
         self.btn_title_bar_style_0 = """QPushButton{background-color: rgb(15, 15, 15);
                                                    color: rgb(255, 255, 255);
-                                                   border-bottom:2px solid rgb(20, 20, 20);
+                                                   border-bottom:0px solid rgb(20, 20, 20);
                                                    border-right:2px solid rgb(20, 20, 20);
-                                                   border-top:2px solid rgb(20, 20, 20);
+                                                   border-top:0px solid rgb(20, 20, 20);
                                                    border-left:2px solid rgb(20, 20, 20);}"""
 
         self.btn_title_bar_style_1 = """QPushButton{background-color: rgb(10, 10, 10);
                                                    color: rgb(200, 200, 200);
-                                                   border-bottom:2px solid rgb(15, 15, 15);
+                                                   border-bottom:0px solid rgb(15, 15, 15);
                                                    border-right:2px solid rgb(15, 15, 15);
-                                                   border-top:2px solid rgb(15, 15, 15);
+                                                   border-top:0px solid rgb(15, 15, 15);
                                                    border-left:2px solid rgb(15, 15, 15);}"""
+
+        self.btn_icue_con_stat_style = """QPushButton{background-color: rgb(10, 10, 10);
+                                                           color: rgb(200, 200, 200);
+                                                           border-bottom:2px solid rgb(15, 15, 15);
+                                                           border-right:2px solid rgb(15, 15, 15);
+                                                           border-top:2px solid rgb(15, 15, 15);
+                                                           border-left:2px solid rgb(15, 15, 15);}"""
 
         self.lbl_feature_title_style = """QLabel{background-color: rgb(15, 15, 15);
                                                    color: rgb(255, 255, 255);
@@ -910,7 +921,7 @@ class App(QMainWindow):
         self.btn_con_stat_name.resize(36, 36)
         self.icon_sz_18_18 = QSize(28, 28)
         self.btn_con_stat_name.setIconSize(self.icon_sz_18_18)
-        self.btn_con_stat_name.setStyleSheet(self.btn_title_bar_style_1)
+        self.btn_con_stat_name.setStyleSheet(self.btn_icue_con_stat_style)
         print('-- [App.__init__] created:', self.btn_con_stat_name)
         ui_object_complete.append(self.btn_con_stat_name)
         ui_object_font_list_s8b.append(self.btn_con_stat_name)
@@ -1016,16 +1027,17 @@ class App(QMainWindow):
         self.inner_group_spacing_stat_w = 2
         self.inner_group_spacing_stat_h = 4
 
-        self.lbl_con_stat_kb_img = QPushButton(self)
-        self.lbl_con_stat_kb_img.move(128 + 4, 28)
-        self.lbl_con_stat_kb_img.resize(self.btn_stat_w, self.btn_stat_h)
-        self.lbl_con_stat_kb_img.setIcon(QIcon("./image/img_kb.png"))
-        self.icon_sz_18_18 = QSize(24, 24)
-        self.lbl_con_stat_kb_img.setIconSize(self.icon_sz_18_18)
-        self.lbl_con_stat_kb_img.setStyleSheet(self.btn_stat_img_style)
-        print('-- [App.__init__] created:', self.lbl_con_stat_kb_img)
-        self.object_interaction_enabled.append(self.lbl_con_stat_kb_img)
-        ui_object_complete.append(self.lbl_con_stat_kb_img)
+        self.btn_con_stat_kb_img = QPushButton(self)
+        self.btn_con_stat_kb_img.move(128 + 4, 28)
+        self.btn_con_stat_kb_img.resize(self.btn_stat_w, self.btn_stat_h)
+        self.btn_con_stat_kb_img.setIcon(QIcon("./image/kb_corsair_k95_platinum.png"))
+        self.icon_sz_18_18 = QSize(36, 36)
+        self.btn_con_stat_kb_img.setIconSize(self.icon_sz_18_18)
+        self.btn_con_stat_kb_img.setStyleSheet(self.btn_stat_img_style)
+        self.btn_con_stat_kb_img.clicked.connect(self.btn_con_stat_kb_img_function)
+        print('-- [App.__init__] created:', self.btn_con_stat_kb_img)
+        self.object_interaction_enabled.append(self.btn_con_stat_kb_img)
+        ui_object_complete.append(self.btn_con_stat_kb_img)
 
         self.lbl_con_stat_kb = QLabel(self)
         self.lbl_con_stat_kb.move(128 + 4 + 36, 28)
@@ -1037,16 +1049,17 @@ class App(QMainWindow):
         ui_object_complete.append(self.lbl_con_stat_kb)
         ui_object_font_list_s8b.append(self.lbl_con_stat_kb)
 
-        self.lbl_con_stat_ms_img = QPushButton(self)
-        self.lbl_con_stat_ms_img.move(128 + 4 + 36 + 150, 28)
-        self.lbl_con_stat_ms_img.resize(self.btn_stat_w, self.btn_stat_h)
-        self.lbl_con_stat_ms_img.setIcon(QIcon("./image/img_ms.png"))
-        self.icon_sz_18_18 = QSize(20, 20)
-        self.lbl_con_stat_ms_img.setIconSize(self.icon_sz_18_18)
-        self.lbl_con_stat_ms_img.setStyleSheet(self.btn_stat_img_style)
-        print('-- [App.__init__] created:', self.lbl_con_stat_ms_img)
-        self.object_interaction_enabled.append(self.lbl_con_stat_ms_img)
-        ui_object_complete.append(self.lbl_con_stat_ms_img)
+        self.btn_con_stat_ms_img = QPushButton(self)
+        self.btn_con_stat_ms_img.move(128 + 4 + 36 + 150, 28)
+        self.btn_con_stat_ms_img.resize(self.btn_stat_w, self.btn_stat_h)
+        self.btn_con_stat_ms_img.setIcon(QIcon("./image/ms_corsair_scimitar_rgb_elite.png"))
+        self.icon_sz_18_18 = QSize(36, 36)
+        self.btn_con_stat_ms_img.setIconSize(self.icon_sz_18_18)
+        self.btn_con_stat_ms_img.setStyleSheet(self.btn_stat_img_style)
+        self.btn_con_stat_ms_img.clicked.connect(self.btn_con_stat_ms_img_function)
+        print('-- [App.__init__] created:', self.btn_con_stat_ms_img)
+        self.object_interaction_enabled.append(self.btn_con_stat_ms_img)
+        ui_object_complete.append(self.btn_con_stat_ms_img)
 
         self.lbl_con_stat_mouse = QLabel(self)
         self.lbl_con_stat_mouse.move(128 + 4 + 36 + 150 + 36, 28)
@@ -2190,6 +2203,45 @@ class App(QMainWindow):
         else:
             print('-- [App.btn_cpu_mon_temp_function]: bool_cpu_temperature, bool_vram_temperature', bool_cpu_temperature, bool_vram_temperature)
 
+    def btn_con_stat_kb_img_function(self):
+        print('-- [App.btn_con_stat_kb_img_function]: plugged in')
+        global str_path_kb_img
+        self.setFocus()
+
+        if len(devices_kb) > 0:
+            options = QFileDialog.Options()
+            fileName, _ = QFileDialog.getOpenFileName(self, "Select Keyboard Image", "",
+                                                      "All Files (*);;Python Files (*.py)", options=options)
+            if fileName:
+                print('-- [App.btn_con_stat_kb_img_function] file selected:', fileName)
+                str_path_kb_img = fileName
+
+                if self.write_engaged is False:
+                    print('-- [App.btn_con_stat_kb_img_function] changing str_path_kb_img:', str_path_kb_img)
+                    self.write_var = 'str_path_kb_img: '+str_path_kb_img
+                    self.write_changes()
+                    self.btn_con_stat_kb_img.setIcon(QIcon(str_path_kb_img))
+
+    def btn_con_stat_ms_img_function(self):
+        print('-- [App.btn_con_stat_ms_img_function]: plugged in')
+        global str_path_ms_img
+
+        self.setFocus()
+
+        if len(devices_kb) > 0:
+            options = QFileDialog.Options()
+            fileName, _ = QFileDialog.getOpenFileName(self, "Select Mouse Image", "",
+                                                      "All Files (*);;Python Files (*.py)", options=options)
+            if fileName:
+                print('-- [App.btn_con_stat_ms_img_function] file selected:', fileName)
+                str_path_ms_img = fileName
+
+                if self.write_engaged is False:
+                    print('-- [App.btn_con_stat_ms_img_function] changing str_path_kb_img:', str_path_ms_img)
+                    self.write_var = 'str_path_ms_img: ' + str_path_ms_img
+                    self.write_changes()
+                    self.btn_con_stat_ms_img.setIcon(QIcon(str_path_ms_img))
+
     def openFileNameDialogG1(self):
         global str_event_notification_run_path_g1, devices_kb
         print('-- [App.openFileNameDialogG1]: plugged in')
@@ -2772,10 +2824,10 @@ class App(QMainWindow):
         self.btn_con_stat_name.show()
 
         if len(devices_kb) > 0:
-            self.lbl_con_stat_kb_img.show()
+            self.btn_con_stat_kb_img.show()
             self.lbl_con_stat_kb.show()
         if len(devices_ms) > 0:
-            self.lbl_con_stat_ms_img.show()
+            self.btn_con_stat_ms_img.show()
             self.lbl_con_stat_mouse.show()
 
     def feature_pg_util(self):
@@ -3970,6 +4022,8 @@ class App(QMainWindow):
 
         global bool_cpu_temperature, bool_vram_temperature
 
+        global str_path_kb_img, str_path_ms_img
+
         hdd_mon_thread = HddMonClass( )
         thread_disk_rw.append(hdd_mon_thread)
 
@@ -4027,7 +4081,7 @@ class App(QMainWindow):
                                         self.btn_backlight_sub)
         thread_backlight_auto.append(backlight_auto)
 
-        compile_devices_thread = CompileDevicesClass(self.btn_con_stat_name, self.lbl_con_stat_kb, self.lbl_con_stat_mouse, self.lbl_con_stat_ms_img, self.lbl_con_stat_kb_img,
+        compile_devices_thread = CompileDevicesClass(self.btn_con_stat_name, self.lbl_con_stat_kb, self.lbl_con_stat_mouse, self.btn_con_stat_ms_img, self.btn_con_stat_kb_img,
                                                      self.btn_refresh_recompile, self.btn_title_bar_style_0, self.btn_title_bar_style_1)
         thread_compile_devices.append(compile_devices_thread)
         thread_compile_devices[0].start()
@@ -4044,6 +4098,11 @@ class App(QMainWindow):
         while bool_backend_allow_display is False:
             time.sleep(1)
         print('-- [App.initUI]: displaying application')
+
+        if os.path.exists(str_path_kb_img):
+            self.btn_con_stat_kb_img.setIcon(QIcon(str_path_kb_img))
+        if os.path.exists(str_path_ms_img):
+            self.btn_con_stat_ms_img.setIcon(QIcon(str_path_ms_img))
 
         if bool_switch_backlight_auto is False:
             self.btn_backlight_auto.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
@@ -4935,14 +4994,14 @@ class SdkEventHandlerClass(QThread):
 class CompileDevicesClass(QThread):
     print('-- [CompileDevicesClass]: plugged in')
 
-    def __init__(self, btn_con_stat_name, lbl_con_stat_kb, lbl_con_stat_mouse, lbl_con_stat_ms_img, lbl_con_stat_kb_img, btn_refresh_recompile, btn_title_bar_style_0, btn_title_bar_style_1):
+    def __init__(self, btn_con_stat_name, lbl_con_stat_kb, lbl_con_stat_mouse, btn_con_stat_ms_img, btn_con_stat_kb_img, btn_refresh_recompile, btn_title_bar_style_0, btn_title_bar_style_1):
         QThread.__init__(self)
         global sdk_color_hddread_on, sdk_color_backlight, sdk_color_backlight_on
         self.btn_con_stat_name = btn_con_stat_name
         self.lbl_con_stat_kb = lbl_con_stat_kb
         self.lbl_con_stat_mouse = lbl_con_stat_mouse
-        self.lbl_con_stat_ms_img = lbl_con_stat_ms_img
-        self.lbl_con_stat_kb_img = lbl_con_stat_kb_img
+        self.btn_con_stat_ms_img = btn_con_stat_ms_img
+        self.btn_con_stat_kb_img = btn_con_stat_kb_img
         self.btn_refresh_recompile = btn_refresh_recompile
         self.btn_title_bar_style_0 = btn_title_bar_style_0
         self.btn_title_bar_style_1 = btn_title_bar_style_1
@@ -5108,8 +5167,8 @@ class CompileDevicesClass(QThread):
             self.btn_con_stat_name.setIcon(QIcon("./image/icue_logo_connected_0.png"))
             self.lbl_con_stat_mouse.hide()
             self.lbl_con_stat_kb.hide()
-            self.lbl_con_stat_ms_img.hide()
-            self.lbl_con_stat_kb_img.hide()
+            self.btn_con_stat_ms_img.hide()
+            self.btn_con_stat_kb_img.hide()
             time.sleep(2)
             self.attempt_connect()
 
@@ -5184,20 +5243,20 @@ class CompileDevicesClass(QThread):
                 if len(devices_kb) > 0:
                     self.lbl_con_stat_kb.setText(str(devices_kb_name[0]))
                     self.lbl_con_stat_kb.show()
-                    self.lbl_con_stat_kb_img.show()
+                    self.btn_con_stat_kb_img.show()
                 elif len(devices_kb) < 1:
                     self.lbl_con_stat_kb.setText('')
                     self.lbl_con_stat_kb.hide()
-                    self.lbl_con_stat_kb_img.hide()
+                    self.btn_con_stat_kb_img.hide()
 
                 if len(devices_ms) > 0:
                     self.lbl_con_stat_mouse.setText(str(devices_ms_name[0]))
                     self.lbl_con_stat_mouse.show()
-                    self.lbl_con_stat_ms_img.show()
+                    self.btn_con_stat_ms_img.show()
                 elif len(devices_ms) < 1:
                     self.lbl_con_stat_mouse.setText('')
                     self.lbl_con_stat_mouse.hide()
-                    self.lbl_con_stat_ms_img.hide()
+                    self.btn_con_stat_ms_img.hide()
 
                 if len(devices_kb) >= 1 or len(devices_ms) >= 1:
                     self.entry_sequence()
@@ -5262,6 +5321,8 @@ class CompileDevicesClass(QThread):
         global bool_backend_allow_display, bool_backend_icue_connected, bool_backend_config_read_complete
 
         global bool_cpu_temperature, bool_vram_temperature
+
+        global str_path_kb_img, str_path_ms_img
 
         startup_loc = '/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/iCUEDisplay.lnk'
         bool_backend_valid_network_adapter_name = False
@@ -5594,6 +5655,15 @@ class CompileDevicesClass(QThread):
                 elif line == 'bool_vram_temperature: true':
                     bool_vram_temperature = True
 
+                if line.startswith('str_path_kb_img: '):
+                    var = line.replace('str_path_kb_img: ', '')
+                    if os.path.exists(var):
+                        str_path_kb_img = var
+                if line.startswith('str_path_ms_img: '):
+                    var = line.replace('str_path_ms_img: ', '')
+                    if os.path.exists(var):
+                        str_path_ms_img = var
+
         print('-- [ConfigCompile.config_read] bool_switch_event_notification_g1:', bool_switch_event_notification_g1)
         print('-- [ConfigCompile.read_config] bool_switch_event_notification_g2:', bool_switch_event_notification_g2)
         print('-- [ConfigCompile.read_config] bool_switch_event_notification_g3:', bool_switch_event_notification_g3)
@@ -5660,8 +5730,8 @@ class CompileDevicesClass(QThread):
         self.btn_refresh_recompile.setStyleSheet(self.btn_title_bar_style_0)
         self.lbl_con_stat_mouse.hide()
         self.lbl_con_stat_kb.hide()
-        self.lbl_con_stat_ms_img.hide()
-        self.lbl_con_stat_kb_img.hide()
+        self.btn_con_stat_ms_img.hide()
+        self.btn_con_stat_kb_img.hide()
 
         while True:
             try:
