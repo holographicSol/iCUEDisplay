@@ -4,9 +4,7 @@
 
 Converts a Corsair K95 Platinum into a HUD.
 
-Project in early development and UI does not necessarliy reflect the final products image. Currently the UI is purely logic and has minimun
-aesthetic design.
-Features being refined and added daily. Existing features may be more complex in coming updates.
+There may be further feature updates in the future.
 
 Google Drive Early Releases: https://drive.google.com/drive/folders/1xHeI_X5vnpKqQ3vkBz6hw97RnqaPwWNl?usp=sharing
 
