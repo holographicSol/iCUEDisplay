@@ -4435,6 +4435,7 @@ class App(QMainWindow):
         backlight_auto = BackLightClass(self.color_all_id,
                                         self.btn_bck_light,
                                         self.btn_backlight_sub,
+                                        self.btn_title_bar_style_0,
                                         self.btn_title_bar_style_1,
                                         self.btn_menu_style,
                                         self.btn_menu_style_1,
@@ -6115,11 +6116,12 @@ class TemperatureClass(QThread):
 class BackLightClass(QThread):
     print('-- [BackLightClass]: plugged in')
 
-    def __init__(self, color_all_id, btn_bck_light, btn_backlight_sub, btn_title_bar_style_1, btn_menu_style, btn_menu_style_1, lbl_backlight_sub):
+    def __init__(self, color_all_id, btn_bck_light, btn_backlight_sub, btn_title_bar_style_1, btn_title_bar_style_0, btn_menu_style, btn_menu_style_1, lbl_backlight_sub):
         QThread.__init__(self)
         self.color_all_id = color_all_id
         self.btn_bck_light = btn_bck_light
         self.btn_backlight_sub = btn_backlight_sub
+        self.btn_title_bar_style_0 = btn_title_bar_style_0
         self.btn_title_bar_style_1 = btn_title_bar_style_1
         self.btn_menu_style = btn_menu_style
         self.btn_menu_style_1 = btn_menu_style_1
