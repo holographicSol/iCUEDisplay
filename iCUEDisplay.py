@@ -633,36 +633,48 @@ class App(QMainWindow):
                                    border-bottom:0px solid rgb(5, 5, 5);
                                    border-right:0px solid rgb(5, 5, 5);
                                    border-left:0px solid rgb(5, 5, 5);}"""
-        self.cmb_menu_style = """QComboBox {background-color: rgb(15, 15, 15);
+        self.lbl_menu_key_style = """QLabel {background-color: rgb(8, 8, 8);
+                                           color: rgb(150, 150, 150);
+                                           border-top:2px solid rgb(10, 10, 10);
+                                           border-bottom:0px solid rgb(10, 10, 10);
+                                           border-right:2px solid rgb(10, 10, 10);
+                                           border-left:2px solid rgb(10, 10, 10);}"""
+        self.cmb_menu_style = """QComboBox {background-color: rgb(10, 10, 10);
                    color: rgb(200, 200, 200);
                    border-top:2px solid rgb(15, 15, 15);
                    border-bottom:2px solid rgb(15, 15, 15);
                    border-right:2px solid rgb(15, 15, 15);
                    border-left:2px solid rgb(15, 15, 15);}"""
-        self.btn_menu_style = """QPushButton{background-color: rgb(15, 15, 15);
-                           color: rgb(0, 0, 0);
-                           border-bottom:0px solid rgb(0, 0, 0);
-                           border-right:0px solid rgb(0, 0, 0);
-                           border-top:0px solid rgb(0, 0, 0);
-                           border-left:0px solid rgb(0, 0, 0);}"""
+        self.btn_menu_style = """QPushButton{background-color: rgb(10, 10, 10);
+                                                           color: rgb(200, 200, 200);
+                                                           border-bottom:2px solid rgb(15, 15, 15);
+                                                           border-right:2px solid rgb(15, 15, 15);
+                                                           border-top:2px solid rgb(15, 15, 15);
+                                                           border-left:2px solid rgb(0, 0, 0);}"""
+        self.btn_menu_style_1 = """QPushButton{background-color: rgb(10, 10, 10);
+                                                                   color: rgb(200, 200, 200);
+                                                                   border-bottom:2px solid rgb(15, 15, 15);
+                                                                   border-right:2px solid rgb(15, 15, 15);
+                                                                   border-top:2px solid rgb(15, 15, 15);
+                                                                   border-left:2px solid rgb(0, 0, 0);}"""
         self.lbl_menu_description_style = """QLabel {background-color: rgb(15, 15, 15);
                    color: rgb(200, 200, 200);
                    border-bottom:2px solid rgb(8, 8, 8);
                    border-right:2px solid rgb(8, 8, 8);
                    border-top:2px solid rgb(8, 8, 8);
                    border-left:2px solid rgb(8, 8, 8);}"""
-        self.lbl_menu_style = """QLabel{background-color: rgb(15, 15, 15);
-                                                   color: rgb(197, 197, 197);
-                                                   border-bottom:0px solid rgb(15, 15, 15);
-                                                   border-right:0px solid rgb(15, 15, 15);
-                                                   border-top:0px solid rgb(15, 15, 15);
-                                                   border-left:4px solid rgb(15, 15, 15);}"""
-        self.qle_menu_style = """QLineEdit{background-color: rgb(15, 15, 15);
-                                                   color: rgb(197, 197, 197);
-                                                   border-bottom:0px solid rgb(15, 15, 15);
-                                                   border-right:0px solid rgb(15, 15, 15);
-                                                   border-top:0px solid rgb(15, 15, 15);
-                                                   border-left:0px solid rgb(15, 15, 15);}"""
+        self.lbl_menu_style = """QLabel{background-color: rgb(10, 10, 10);
+                                                           color: rgb(200, 200, 200);
+                                                           border-bottom:2px solid rgb(15, 15, 15);
+                                                           border-right:2px solid rgb(15, 15, 15);
+                                                           border-top:2px solid rgb(15, 15, 15);
+                                                           border-left:2px solid rgb(0, 0, 0);}"""
+        self.qle_menu_style = """QLineEdit{background-color: rgb(10, 10, 10);
+                                                           color: rgb(200, 200, 200);
+                                                           border-bottom:2px solid rgb(15, 15, 15);
+                                                           border-right:2px solid rgb(15, 15, 15);
+                                                           border-top:2px solid rgb(15, 15, 15);
+                                                           border-left:2px solid rgb(0, 0, 0);}"""
         self.setStyleSheet(self.tooltip_style)
 
         """ Object Geometry """
@@ -895,12 +907,13 @@ class App(QMainWindow):
         ui_object_complete.append(self.lbl_settings_bg)
         ui_object_font_list_s8b.append(self.lbl_settings_bg)
 
-        self.lbl_cpu_mon = QLabel(self)
+        self.lbl_cpu_mon = QPushButton(self)
         self.lbl_cpu_mon.move(self.menu_obj_pos_w + 2, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.lbl_cpu_mon.resize(100, self.monitor_btn_h)
         self.lbl_cpu_mon.setFont(self.font_s8b)
         self.lbl_cpu_mon.setText('CPU MONITOR')
-        self.lbl_cpu_mon.setStyleSheet(self.lbl_menu_style)
+        self.lbl_cpu_mon.setStyleSheet(self.btn_menu_style)
+        self.lbl_cpu_mon.clicked.connect(self.btn_cpu_mon_function)
         print('-- [App.__init__] created:', self.lbl_cpu_mon)
         ui_object_complete.append(self.lbl_cpu_mon)
         ui_object_font_list_s8b.append(self.lbl_cpu_mon)
@@ -914,6 +927,17 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.btn_cpu_mon)
         self.object_interaction_enabled.append(self.btn_cpu_mon)
         ui_object_complete.append(self.btn_cpu_mon)
+
+        self.lbl_util_key_0 = QLabel(self)
+        self.lbl_util_key_0.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.lbl_util_key_0.resize(self.monitor_btn_w, self.monitor_btn_h)
+        self.lbl_util_key_0.setFont(self.font_s8b)
+        self.lbl_util_key_0.setText('R G B')
+        self.lbl_util_key_0.setStyleSheet(self.lbl_menu_key_style)
+        self.lbl_util_key_0.setAlignment(Qt.AlignCenter)
+        print('-- [App.__init__] created:', self.lbl_util_key_0)
+        ui_object_complete.append(self.lbl_util_key_0)
+        ui_object_font_list_s8b.append(self.lbl_util_key_0)
 
         self.qle_cpu_mon_rgb_on = QLineEdit(self)
         self.qle_cpu_mon_rgb_on.resize(self.monitor_btn_w, self.monitor_btn_h)
@@ -939,12 +963,132 @@ class App(QMainWindow):
         ui_object_complete.append(self.qle_cpu_led_time_on)
         ui_object_font_list_s8b.append(self.qle_cpu_led_time_on)
 
-        self.lbl_cpu_mon_temp = QLabel(self)
+        self.lbl_util_key_9 = QLabel(self)
+        self.lbl_util_key_9.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 60)
+        self.lbl_util_key_9.resize(100, 60)
+        self.lbl_util_key_9.setStyleSheet(self.lbl_menu_key_style)
+        print('-- [App.__init__] created:', self.lbl_util_key_9)
+        ui_object_complete.append(self.lbl_util_key_9)
+
+        """ blue"""
+        self.lbl_util_key_1 = QLabel(self)
+        self.lbl_util_key_1.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10)
+        self.lbl_util_key_1.resize(10, 10)
+        self.lbl_util_key_1.setStyleSheet("""QLabel {background-color: rgb(0, 0, 255);
+                                                   color: rgb(150, 150, 150);
+                                                   border-top:2px solid rgb(10, 10, 10);
+                                                   border-bottom:2px solid rgb(10, 10, 10);
+                                                   border-right:2px solid rgb(10, 10, 10);
+                                                   border-left:2px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_util_key_1)
+        ui_object_complete.append(self.lbl_util_key_1)
+
+        self.lbl_util_key_2 = QLabel(self)
+        self.lbl_util_key_2.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 10 + 4 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10)
+        self.lbl_util_key_2.resize(self.monitor_btn_w, 10)
+        self.lbl_util_key_2.setFont(self.font_s7b)
+        self.lbl_util_key_2.setText('< 30c')
+        self.lbl_util_key_2.setStyleSheet("""QLabel {background-color: rgb(8, 8, 8);
+                                                   color: rgb(150, 150, 150);
+                                                   border-top:0px solid rgb(10, 10, 10);
+                                                   border-bottom:0px solid rgb(10, 10, 10);
+                                                   border-right:0px solid rgb(10, 10, 10);
+                                                   border-left:0px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_util_key_2)
+        ui_object_complete.append(self.lbl_util_key_2)
+        ui_object_font_list_s7b.append(self.lbl_util_key_2)
+
+        """ yellow """
+        self.lbl_util_key_3 = QLabel(self)
+        self.lbl_util_key_3.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 4 - 10)
+        self.lbl_util_key_3.resize(10, 10)
+        self.lbl_util_key_3.setStyleSheet("""QLabel {background-color: rgb(255, 255, 0);
+                                                           color: rgb(150, 150, 150);
+                                                           border-top:2px solid rgb(10, 10, 10);
+                                                           border-bottom:2px solid rgb(10, 10, 10);
+                                                           border-right:2px solid rgb(10, 10, 10);
+                                                           border-left:2px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_util_key_3)
+        ui_object_complete.append(self.lbl_util_key_3)
+
+        self.lbl_util_key_4 = QLabel(self)
+        self.lbl_util_key_4.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 10 + 4 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 4 - 10)
+        self.lbl_util_key_4.resize(self.monitor_btn_w, 10)
+        self.lbl_util_key_4.setFont(self.font_s7b)
+        self.lbl_util_key_4.setText('>=30c, <50c')
+        self.lbl_util_key_4.setStyleSheet("""QLabel {background-color: rgb(8, 8, 8);
+                                                           color: rgb(150, 150, 150);
+                                                           border-top:0px solid rgb(10, 10, 10);
+                                                           border-bottom:0px solid rgb(10, 10, 10);
+                                                           border-right:0px solid rgb(10, 10, 10);
+                                                           border-left:0px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_util_key_4)
+        ui_object_complete.append(self.lbl_util_key_4)
+        ui_object_font_list_s7b.append(self.lbl_util_key_4)
+
+        """ amber """
+        self.lbl_util_key_5 = QLabel(self)
+        self.lbl_util_key_5.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 4 - 10 - 4 - 10)
+        self.lbl_util_key_5.resize(10, 10)
+        self.lbl_util_key_5.setStyleSheet("""QLabel {background-color: rgb(255, 100, 0);
+                                                                   color: rgb(150, 150, 150);
+                                                                   border-top:2px solid rgb(10, 10, 10);
+                                                                   border-bottom:2px solid rgb(10, 10, 10);
+                                                                   border-right:2px solid rgb(10, 10, 10);
+                                                                   border-left:2px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_util_key_5)
+        ui_object_complete.append(self.lbl_util_key_5)
+
+        self.lbl_util_key_6 = QLabel(self)
+        self.lbl_util_key_6.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 10 + 4 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 4 - 10 - 4 - 10)
+        self.lbl_util_key_6.resize(self.monitor_btn_w, 10)
+        self.lbl_util_key_6.setFont(self.font_s7b)
+        self.lbl_util_key_6.setText('>=50c, <70c')
+        self.lbl_util_key_6.setStyleSheet("""QLabel {background-color: rgb(8, 8, 8);
+                                                                   color: rgb(150, 150, 150);
+                                                                   border-top:0px solid rgb(10, 10, 10);
+                                                                   border-bottom:0px solid rgb(10, 10, 10);
+                                                                   border-right:0px solid rgb(10, 10, 10);
+                                                                   border-left:0px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_util_key_6)
+        ui_object_complete.append(self.lbl_util_key_6)
+        ui_object_font_list_s7b.append(self.lbl_util_key_6)
+
+        """ red """
+        self.lbl_util_key_7 = QLabel(self)
+        self.lbl_util_key_7.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 4 - 10 - 4 - 10 - 4 - 10)
+        self.lbl_util_key_7.resize(10, 10)
+        self.lbl_util_key_7.setStyleSheet("""QLabel {background-color: rgb(255, 0, 0);
+                                                                           color: rgb(150, 150, 150);
+                                                                           border-top:2px solid rgb(10, 10, 10);
+                                                                           border-bottom:2px solid rgb(10, 10, 10);
+                                                                           border-right:2px solid rgb(10, 10, 10);
+                                                                           border-left:2px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_util_key_7)
+        ui_object_complete.append(self.lbl_util_key_7)
+
+        self.lbl_util_key_8 = QLabel(self)
+        self.lbl_util_key_8.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 10 + 4 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 4 - 10 - 4 - 10 - 4 - 10)
+        self.lbl_util_key_8.resize(self.monitor_btn_w, 10)
+        self.lbl_util_key_8.setFont(self.font_s7b)
+        self.lbl_util_key_8.setText('>70c')
+        self.lbl_util_key_8.setStyleSheet("""QLabel {background-color: rgb(8, 8, 8);
+                                                                           color: rgb(150, 150, 150);
+                                                                           border-top:0px solid rgb(10, 10, 10);
+                                                                           border-bottom:0px solid rgb(10, 10, 10);
+                                                                           border-right:0px solid rgb(10, 10, 10);
+                                                                           border-left:0px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_util_key_8)
+        ui_object_complete.append(self.lbl_util_key_8)
+        ui_object_font_list_s7b.append(self.lbl_util_key_8)
+
+        self.lbl_cpu_mon_temp = QPushButton(self)
         self.lbl_cpu_mon_temp.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.lbl_cpu_mon_temp.resize(100, self.monitor_btn_h)
         self.lbl_cpu_mon_temp.setFont(self.font_s8b)
         self.lbl_cpu_mon_temp.setText('TEMPERATURE')
-        self.lbl_cpu_mon_temp.setStyleSheet(self.lbl_menu_style)
+        self.lbl_cpu_mon_temp.setStyleSheet(self.btn_menu_style)
+        self.lbl_cpu_mon_temp.clicked.connect(self.btn_cpu_mon_temp_function)
         print('-- [App.__init__] created:', self.lbl_cpu_mon_temp)
         ui_object_complete.append(self.lbl_cpu_mon_temp)
         ui_object_font_list_s8b.append(self.lbl_cpu_mon_temp)
@@ -959,12 +1103,13 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_cpu_mon_temp)
         ui_object_complete.append(self.btn_cpu_mon_temp)
 
-        self.lbl_dram_mon = QLabel(self)
+        self.lbl_dram_mon = QPushButton(self)
         self.lbl_dram_mon.move(self.menu_obj_pos_w + 2, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.lbl_dram_mon.resize(100, self.monitor_btn_h)
         self.lbl_dram_mon.setFont(self.font_s8b)
         self.lbl_dram_mon.setText('DRAM MONITOR')
-        self.lbl_dram_mon.setStyleSheet(self.lbl_menu_style)
+        self.lbl_dram_mon.setStyleSheet(self.btn_menu_style)
+        self.lbl_dram_mon.clicked.connect(self.btn_dram_mon_function)
         print('-- [App.__init__] created:', self.lbl_dram_mon)
         ui_object_complete.append(self.lbl_dram_mon)
         ui_object_font_list_s8b.append(self.lbl_dram_mon)
@@ -1003,12 +1148,13 @@ class App(QMainWindow):
         ui_object_complete.append(self.qle_dram_led_time_on)
         ui_object_font_list_s8b.append(self.qle_dram_led_time_on)
 
-        self.lbl_vram_mon = QLabel(self)
+        self.lbl_vram_mon = QPushButton(self)
         self.lbl_vram_mon.move(self.menu_obj_pos_w + 2, self.height - 8 - self.monitor_btn_h)
         self.lbl_vram_mon.resize(100, self.monitor_btn_h)
         self.lbl_vram_mon.setFont(self.font_s8b)
         self.lbl_vram_mon.setText('VRAM MONITOR')
-        self.lbl_vram_mon.setStyleSheet(self.lbl_menu_style)
+        self.lbl_vram_mon.setStyleSheet(self.btn_menu_style)
+        self.lbl_vram_mon.clicked.connect(self.btn_vram_mon_function)
         print('-- [App.__init__] created:', self.lbl_vram_mon)
         ui_object_complete.append(self.lbl_vram_mon)
         ui_object_font_list_s8b.append(self.lbl_vram_mon)
@@ -1047,12 +1193,13 @@ class App(QMainWindow):
         ui_object_complete.append(self.qle_vram_led_time_on)
         ui_object_font_list_s8b.append(self.qle_vram_led_time_on)
 
-        self.lbl_vram_mon_temp = QLabel(self)
+        self.lbl_vram_mon_temp = QPushButton(self)
         self.lbl_vram_mon_temp.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4, self.height - 8 - self.monitor_btn_h)
         self.lbl_vram_mon_temp.resize(100, self.monitor_btn_h)
         self.lbl_vram_mon_temp.setFont(self.font_s8b)
         self.lbl_vram_mon_temp.setText('TEMPERATURE')
-        self.lbl_vram_mon_temp.setStyleSheet(self.lbl_menu_style)
+        self.lbl_vram_mon_temp.setStyleSheet(self.btn_menu_style)
+        self.lbl_vram_mon_temp.clicked.connect(self.btn_vram_mon_temp_function)
         print('-- [App.__init__] created:', self.lbl_vram_mon_temp)
         ui_object_complete.append(self.lbl_vram_mon_temp)
         ui_object_font_list_s8b.append(self.lbl_vram_mon_temp)
@@ -1068,13 +1215,63 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_vram_mon_temp)
         ui_object_font_list_s8b.append(self.btn_vram_mon_temp)
 
-        self.lbl_hdd_mon_sub = QLabel(self)
+        self.lbl_disk_key_0 = QLabel(self)
+        self.lbl_disk_key_0.move(self.menu_obj_pos_w + 2 + 88 + 4 + 52 + 4 + 28 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.lbl_disk_key_0.resize(self.monitor_btn_w, self.monitor_btn_h)
+        self.lbl_disk_key_0.setFont(self.font_s8b)
+        self.lbl_disk_key_0.setText('R G B')
+        self.lbl_disk_key_0.setStyleSheet(self.lbl_menu_key_style)
+        self.lbl_disk_key_0.setAlignment(Qt.AlignCenter)
+        print('-- [App.__init__] created:', self.lbl_disk_key_0)
+        ui_object_complete.append(self.lbl_disk_key_0)
+        ui_object_font_list_s8b.append(self.lbl_disk_key_0)
+
+        self.lbl_disk_key_1 = QLabel(self)
+        self.lbl_disk_key_1.move(self.menu_obj_pos_w + 2 + 88 + 4 + 52 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 52 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.lbl_disk_key_1.resize(self.monitor_btn_w, self.monitor_btn_h)
+        self.lbl_disk_key_1.setFont(self.font_s8b)
+        self.lbl_disk_key_1.setText('R G B')
+        self.lbl_disk_key_1.setStyleSheet(self.lbl_menu_key_style)
+        self.lbl_disk_key_1.setAlignment(Qt.AlignCenter)
+        print('-- [App.__init__] created:', self.lbl_disk_key_1)
+        ui_object_complete.append(self.lbl_disk_key_1)
+        ui_object_font_list_s8b.append(self.lbl_disk_key_1)
+
+        """ blue"""
+        self.lbl_disk_key_2 = QLabel(self)
+        self.lbl_disk_key_2.move(self.menu_obj_pos_w + 2, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.lbl_disk_key_2.resize(10, 10)
+        self.lbl_disk_key_2.setStyleSheet("""QLabel {background-color: rgb(0, 0, 255);
+                                                           color: rgb(150, 150, 150);
+                                                           border-top:2px solid rgb(10, 10, 10);
+                                                           border-bottom:2px solid rgb(10, 10, 10);
+                                                           border-right:2px solid rgb(10, 10, 10);
+                                                           border-left:2px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_disk_key_2)
+        ui_object_complete.append(self.lbl_disk_key_2)
+
+        self.lbl_disk_key_3 = QLabel(self)
+        self.lbl_disk_key_3.move(self.menu_obj_pos_w + 2 + 4 + 10, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.lbl_disk_key_3.resize(self.monitor_btn_w * 2, 10)
+        self.lbl_disk_key_3.setFont(self.font_s7b)
+        self.lbl_disk_key_3.setText('Mounted Drive Letters')
+        self.lbl_disk_key_3.setStyleSheet("""QLabel {background-color: rgb(8, 8, 8);
+                                                           color: rgb(150, 150, 150);
+                                                           border-top:0px solid rgb(10, 10, 10);
+                                                           border-bottom:0px solid rgb(10, 10, 10);
+                                                           border-right:0px solid rgb(10, 10, 10);
+                                                           border-left:0px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_disk_key_3)
+        ui_object_complete.append(self.lbl_disk_key_3)
+        ui_object_font_list_s7b.append(self.lbl_disk_key_3)
+
+        self.lbl_hdd_mon_sub = QPushButton(self)
         self.lbl_hdd_mon_sub.move(self.menu_obj_pos_w + 2, self.height - 8 - self.monitor_btn_h)
         self.lbl_hdd_mon_sub.resize(88, 28)
         self.lbl_hdd_mon_sub.setFont(self.font_s8b)
         self.lbl_hdd_mon_sub.setText('DISK MONITOR')
-        self.lbl_hdd_mon_sub.setAlignment(Qt.AlignCenter)
-        self.lbl_hdd_mon_sub.setStyleSheet(self.lbl_menu_style)
+        self.lbl_hdd_mon_sub.setStyleSheet(self.btn_menu_style)
+        self.lbl_hdd_mon_sub.clicked.connect(self.btn_hdd_mon_function)
         print('-- [App.__init__] created:', self.lbl_hdd_mon_sub)
         ui_object_complete.append(self.lbl_hdd_mon_sub)
         ui_object_font_list_s8b.append(self.lbl_hdd_mon_sub)
@@ -1145,12 +1342,325 @@ class App(QMainWindow):
         ui_object_complete.append(self.qle_hdd_led_time_on)
         ui_object_font_list_s8b.append(self.qle_hdd_led_time_on)
 
-        self.lbl_network_adapter = QLabel(self)
+        """ TB """
+        self.lbl_nettraffic_key_0 = QLabel(self)
+        self.lbl_nettraffic_key_0.move(self.menu_obj_pos_w + 2 + 4 + 72, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.lbl_nettraffic_key_0.resize(10, 10)
+        self.lbl_nettraffic_key_0.setStyleSheet("""QLabel {background-color: rgb(255, 255, 255);
+                                               color: rgb(150, 150, 150);
+                                               border-top:2px solid rgb(10, 10, 10);
+                                               border-bottom:2px solid rgb(10, 10, 10);
+                                               border-right:2px solid rgb(10, 10, 10);
+                                               border-left:2px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_nettraffic_key_0)
+        ui_object_complete.append(self.lbl_nettraffic_key_0)
+
+        self.lbl_nettraffic_key_1 = QLabel(self)
+        self.lbl_nettraffic_key_1.move(self.menu_obj_pos_w + 2 + 4 + 10 + 4 + 72, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.lbl_nettraffic_key_1.resize(self.monitor_btn_w * 2, 10)
+        self.lbl_nettraffic_key_1.setFont(self.font_s7b)
+        self.lbl_nettraffic_key_1.setText('TB')
+        self.lbl_nettraffic_key_1.setStyleSheet("""QLabel {background-color: rgb(8, 8, 8);
+                                               color: rgb(150, 150, 150);
+                                               border-top:0px solid rgb(10, 10, 10);
+                                               border-bottom:0px solid rgb(10, 10, 10);
+                                               border-right:0px solid rgb(10, 10, 10);
+                                               border-left:0px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_nettraffic_key_1)
+        ui_object_complete.append(self.lbl_nettraffic_key_1)
+        ui_object_font_list_s7b.append(self.lbl_nettraffic_key_1)
+
+        """ GB """
+        self.lbl_nettraffic_key_2 = QLabel(self)
+        self.lbl_nettraffic_key_2.move(self.menu_obj_pos_w + 2 + 4 + 72, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10)
+        self.lbl_nettraffic_key_2.resize(10, 10)
+        self.lbl_nettraffic_key_2.setStyleSheet("""QLabel {background-color: rgb(0, 255, 255);
+                                               color: rgb(150, 150, 150);
+                                               border-top:2px solid rgb(10, 10, 10);
+                                               border-bottom:2px solid rgb(10, 10, 10);
+                                               border-right:2px solid rgb(10, 10, 10);
+                                               border-left:2px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_nettraffic_key_2)
+        ui_object_complete.append(self.lbl_nettraffic_key_2)
+
+        self.lbl_nettraffic_key_3 = QLabel(self)
+        self.lbl_nettraffic_key_3.move(self.menu_obj_pos_w + 2 + 4 + 10 + 4 + 72, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10)
+        self.lbl_nettraffic_key_3.resize(self.monitor_btn_w * 2, 10)
+        self.lbl_nettraffic_key_3.setFont(self.font_s7b)
+        self.lbl_nettraffic_key_3.setText('GB')
+        self.lbl_nettraffic_key_3.setStyleSheet("""QLabel {background-color: rgb(8, 8, 8);
+                                               color: rgb(150, 150, 150);
+                                               border-top:0px solid rgb(10, 10, 10);
+                                               border-bottom:0px solid rgb(10, 10, 10);
+                                               border-right:0px solid rgb(10, 10, 10);
+                                               border-left:0px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_nettraffic_key_3)
+        ui_object_complete.append(self.lbl_nettraffic_key_3)
+        ui_object_font_list_s7b.append(self.lbl_nettraffic_key_3)
+
+        """ MB """
+        self.lbl_nettraffic_key_4 = QLabel(self)
+        self.lbl_nettraffic_key_4.move(self.menu_obj_pos_w + 2 + 4 + 72, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 4 - 10)
+        self.lbl_nettraffic_key_4.resize(10, 10)
+        self.lbl_nettraffic_key_4.setStyleSheet("""QLabel {background-color: rgb(0, 0, 255);
+                                               color: rgb(150, 150, 150);
+                                               border-top:2px solid rgb(10, 10, 10);
+                                               border-bottom:2px solid rgb(10, 10, 10);
+                                               border-right:2px solid rgb(10, 10, 10);
+                                               border-left:2px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_nettraffic_key_4)
+        ui_object_complete.append(self.lbl_nettraffic_key_4)
+
+        self.lbl_nettraffic_key_5 = QLabel(self)
+        self.lbl_nettraffic_key_5.move(self.menu_obj_pos_w + 2 + 4 + 10 + 4 + 72, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 4 - 10)
+        self.lbl_nettraffic_key_5.resize(self.monitor_btn_w * 2, 10)
+        self.lbl_nettraffic_key_5.setFont(self.font_s7b)
+        self.lbl_nettraffic_key_5.setText('MB')
+        self.lbl_nettraffic_key_5.setStyleSheet("""QLabel {background-color: rgb(8, 8, 8);
+                                               color: rgb(150, 150, 150);
+                                               border-top:0px solid rgb(10, 10, 10);
+                                               border-bottom:0px solid rgb(10, 10, 10);
+                                               border-right:0px solid rgb(10, 10, 10);
+                                               border-left:0px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_nettraffic_key_5)
+        ui_object_complete.append(self.lbl_nettraffic_key_5)
+        ui_object_font_list_s7b.append(self.lbl_nettraffic_key_5)
+
+        """ KB """
+        self.lbl_nettraffic_key_6 = QLabel(self)
+        self.lbl_nettraffic_key_6.move(self.menu_obj_pos_w + 2 + 4 + 72, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 4 - 10 - 4 - 10)
+        self.lbl_nettraffic_key_6.resize(10, 10)
+        self.lbl_nettraffic_key_6.setStyleSheet("""QLabel {background-color: rgb(0, 255, 0);
+                                               color: rgb(150, 150, 150);
+                                               border-top:2px solid rgb(10, 10, 10);
+                                               border-bottom:2px solid rgb(10, 10, 10);
+                                               border-right:2px solid rgb(10, 10, 10);
+                                               border-left:2px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_nettraffic_key_6)
+        ui_object_complete.append(self.lbl_nettraffic_key_6)
+
+        self.lbl_nettraffic_key_7 = QLabel(self)
+        self.lbl_nettraffic_key_7.move(self.menu_obj_pos_w + 2 + 4 + 10 + 4 + 72, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 4 - 10 - 4 - 10)
+        self.lbl_nettraffic_key_7.resize(self.monitor_btn_w * 2, 10)
+        self.lbl_nettraffic_key_7.setFont(self.font_s7b)
+        self.lbl_nettraffic_key_7.setText('KB')
+        self.lbl_nettraffic_key_7.setStyleSheet("""QLabel {background-color: rgb(8, 8, 8);
+                                               color: rgb(150, 150, 150);
+                                               border-top:0px solid rgb(10, 10, 10);
+                                               border-bottom:0px solid rgb(10, 10, 10);
+                                               border-right:0px solid rgb(10, 10, 10);
+                                               border-left:0px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_nettraffic_key_7)
+        ui_object_complete.append(self.lbl_nettraffic_key_7)
+        ui_object_font_list_s7b.append(self.lbl_nettraffic_key_7)
+
+        """ Bytes """
+        self.lbl_nettraffic_key_8 = QLabel(self)
+        self.lbl_nettraffic_key_8.move(self.menu_obj_pos_w + 2 + 4 + 72, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 4 - 10 - 4 - 10 - 4 - 10)
+        self.lbl_nettraffic_key_8.resize(10, 10)
+        self.lbl_nettraffic_key_8.setStyleSheet("""QLabel {background-color: rgb(255, 0, 0);
+                                               color: rgb(150, 150, 150);
+                                               border-top:2px solid rgb(10, 10, 10);
+                                               border-bottom:2px solid rgb(10, 10, 10);
+                                               border-right:2px solid rgb(10, 10, 10);
+                                               border-left:2px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_nettraffic_key_8)
+        ui_object_complete.append(self.lbl_nettraffic_key_8)
+
+        self.lbl_nettraffic_key_9 = QLabel(self)
+        self.lbl_nettraffic_key_9.move(self.menu_obj_pos_w + 2 + 4 + 10 + 4 + 72, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 4 - 10 - 4 - 10 - 4 - 10)
+        self.lbl_nettraffic_key_9.resize(self.monitor_btn_w * 2, 10)
+        self.lbl_nettraffic_key_9.setFont(self.font_s7b)
+        self.lbl_nettraffic_key_9.setText('Bytes')
+        self.lbl_nettraffic_key_9.setStyleSheet("""QLabel {background-color: rgb(8, 8, 8);
+                                               color: rgb(150, 150, 150);
+                                               border-top:0px solid rgb(10, 10, 10);
+                                               border-bottom:0px solid rgb(10, 10, 10);
+                                               border-right:0px solid rgb(10, 10, 10);
+                                               border-left:0px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_nettraffic_key_9)
+        ui_object_complete.append(self.lbl_nettraffic_key_9)
+        ui_object_font_list_s7b.append(self.lbl_nettraffic_key_9)
+
+        self.lbl_nettraffic_key_20 = QLabel(self)
+        self.lbl_nettraffic_key_20.move(self.menu_obj_pos_w + 2 + 4 + 72, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 4 - 10 - 4 - 10 - 4 - 10 - 4 - 10- 4 - 10)
+        self.lbl_nettraffic_key_20.resize(self.monitor_btn_w * 2, 10)
+        self.lbl_nettraffic_key_20.setFont(self.font_s7b)
+        self.lbl_nettraffic_key_20.setText('Received [1] - [9]')
+        self.lbl_nettraffic_key_20.setStyleSheet("""QLabel {background-color: rgb(8, 8, 8);
+                                               color: rgb(150, 150, 150);
+                                               border-top:0px solid rgb(10, 10, 10);
+                                               border-bottom:0px solid rgb(10, 10, 10);
+                                               border-right:0px solid rgb(10, 10, 10);
+                                               border-left:0px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_nettraffic_key_20)
+        ui_object_complete.append(self.lbl_nettraffic_key_20)
+        ui_object_font_list_s7b.append(self.lbl_nettraffic_key_20)
+
+        self.lbl_nettraffic_key_22 = QLabel(self)
+        self.lbl_nettraffic_key_22.move(self.menu_obj_pos_w + 2 + 4 + 72, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 4 - 10 - 4 - 10 - 4 - 10 - 4 - 10 - 4 - 10- 4 - 10)
+        self.lbl_nettraffic_key_22.resize(self.monitor_btn_w * 2, 10)
+        self.lbl_nettraffic_key_22.setFont(self.font_s7b)
+        self.lbl_nettraffic_key_22.setText('Sent [F1] - [F9]')
+        self.lbl_nettraffic_key_22.setStyleSheet("""QLabel {background-color: rgb(8, 8, 8);
+                                               color: rgb(150, 150, 150);
+                                               border-top:0px solid rgb(10, 10, 10);
+                                               border-bottom:0px solid rgb(10, 10, 10);
+                                               border-right:0px solid rgb(10, 10, 10);
+                                               border-left:0px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_nettraffic_key_22)
+        ui_object_complete.append(self.lbl_nettraffic_key_22)
+        ui_object_font_list_s7b.append(self.lbl_nettraffic_key_22)
+
+        """ Thousand + """
+        self.lbl_nettraffic_key_11 = QLabel(self)
+        self.lbl_nettraffic_key_11.move(self.menu_obj_pos_w + 2 + 4 + 72 + 20 + 4 + 72, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10)
+        self.lbl_nettraffic_key_11.resize(10, 10)
+        self.lbl_nettraffic_key_11.setStyleSheet("""QLabel {background-color: rgb(255, 255, 255);
+                                               color: rgb(150, 150, 150);
+                                               border-top:2px solid rgb(10, 10, 10);
+                                               border-bottom:2px solid rgb(10, 10, 10);
+                                               border-right:2px solid rgb(10, 10, 10);
+                                               border-left:2px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_nettraffic_key_11)
+        ui_object_complete.append(self.lbl_nettraffic_key_11)
+
+        self.lbl_nettraffic_key_12 = QLabel(self)
+        self.lbl_nettraffic_key_12.move(self.menu_obj_pos_w + 2 + 4 + 72 + 4 + 10 + 20 + 4 + 72, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10)
+        self.lbl_nettraffic_key_12.resize(self.monitor_btn_w * 2, 10)
+        self.lbl_nettraffic_key_12.setFont(self.font_s7b)
+        self.lbl_nettraffic_key_12.setText('Thousand+')
+        self.lbl_nettraffic_key_12.setStyleSheet("""QLabel {background-color: rgb(8, 8, 8);
+                                               color: rgb(150, 150, 150);
+                                               border-top:0px solid rgb(10, 10, 10);
+                                               border-bottom:0px solid rgb(10, 10, 10);
+                                               border-right:0px solid rgb(10, 10, 10);
+                                               border-left:0px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_nettraffic_key_12)
+        ui_object_complete.append(self.lbl_nettraffic_key_12)
+        ui_object_font_list_s7b.append(self.lbl_nettraffic_key_12)
+
+        """ Hundreds """
+        self.lbl_nettraffic_key_13 = QLabel(self)
+        self.lbl_nettraffic_key_13.move(self.menu_obj_pos_w + 2 + 4 + 72 + 20 + 4 + 72, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 4 - 10)
+        self.lbl_nettraffic_key_13.resize(10, 10)
+        self.lbl_nettraffic_key_13.setStyleSheet("""QLabel {background-color: rgb(0, 255, 255);
+                                               color: rgb(150, 150, 150);
+                                               border-top:2px solid rgb(10, 10, 10);
+                                               border-bottom:2px solid rgb(10, 10, 10);
+                                               border-right:2px solid rgb(10, 10, 10);
+                                               border-left:2px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_nettraffic_key_13)
+        ui_object_complete.append(self.lbl_nettraffic_key_13)
+
+        self.lbl_nettraffic_key_14 = QLabel(self)
+        self.lbl_nettraffic_key_14.move(self.menu_obj_pos_w + 2 + 4 + 72 + 4 + 10 + 20 + 4 + 72, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 4 - 10)
+        self.lbl_nettraffic_key_14.resize(self.monitor_btn_w * 2, 10)
+        self.lbl_nettraffic_key_14.setFont(self.font_s7b)
+        self.lbl_nettraffic_key_14.setText('Hundreds')
+        self.lbl_nettraffic_key_14.setStyleSheet("""QLabel {background-color: rgb(8, 8, 8);
+                                               color: rgb(150, 150, 150);
+                                               border-top:0px solid rgb(10, 10, 10);
+                                               border-bottom:0px solid rgb(10, 10, 10);
+                                               border-right:0px solid rgb(10, 10, 10);
+                                               border-left:0px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_nettraffic_key_14)
+        ui_object_complete.append(self.lbl_nettraffic_key_14)
+        ui_object_font_list_s7b.append(self.lbl_nettraffic_key_14)
+
+        """ Tens """
+        self.lbl_nettraffic_key_15 = QLabel(self)
+        self.lbl_nettraffic_key_15.move(self.menu_obj_pos_w + 2 + 4 + 72 + 20 + 4 + 72, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 4 - 10 - 4 - 10)
+        self.lbl_nettraffic_key_15.resize(10, 10)
+        self.lbl_nettraffic_key_15.setStyleSheet("""QLabel {background-color: rgb(0, 0, 255);
+                                               color: rgb(150, 150, 150);
+                                               border-top:2px solid rgb(10, 10, 10);
+                                               border-bottom:2px solid rgb(10, 10, 10);
+                                               border-right:2px solid rgb(10, 10, 10);
+                                               border-left:2px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_nettraffic_key_15)
+        ui_object_complete.append(self.lbl_nettraffic_key_15)
+
+        self.lbl_nettraffic_key_16 = QLabel(self)
+        self.lbl_nettraffic_key_16.move(self.menu_obj_pos_w + 2 + 4 + 72 + 4 + 10 + 20 + 4 + 72, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 4 - 10 - 4 - 10)
+        self.lbl_nettraffic_key_16.resize(self.monitor_btn_w * 2, 10)
+        self.lbl_nettraffic_key_16.setFont(self.font_s7b)
+        self.lbl_nettraffic_key_16.setText('Tens')
+        self.lbl_nettraffic_key_16.setStyleSheet("""QLabel {background-color: rgb(8, 8, 8);
+                                               color: rgb(150, 150, 150);
+                                               border-top:0px solid rgb(10, 10, 10);
+                                               border-bottom:0px solid rgb(10, 10, 10);
+                                               border-right:0px solid rgb(10, 10, 10);
+                                               border-left:0px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_nettraffic_key_16)
+        ui_object_complete.append(self.lbl_nettraffic_key_16)
+        ui_object_font_list_s7b.append(self.lbl_nettraffic_key_16)
+
+        """ Units """
+        self.lbl_nettraffic_key_17 = QLabel(self)
+        self.lbl_nettraffic_key_17.move(self.menu_obj_pos_w + 2 + 4 + 72 + 20 + 4 + 72, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 4 - 10 - 4 - 10 - 4 - 10)
+        self.lbl_nettraffic_key_17.resize(10, 10)
+        self.lbl_nettraffic_key_17.setStyleSheet("""QLabel {background-color: rgb(255, 0, 0);
+                                               color: rgb(150, 150, 150);
+                                               border-top:2px solid rgb(10, 10, 10);
+                                               border-bottom:2px solid rgb(10, 10, 10);
+                                               border-right:2px solid rgb(10, 10, 10);
+                                               border-left:2px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_nettraffic_key_17)
+        ui_object_complete.append(self.lbl_nettraffic_key_17)
+
+        self.lbl_nettraffic_key_18 = QLabel(self)
+        self.lbl_nettraffic_key_18.move(self.menu_obj_pos_w + 2 + 4 + 72 + 4 + 10 + 20 + 4 + 72, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 4 - 10 - 4 - 10 - 4 - 10)
+        self.lbl_nettraffic_key_18.resize(self.monitor_btn_w * 2, 10)
+        self.lbl_nettraffic_key_18.setFont(self.font_s7b)
+        self.lbl_nettraffic_key_18.setText('Units')
+        self.lbl_nettraffic_key_18.setStyleSheet("""QLabel {background-color: rgb(8, 8, 8);
+                                               color: rgb(150, 150, 150);
+                                               border-top:0px solid rgb(10, 10, 10);
+                                               border-bottom:0px solid rgb(10, 10, 10);
+                                               border-right:0px solid rgb(10, 10, 10);
+                                               border-left:0px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_nettraffic_key_18)
+        ui_object_complete.append(self.lbl_nettraffic_key_18)
+        ui_object_font_list_s7b.append(self.lbl_nettraffic_key_18)
+
+        self.lbl_nettraffic_key_19 = QLabel(self)
+        self.lbl_nettraffic_key_19.move(self.menu_obj_pos_w + 2 + 4 + 72 + 20 + 4 + 72, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 4 - 10 - 4 - 10 - 4 - 10 - 4 - 10 - 4 - 10)
+        self.lbl_nettraffic_key_19.resize(self.monitor_btn_w * 2, 10)
+        self.lbl_nettraffic_key_19.setFont(self.font_s7b)
+        self.lbl_nettraffic_key_19.setText('Received [0]]')
+        self.lbl_nettraffic_key_19.setStyleSheet("""QLabel {background-color: rgb(8, 8, 8);
+                                               color: rgb(150, 150, 150);
+                                               border-top:0px solid rgb(10, 10, 10);
+                                               border-bottom:0px solid rgb(10, 10, 10);
+                                               border-right:0px solid rgb(10, 10, 10);
+                                               border-left:0px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_nettraffic_key_19)
+        ui_object_complete.append(self.lbl_nettraffic_key_19)
+        ui_object_font_list_s7b.append(self.lbl_nettraffic_key_19)
+
+        self.lbl_nettraffic_key_21 = QLabel(self)
+        self.lbl_nettraffic_key_21.move(self.menu_obj_pos_w + 2 + 4 + 72 + 20 + 4 + 72, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 4 - 10 - 4 - 10 - 4 - 10 - 4 - 10 - 4 - 10 - 4 - 10)
+        self.lbl_nettraffic_key_21.resize(self.monitor_btn_w * 2, 10)
+        self.lbl_nettraffic_key_21.setFont(self.font_s7b)
+        self.lbl_nettraffic_key_21.setText('Sent [F10]]')
+        self.lbl_nettraffic_key_21.setStyleSheet("""QLabel {background-color: rgb(8, 8, 8);
+                                                   color: rgb(150, 150, 150);
+                                                   border-top:0px solid rgb(10, 10, 10);
+                                                   border-bottom:0px solid rgb(10, 10, 10);
+                                                   border-right:0px solid rgb(10, 10, 10);
+                                                   border-left:0px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_nettraffic_key_21)
+        ui_object_complete.append(self.lbl_nettraffic_key_21)
+        ui_object_font_list_s7b.append(self.lbl_nettraffic_key_21)
+
+        self.lbl_network_adapter = QPushButton(self)
         self.lbl_network_adapter.move(self.menu_obj_pos_w + 2, self.height - 8 - self.monitor_btn_h)
         self.lbl_network_adapter.resize(72, self.monitor_btn_h)
         self.lbl_network_adapter.setFont(self.font_s8b)
         self.lbl_network_adapter.setText('ADAPTER')
-        self.lbl_network_adapter.setStyleSheet(self.lbl_menu_style)
+        self.lbl_network_adapter.setStyleSheet(self.btn_menu_style)
+        self.lbl_network_adapter.clicked.connect(self.btn_network_adapter_function)
         print('-- [App.__init__] created:', self.lbl_network_adapter)
         ui_object_complete.append(self.lbl_network_adapter)
         ui_object_font_list_s8b.append(self.lbl_network_adapter)
@@ -1199,18 +1709,73 @@ class App(QMainWindow):
         ui_object_complete.append(self.qle_network_adapter_led_time_on)
         ui_object_font_list_s8b.append(self.qle_network_adapter_led_time_on)
 
-        self.lbl_net_con_mouse = QLabel(self)
-        self.lbl_net_con_mouse.move(self.menu_obj_pos_w + 2, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.lbl_net_con_mouse_key_1 = QLabel(self)
+        self.lbl_net_con_mouse_key_1.move(self.menu_obj_pos_w + 2, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10)
+        self.lbl_net_con_mouse_key_1.resize(10, 10)
+        self.lbl_net_con_mouse_key_1.setStyleSheet("""QLabel {background-color: rgb(0, 255, 0);
+                                                       color: rgb(150, 150, 150);
+                                                       border-top:2px solid rgb(10, 10, 10);
+                                                       border-bottom:2px solid rgb(10, 10, 10);
+                                                       border-right:2px solid rgb(10, 10, 10);
+                                                       border-left:2px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_net_con_mouse_key_1)
+        ui_object_complete.append(self.lbl_net_con_mouse_key_1)
+
+        self.lbl_net_con_mouse_key_2 = QLabel(self)
+        self.lbl_net_con_mouse_key_2.move(self.menu_obj_pos_w + 2 + 4 + 10, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10)
+        self.lbl_net_con_mouse_key_2.resize(72, 10)
+        self.lbl_net_con_mouse_key_2.setFont(self.font_s7b)
+        self.lbl_net_con_mouse_key_2.setText('Online')
+        self.lbl_net_con_mouse_key_2.setStyleSheet("""QLabel {background-color: rgb(8, 8, 8);
+                                                       color: rgb(150, 150, 150);
+                                                       border-top:0px solid rgb(10, 10, 10);
+                                                       border-bottom:0px solid rgb(10, 10, 10);
+                                                       border-right:0px solid rgb(10, 10, 10);
+                                                       border-left:0px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_net_con_mouse_key_2)
+        ui_object_complete.append(self.lbl_net_con_mouse_key_2)
+        ui_object_font_list_s7b.append(self.lbl_net_con_mouse_key_2)
+
+        self.lbl_net_con_mouse_key_3 = QLabel(self)
+        self.lbl_net_con_mouse_key_3.move(self.menu_obj_pos_w + 2 + 4 + 10 + 4 + 72, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10)
+        self.lbl_net_con_mouse_key_3.resize(10, 10)
+        self.lbl_net_con_mouse_key_3.setStyleSheet("""QLabel {background-color: rgb(255, 0, 0);
+                                                               color: rgb(150, 150, 150);
+                                                               border-top:2px solid rgb(10, 10, 10);
+                                                               border-bottom:2px solid rgb(10, 10, 10);
+                                                               border-right:2px solid rgb(10, 10, 10);
+                                                               border-left:2px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_net_con_mouse_key_3)
+        ui_object_complete.append(self.lbl_net_con_mouse_key_3)
+
+        self.lbl_net_con_mouse_key_4 = QLabel(self)
+        self.lbl_net_con_mouse_key_4.move(self.menu_obj_pos_w + 2 + 4 + 10 + 4 + 72 + 4 + 10, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10)
+        self.lbl_net_con_mouse_key_4.resize(72, 10)
+        self.lbl_net_con_mouse_key_4.setFont(self.font_s7b)
+        self.lbl_net_con_mouse_key_4.setText('Offline')
+        self.lbl_net_con_mouse_key_4.setStyleSheet("""QLabel {background-color: rgb(8, 8, 8);
+                                                               color: rgb(150, 150, 150);
+                                                               border-top:0px solid rgb(10, 10, 10);
+                                                               border-bottom:0px solid rgb(10, 10, 10);
+                                                               border-right:0px solid rgb(10, 10, 10);
+                                                               border-left:0px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_net_con_mouse_key_4)
+        ui_object_complete.append(self.lbl_net_con_mouse_key_4)
+        ui_object_font_list_s7b.append(self.lbl_net_con_mouse_key_4)
+
+        self.lbl_net_con_mouse = QPushButton(self)
+        self.lbl_net_con_mouse.move(self.menu_obj_pos_w + 2, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.lbl_net_con_mouse.resize(240, self.monitor_btn_h)
         self.lbl_net_con_mouse.setFont(self.font_s8b)
         self.lbl_net_con_mouse.setText('DISPLAY INTERNET CONNECTION (MOUSE)')
-        self.lbl_net_con_mouse.setStyleSheet(self.lbl_menu_style)
+        self.lbl_net_con_mouse.setStyleSheet(self.btn_menu_style)
+        self.lbl_net_con_mouse.clicked.connect(self.btn_net_con_mouse_function)
         print('-- [App.__init__] created:', self.lbl_net_con_mouse)
         ui_object_complete.append(self.lbl_net_con_mouse)
         ui_object_font_list_s8b.append(self.lbl_net_con_mouse)
 
         self.btn_net_con_mouse = QPushButton(self)
-        self.btn_net_con_mouse.move(self.menu_obj_pos_w + 2 + 240 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.btn_net_con_mouse.move(self.menu_obj_pos_w + 2 + 240 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.btn_net_con_mouse.resize(28, 28)
         self.btn_net_con_mouse.setStyleSheet(self.btn_menu_style)
         self.btn_net_con_mouse.setIconSize(self.tog_switch_ico_sz)
@@ -1219,8 +1784,19 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_net_con_mouse)
         ui_object_complete.append(self.btn_net_con_mouse)
 
+        self.lbl_net_con_mouse_key_0 = QLabel(self)
+        self.lbl_net_con_mouse_key_0.move(self.menu_obj_pos_w + 2 + 240 + 4 + 28 + 4,  self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.lbl_net_con_mouse_key_0.resize(self.monitor_btn_w + 4, self.monitor_btn_h)
+        self.lbl_net_con_mouse_key_0.setFont(self.font_s8b)
+        self.lbl_net_con_mouse_key_0.setText('LED')
+        self.lbl_net_con_mouse_key_0.setStyleSheet(self.lbl_menu_key_style)
+        self.lbl_net_con_mouse_key_0.setAlignment(Qt.AlignCenter)
+        print('-- [App.__init__] created:', self.lbl_net_con_mouse_key_0)
+        ui_object_complete.append(self.lbl_net_con_mouse_key_0)
+        ui_object_font_list_s8b.append(self.lbl_net_con_mouse_key_0)
+
         self.btn_net_con_mouse_led_selected_prev = QPushButton(self)
-        self.btn_net_con_mouse_led_selected_prev.move(self.menu_obj_pos_w + 2 + 240 + 4 + 28 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.btn_net_con_mouse_led_selected_prev.move(self.menu_obj_pos_w + 2 + 240 + 4 + 28 + 4,  self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.btn_net_con_mouse_led_selected_prev.resize(20, 28)
         self.btn_net_con_mouse_led_selected_prev.setIcon(QIcon("./image/img_minus.png"))
         self.btn_net_con_mouse_led_selected_prev.setStyleSheet(self.btn_menu_style)
@@ -1230,7 +1806,7 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_net_con_mouse_led_selected_prev)
 
         self.lbl_net_con_mouse_led_selected = QLabel(self)
-        self.lbl_net_con_mouse_led_selected.move(self.menu_obj_pos_w + 2 + 240 + 4 + 28 + 4 + 20 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.lbl_net_con_mouse_led_selected.move(self.menu_obj_pos_w + 2 + 240 + 4 + 28 + 4 + 20 + 4,  self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.lbl_net_con_mouse_led_selected.resize(28, self.monitor_btn_h)
         self.lbl_net_con_mouse_led_selected.setFont(self.font_s8b)
         self.lbl_net_con_mouse_led_selected.setStyleSheet(self.lbl_menu_style)
@@ -1240,7 +1816,7 @@ class App(QMainWindow):
         ui_object_font_list_s8b.append(self.lbl_net_con_mouse_led_selected)
 
         self.btn_net_con_mouse_led_selected_next = QPushButton(self)
-        self.btn_net_con_mouse_led_selected_next.move(self.menu_obj_pos_w + 2 + 240 + 4 + 28 + 4 + 20 + 4 + 28 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.btn_net_con_mouse_led_selected_next.move(self.menu_obj_pos_w + 2 + 240 + 4 + 28 + 4 + 20 + 4 + 28 + 4,  self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.btn_net_con_mouse_led_selected_next.resize(20, self.monitor_btn_h)
         self.btn_net_con_mouse_led_selected_next.setIcon(QIcon("./image/img_plus.png"))
         self.btn_net_con_mouse_led_selected_next.setStyleSheet(self.btn_menu_style)
@@ -1249,18 +1825,19 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_net_con_mouse_led_selected_next)
         ui_object_complete.append(self.btn_net_con_mouse_led_selected_next)
 
-        self.lbl_net_con_kb = QLabel(self)
-        self.lbl_net_con_kb.move(self.menu_obj_pos_w + 2, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.lbl_net_con_kb = QPushButton(self)
+        self.lbl_net_con_kb.move(self.menu_obj_pos_w + 2,  self.height - 8 - self.monitor_btn_h)
         self.lbl_net_con_kb.resize(280, self.monitor_btn_h)
         self.lbl_net_con_kb.setFont(self.font_s8b)
         self.lbl_net_con_kb.setText('DISPLAY INTERNET CONNECTION (KEYBOARD)')
-        self.lbl_net_con_kb.setStyleSheet(self.lbl_menu_style)
+        self.lbl_net_con_kb.setStyleSheet(self.btn_menu_style)
+        self.lbl_net_con_kb.clicked.connect(self.btn_net_con_kb_function)
         print('-- [App.__init__] created:', self.lbl_net_con_kb)
         ui_object_complete.append(self.lbl_net_con_kb)
         ui_object_font_list_s8b.append(self.lbl_net_con_kb)
 
         self.btn_net_con_kb = QPushButton(self)
-        self.btn_net_con_kb.move(self.menu_obj_pos_w + 2 + 280 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.btn_net_con_kb.move(self.menu_obj_pos_w + 2 + 280 + 4, self.height - 8 - self.monitor_btn_h)
         self.btn_net_con_kb.resize(28, 28)
         self.btn_net_con_kb.setStyleSheet(self.btn_menu_style)
         self.btn_net_con_kb.setIconSize(self.tog_switch_ico_sz)
@@ -1269,18 +1846,86 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_net_con_kb)
         ui_object_complete.append(self.btn_net_con_kb)
 
-        self.lbl_netshare_mon = QLabel(self)
-        self.lbl_netshare_mon.move(self.menu_obj_pos_w + 2, self.height - 8 - self.monitor_btn_h)
+        self.lbl_netshare_key_5 = QLabel(self)
+        self.lbl_netshare_key_5.move(self.menu_obj_pos_w + 2 + 126 + 4 + 28 + self.monitor_btn_w + 8, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 4 - 10 - 4 - 10 - 4 - 10 - 20 - 4)
+        self.lbl_netshare_key_5.resize(158, 60)
+        self.lbl_netshare_key_5.setStyleSheet(self.lbl_menu_key_style)
+        print('-- [App.__init__] created:', self.lbl_netshare_key_5)
+        ui_object_complete.append(self.lbl_netshare_key_5)
+
+        self.lbl_netshare_key_1 = QLabel(self)
+        self.lbl_netshare_key_1.move(self.menu_obj_pos_w + 2 + 126 + 4 + 28 + 4 + self.monitor_btn_w + 8, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 20)
+        self.lbl_netshare_key_1.resize(150, 10)
+        self.lbl_netshare_key_1.setFont(self.font_s7b)
+        self.lbl_netshare_key_1.setText('[HOME]                   User Shares')
+        self.lbl_netshare_key_1.setStyleSheet("""QLabel {background-color: rgb(8, 8, 8);
+                                               color: rgb(150, 150, 150);
+                                               border-top:0px solid rgb(10, 10, 10);
+                                               border-bottom:0px solid rgb(10, 10, 10);
+                                               border-right:0px solid rgb(10, 10, 10);
+                                               border-left:0px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_netshare_key_1)
+        ui_object_complete.append(self.lbl_netshare_key_1)
+        ui_object_font_list_s7b.append(self.lbl_netshare_key_1)
+
+        self.lbl_netshare_key_2 = QLabel(self)
+        self.lbl_netshare_key_2.move(self.menu_obj_pos_w + 2 + 126 + 4 + 28 + 4 + self.monitor_btn_w + 8, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 4 - 10 - 20)
+        self.lbl_netshare_key_2.resize(150, 10)
+        self.lbl_netshare_key_2.setFont(self.font_s7b)
+        self.lbl_netshare_key_2.setText('[PAUSE BREAK]   Default Shares')
+        self.lbl_netshare_key_2.setStyleSheet("""QLabel {background-color: rgb(8, 8, 8);
+                                               color: rgb(150, 150, 150);
+                                               border-top:0px solid rgb(10, 10, 10);
+                                               border-bottom:0px solid rgb(10, 10, 10);
+                                               border-right:0px solid rgb(10, 10, 10);
+                                               border-left:0px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_netshare_key_2)
+        ui_object_complete.append(self.lbl_netshare_key_2)
+        ui_object_font_list_s7b.append(self.lbl_netshare_key_2)
+
+        self.lbl_netshare_key_3 = QLabel(self)
+        self.lbl_netshare_key_3.move(self.menu_obj_pos_w + 2 + 126 + 4 + 28 + 4 + self.monitor_btn_w + 8, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 4 - 10 - 4 - 10 - 20)
+        self.lbl_netshare_key_3.resize(150, 10)
+        self.lbl_netshare_key_3.setFont(self.font_s7b)
+        self.lbl_netshare_key_3.setText('[SCROLL LOCK]   $Admin')
+        self.lbl_netshare_key_3.setStyleSheet("""QLabel {background-color: rgb(8, 8, 8);
+                                               color: rgb(150, 150, 150);
+                                               border-top:0px solid rgb(10, 10, 10);
+                                               border-bottom:0px solid rgb(10, 10, 10);
+                                               border-right:0px solid rgb(10, 10, 10);
+                                               border-left:0px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_netshare_key_3)
+        ui_object_complete.append(self.lbl_netshare_key_3)
+        ui_object_font_list_s7b.append(self.lbl_netshare_key_3)
+
+        self.lbl_netshare_key_4 = QLabel(self)
+        self.lbl_netshare_key_4.move(self.menu_obj_pos_w + 2 + 126 + 4 + 28 + 4 + self.monitor_btn_w + 8, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 4 - 10 - 4 - 10 - 4 - 10 - 20)
+        self.lbl_netshare_key_4.resize(150, 10)
+        self.lbl_netshare_key_4.setFont(self.font_s7b)
+        self.lbl_netshare_key_4.setText('[PRINT SCREEN]  $IPC')
+        self.lbl_netshare_key_4.setStyleSheet("""QLabel {background-color: rgb(8, 8, 8);
+                                               color: rgb(150, 150, 150);
+                                               border-top:0px solid rgb(10, 10, 10);
+                                               border-bottom:0px solid rgb(10, 10, 10);
+                                               border-right:0px solid rgb(10, 10, 10);
+                                               border-left:0px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_netshare_key_4)
+        ui_object_complete.append(self.lbl_netshare_key_4)
+        ui_object_font_list_s7b.append(self.lbl_netshare_key_4)
+
+        self.lbl_netshare_mon = QPushButton(self)
+        self.lbl_netshare_mon.move(self.menu_obj_pos_w + 2, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.lbl_netshare_mon.resize(126, self.monitor_btn_h)
         self.lbl_netshare_mon.setFont(self.font_s8b)
         self.lbl_netshare_mon.setText('NETWORK SHARES')
-        self.lbl_netshare_mon.setStyleSheet(self.lbl_menu_style)
+        self.lbl_netshare_mon.setStyleSheet(self.btn_menu_style)
+        self.lbl_netshare_mon.clicked.connect(self.btn_defnetshare_function)
         print('-- [App.__init__] created:', self.lbl_netshare_mon)
         ui_object_complete.append(self.lbl_netshare_mon)
         ui_object_font_list_s8b.append(self.lbl_netshare_mon)
 
         self.btn_netshare_mon = QPushButton(self)
-        self.btn_netshare_mon.move(self.menu_obj_pos_w + 2 + 126 + 4, self.height - 8 - self.monitor_btn_h)
+        self.btn_netshare_mon.move(self.menu_obj_pos_w + 2 + 126 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.btn_netshare_mon.resize(28, 28)
         self.btn_netshare_mon.setStyleSheet(self.btn_menu_style)
         self.btn_netshare_mon.setIconSize(self.tog_switch_ico_sz)
@@ -1289,9 +1934,20 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_netshare_mon)
         ui_object_complete.append(self.btn_netshare_mon)
 
+        self.lbl_netshare_key_0 = QLabel(self)
+        self.lbl_netshare_key_0.move(self.menu_obj_pos_w + 2 + 126 + 4 + 28 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.lbl_netshare_key_0.resize(self.monitor_btn_w, self.monitor_btn_h)
+        self.lbl_netshare_key_0.setFont(self.font_s8b)
+        self.lbl_netshare_key_0.setText('R G B')
+        self.lbl_netshare_key_0.setStyleSheet(self.lbl_menu_key_style)
+        self.lbl_netshare_key_0.setAlignment(Qt.AlignCenter)
+        print('-- [App.__init__] created:', self.lbl_netshare_key_0)
+        ui_object_complete.append(self.lbl_netshare_key_0)
+        ui_object_font_list_s8b.append(self.lbl_netshare_key_0)
+
         self.qle_netshare_mon_rgb_on = QLineEdit(self)
         self.qle_netshare_mon_rgb_on.resize(self.monitor_btn_w, self.monitor_btn_h)
-        self.qle_netshare_mon_rgb_on.move(self.menu_obj_pos_w + 2 + 126 + 4 + 28 + 4, self.height - 8 - self.monitor_btn_h)
+        self.qle_netshare_mon_rgb_on.move(self.menu_obj_pos_w + 2 + 126 + 4 + 28 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.qle_netshare_mon_rgb_on.setFont(self.font_s8b)
         self.qle_netshare_mon_rgb_on.returnPressed.connect(self.netshare_active_rgb_function)
         self.qle_netshare_mon_rgb_on.setStyleSheet(self.qle_menu_style)
@@ -1301,18 +1957,19 @@ class App(QMainWindow):
         ui_object_complete.append(self.qle_netshare_mon_rgb_on)
         ui_object_font_list_s8b.append(self.qle_netshare_mon_rgb_on)
 
-        self.lbl_exclusive_con = QLabel(self)
-        self.lbl_exclusive_con.move(self.menu_obj_pos_w + 2, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.lbl_exclusive_con = QPushButton(self)
+        self.lbl_exclusive_con.move(self.menu_obj_pos_w + 2, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.lbl_exclusive_con.resize(126, self.monitor_btn_h)
         self.lbl_exclusive_con.setFont(self.font_s8b)
         self.lbl_exclusive_con.setText('EXCLUSIVE CONTROL')
-        self.lbl_exclusive_con.setStyleSheet(self.lbl_menu_style)
+        self.lbl_exclusive_con.setStyleSheet(self.btn_menu_style)
+        self.lbl_exclusive_con.clicked.connect(self.btn_exclusive_con_function)
         print('-- [App.__init__] created:', self.lbl_exclusive_con)
         ui_object_complete.append(self.lbl_exclusive_con)
         ui_object_font_list_s8b.append(self.lbl_exclusive_con)
 
         self.btn_exclusive_con = QPushButton(self)
-        self.btn_exclusive_con.move(self.menu_obj_pos_w + 2 + 126 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.btn_exclusive_con.move(self.menu_obj_pos_w + 2 + 126 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.btn_exclusive_con.resize(28, 28)
         self.btn_exclusive_con.setStyleSheet(self.btn_menu_style)
         self.btn_exclusive_con.setIconSize(self.tog_switch_ico_sz)
@@ -1321,18 +1978,19 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_exclusive_con)
         ui_object_complete.append(self.btn_exclusive_con)
 
-        self.lbl_run_startup = QLabel(self)
-        self.lbl_run_startup.move(self.menu_obj_pos_w + 2, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.lbl_run_startup = QPushButton(self)
+        self.lbl_run_startup.move(self.menu_obj_pos_w + 2, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.lbl_run_startup.resize(126, self.monitor_btn_h)
         self.lbl_run_startup.setFont(self.font_s8b)
         self.lbl_run_startup.setText('AUTOMATIC STARTUP')
-        self.lbl_run_startup.setStyleSheet(self.lbl_menu_style)
+        self.lbl_run_startup.setStyleSheet(self.btn_menu_style)
+        self.lbl_run_startup.clicked.connect(self.btn_run_startup_function)
         print('-- [App.__init__] created:', self.lbl_run_startup)
         ui_object_complete.append(self.lbl_run_startup)
         ui_object_font_list_s8b.append(self.lbl_run_startup)
 
         self.btn_run_startup = QPushButton(self)
-        self.btn_run_startup.move(self.menu_obj_pos_w + 2 + 126 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.btn_run_startup.move(self.menu_obj_pos_w + 2 + 126 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.btn_run_startup.resize(28, 28)
         self.btn_run_startup.setStyleSheet(self.btn_menu_style)
         self.btn_run_startup.setIconSize(self.tog_switch_ico_sz)
@@ -1341,18 +1999,19 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_run_startup)
         ui_object_complete.append(self.btn_run_startup)
 
-        self.lbl_start_minimized = QLabel(self)
-        self.lbl_start_minimized.move(self.menu_obj_pos_w + 2, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.lbl_start_minimized = QPushButton(self)
+        self.lbl_start_minimized.move(self.menu_obj_pos_w + 2, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.lbl_start_minimized.resize(126, self.monitor_btn_h)
         self.lbl_start_minimized.setFont(self.font_s8b)
         self.lbl_start_minimized.setText('START MINIMIZED')
-        self.lbl_start_minimized.setStyleSheet(self.lbl_menu_style)
+        self.lbl_start_minimized.setStyleSheet(self.btn_menu_style)
+        self.lbl_start_minimized.clicked.connect(self.btn_start_minimized_function)
         print('-- [App.__init__] created:', self.lbl_start_minimized)
         ui_object_complete.append(self.lbl_start_minimized)
         ui_object_font_list_s8b.append(self.lbl_start_minimized)
 
         self.btn_start_minimized = QPushButton(self)
-        self.btn_start_minimized.move(self.menu_obj_pos_w + 2 + 126 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.btn_start_minimized.move(self.menu_obj_pos_w + 2 + 126 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.btn_start_minimized.resize(28, 28)
         self.btn_start_minimized.setStyleSheet(self.btn_menu_style)
         self.btn_start_minimized.setIconSize(self.tog_switch_ico_sz)
@@ -1361,12 +2020,13 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_start_minimized)
         ui_object_complete.append(self.btn_start_minimized)
 
-        self.lbl_backlight_sub = QLabel(self)
+        self.lbl_backlight_sub = QPushButton(self)
         self.lbl_backlight_sub.move(self.menu_obj_pos_w + 2, self.height - 8 - self.monitor_btn_h)
         self.lbl_backlight_sub.resize(86, 28)
         self.lbl_backlight_sub.setFont(self.font_s8b)
         self.lbl_backlight_sub.setText('BACKLIGHT')
-        self.lbl_backlight_sub.setStyleSheet(self.lbl_menu_style)
+        self.lbl_backlight_sub.setStyleSheet(self.btn_menu_style)
+        self.lbl_backlight_sub.clicked.connect(self.btn_bck_light_function)
         print('-- [App.__init__] created:', self.lbl_backlight_sub)
         ui_object_complete.append(self.lbl_backlight_sub)
         ui_object_font_list_s8b.append(self.lbl_backlight_sub)
@@ -1381,6 +2041,17 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_backlight_sub)
         ui_object_complete.append(self.btn_backlight_sub)
 
+        self.lbl_backlight_key_0 = QLabel(self)
+        self.lbl_backlight_key_0.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.lbl_backlight_key_0.resize(self.monitor_btn_w, self.monitor_btn_h)
+        self.lbl_backlight_key_0.setFont(self.font_s8b)
+        self.lbl_backlight_key_0.setText('R G B')
+        self.lbl_backlight_key_0.setStyleSheet(self.lbl_menu_key_style)
+        self.lbl_backlight_key_0.setAlignment(Qt.AlignCenter)
+        print('-- [App.__init__] created:', self.lbl_backlight_key_0)
+        ui_object_complete.append(self.lbl_backlight_key_0)
+        ui_object_font_list_s8b.append(self.lbl_backlight_key_0)
+
         self.qle_backlight_rgb_on = QLineEdit(self)
         self.qle_backlight_rgb_on.resize(self.monitor_btn_w, self.monitor_btn_h)
         self.qle_backlight_rgb_on.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4, self.height - 8 - self.monitor_btn_h)
@@ -1393,12 +2064,13 @@ class App(QMainWindow):
         ui_object_complete.append(self.qle_backlight_rgb_on)
         ui_object_font_list_s8b.append(self.qle_backlight_rgb_on)
 
-        self.lbl_backlight_auto = QLabel(self)
+        self.lbl_backlight_auto = QPushButton(self)
         self.lbl_backlight_auto.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4, self.height - 8 - self.monitor_btn_h)
         self.lbl_backlight_auto.resize(92, self.monitor_btn_h)
         self.lbl_backlight_auto.setFont(self.font_s8b)
         self.lbl_backlight_auto.setText('AUTOMATIC')
-        self.lbl_backlight_auto.setStyleSheet(self.lbl_menu_style)
+        self.lbl_backlight_auto.setStyleSheet(self.btn_menu_style)
+        self.lbl_backlight_auto.clicked.connect(self.backlight_auto_function)
         print('-- [App.__init__] created:', self.lbl_backlight_auto)
         ui_object_complete.append(self.lbl_backlight_auto)
         ui_object_font_list_s8b.append(self.lbl_backlight_auto)
@@ -1414,11 +2086,11 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_backlight_auto)
 
         self.lbl_backlight_auto_time_0 = QLabel(self)
-        self.lbl_backlight_auto_time_0.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 92 + 4 + 28 + 4, self.height - 8 - self.monitor_btn_h - 16)
-        self.lbl_backlight_auto_time_0.resize(42, 14)
+        self.lbl_backlight_auto_time_0.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 92 + 4 + 28 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.lbl_backlight_auto_time_0.resize(42, self.monitor_btn_h)
         self.lbl_backlight_auto_time_0.setFont(self.font_s7b)
         self.lbl_backlight_auto_time_0.setText('Time 0:')
-        self.lbl_backlight_auto_time_0.setStyleSheet(self.lbl_menu_description_style)
+        self.lbl_backlight_auto_time_0.setStyleSheet(self.lbl_menu_key_style)
         print('-- [App.__init__] created:', self.lbl_backlight_auto_time_0)
         ui_object_complete.append(self.lbl_backlight_auto_time_0)
         ui_object_font_list_s7b.append(self.lbl_backlight_auto_time_0)
@@ -1437,11 +2109,11 @@ class App(QMainWindow):
         ui_object_font_list_s8b.append(self.btn_backlight_auto_time_0)
 
         self.lbl_backlight_auto_time_1 = QLabel(self)
-        self.lbl_backlight_auto_time_1.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 92 + 4 + 28 + 4 + 42 + 4, self.height - 8 - self.monitor_btn_h - 16)
-        self.lbl_backlight_auto_time_1.resize(42, 14)
+        self.lbl_backlight_auto_time_1.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 92 + 4 + 28 + 4 + 42 + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.lbl_backlight_auto_time_1.resize(42, self.monitor_btn_h)
         self.lbl_backlight_auto_time_1.setFont(self.font_s7b)
         self.lbl_backlight_auto_time_1.setText('Time 1:')
-        self.lbl_backlight_auto_time_1.setStyleSheet(self.lbl_menu_description_style)
+        self.lbl_backlight_auto_time_1.setStyleSheet(self.lbl_menu_key_style)
         print('-- [App.__init__] created:', self.lbl_backlight_auto_time_1)
         ui_object_complete.append(self.lbl_backlight_auto_time_1)
         ui_object_font_list_s7b.append(self.lbl_backlight_auto_time_1)
@@ -1459,12 +2131,23 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_backlight_auto_time_1)
         ui_object_font_list_s8b.append(self.btn_backlight_auto_time_1)
 
-        self.lbl_event_notification_g1 = QLabel(self)
+        self.lbl_event_notification_key_0 = QLabel(self)
+        self.lbl_event_notification_key_0.move(self.menu_obj_pos_w + 2, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 20 - 20)
+        self.lbl_event_notification_key_0.resize(300, 20)
+        self.lbl_event_notification_key_0.setFont(self.font_s8b)
+        self.lbl_event_notification_key_0.setText('Event Notification & Event Response (Advanced Users)')
+        self.lbl_event_notification_key_0.setStyleSheet(self.lbl_menu_key_style)
+        print('-- [App.__init__] created:', self.lbl_event_notification_key_0)
+        ui_object_complete.append(self.lbl_event_notification_key_0)
+        ui_object_font_list_s8b.append(self.lbl_event_notification_key_0)
+
+        self.lbl_event_notification_g1 = QPushButton(self)
         self.lbl_event_notification_g1.move(self.menu_obj_pos_w + 2, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20)
         self.lbl_event_notification_g1.resize(60, 20)
         self.lbl_event_notification_g1.setFont(self.font_s8b)
         self.lbl_event_notification_g1.setText('G1 Notify')
-        self.lbl_event_notification_g1.setStyleSheet(self.lbl_menu_style)
+        self.lbl_event_notification_g1.setStyleSheet(self.btn_menu_style)
+        self.lbl_event_notification_g1.clicked.connect(self.btn_event_notification_g1_function)
         print('-- [App.__init__] created:', self.lbl_event_notification_g1)
         ui_object_complete.append(self.lbl_event_notification_g1)
         ui_object_font_list_s8b.append(self.lbl_event_notification_g1)
@@ -1479,12 +2162,13 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_event_notification_g1)
         ui_object_complete.append(self.btn_event_notification_g1)
 
-        self.lbl_event_notification_run_g1 = QLabel(self)
+        self.lbl_event_notification_run_g1 = QPushButton(self)
         self.lbl_event_notification_run_g1.move(self.menu_obj_pos_w + 2 + 60 + 4 + 20 + 4, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20)
         self.lbl_event_notification_run_g1.resize(30, 20)
         self.lbl_event_notification_run_g1.setFont(self.font_s8b)
         self.lbl_event_notification_run_g1.setText('Run')
-        self.lbl_event_notification_run_g1.setStyleSheet(self.lbl_menu_style)
+        self.lbl_event_notification_run_g1.setStyleSheet(self.btn_menu_style)
+        self.lbl_event_notification_run_g1.clicked.connect(self.btn_event_notification_run_g1_function)
         print('-- [App.__init__] created:', self.lbl_event_notification_run_g1)
         ui_object_complete.append(self.lbl_event_notification_run_g1)
         ui_object_font_list_s8b.append(self.lbl_event_notification_run_g1)
@@ -1519,12 +2203,13 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_event_notification_select_file_g1)
         ui_object_complete.append(self.btn_event_notification_select_file_g1)
 
-        self.lbl_event_notification_g2 = QLabel(self)
+        self.lbl_event_notification_g2 = QPushButton(self)
         self.lbl_event_notification_g2.move(self.menu_obj_pos_w + 2, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20)
         self.lbl_event_notification_g2.resize(60, 20)
         self.lbl_event_notification_g2.setFont(self.font_s8b)
         self.lbl_event_notification_g2.setText('G2 Notify')
-        self.lbl_event_notification_g2.setStyleSheet(self.lbl_menu_style)
+        self.lbl_event_notification_g2.setStyleSheet(self.btn_menu_style)
+        self.lbl_event_notification_g2.clicked.connect(self.btn_event_notification_g2_function)
         print('-- [App.__init__] created:', self.lbl_event_notification_g2)
         ui_object_complete.append(self.lbl_event_notification_g2)
         ui_object_font_list_s8b.append(self.lbl_event_notification_g2)
@@ -1539,12 +2224,13 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_event_notification_g2)
         ui_object_complete.append(self.btn_event_notification_g2)
 
-        self.lbl_event_notification_run_g2 = QLabel(self)
+        self.lbl_event_notification_run_g2 = QPushButton(self)
         self.lbl_event_notification_run_g2.move(self.menu_obj_pos_w + 2 + 60 + 4 + 20 + 4, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20)
         self.lbl_event_notification_run_g2.resize(30, 20)
         self.lbl_event_notification_run_g2.setFont(self.font_s8b)
         self.lbl_event_notification_run_g2.setText('Run')
-        self.lbl_event_notification_run_g2.setStyleSheet(self.lbl_menu_style)
+        self.lbl_event_notification_run_g2.setStyleSheet(self.btn_menu_style)
+        self.lbl_event_notification_run_g2.clicked.connect(self.btn_event_notification_run_g2_function)
         print('-- [App.__init__] created:', self.lbl_event_notification_run_g2)
         ui_object_complete.append(self.lbl_event_notification_run_g2)
         ui_object_font_list_s8b.append(self.lbl_event_notification_run_g2)
@@ -1579,12 +2265,13 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_event_notification_select_file_g2)
         ui_object_complete.append(self.btn_event_notification_select_file_g2)
 
-        self.lbl_event_notification_g3 = QLabel(self)
+        self.lbl_event_notification_g3 = QPushButton(self)
         self.lbl_event_notification_g3.move(self.menu_obj_pos_w + 2, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20)
         self.lbl_event_notification_g3.resize(60, 20)
         self.lbl_event_notification_g3.setFont(self.font_s8b)
         self.lbl_event_notification_g3.setText('G3 Notify')
-        self.lbl_event_notification_g3.setStyleSheet(self.lbl_menu_style)
+        self.lbl_event_notification_g3.setStyleSheet(self.btn_menu_style)
+        self.lbl_event_notification_g3.clicked.connect(self.btn_event_notification_g3_function)
         print('-- [App.__init__] created:', self.lbl_event_notification_g3)
         ui_object_complete.append(self.lbl_event_notification_g3)
         ui_object_font_list_s8b.append(self.lbl_event_notification_g3)
@@ -1599,12 +2286,13 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_event_notification_g3)
         ui_object_complete.append(self.btn_event_notification_g3)
 
-        self.lbl_event_notification_run_g3 = QLabel(self)
+        self.lbl_event_notification_run_g3 = QPushButton(self)
         self.lbl_event_notification_run_g3.move(self.menu_obj_pos_w + 2 + 60 + 4 + 20 + 4, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20)
         self.lbl_event_notification_run_g3.resize(30, 20)
         self.lbl_event_notification_run_g3.setFont(self.font_s8b)
         self.lbl_event_notification_run_g3.setText('Run')
-        self.lbl_event_notification_run_g3.setStyleSheet(self.lbl_menu_style)
+        self.lbl_event_notification_run_g3.setStyleSheet(self.btn_menu_style)
+        self.lbl_event_notification_run_g3.clicked.connect(self.btn_event_notification_run_g3_function)
         print('-- [App.__init__] created:', self.lbl_event_notification_run_g3)
         ui_object_complete.append(self.lbl_event_notification_run_g3)
         ui_object_font_list_s8b.append(self.lbl_event_notification_run_g3)
@@ -1639,12 +2327,13 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_event_notification_select_file_g3)
         ui_object_complete.append(self.btn_event_notification_select_file_g3)
 
-        self.lbl_event_notification_g4 = QLabel(self)
+        self.lbl_event_notification_g4 = QPushButton(self)
         self.lbl_event_notification_g4.move(self.menu_obj_pos_w + 2, self.height - 8 - 20 - 4 - 20 - 4 - 20)
         self.lbl_event_notification_g4.resize(60, 20)
         self.lbl_event_notification_g4.setFont(self.font_s8b)
         self.lbl_event_notification_g4.setText('G4 Notify')
-        self.lbl_event_notification_g4.setStyleSheet(self.lbl_menu_style)
+        self.lbl_event_notification_g4.setStyleSheet(self.btn_menu_style)
+        self.lbl_event_notification_g4.clicked.connect(self.btn_event_notification_g4_function)
         print('-- [App.__init__] created:', self.lbl_event_notification_g4)
         ui_object_complete.append(self.lbl_event_notification_g4)
         ui_object_font_list_s8b.append(self.lbl_event_notification_g4)
@@ -1659,12 +2348,13 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_event_notification_g4)
         ui_object_complete.append(self.btn_event_notification_g4)
 
-        self.lbl_event_notification_run_g4 = QLabel(self)
+        self.lbl_event_notification_run_g4 = QPushButton(self)
         self.lbl_event_notification_run_g4.move(self.menu_obj_pos_w + 2 + 60 + 4 + 20 + 4, self.height - 8 - 20 - 4 - 20 - 4 - 20)
         self.lbl_event_notification_run_g4.resize(30, 20)
         self.lbl_event_notification_run_g4.setFont(self.font_s8b)
         self.lbl_event_notification_run_g4.setText('Run')
-        self.lbl_event_notification_run_g4.setStyleSheet(self.lbl_menu_style)
+        self.lbl_event_notification_run_g4.setStyleSheet(self.btn_menu_style)
+        self.lbl_event_notification_run_g4.clicked.connect(self.btn_event_notification_run_g4_function)
         print('-- [App.__init__] created:', self.lbl_event_notification_run_g4)
         ui_object_complete.append(self.lbl_event_notification_run_g4)
         ui_object_font_list_s8b.append(self.lbl_event_notification_run_g4)
@@ -1699,12 +2389,13 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_event_notification_select_file_g4)
         ui_object_complete.append(self.btn_event_notification_select_file_g4)
 
-        self.lbl_event_notification_g5 = QLabel(self)
+        self.lbl_event_notification_g5 = QPushButton(self)
         self.lbl_event_notification_g5.move(self.menu_obj_pos_w + 2, self.height - 8 - 20 - 4 - 20)
         self.lbl_event_notification_g5.resize(60, 20)
         self.lbl_event_notification_g5.setFont(self.font_s8b)
         self.lbl_event_notification_g5.setText('G5 Notify')
-        self.lbl_event_notification_g5.setStyleSheet(self.lbl_menu_style)
+        self.lbl_event_notification_g5.setStyleSheet(self.btn_menu_style)
+        self.lbl_event_notification_g5.clicked.connect(self.btn_event_notification_g5_function)
         print('-- [App.__init__] created:', self.lbl_event_notification_g5)
         ui_object_complete.append(self.lbl_event_notification_g5)
         ui_object_font_list_s8b.append(self.lbl_event_notification_g5)
@@ -1719,12 +2410,13 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_event_notification_g5)
         ui_object_complete.append(self.btn_event_notification_g5)
 
-        self.lbl_event_notification_run_g5 = QLabel(self)
+        self.lbl_event_notification_run_g5 = QPushButton(self)
         self.lbl_event_notification_run_g5.move(self.menu_obj_pos_w + 2 + 60 + 4 + 20 + 4, self.height - 8 - 20 - 4 - 20)
         self.lbl_event_notification_run_g5.resize(30, 20)
         self.lbl_event_notification_run_g5.setFont(self.font_s8b)
         self.lbl_event_notification_run_g5.setText('Run')
-        self.lbl_event_notification_run_g5.setStyleSheet(self.lbl_menu_style)
+        self.lbl_event_notification_run_g5.setStyleSheet(self.btn_menu_style)
+        self.lbl_event_notification_run_g5.clicked.connect(self.btn_event_notification_run_g5_function)
         print('-- [App.__init__] created:', self.lbl_event_notification_run_g5)
         ui_object_complete.append(self.lbl_event_notification_run_g5)
         ui_object_font_list_s8b.append(self.lbl_event_notification_run_g5)
@@ -1759,12 +2451,13 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_event_notification_select_file_g5)
         ui_object_complete.append(self.btn_event_notification_select_file_g5)
 
-        self.lbl_event_notification_g6 = QLabel(self)
+        self.lbl_event_notification_g6 = QPushButton(self)
         self.lbl_event_notification_g6.move(self.menu_obj_pos_w + 2, self.height - 8 - 20)
         self.lbl_event_notification_g6.resize(60, 20)
         self.lbl_event_notification_g6.setFont(self.font_s8b)
         self.lbl_event_notification_g6.setText('G6 Notify')
-        self.lbl_event_notification_g6.setStyleSheet(self.lbl_menu_style)
+        self.lbl_event_notification_g6.setStyleSheet(self.btn_menu_style)
+        self.lbl_event_notification_g6.clicked.connect(self.btn_event_notification_g6_function)
         print('-- [App.__init__] created:', self.lbl_event_notification_g6)
         ui_object_complete.append(self.lbl_event_notification_g6)
         ui_object_font_list_s8b.append(self.lbl_event_notification_g6)
@@ -1779,12 +2472,13 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_event_notification_g6)
         ui_object_complete.append(self.btn_event_notification_g6)
 
-        self.lbl_event_notification_run_g6 = QLabel(self)
+        self.lbl_event_notification_run_g6 = QPushButton(self)
         self.lbl_event_notification_run_g6.move(self.menu_obj_pos_w + 2 + 60 + 4 + 20 + 4, self.height - 8 - 20)
         self.lbl_event_notification_run_g6.resize(30, 20)
         self.lbl_event_notification_run_g6.setFont(self.font_s8b)
         self.lbl_event_notification_run_g6.setText('Run')
-        self.lbl_event_notification_run_g6.setStyleSheet(self.lbl_menu_style)
+        self.lbl_event_notification_run_g6.setStyleSheet(self.btn_menu_style)
+        self.lbl_event_notification_run_g6.clicked.connect(self.btn_event_notification_run_g6_function)
         print('-- [App.__init__] created:', self.lbl_event_notification_run_g6)
         ui_object_complete.append(self.lbl_event_notification_run_g6)
         ui_object_font_list_s8b.append(self.lbl_event_notification_run_g6)
@@ -1874,6 +2568,7 @@ class App(QMainWindow):
         self.write_var_key = -1
         self.write_engaged = False
         self.feature_pg_home()
+        time.sleep(2)
         event_filter_self.append(self)
         self.filter = ObjEveFilter()
         self.installEventFilter(self.filter)
@@ -1892,6 +2587,7 @@ class App(QMainWindow):
                 self.write_var = 'bool_cpu_temperature: false'
                 self.write_changes()
             self.btn_cpu_mon_temp.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_cpu_mon_temp.setStyleSheet(self.btn_menu_style)
             bool_cpu_temperature = False
         elif bool_cpu_temperature is False:
             if self.write_engaged is False:
@@ -1899,6 +2595,7 @@ class App(QMainWindow):
                 self.write_var = 'bool_cpu_temperature: true'
                 self.write_changes()
             self.btn_cpu_mon_temp.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_cpu_mon_temp.setStyleSheet(self.btn_menu_style_1)
             bool_cpu_temperature = True
         if bool_vram_temperature is True or bool_cpu_temperature is True:
             print('-- [App.btn_cpu_mon_temp_function]: starting thread_temperatures')
@@ -1917,6 +2614,7 @@ class App(QMainWindow):
                 self.write_var = 'bool_vram_temperature: false'
                 self.write_changes()
             self.btn_vram_mon_temp.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_vram_mon_temp.setStyleSheet(self.btn_menu_style)
             bool_vram_temperature = False
         elif bool_vram_temperature is False:
             if self.write_engaged is False:
@@ -1924,6 +2622,7 @@ class App(QMainWindow):
                 self.write_var = 'bool_vram_temperature: true'
                 self.write_changes()
             self.btn_vram_mon_temp.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_vram_mon_temp.setStyleSheet(self.btn_menu_style_1)
             bool_vram_temperature = True
         if bool_vram_temperature is True or bool_cpu_temperature is True:
             print('-- [App.btn_cpu_mon_temp_function]: starting thread_temperatures')
@@ -2077,12 +2776,14 @@ class App(QMainWindow):
                     self.write_var = 'bool_switch_event_notification_g1: true'
                     self.write_changes()
                     self.btn_event_notification_g1.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                    self.lbl_event_notification_g1.setStyleSheet(self.btn_menu_style_1)
                 elif bool_switch_event_notification_g1 is True:
                     bool_switch_event_notification_g1 = False
                     print('-- [App.btn_event_notification_g1_function] changing bool_switch_event_notification_g1: false')
                     self.write_var = 'bool_switch_event_notification_g1: false'
                     self.write_changes()
                     self.btn_event_notification_g1.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                    self.lbl_event_notification_g1.setStyleSheet(self.btn_menu_style)
 
     def btn_event_notification_run_g1_function(self):
         print('-- [App.btn_event_notification_run_g1_function]: plugged in')
@@ -2096,12 +2797,14 @@ class App(QMainWindow):
                     self.write_var = 'bool_switch_event_notification_run_g1: true'
                     self.write_changes()
                     self.btn_event_notification_run_g1.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                    self.lbl_event_notification_run_g1.setStyleSheet(self.btn_menu_style_1)
                 elif bool_switch_event_notification_run_g1 is True:
                     bool_switch_event_notification_run_g1 = False
                     print('-- [App.btn_event_notification_run_g1_function] changing bool_switch_event_notification_run_g1: false')
                     self.write_var = 'bool_switch_event_notification_run_g1: false'
                     self.write_changes()
                     self.btn_event_notification_run_g1.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                    self.lbl_event_notification_run_g1.setStyleSheet(self.btn_menu_style)
 
     def btn_event_notification_g2_function(self):
         print('-- [App.btn_event_notification_g2_function]: plugged in')
@@ -2115,12 +2818,14 @@ class App(QMainWindow):
                     self.write_var = 'bool_switch_event_notification_g2: true'
                     self.write_changes()
                     self.btn_event_notification_g2.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                    self.lbl_event_notification_g2.setStyleSheet(self.btn_menu_style_1)
                 elif bool_switch_event_notification_g2 is True:
                     bool_switch_event_notification_g2 = False
                     print('-- [App.btn_event_notification_g2_function] changing bool_switch_event_notification_g2: false')
                     self.write_var = 'bool_switch_event_notification_g2: false'
                     self.write_changes()
                     self.btn_event_notification_g2.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                    self.lbl_event_notification_g2.setStyleSheet(self.btn_menu_style)
 
     def btn_event_notification_run_g2_function(self):
         print('-- [App.btn_event_notification_run_g2_function]: plugged in')
@@ -2134,12 +2839,14 @@ class App(QMainWindow):
                     self.write_var = 'bool_switch_event_notification_run_g2: true'
                     self.write_changes()
                     self.btn_event_notification_run_g2.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                    self.lbl_event_notification_run_g2.setStyleSheet(self.btn_menu_style_1)
                 elif bool_switch_event_notification_run_g2 is True:
                     bool_switch_event_notification_run_g2 = False
                     print('-- [App.btn_event_notification_run_g2_function] changing bool_switch_event_notification_run_g2: false')
                     self.write_var = 'bool_switch_event_notification_run_g2: false'
                     self.write_changes()
                     self.btn_event_notification_run_g2.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                    self.lbl_event_notification_run_g2.setStyleSheet(self.btn_menu_style)
 
     def btn_event_notification_g3_function(self):
         print('-- [App.btn_event_notification_g3_function]: plugged in')
@@ -2153,12 +2860,14 @@ class App(QMainWindow):
                     self.write_var = 'bool_switch_event_notification_g3: true'
                     self.write_changes()
                     self.btn_event_notification_g3.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                    self.lbl_event_notification_g3.setStyleSheet(self.btn_menu_style_1)
                 elif bool_switch_event_notification_g3 is True:
                     bool_switch_event_notification_g3 = False
                     print('-- [App.btn_event_notification_g3_function] changing bool_switch_event_notification_g3: false')
                     self.write_var = 'bool_switch_event_notification_g3: false'
                     self.write_changes()
                     self.btn_event_notification_g3.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                    self.lbl_event_notification_g3.setStyleSheet(self.btn_menu_style)
 
     def btn_event_notification_run_g3_function(self):
         print('-- [App.btn_event_notification_run_g3_function]: plugged in')
@@ -2172,12 +2881,14 @@ class App(QMainWindow):
                     self.write_var = 'bool_switch_event_notification_run_g3: true'
                     self.write_changes()
                     self.btn_event_notification_run_g3.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                    self.lbl_event_notification_run_g3.setStyleSheet(self.btn_menu_style_1)
                 elif bool_switch_event_notification_run_g3 is True:
                     bool_switch_event_notification_run_g3 = False
                     print('-- [App.btn_event_notification_run_g3_function] changing bool_switch_event_notification_run_g3: false')
                     self.write_var = 'bool_switch_event_notification_run_g3: false'
                     self.write_changes()
                     self.btn_event_notification_run_g3.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                    self.lbl_event_notification_run_g3.setStyleSheet(self.btn_menu_style)
 
     def btn_event_notification_g4_function(self):
         print('-- [App.btn_event_notification_g4_function]: plugged in')
@@ -2191,12 +2902,14 @@ class App(QMainWindow):
                     self.write_var = 'bool_switch_event_notification_g4: true'
                     self.write_changes()
                     self.btn_event_notification_g4.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                    self.lbl_event_notification_g4.setStyleSheet(self.btn_menu_style_1)
                 elif bool_switch_event_notification_g4 is True:
                     bool_switch_event_notification_g4 = False
                     print('-- [App.btn_event_notification_g4_function] changing bool_switch_event_notification_g4: false')
                     self.write_var = 'bool_switch_event_notification_g4: false'
                     self.write_changes()
                     self.btn_event_notification_g4.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                    self.lbl_event_notification_g4.setStyleSheet(self.btn_menu_style)
 
     def btn_event_notification_run_g4_function(self):
         print('-- [App.btn_event_notification_run_g4_function]: plugged in')
@@ -2210,12 +2923,14 @@ class App(QMainWindow):
                     self.write_var = 'bool_switch_event_notification_run_g4: true'
                     self.write_changes()
                     self.btn_event_notification_run_g4.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                    self.lbl_event_notification_run_g4.setStyleSheet(self.btn_menu_style_1)
                 elif bool_switch_event_notification_run_g4 is True:
                     bool_switch_event_notification_run_g4 = False
                     print('-- [App.btn_event_notification_run_g4_function] changing bool_switch_event_notification_run_g4: false')
                     self.write_var = 'bool_switch_event_notification_run_g4: false'
                     self.write_changes()
                     self.btn_event_notification_run_g4.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                    self.lbl_event_notification_run_g4.setStyleSheet(self.btn_menu_style)
 
     def btn_event_notification_g5_function(self):
         print('-- [App.btn_event_notification_g5_function]: plugged in')
@@ -2229,12 +2944,14 @@ class App(QMainWindow):
                     self.write_var = 'bool_switch_event_notification_g5: true'
                     self.write_changes()
                     self.btn_event_notification_g5.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                    self.lbl_event_notification_g5.setStyleSheet(self.btn_menu_style_1)
                 elif bool_switch_event_notification_g5 is True:
                     bool_switch_event_notification_g5 = False
                     print('-- [App.btn_event_notification_g5_function] changing bool_switch_event_notification_g5: false')
                     self.write_var = 'bool_switch_event_notification_g5: false'
                     self.write_changes()
                     self.btn_event_notification_g5.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                    self.lbl_event_notification_g5.setStyleSheet(self.btn_menu_style)
 
     def btn_event_notification_run_g5_function(self):
         print('-- [App.btn_event_notification_run_g5_function]: plugged in')
@@ -2248,12 +2965,14 @@ class App(QMainWindow):
                     self.write_var = 'bool_switch_event_notification_run_g5: true'
                     self.write_changes()
                     self.btn_event_notification_run_g5.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                    self.lbl_event_notification_run_g5.setStyleSheet(self.btn_menu_style_1)
                 elif bool_switch_event_notification_run_g5 is True:
                     bool_switch_event_notification_run_g5 = False
                     print('-- [App.btn_event_notification_run_g5_function] changing bool_switch_event_notification_run_g5: false')
                     self.write_var = 'bool_switch_event_notification_run_g5: false'
                     self.write_changes()
                     self.btn_event_notification_run_g5.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                    self.lbl_event_notification_run_g5.setStyleSheet(self.btn_menu_style)
 
     def btn_event_notification_g6_function(self):
         print('-- [App.btn_event_notification_g6_function]: plugged in')
@@ -2267,12 +2986,14 @@ class App(QMainWindow):
                     self.write_var = 'bool_switch_event_notification_g6: true'
                     self.write_changes()
                     self.btn_event_notification_g6.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                    self.lbl_event_notification_g6.setStyleSheet(self.btn_menu_style_1)
                 elif bool_switch_event_notification_g6 is True:
                     bool_switch_event_notification_g6 = False
                     print('-- [App.btn_event_notification_g6_function] changing bool_switch_event_notification_g6: false')
                     self.write_var = 'bool_switch_event_notification_g6: false'
                     self.write_changes()
                     self.btn_event_notification_g6.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                    self.lbl_event_notification_g6.setStyleSheet(self.btn_menu_style)
 
     def btn_event_notification_run_g6_function(self):
         print('-- [App.btn_event_notification_run_g6_function]: plugged in')
@@ -2286,12 +3007,14 @@ class App(QMainWindow):
                     self.write_var = 'bool_switch_event_notification_run_g6: true'
                     self.write_changes()
                     self.btn_event_notification_run_g6.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                    self.lbl_event_notification_run_g6.setStyleSheet(self.btn_menu_style_1)
                 elif bool_switch_event_notification_run_g6 is True:
                     bool_switch_event_notification_run_g6 = False
                     print('-- [App.btn_event_notification_run_g6_function] changing bool_switch_event_notification_run_g6: false')
                     self.write_var = 'bool_switch_event_notification_run_g6: false'
                     self.write_changes()
                     self.btn_event_notification_run_g6.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                    self.lbl_event_notification_run_g6.setStyleSheet(self.btn_menu_style)
 
     def recompile(self):
         print('-- [App.recompile]: plugged in')
@@ -2339,6 +3062,7 @@ class App(QMainWindow):
             self.btn_feature_page_event_notification.setStyleSheet(self.btn_side_menu_style_1)
             self.btn_feature_page_settings.show()
             self.btn_feature_page_settings.setStyleSheet(self.btn_side_menu_style_1)
+
         except Exception as e:
             print(e)
 
@@ -2375,6 +3099,17 @@ class App(QMainWindow):
         self.btn_cpu_mon_temp.show()
         self.btn_vram_mon_temp.show()
 
+        self.lbl_util_key_0.show()
+        self.lbl_util_key_1.show()
+        self.lbl_util_key_2.show()
+        self.lbl_util_key_3.show()
+        self.lbl_util_key_4.show()
+        self.lbl_util_key_5.show()
+        self.lbl_util_key_6.show()
+        self.lbl_util_key_7.show()
+        self.lbl_util_key_8.show()
+        self.lbl_util_key_9.show()
+
     def btn_feature_page_disk_util(self):
         print('-- [App.btn_feature_page_disk_util]: plugged in')
         self.hide_all_features()
@@ -2387,6 +3122,10 @@ class App(QMainWindow):
         self.qle_hdd_led_time_on.show()
         self.lbl_hdd_read_mon.show()
         self.qle_hdd_read_mon_rgb_on.show()
+        self.lbl_disk_key_0.show()
+        self.lbl_disk_key_1.show()
+        self.lbl_disk_key_2.show()
+        self.lbl_disk_key_3.show()
 
     def btn_feature_page_network_traffic_function(self):
         print('-- [App.btn_feature_page_network_traffic_function]: plugged in')
@@ -2398,6 +3137,29 @@ class App(QMainWindow):
         self.btn_network_adapter_refresh.show()
         self.btn_network_adapter.show()
         self.qle_network_adapter_led_time_on.show()
+
+        self.lbl_nettraffic_key_0.show()
+        self.lbl_nettraffic_key_1.show()
+        self.lbl_nettraffic_key_2.show()
+        self.lbl_nettraffic_key_3.show()
+        self.lbl_nettraffic_key_4.show()
+        self.lbl_nettraffic_key_5.show()
+        self.lbl_nettraffic_key_6.show()
+        self.lbl_nettraffic_key_7.show()
+        self.lbl_nettraffic_key_8.show()
+        self.lbl_nettraffic_key_9.show()
+        self.lbl_nettraffic_key_11.show()
+        self.lbl_nettraffic_key_12.show()
+        self.lbl_nettraffic_key_13.show()
+        self.lbl_nettraffic_key_14.show()
+        self.lbl_nettraffic_key_15.show()
+        self.lbl_nettraffic_key_16.show()
+        self.lbl_nettraffic_key_17.show()
+        self.lbl_nettraffic_key_18.show()
+        self.lbl_nettraffic_key_19.show()
+        self.lbl_nettraffic_key_20.show()
+        self.lbl_nettraffic_key_21.show()
+        self.lbl_nettraffic_key_22.show()
 
     def btn_feature_page_networking_function(self):
         print('-- [App.btn_feature_page_networking_function]: plugged in')
@@ -2414,6 +3176,17 @@ class App(QMainWindow):
         self.lbl_netshare_mon.show()
         self.btn_netshare_mon.show()
         self.qle_netshare_mon_rgb_on.show()
+        self.lbl_netshare_key_0.show()
+        self.lbl_netshare_key_1.show()
+        self.lbl_netshare_key_2.show()
+        self.lbl_netshare_key_3.show()
+        self.lbl_netshare_key_4.show()
+        self.lbl_netshare_key_5.show()
+        self.lbl_net_con_mouse_key_0.show()
+        self.lbl_net_con_mouse_key_1.show()
+        self.lbl_net_con_mouse_key_2.show()
+        self.lbl_net_con_mouse_key_3.show()
+        self.lbl_net_con_mouse_key_4.show()
 
     def btn_feature_page_event_notification_function(self):
         print('-- [App.btn_feature_page_event_notification_function]: plugged in')
@@ -2456,6 +3229,7 @@ class App(QMainWindow):
         self.lbl_event_notification_fpath_g4.show()
         self.lbl_event_notification_fpath_g5.show()
         self.lbl_event_notification_fpath_g6.show()
+        self.lbl_event_notification_key_0.show()
 
     def btn_feature_page_settings_function(self):
         print('-- [App.btn_feature_page_settings_function]: plugged in')
@@ -2477,6 +3251,7 @@ class App(QMainWindow):
         self.btn_backlight_auto_time_1.show()
         self.lbl_backlight_auto_time_0.show()
         self.lbl_backlight_auto_time_1.show()
+        self.lbl_backlight_key_0.show()
 
     def sanitize_rgb_values(self):
         print('-- [App.sanitize_rgb_values]: plugged in')
@@ -2659,6 +3434,7 @@ class App(QMainWindow):
                 print('-- [App.btn_bck_light_function] setting bool_switch_backlight:', bool_switch_backlight)
                 self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_0)
                 self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                self.lbl_backlight_sub.setStyleSheet(self.btn_menu_style_1)
             elif bool_switch_backlight is True:
                 self.write_var = 'bool_switch_backlight: false'
                 self.write_changes()
@@ -2667,6 +3443,7 @@ class App(QMainWindow):
                 print('-- [App.btn_bck_light_function] setting bool_switch_backlight:', bool_switch_backlight)
                 self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_1)
                 self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                self.lbl_backlight_sub.setStyleSheet(self.btn_menu_style)
             self.color_all_id()
 
     def backlight_auto_function(self):
@@ -2682,12 +3459,14 @@ class App(QMainWindow):
                         bool_switch_backlight_auto = False
                         self.write_var = 'bool_switch_backlight_auto: false'
                         self.btn_backlight_auto.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                        self.lbl_backlight_auto.setStyleSheet(self.btn_menu_style)
                         self.write_changes()
                     elif bool_switch_backlight_auto is False:
                         thread_backlight_auto[0].start()
                         bool_switch_backlight_auto = True
                         self.write_var = 'bool_switch_backlight_auto: true'
                         self.btn_backlight_auto.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                        self.lbl_backlight_auto.setStyleSheet(self.btn_menu_style_1)
                         self.write_changes()
 
     def btn_backlight_auto_time_0_function(self):
@@ -2770,12 +3549,14 @@ class App(QMainWindow):
                     sdk.request_control()
                     bool_switch_startup_exclusive_control = True
                     self.btn_exclusive_con.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                    self.lbl_exclusive_con.setStyleSheet(self.btn_menu_style_1)
                 elif bool_switch_startup_exclusive_control is True:
                     print('-- [App.btn_exclusive_con_function] exclusive access request changed: releasing control')
                     self.write_var = 'exclusive_access: false'
                     sdk.release_control()
                     bool_switch_startup_exclusive_control = False
                     self.btn_exclusive_con.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                    self.lbl_exclusive_con.setStyleSheet(self.btn_menu_style)
                 self.write_changes()
                 self.recompile()
 
@@ -2801,6 +3582,7 @@ class App(QMainWindow):
                     except Exception as e:
                         print('-- [App.btn_run_startup_function] btn_run_startup_function:', e)
                 self.btn_run_startup.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                self.lbl_run_startup.setStyleSheet(self.btn_menu_style)
             # Create shortcut
             elif bool_switch_startup_autorun is False:
                 if os.path.exists(shortcut_in):
@@ -2820,12 +3602,14 @@ class App(QMainWindow):
                 if os.path.exists(shortcut_out):
                     print('-- [App.btn_run_startup_function]: file copied successfully')
                     self.btn_run_startup.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                    self.lbl_run_startup.setStyleSheet(self.btn_menu_style_1)
                     bool_switch_startup_autorun = True
                     self.write_var = 'run_startup: true'
                     self.write_changes()
                 elif not os.path.exists(shortcut_out):
                     print('-- [App.btn_run_startup_function]: shortcut file failed to be created')
                     self.btn_run_startup.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                    self.lbl_run_startup.setStyleSheet(self.btn_menu_style)
 
     def btn_start_minimized_function(self):
         print('-- [App.btn_start_minimized_function]: plugged in')
@@ -2838,12 +3622,14 @@ class App(QMainWindow):
                 self.write_var = 'start_minimized: false'
                 self.write_changes()
                 self.btn_start_minimized.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                self.lbl_start_minimized.setStyleSheet(self.btn_menu_style)
             elif bool_switch_startup_minimized is False:
                 bool_switch_startup_minimized = True
                 print('-- [App.btn_start_minimized_function] setting bool_switch_startup_minimized:', bool_switch_startup_minimized)
                 self.write_var = 'start_minimized: true'
                 self.write_changes()
                 self.btn_start_minimized.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                self.lbl_start_minimized.setStyleSheet(self.btn_menu_style_1)
 
     def btn_cpu_mon_function(self):
         print('-- [App.btn_cpu_mon_function]: plugged in')
@@ -2858,6 +3644,7 @@ class App(QMainWindow):
                     self.write_var = 'cpu_startup: false'
                     bool_switch_startup_cpu_util = False
                     self.btn_cpu_mon.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                    self.lbl_cpu_mon.setStyleSheet(self.btn_menu_style)
                     self.write_changes()
                 elif bool_switch_startup_cpu_util is False:
                     print('-- [App.btn_cpu_mon_function] starting thread: thread_cpu_util:')
@@ -2865,6 +3652,7 @@ class App(QMainWindow):
                     self.write_var = 'cpu_startup: true'
                     bool_switch_startup_cpu_util = True
                     self.btn_cpu_mon.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                    self.lbl_cpu_mon.setStyleSheet(self.btn_menu_style_1)
                     self.write_changes()
 
     def btn_cpu_led_time_on_function(self):
@@ -2927,12 +3715,14 @@ class App(QMainWindow):
                     self.write_var = 'dram_startup: false'
                     bool_switch_startup_dram_util = False
                     self.btn_dram_mon.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                    self.lbl_dram_mon.setStyleSheet(self.btn_menu_style)
                 elif bool_switch_startup_dram_util is False:
                     print('-- [App.btn_dram_mon_function] starting thread: thread_dram_util:')
                     thread_dram_util[0].start()
                     self.write_var = 'dram_startup: true'
                     bool_switch_startup_dram_util = True
                     self.btn_dram_mon.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                    self.lbl_dram_mon.setStyleSheet(self.btn_menu_style_1)
                 self.write_changes()
 
     def btn_dram_led_time_on_function(self):
@@ -2996,12 +3786,14 @@ class App(QMainWindow):
                     self.write_var = 'vram_startup: false'
                     bool_switch_startup_vram_util = False
                     self.btn_vram_mon.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                    self.lbl_vram_mon.setStyleSheet(self.btn_menu_style)
                 elif bool_switch_startup_vram_util is False:
                     print('-- [App.btn_vram_mon_function] starting thread: thread_vram_util:')
                     thread_vram_util[0].start()
                     self.write_var = 'vram_startup: true'
                     bool_switch_startup_vram_util = True
                     self.btn_vram_mon.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                    self.lbl_vram_mon.setStyleSheet(self.btn_menu_style_1)
                 self.write_changes()
 
     def btn_vram_led_time_on_function(self):
@@ -3063,6 +3855,7 @@ class App(QMainWindow):
                     print('-- [App.btn_hdd_mon_function] stopping thread: thread_disk_rw:')
                     thread_disk_rw[0].stop()
                     self.btn_hdd_mon.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                    self.lbl_hdd_mon_sub.setStyleSheet(self.btn_menu_style)
                     self.write_var = 'hdd_startup: false'
                     bool_switch_startup_hdd_read_write = False
                     self.write_changes()
@@ -3070,6 +3863,7 @@ class App(QMainWindow):
                     print('-- [App.btn_hdd_mon_function] starting thread: thread_disk_rw:')
                     thread_disk_rw[0].start()
                     self.btn_hdd_mon.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                    self.lbl_hdd_mon_sub.setStyleSheet(self.btn_menu_style_1)
                     self.write_var = 'hdd_startup: true'
                     bool_switch_startup_hdd_read_write = True
                     self.write_changes()
@@ -3164,6 +3958,7 @@ class App(QMainWindow):
                     self.write_var = 'network_adapter_startup: false'
                     self.write_changes()
                     self.btn_network_adapter.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                    self.lbl_network_adapter.setStyleSheet(self.btn_menu_style)
                 elif bool_switch_startup_net_traffic is False:
                     bool_switch_startup_net_traffic = True
                     print('-- [App.btn_network_adapter_function] starting thread: thread_net_traffic:')
@@ -3171,6 +3966,7 @@ class App(QMainWindow):
                     self.write_var = 'network_adapter_startup: true'
                     self.write_changes()
                     self.btn_network_adapter.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                    self.lbl_network_adapter.setStyleSheet(self.btn_menu_style_1)
 
     def cmb_network_adapter_name_function(self, text):
         print('-- [App.cmb_network_adapter_name_function]: plugged in')
@@ -3239,11 +4035,13 @@ class App(QMainWindow):
                     self.write_var = 'bool_switch_startup_net_con_ms: false'
                     self.write_changes()
                     self.btn_net_con_mouse.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                    self.lbl_net_con_mouse.setStyleSheet(self.btn_menu_style)
                     if bool_switch_startup_net_con_kb is False:
                         self.write_var = 'bool_switch_startup_net_con: false'
                         self.write_changes()
                         bool_switch_startup_net_con = False
                         self.btn_net_con_mouse.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                        self.lbl_net_con_mouse.setStyleSheet(self.btn_menu_style)
                     elif bool_switch_startup_net_con_kb is True:
                         print('-- [App.btn_net_con_mouse_function] starting thread: thread_net_connection')
                         thread_net_connection[0].start()
@@ -3256,6 +4054,7 @@ class App(QMainWindow):
                     self.write_var = 'bool_switch_startup_net_con_ms: true'
                     self.write_changes()
                     self.btn_net_con_mouse.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                    self.lbl_net_con_mouse.setStyleSheet(self.btn_menu_style_1)
                     self.write_var = 'bool_switch_startup_net_con: true'
                     self.write_changes()
                     bool_switch_startup_net_con = True
@@ -3274,6 +4073,7 @@ class App(QMainWindow):
                     self.write_var = 'bool_switch_startup_net_con_kb: false'
                     self.write_changes()
                     self.btn_net_con_kb.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                    self.lbl_net_con_kb.setStyleSheet(self.btn_menu_style)
                     if bool_switch_startup_net_con_ms is False:
                         self.write_var = 'bool_switch_startup_net_con: false'
                         self.write_changes()
@@ -3291,6 +4091,7 @@ class App(QMainWindow):
                     self.write_changes()
                     bool_switch_startup_net_con = True
                     self.btn_net_con_kb.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                    self.lbl_net_con_kb.setStyleSheet(self.btn_menu_style_1)
                     print('-- [App.btn_net_con_kb_function] starting thread: thread_net_connection')
                     thread_net_connection[0].start()
 
@@ -3359,12 +4160,14 @@ class App(QMainWindow):
                     self.write_var = 'netshare_startup: false'
                     bool_switch_startup_net_share_mon = False
                     self.btn_netshare_mon.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                    self.lbl_netshare_mon.setStyleSheet(self.btn_menu_style)
                 elif bool_switch_startup_net_share_mon is False:
                     print('-- [App.btn_defnetshare_function] starting: thread_net_share')
                     thread_net_share[0].start()
                     self.write_var = 'netshare_startup: true'
                     bool_switch_startup_net_share_mon = True
                     self.btn_netshare_mon.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                    self.lbl_netshare_mon.setStyleSheet(self.btn_menu_style_1)
                 self.write_changes()
 
     def netshare_active_rgb_function(self):
@@ -3631,7 +4434,11 @@ class App(QMainWindow):
         thread_g6_notify.append(g6_notify)
         backlight_auto = BackLightClass(self.color_all_id,
                                         self.btn_bck_light,
-                                        self.btn_backlight_sub)
+                                        self.btn_backlight_sub,
+                                        self.btn_title_bar_style_1,
+                                        self.btn_menu_style,
+                                        self.btn_menu_style_1,
+                                        self.lbl_backlight_sub)
         thread_backlight_auto.append(backlight_auto)
         compile_devices_thread = CompileDevicesClass(self.btn_con_stat_name, self.lbl_con_stat_kb, self.lbl_con_stat_mouse, self.btn_con_stat_ms_img, self.btn_con_stat_kb_img,
                                                      self.btn_refresh_recompile, self.btn_title_bar_style_0, self.btn_title_bar_style_1)
@@ -3649,115 +4456,177 @@ class App(QMainWindow):
             self.btn_con_stat_ms_img.setIcon(QIcon(str_path_ms_img))
         if bool_switch_backlight_auto is False:
             self.btn_backlight_auto.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_backlight_auto.setStyleSheet(self.btn_menu_style)
         elif bool_switch_backlight_auto is True:
             self.btn_backlight_auto.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_backlight_auto.setStyleSheet(self.btn_menu_style_1)
             if len(devices_kb) > 0 or len(devices_ms) > 0:
                 thread_backlight_auto[0].start()
         if bool_switch_startup_autorun is True:
             self.btn_run_startup.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_run_startup.setStyleSheet(self.btn_menu_style_1)
         elif bool_switch_startup_autorun is False:
             self.btn_run_startup.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_run_startup.setStyleSheet(self.btn_menu_style)
         if bool_switch_startup_minimized is True:
             self.showMinimized()
             self.btn_start_minimized.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_start_minimized.setStyleSheet(self.btn_menu_style_1)
         elif bool_switch_startup_minimized is False:
             self.btn_start_minimized.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_start_minimized.setStyleSheet(self.btn_menu_style)
+
         if bool_switch_startup_cpu_util is True:
             self.btn_cpu_mon.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_cpu_mon.setStyleSheet(self.btn_menu_style_1)
         elif bool_switch_startup_cpu_util is False:
             self.btn_cpu_mon.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_cpu_mon.setStyleSheet(self.btn_menu_style)
         if bool_switch_startup_dram_util is True:
             self.btn_dram_mon.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_dram_mon.setStyleSheet(self.btn_menu_style_1)
         elif bool_switch_startup_dram_util is False:
             self.btn_dram_mon.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_dram_mon.setStyleSheet(self.btn_menu_style)
         if bool_switch_startup_vram_util is True:
             self.btn_vram_mon.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_vram_mon.setStyleSheet(self.btn_menu_style_1)
         elif bool_switch_startup_vram_util is False:
             self.btn_vram_mon.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_vram_mon.setStyleSheet(self.btn_menu_style)
         if bool_switch_startup_hdd_read_write is True:
             self.btn_hdd_mon.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_hdd_mon_sub.setStyleSheet(self.btn_menu_style_1)
         elif bool_switch_startup_hdd_read_write is False:
             self.btn_hdd_mon.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_hdd_mon_sub.setStyleSheet(self.btn_menu_style)
         if bool_switch_startup_exclusive_control is True:
             self.btn_exclusive_con.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_exclusive_con.setStyleSheet(self.btn_menu_style_1)
         elif bool_switch_startup_exclusive_control is False:
             self.btn_exclusive_con.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_exclusive_con.setStyleSheet(self.btn_menu_style)
         if bool_backend_icue_connected is False:
             self.btn_con_stat_name.setIcon(QIcon("./image/icue_logo_connected_0.png"))
         elif bool_backend_icue_connected is True:
             self.btn_con_stat_name.setIcon(QIcon("./image/icue_logo_connected_1.png"))
         if bool_switch_startup_net_traffic is False:
             self.btn_network_adapter.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_network_adapter.setStyleSheet(self.btn_menu_style)
         elif bool_switch_startup_net_traffic is True:
             self.btn_network_adapter.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_network_adapter.setStyleSheet(self.btn_menu_style_1)
         if bool_switch_startup_net_con_ms is False:
             self.btn_net_con_mouse.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_net_con_mouse.setStyleSheet(self.btn_menu_style)
         elif bool_switch_startup_net_con_ms is True:
             self.btn_net_con_mouse.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_net_con_mouse.setStyleSheet(self.btn_menu_style_1)
         if bool_switch_startup_net_con_kb is False:
             self.btn_net_con_kb.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_net_con_kb.setStyleSheet(self.btn_menu_style)
         elif bool_switch_startup_net_con_kb is True:
             self.btn_net_con_kb.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_net_con_kb.setStyleSheet(self.btn_menu_style_1)
         if bool_switch_startup_net_share_mon is False:
             self.btn_netshare_mon.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_netshare_mon.setStyleSheet(self.btn_menu_style)
         elif bool_switch_startup_net_share_mon is True:
             self.btn_netshare_mon.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_netshare_mon.setStyleSheet(self.btn_menu_style_1)
         self.lbl_net_con_mouse_led_selected.setText(str(corsairled_id_num_netcon_ms))
         if bool_switch_backlight is True:
             self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_0)
             self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_backlight_sub.setStyleSheet(self.btn_menu_style_1)
             self.color_all_id()
         elif bool_switch_backlight is False:
             self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_1)
             self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_backlight_sub.setStyleSheet(self.btn_menu_style)
+
         if bool_switch_event_notification_g1 is False:
             self.btn_event_notification_g1.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_event_notification_g1.setStyleSheet(self.btn_menu_style)
         elif bool_switch_event_notification_g1 is True:
             self.btn_event_notification_g1.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_event_notification_g1.setStyleSheet(self.btn_menu_style_1)
         if bool_switch_event_notification_g2 is False:
             self.btn_event_notification_g2.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_event_notification_g2.setStyleSheet(self.btn_menu_style)
         elif bool_switch_event_notification_g2 is True:
             self.btn_event_notification_g2.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_event_notification_g2.setStyleSheet(self.btn_menu_style_1)
+
         if bool_switch_event_notification_g3 is False:
             self.btn_event_notification_g3.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_event_notification_g3.setStyleSheet(self.btn_menu_style)
         elif bool_switch_event_notification_g3 is True:
             self.btn_event_notification_g3.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_event_notification_g3.setStyleSheet(self.btn_menu_style_1)
+
         if bool_switch_event_notification_g4 is False:
             self.btn_event_notification_g4.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_event_notification_g4.setStyleSheet(self.btn_menu_style)
         elif bool_switch_event_notification_g4 is True:
             self.btn_event_notification_g4.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_event_notification_g4.setStyleSheet(self.btn_menu_style_1)
+
         if bool_switch_event_notification_g5 is False:
             self.btn_event_notification_g5.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_event_notification_g5.setStyleSheet(self.btn_menu_style)
         elif bool_switch_event_notification_g5 is True:
             self.btn_event_notification_g5.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_event_notification_g5.setStyleSheet(self.btn_menu_style_1)
+
         if bool_switch_event_notification_g6 is False:
             self.btn_event_notification_g6.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_event_notification_g6.setStyleSheet(self.btn_menu_style)
         elif bool_switch_event_notification_g6 is True:
             self.btn_event_notification_g6.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_event_notification_g6.setStyleSheet(self.btn_menu_style_1)
+
         if bool_switch_event_notification_run_g1 is False:
             self.btn_event_notification_run_g1.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_event_notification_run_g1.setStyleSheet(self.btn_menu_style)
         elif bool_switch_event_notification_run_g1 is True:
             self.btn_event_notification_run_g1.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_event_notification_run_g1.setStyleSheet(self.btn_menu_style_1)
+
         if bool_switch_event_notification_run_g2 is False:
             self.btn_event_notification_run_g2.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_event_notification_run_g2.setStyleSheet(self.btn_menu_style)
         elif bool_switch_event_notification_run_g2 is True:
             self.btn_event_notification_run_g2.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_event_notification_run_g2.setStyleSheet(self.btn_menu_style_1)
+
         if bool_switch_event_notification_run_g3 is False:
             self.btn_event_notification_run_g3.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_event_notification_run_g3.setStyleSheet(self.btn_menu_style)
         elif bool_switch_event_notification_run_g3 is True:
             self.btn_event_notification_run_g3.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_event_notification_run_g3.setStyleSheet(self.btn_menu_style_1)
+
         if bool_switch_event_notification_run_g4 is False:
             self.btn_event_notification_run_g4.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_event_notification_run_g4.setStyleSheet(self.btn_menu_style)
         elif bool_switch_event_notification_run_g4 is True:
             self.btn_event_notification_run_g4.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_event_notification_run_g4.setStyleSheet(self.btn_menu_style_1)
+
         if bool_switch_event_notification_run_g5 is False:
             self.btn_event_notification_run_g5.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_event_notification_run_g5.setStyleSheet(self.btn_menu_style)
         elif bool_switch_event_notification_run_g5 is True:
             self.btn_event_notification_run_g5.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_event_notification_run_g5.setStyleSheet(self.btn_menu_style_1)
+
         if bool_switch_event_notification_run_g6 is False:
             self.btn_event_notification_run_g6.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_event_notification_run_g6.setStyleSheet(self.btn_menu_style)
         elif bool_switch_event_notification_run_g6 is True:
             self.btn_event_notification_run_g6.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_event_notification_run_g6.setStyleSheet(self.btn_menu_style_1)
         if len(str_event_notification_run_path_g1) > 0:
             self.lbl_event_notification_fpath_g1.setText(str_event_notification_run_path_g1)
             self.lbl_event_notification_fpath_g1.setAlignment(Qt.AlignLeft | Qt.AlignTrailing)
@@ -3778,12 +4647,16 @@ class App(QMainWindow):
             self.lbl_event_notification_fpath_g6.setAlignment(Qt.AlignLeft | Qt.AlignTrailing)
         if bool_cpu_temperature is True:
             self.btn_cpu_mon_temp.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_cpu_mon_temp.setStyleSheet(self.btn_menu_style_1)
         elif bool_cpu_temperature is False:
             self.btn_cpu_mon_temp.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_cpu_mon_temp.setStyleSheet(self.btn_menu_style)
         if bool_vram_temperature is True:
             self.btn_vram_mon_temp.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_vram_mon_temp.setStyleSheet(self.btn_menu_style_1)
         elif bool_vram_temperature is False:
             self.btn_vram_mon_temp.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_vram_mon_temp.setStyleSheet(self.btn_menu_style_1)
         self.btn_backlight_auto_time_0_str = str(backlight_time_0).strip()
         self.btn_backlight_auto_time_0.setText(backlight_time_0)
         self.btn_backlight_auto_time_1_str = str(backlight_time_1).strip()
@@ -5242,11 +6115,15 @@ class TemperatureClass(QThread):
 class BackLightClass(QThread):
     print('-- [BackLightClass]: plugged in')
 
-    def __init__(self, color_all_id, btn_bck_light, btn_backlight_sub):
+    def __init__(self, color_all_id, btn_bck_light, btn_backlight_sub, btn_title_bar_style_1, btn_menu_style, btn_menu_style_1, lbl_backlight_sub):
         QThread.__init__(self)
         self.color_all_id = color_all_id
         self.btn_bck_light = btn_bck_light
         self.btn_backlight_sub = btn_backlight_sub
+        self.btn_title_bar_style_1 = btn_title_bar_style_1
+        self.btn_menu_style = btn_menu_style
+        self.btn_menu_style_1 = btn_menu_style_1
+        self.lbl_backlight_sub = lbl_backlight_sub
 
     def run(self):
         print('-- [BackLightClass.run]: plugged in')
@@ -5269,6 +6146,7 @@ class BackLightClass(QThread):
                         bool_switch_backlight = True
                         self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_0)
                         self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                        self.lbl_backlight_sub.setStyleSheet(self.btn_menu_style_1)
                         sdk_color_backlight = sdk_color_backlight_on
                         self.color_all_id()
                 if time_now_int < backlight_time_0_int or time_now_int >= backlight_time_1_int:
@@ -5277,6 +6155,7 @@ class BackLightClass(QThread):
                         bool_switch_backlight = False
                         self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_1)
                         self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                        self.lbl_backlight_sub.setStyleSheet(self.btn_menu_style)
                         sdk_color_backlight = (0, 0, 0)
                         self.color_all_id()
             elif backlight_time_0_int > backlight_time_1_int:
@@ -5288,6 +6167,7 @@ class BackLightClass(QThread):
                             bool_switch_backlight = True
                             self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_0)
                             self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                            self.lbl_backlight_sub.setStyleSheet(self.btn_menu_style_1)
                             sdk_color_backlight = sdk_color_backlight_on
                             self.color_all_id()
                     else:
@@ -5296,6 +6176,7 @@ class BackLightClass(QThread):
                             bool_switch_backlight = False
                             self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_1)
                             self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                            self.lbl_backlight_sub.setStyleSheet(self.btn_menu_style)
                             sdk_color_backlight = (0, 0, 0)
                             self.color_all_id()
                 else:
@@ -5305,6 +6186,7 @@ class BackLightClass(QThread):
                             bool_switch_backlight = True
                             self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_0)
                             self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+                            self.lbl_backlight_sub.setStyleSheet(self.btn_menu_style_1)
                             sdk_color_backlight = sdk_color_backlight_on
                             self.color_all_id()
                     else:
@@ -5313,6 +6195,7 @@ class BackLightClass(QThread):
                             bool_switch_backlight = False
                             self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_1)
                             self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                            self.lbl_backlight_sub.setStyleSheet(self.btn_menu_style)
                             sdk_color_backlight = (0, 0, 0)
                             self.color_all_id()
             time.sleep(1)
