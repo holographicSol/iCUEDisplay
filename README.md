@@ -135,10 +135,6 @@ press (0.75 seconds +) will remove the notification and not run the directed cod
 
 [OS: Windows 10]
 
-[NOTES 0: Right click OpenHardwareMonitor.dll in /py/bin/ select Properties, General Tab, Click Unblock and apply (skip if running exe/py as Admin)]
+[Run as Admin]
 
-[NOTES 1: Then Run exe/.py as Admin]
-
---------------------------------------------------------------------------------------------------------------------------------------------
-      MINIMUM REQUIREMENTS
 [Resolution: 1920x1080 or higher is recommended]
