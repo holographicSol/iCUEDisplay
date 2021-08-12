@@ -16,38 +16,37 @@ Google Drive Early Releases: https://drive.google.com/drive/folders/1xHeI_X5vnpK
 --------------------------------------------------------------------------------------------------------------------------------------------
       FEATURE OVERVIEW
 
-[FEATURE 0:
+[BASIC UTILIZATION:
 CPU Utilization Monitor
 DRAM Utilization Monitor
 VRAM Utilization Monitor]
 
-[FEATURE 1:
+[DISK UTILIZATION:
 Disk Read Monitor (Disks Mounted With Letter A:\ - Z:\)
 Disk Write Monitor (Disks Mounted With Letter A:\ - Z:\)
 Disk Mount Monitor (Disks Mounted With Letter A:\ - Z:\)]
 
-[FEATURE 2:
+[NETWORK TRAFFIC:
 Network Sent Bytes to Terabytes (Overkill)
 Network Received Bytes To Terrabytes (Overkill)]
 
-[FEATURE 3:
-Internet Connection Status (Online, Offline, Intermittent)]
-
-[FEATURE 4:
+[NETWORKING:
+Internet Connection Status (Online, Offline, Intermittent)
 Network Shares (Remote IPC, Remote Admin, Default share(s), User Defined Shares)]
 
-[FEATURE 5:
-Event Notifiaction & Event Response (Advanced Users)]
+[EVENT NOTIFICATION & EVENT RESPONSE (Advanced Users)]
 
-[FEATURE 6:
-A Backlight When Needed and automatic backlight]
+[SETTINGS:
+A Backlight When Needed and automatic backlight
+Automatic Startup
+Start Minimized]
 
 [OTHER FEATURES (Backend):
 Threads running designed for keyboard are stopped if keyboard removed while threads designed for mouse continue and vis versa. Threads will
 be restarted automatically when device plugged back in]
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-      FEATURE 0 BASIC UTILIZATION
+      BASIC UTILIZATION
 [CPU UTILIZATION: Utilization is displayed in stages of 25% on Numpad 1, 4, 7, NumLock.]
 
 [DRAM UTILIZATION: Utilization is displayed in stages of 25% on Numpad 2, 5, 8, ForwardSlash.]
@@ -61,7 +60,7 @@ be restarted automatically when device plugged back in]
 ![DEMO IMAGE](/image/icue_demo_image_1.png)
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-      FEATURE 1 DISKS UTILIZATION
+      DISKS UTILIZATION
 [Displays information accross the alpha keys about disks mounted with a letter. Alpha keys are reserved for this feature]
 
 [DISKS MOUNTED: Displayed in Blue when disk letter is mounted]
@@ -73,7 +72,7 @@ be restarted automatically when device plugged back in]
 ![DEMO IMAGE](/image/icue_demo_image_2.png)
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-      FEATURE 2 NETWORKING TRAFFIC
+      NETWORKING TRAFFIC
 [ADAPTER SELECTION: Choose which network adapter to monitor sent/received bytes]
 
 [BYTES SENT: Displayed on keys F1-F10. F1-F9 Displayes number of bytes/KB/MB/GB/TB sent while F10 displays unit/ten/hundred/thousand+]
@@ -95,8 +94,9 @@ INTERNET CONNECTION STATUS
 [INTERMITTENT: Amber]
 
 [OFFLINE: Red]
+
 --------------------------------------------------------------------------------------------------------------------------------------------
-NETWORK SHARES
+      NETWORK SHARES
 [Remote IPC: Dipslayed on PRINTSCREEN key when shared]
 
 [Remote Admin: Displayed on SCROLLLOCK key when shared]
@@ -108,7 +108,7 @@ NETWORK SHARES
 ![DEMO IMAGE](/image/icue_demo_image_4.png)
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-      FEATURE 5 EVENT NOTIFICATION & EVENT RESPONSE
+      EVENT NOTIFICATION & EVENT RESPONSE
 [Enables slightly advanced users to create small programs that simply write True to any event_notification_gx.dat file in the /data directory
 to receive an event notification (blinking G key) for any possible reason and if requested execute code for event response]
 
@@ -122,7 +122,7 @@ press (0.75 seconds +) will remove the notification and not run the directed cod
 ![DEMO IMAGE](/image/icue_demo_image_5.png)
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-      FEATURE 6 BACKLIGHT AND AUTOMATIC BACKLIGHT
+      SETTINGS
 [AUTOMATIC BACKLIGHT: User may set a time for the backlight to turn on and off and may optionally enable the backlight manually]
 
 ![DEMO IMAGE](/image/icue_demo_image_6.png)
@@ -142,4 +142,5 @@ press (0.75 seconds +) will remove the notification and not run the directed cod
 [NOTES 1: Then Run exe/.py as Admin]
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-
+      MINIMUM REQUIREMENTS
+[Resolution: 1920x1080 or higher is recommended]
