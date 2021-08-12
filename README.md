@@ -11,7 +11,7 @@ Features being refined and added daily. Existing features may be more complex in
 Google Drive Early Releases: https://drive.google.com/drive/folders/1xHeI_X5vnpKqQ3vkBz6hw97RnqaPwWNl?usp=sharing
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-![DEMO IMAGE](/image/icue_demo_image_0)
+![DEMO IMAGE](/image/icue_demo_image_0.png)
 
 --------------------------------------------------------------------------------------------------------------------------------------------
       FEATURE OVERVIEW
