@@ -81,27 +81,17 @@ be restarted automatically when device plugged back in]
 
 --------------------------------------------------------------------------------------------------------------------------------------------
       NETWORKING
---------------------------------------------------------------------------------------------------------------------------------------------
-INTERNET CONNECTION STATUS
-[KEYBOARD: ESC Key]
+[INTERNET CONNECTION STATUS (KEYBOARD): ESC Key]
 
-[MOUSE: Choose which LED (Tested with Scimitar Elite)]
+[INTERNET CONNECTION STATUS (MOUSE): Choose which LED (Tested with Scimitar Elite)]
 
-[ONLINE: Green]
+[NETWORK SHARE (Remote IPC): Dipslayed on PRINTSCREEN key when shared]
 
-[INTERMITTENT: Amber]
+[NETWORK SHARE (Remote Admin): Displayed on SCROLLLOCK key when shared]
 
-[OFFLINE: Red]
+[NETWORK SHARE (Default Share): Displayed on PAUSEBREAK key when shared]
 
---------------------------------------------------------------------------------------------------------------------------------------------
-      NETWORK SHARES
-[Remote IPC: Dipslayed on PRINTSCREEN key when shared]
-
-[Remote Admin: Displayed on SCROLLLOCK key when shared]
-
-[Default Share: Displayed on PAUSEBREAK key when shared]
-
-[NON-DEFAULT: Displayed on HOME key when shared]
+[NETWORK SHARE (NON-DEFAULT): Displayed on HOME key when shared]
 
 ![DEMO IMAGE](/image/icue_demo_image_4.png)
 
