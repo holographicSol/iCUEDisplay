@@ -3042,9 +3042,11 @@ class App(QMainWindow):
             self.btn_con_stat_name.show()
             """ connected devices """
             if len(devices_kb) > 0:
+                print('foo kb')
                 self.btn_con_stat_kb_img.show()
                 self.lbl_con_stat_kb.show()
             if len(devices_ms) > 0:
+                print('foo ms')
                 self.btn_con_stat_ms_img.show()
                 self.lbl_con_stat_mouse.show()
             """ side menu """
@@ -3070,12 +3072,12 @@ class App(QMainWindow):
         print('-- [App.feature_pg_home]: plugged in')
         self.hide_all_features()
         self.btn_feature_page_home.setStyleSheet(self.btn_side_menu_style)
-        if len(devices_kb) > 0:
-            self.btn_con_stat_kb_img.show()
-            self.lbl_con_stat_kb.show()
-        if len(devices_ms) > 0:
-            self.btn_con_stat_ms_img.show()
-            self.lbl_con_stat_mouse.show()
+        # if len(devices_kb) > 0:
+        #     self.btn_con_stat_kb_img.show()
+        #     self.lbl_con_stat_kb.show()
+        # if len(devices_ms) > 0:
+        #     self.btn_con_stat_ms_img.show()
+        #     self.lbl_con_stat_mouse.show()
 
     def feature_pg_util(self):
         print('-- [App.feature_pg_util]: plugged in')
@@ -5470,7 +5472,7 @@ class CompileDevicesClass(QThread):
 
     def attempt_connect(self):
         # print('-- [CompileDevicesClass.attempt_connect]: plugged in')
-        global sdk, bool_backend_icue_connected, devices_previous, bool_backend_icue_connected_previous
+        global sdk, bool_backend_icue_connected, devices_previous, bool_backend_icue_connected_previous, devices_kb, devices_ms
         connected = sdk.connect()
         if not connected:
             bool_backend_icue_connected = False
@@ -5478,6 +5480,8 @@ class CompileDevicesClass(QThread):
                 bool_backend_icue_connected_previous = bool_backend_icue_connected
                 self.stop_all_threads()
             devices_previous = []
+            devices_kb = []
+            devices_ms = []
             self.btn_con_stat_name.setIcon(QIcon("./image/icue_logo_connected_0.png"))
             self.lbl_con_stat_mouse.hide()
             self.lbl_con_stat_kb.hide()
@@ -6003,7 +6007,7 @@ class CompileDevicesClass(QThread):
 
     def run(self):
         print('-- [CompileDevicesClass.run]: plugged in')
-        global bool_backend_allow_display, bool_backend_icue_connected, bool_backend_config_read_complete
+        global bool_backend_allow_display, bool_backend_icue_connected, bool_backend_config_read_complete, devices_kb, devices_ms
         bool_backend_config_read_complete = False
         bool_backend_allow_display = False
         self.btn_refresh_recompile.setStyleSheet(self.btn_title_bar_style_0)
@@ -6012,6 +6016,8 @@ class CompileDevicesClass(QThread):
         self.btn_con_stat_ms_img.hide()
         self.btn_con_stat_kb_img.hide()
         self.btn_con_stat_name.setIcon(QIcon('./image/icue_logo_connected_0.png'))
+        devices_kb = []
+        devices_ms = []
         while True:
             try:
                 if bool_backend_config_read_complete is False:
