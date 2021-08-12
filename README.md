@@ -47,7 +47,7 @@ Threads running designed for keyboard are stopped if keyboard removed while thre
 be restarted automatically when device plugged back in]
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-      FEATURE 0 CPU DRAM & VRAM UTILIZATION
+      FEATURE 0 BASIC UTILIZATION
 [CPU UTILIZATION: Utilization is displayed in stages of 25% on Numpad 1, 4, 7, NumLock.]
 
 [DRAM UTILIZATION: Utilization is displayed in stages of 25% on Numpad 2, 5, 8, ForwardSlash.]
@@ -57,6 +57,8 @@ be restarted automatically when device plugged back in]
 [CPU TEMPERATURE]
 
 [VRAM TEMPERATURE]
+
+![DEMO IMAGE](/image/icue_demo_image_1.png)
 
 --------------------------------------------------------------------------------------------------------------------------------------------
       FEATURE 1 DISKS UTILIZATION
@@ -68,17 +70,22 @@ be restarted automatically when device plugged back in]
 
 [Disk Writes: Displayed in Red by default]
 
+![DEMO IMAGE](/image/icue_demo_image_2.png)
+
 --------------------------------------------------------------------------------------------------------------------------------------------
-      FEATURE 2 NETWORKING SENT/RECEIVED BYTES
+      FEATURE 2 NETWORKING TRAFFIC
 [ADAPTER SELECTION: Choose which network adapter to monitor sent/received bytes]
 
 [BYTES SENT: Displayed on keys F1-F10. F1-F9 Displayes number of bytes/KB/MB/GB/TB sent while F10 displays unit/ten/hundred/thousand+]
 
 [BYTES RECEIVED: Displayed on keys 1-0. 1-9 Displayes number of bytes/KB/MB/GB/TB sent while 0 displays unit/ten/hundred/thousand+]
 
+![DEMO IMAGE](/image/icue_demo_image_3.png)
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-      FEATURE 3 INTERNET CONNECTION STATUS
+      NETWORKING
+--------------------------------------------------------------------------------------------------------------------------------------------
+INTERNET CONNECTION STATUS
 [KEYBOARD: ESC Key]
 
 [MOUSE: Choose which LED (Tested with Scimitar Elite)]
@@ -88,11 +95,8 @@ be restarted automatically when device plugged back in]
 [INTERMITTENT: Amber]
 
 [OFFLINE: Red]
-
-
-
 --------------------------------------------------------------------------------------------------------------------------------------------
-      FEATURE 4 NETWORK SHARES
+NETWORK SHARES
 [Remote IPC: Dipslayed on PRINTSCREEN key when shared]
 
 [Remote Admin: Displayed on SCROLLLOCK key when shared]
@@ -100,6 +104,8 @@ be restarted automatically when device plugged back in]
 [Default Share: Displayed on PAUSEBREAK key when shared]
 
 [NON-DEFAULT: Displayed on HOME key when shared]
+
+![DEMO IMAGE](/image/icue_demo_image_4.png)
 
 --------------------------------------------------------------------------------------------------------------------------------------------
       FEATURE 5 EVENT NOTIFICATION & EVENT RESPONSE
@@ -113,9 +119,13 @@ press (0.75 seconds +) will remove the notification and not run the directed cod
 
 [EVENT RESPONSE: Requires event notification to be enabled and is also designed to only run code/file once per notification event]
 
+![DEMO IMAGE](/image/icue_demo_image_5.png)
+
 --------------------------------------------------------------------------------------------------------------------------------------------
       FEATURE 6 BACKLIGHT AND AUTOMATIC BACKLIGHT
 [AUTOMATIC BACKLIGHT: User may set a time for the backlight to turn on and off and may optionally enable the backlight manually]
+
+![DEMO IMAGE](/image/icue_demo_image_6.png)
 
 --------------------------------------------------------------------------------------------------------------------------------------------
       BUG REPORTS & FEATURE REQUESTS
