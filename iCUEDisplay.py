@@ -88,6 +88,7 @@ hdd_bytes_type_r = ''
 hdd_bytes_str = ''
 str_path_kb_img = ''
 str_path_ms_img = ''
+bool_execution_policy = True
 bool_execution_policy_show = False
 bool_cpu_temperature = False
 bool_vram_temperature = False
@@ -543,7 +544,7 @@ class App(QMainWindow):
         super(App, self).__init__()
         global bool_backend_install, event_filter_self, avail_w, avail_h, ui_object_complete
         global ui_object_font_list_s6b, ui_object_font_list_s7b, ui_object_font_list_s8b, ui_object_font_list_s9b
-        global bool_execution_policy_show
+        global bool_execution_policy_show, bool_execution_policy
         avail_w = QDesktopWidget().availableGeometry().width()
         avail_h = QDesktopWidget().availableGeometry().height()
         print("-- [App.__init__] available geometry:", 'width=', avail_w, ' height=', avail_h)
@@ -2606,8 +2607,9 @@ class App(QMainWindow):
         ui_object_complete.append(self.lbl_execution_policy)
         ui_object_font_list_s7b.append(self.lbl_execution_policy)
 
+        btn_execution_policy_0_pos_w = int((self.width / 2) - 54)
         self.btn_execution_policy_0 = QPushButton(self)
-        self.btn_execution_policy_0.move((self.width / 2) - 54, self.height - 8 - 40)
+        self.btn_execution_policy_0.move(btn_execution_policy_0_pos_w, self.height - 8 - 40)
         self.btn_execution_policy_0.resize(52, 20)
         self.btn_execution_policy_0.setFont(self.font_s7b)
         self.btn_execution_policy_0.setText('Yes')
@@ -2618,8 +2620,9 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_execution_policy_0)
         ui_object_font_list_s7b.append(self.btn_execution_policy_0)
 
+        btn_execution_policy_1_pos_w = int((self.width / 2) + 2)
         self.btn_execution_policy_1 = QPushButton(self)
-        self.btn_execution_policy_1.move((self.width / 2) + 2, self.height - 8 - 40)
+        self.btn_execution_policy_1.move(btn_execution_policy_1_pos_w, self.height - 8 - 40)
         self.btn_execution_policy_1.resize(52, 20)
         self.btn_execution_policy_1.setFont(self.font_s7b)
         self.btn_execution_policy_1.setText('No')
@@ -2631,14 +2634,13 @@ class App(QMainWindow):
         ui_object_font_list_s7b.append(self.btn_execution_policy_1)
 
         """ check execution policy """
-        self.bool_execution_policy = True
         self.get_execution_policy()
 
-        if self.bool_execution_policy is False:
+        if bool_execution_policy is False:
             bool_execution_policy_show = True
             self.feature_pg_execution_policy()
 
-        elif self.bool_execution_policy is True:
+        elif bool_execution_policy is True:
             bool_execution_policy_show = False
             self.feature_pg_home()
 
@@ -2668,6 +2670,7 @@ class App(QMainWindow):
 
     def get_execution_policy(self):
         print('-- [get_execution_policy]: plugged in')
+        global bool_execution_policy
         cmd_output = []
         cmd = 'powershell Get-ExecutionPolicy'
         xcmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, startupinfo=info)
@@ -2683,12 +2686,16 @@ class App(QMainWindow):
         for _ in cmd_output:
             print('-- [get_execution_policy] ExecutionPolicy:', _)
             if _ != 'Unrestricted':
-                self.bool_execution_policy = False
+                bool_execution_policy = False
+            elif _ == 'Unrestricted':
+                bool_execution_policy = True
 
     def btn_system_mute_function(self):
         print('-- [App.btn_system_mute_function]: plugged in')
-        global thread_system_mute, bool_switch_startup_system_mute
+        global thread_system_mute, bool_switch_startup_system_mute, bool_execution_policy
         self.setFocus()
+        self.get_execution_policy()
+
         if bool_switch_startup_system_mute is True:
             thread_system_mute[0].stop()
             if self.write_engaged is False:
@@ -2698,15 +2705,20 @@ class App(QMainWindow):
             self.btn_system_mute.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
             self.lbl_system_mute.setStyleSheet(self.btn_menu_style_1)
             bool_switch_startup_system_mute = False
+
         elif bool_switch_startup_system_mute is False:
-            thread_system_mute[0].start()
-            if self.write_engaged is False:
-                print('-- [App.btn_system_mute_function] changing bool_switch_startup_system_mute:', bool_switch_startup_system_mute)
-                self.write_var = 'bool_switch_startup_system_mute: true'
-                self.write_changes()
             self.btn_system_mute.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
             self.lbl_system_mute.setStyleSheet(self.btn_menu_style)
-            bool_switch_startup_system_mute = True
+            if bool_execution_policy is True:
+                thread_system_mute[0].start()
+                if self.write_engaged is False:
+                    print('-- [App.btn_system_mute_function] changing bool_switch_startup_system_mute:', bool_switch_startup_system_mute)
+                    self.write_var = 'bool_switch_startup_system_mute: true'
+                    self.write_changes()
+                bool_switch_startup_system_mute = True
+            else:
+                self.btn_system_mute.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                self.lbl_system_mute.setStyleSheet(self.btn_menu_style_1)
 
     def btn_cpu_mon_temp_function(self):
         print('-- [App.btn_cpu_mon_temp_function]: plugged in')
@@ -3175,11 +3187,9 @@ class App(QMainWindow):
             self.btn_con_stat_name.show()
             """ connected devices """
             if len(devices_kb) > 0:
-                print('foo kb')
                 self.btn_con_stat_kb_img.show()
                 self.lbl_con_stat_kb.show()
             if len(devices_ms) > 0:
-                print('foo ms')
                 self.btn_con_stat_ms_img.show()
                 self.lbl_con_stat_mouse.show()
             """ side menu """
@@ -4914,6 +4924,8 @@ class SystemMuteClass(QThread):
 
     def __init__(self):
         QThread.__init__(self)
+        self.bool_mute = None
+        self.bool_mute_prev = None
 
     def send_instruction_on(self):
         # print('-- [EventHandlerG1Notify.send_instruction_on]: plugged in')
@@ -4930,10 +4942,10 @@ class SystemMuteClass(QThread):
     def run(self):
         print('-- [SystemMuteClass.run]: plugged in')
         while True:
-            cmd_output = []
-            cmd = 'powershell ./check_mute.ps1'
-
-            while True:
+            try:
+                """ subprocess """
+                cmd_output = []
+                cmd = 'powershell ./check_mute.ps1'
                 xcmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
                 output = xcmd.stdout.readline()
                 if output == '' and xcmd.poll() is not None:
@@ -4943,12 +4955,26 @@ class SystemMuteClass(QThread):
                 else:
                     break
                 rc = xcmd.poll()
+
+                """ parse standard output """
                 for _ in cmd_output:
                     # print('-- [SystemMuteClass.run] output:', _)
                     if _ == 'False':
-                        self.send_instruction_on()
+                        self.bool_mute = False
+                        if self.bool_mute_prev is True or self.bool_mute_prev is None:
+                            print('-- [SystemMuteClass.run]: un-muted')
+                            self.bool_mute_prev = False
+                            self.send_instruction_on()
                     elif _ == 'True':
-                        self.send_instruction_off()
+                        self.bool_mute = True
+                        if self.bool_mute_prev is False or self.bool_mute_prev is None:
+                            print('-- [SystemMuteClass.run]: muted')
+                            self.bool_mute_prev = True
+                            self.send_instruction_off()
+                time.sleep(1)
+
+            except Exception as e:
+                print('-- [SystemMuteClass.run] Error:', e)
                 time.sleep(1)
 
     def stop(self):
