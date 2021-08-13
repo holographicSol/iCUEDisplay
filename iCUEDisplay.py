@@ -3564,6 +3564,7 @@ class App(QMainWindow):
 
         global devices_kb, devices_ms
         global thread_net_connection
+        global thread_system_mute
 
         if len(devices_kb) > 0:
             for _ in corsairled_id_num_kb_complete:
@@ -3581,6 +3582,9 @@ class App(QMainWindow):
             if bool_switch_startup_net_con_kb is True or bool_switch_startup_net_con_ms is True:
                 thread_net_connection[0].stop()
                 thread_net_connection[0].start()
+            if bool_switch_startup_system_mute is True:
+                thread_system_mute[0].stop()
+                thread_system_mute[0].start()
 
     def btn_bck_light_function(self):
         print('-- [App.btn_bck_light_function]: plugged in')
