@@ -483,7 +483,7 @@ class ObjEveFilter(QObject):
                 avail_h = new_avail_h
                 avail_w = new_avail_w
                 app_width = 560 * multiplier_w
-                app_height = 224 * multiplier_h
+                app_height = 256 * multiplier_h
                 pos_w = ((QDesktopWidget().availableGeometry().width() / 2) - (app_width / 2))
                 pos_h = ((QDesktopWidget().availableGeometry().height() / 2) - (app_height / 2))
                 event_filter_self[0].setGeometry(int(pos_w), int(pos_h), app_width, app_height)
@@ -527,6 +527,7 @@ class ObjEveFilter(QObject):
                 for _ in ui_object_font_list_s9b:
                     _.setFont(font_s9b)
                 # ToDo --> rescale images by multiplier (after finalizing layout)
+
                 # ToDo -->  Geometry set Above. Finalize by displaying the new geometry automatically without user needing to click/move the app for the changes to visibly take effect
         return False
 
