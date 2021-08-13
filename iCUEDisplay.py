@@ -3564,7 +3564,7 @@ class App(QMainWindow):
 
         global devices_kb, devices_ms
         global thread_net_connection
-        global thread_system_mute
+        global thread_system_mute, bool_switch_startup_system_mute
 
         if len(devices_kb) > 0:
             for _ in corsairled_id_num_kb_complete:
@@ -4996,6 +4996,8 @@ class SystemMuteClass(QThread):
     def stop(self):
         print('-- [SystemMuteClass.stop]: plugged in')
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
+        self.bool_mute = None
+        self.bool_mute_prev = None
         try:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({98: sdk_color_backlight}))
         except Exception as e:
