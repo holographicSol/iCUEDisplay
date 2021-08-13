@@ -88,6 +88,7 @@ hdd_bytes_type_r = ''
 hdd_bytes_str = ''
 str_path_kb_img = ''
 str_path_ms_img = ''
+bool_execution_policy_show = False
 bool_cpu_temperature = False
 bool_vram_temperature = False
 bool_event_notification_g1 = False
@@ -141,6 +142,8 @@ bool_backend_icue_connected = False
 bool_backend_icue_connected_previous = None
 bool_backend_config_read_complete = False
 bool_backend_valid_network_adapter_name = False
+bool_switch_startup_system_mute = False
+thread_system_mute = []
 thread_compile_devices = []
 thread_disk_rw = []
 thread_cpu_util = []
@@ -304,7 +307,8 @@ config_data = ['sdk_color_cpu_on: 255,255,0',
                'bool_cpu_temperature: False',
                'bool_vram_temperature: False',
                'str_path_kb_img: ',
-               'str_path_ms_img: ']
+               'str_path_ms_img: ',
+               'bool_switch_startup_system_mute: false']
 
 
 def create_new():
@@ -539,6 +543,7 @@ class App(QMainWindow):
         super(App, self).__init__()
         global bool_backend_install, event_filter_self, avail_w, avail_h, ui_object_complete
         global ui_object_font_list_s6b, ui_object_font_list_s7b, ui_object_font_list_s8b, ui_object_font_list_s9b
+        global bool_execution_policy_show
         avail_w = QDesktopWidget().availableGeometry().width()
         avail_h = QDesktopWidget().availableGeometry().height()
         print("-- [App.__init__] available geometry:", 'width=', avail_w, ' height=', avail_h)
@@ -2132,6 +2137,27 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_backlight_auto_time_1)
         ui_object_font_list_s8b.append(self.btn_backlight_auto_time_1)
 
+        self.lbl_system_mute = QPushButton(self)
+        self.lbl_system_mute.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.lbl_system_mute.resize(126, self.monitor_btn_h)
+        self.lbl_system_mute.setFont(self.font_s8b)
+        self.lbl_system_mute.setText('SHOW SYSTEM MUTE')
+        self.lbl_system_mute.setStyleSheet(self.btn_menu_style)
+        self.lbl_system_mute.clicked.connect(self.btn_system_mute_function)
+        print('-- [App.__init__] created:', self.lbl_system_mute)
+        ui_object_complete.append(self.lbl_system_mute)
+        ui_object_font_list_s8b.append(self.lbl_system_mute)
+
+        self.btn_system_mute = QPushButton(self)
+        self.btn_system_mute.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 126, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.btn_system_mute.resize(28, 28)
+        self.btn_system_mute.setStyleSheet(self.btn_menu_style)
+        self.btn_system_mute.setIconSize(self.tog_switch_ico_sz)
+        self.btn_system_mute.clicked.connect(self.btn_system_mute_function)
+        print('-- [App.__init__] created:', self.btn_system_mute)
+        self.object_interaction_enabled.append(self.btn_system_mute)
+        ui_object_complete.append(self.btn_system_mute)
+
         self.lbl_event_notification_key_0 = QLabel(self)
         self.lbl_event_notification_key_0.move(self.menu_obj_pos_w + 2, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 20 - 20)
         self.lbl_event_notification_key_0.resize(300, 20)
@@ -2568,13 +2594,119 @@ class App(QMainWindow):
         self.write_var_bool = False
         self.write_var_key = -1
         self.write_engaged = False
-        self.feature_pg_home()
+
+        self.lbl_execution_policy = QLabel(self)
+        self.lbl_execution_policy.move(4, 60)
+        self.lbl_execution_policy.resize(self.width - 8, self.height - 100)
+        self.lbl_execution_policy.setFont(self.font_s7b)
+        self.lbl_execution_policy.setText('To enable all features the Execution Policy must be unrestricted.\nWould you like to change the execution policy to unrestricted?')
+        self.lbl_execution_policy.setAlignment(Qt.AlignCenter)
+        self.lbl_execution_policy.setStyleSheet(self.lbl_menu_style)
+        print('-- [App.__init__] created:', self.lbl_execution_policy)
+        ui_object_complete.append(self.lbl_execution_policy)
+        ui_object_font_list_s7b.append(self.lbl_execution_policy)
+
+        self.btn_execution_policy_0 = QPushButton(self)
+        self.btn_execution_policy_0.move((self.width / 2) - 54, self.height - 8 - 40)
+        self.btn_execution_policy_0.resize(52, 20)
+        self.btn_execution_policy_0.setFont(self.font_s7b)
+        self.btn_execution_policy_0.setText('Yes')
+        self.btn_execution_policy_0.setStyleSheet(self.btn_menu_style)
+        self.btn_execution_policy_0.clicked.connect(self.btn_execution_policy_0_function)
+        print('-- [App.__init__] created:', self.btn_execution_policy_0)
+        self.object_interaction_enabled.append(self.btn_execution_policy_0)
+        ui_object_complete.append(self.btn_execution_policy_0)
+        ui_object_font_list_s7b.append(self.btn_execution_policy_0)
+
+        self.btn_execution_policy_1 = QPushButton(self)
+        self.btn_execution_policy_1.move((self.width / 2) + 2, self.height - 8 - 40)
+        self.btn_execution_policy_1.resize(52, 20)
+        self.btn_execution_policy_1.setFont(self.font_s7b)
+        self.btn_execution_policy_1.setText('No')
+        self.btn_execution_policy_1.setStyleSheet(self.btn_menu_style)
+        self.btn_execution_policy_1.clicked.connect(self.btn_execution_policy_1_function)
+        print('-- [App.__init__] created:', self.btn_execution_policy_1)
+        self.object_interaction_enabled.append(self.btn_execution_policy_1)
+        ui_object_complete.append(self.btn_execution_policy_1)
+        ui_object_font_list_s7b.append(self.btn_execution_policy_1)
+
+        """ check execution policy """
+        self.bool_execution_policy = True
+        self.get_execution_policy()
+
+        if self.bool_execution_policy is False:
+            bool_execution_policy_show = True
+            self.feature_pg_execution_policy()
+
+        elif self.bool_execution_policy is True:
+            bool_execution_policy_show = False
+            self.feature_pg_home()
+
         time.sleep(2)
         event_filter_self.append(self)
         self.filter = ObjEveFilter()
         self.installEventFilter(self.filter)
 
         self.initUI()
+
+    def btn_execution_policy_0_function(self):
+        global bool_execution_policy_show
+        print('-- [btn_execution_policy_0_function] unrestricted execution policy accepted: plugged in')
+        try:
+            cmd = 'powershell Set-ExecutionPolicy Unrestricted'
+            xcmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, startupinfo=info)
+        except Exception as e:
+            print('-- [btn_execution_policy_0_function] Error:', e)
+        bool_execution_policy_show = False
+        self.feature_pg_home()
+
+    def btn_execution_policy_1_function(self):
+        global bool_execution_policy_show
+        print('-- [btn_execution_policy_1_function]unrestricted execution policy declined: plugged in')
+        bool_execution_policy_show = False
+        self.feature_pg_home()
+
+    def get_execution_policy(self):
+        print('-- [get_execution_policy]: plugged in')
+        cmd_output = []
+        cmd = 'powershell Get-ExecutionPolicy'
+        xcmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, startupinfo=info)
+        while True:
+            output = xcmd.stdout.readline()
+            if output == '' and xcmd.poll() is not None:
+                break
+            if output:
+                cmd_output.append(str(output.decode("utf-8").strip()))
+            else:
+                break
+        rc = xcmd.poll()
+        for _ in cmd_output:
+            print('-- [get_execution_policy] ExecutionPolicy:', _)
+            if _ != 'Unrestricted':
+                self.bool_execution_policy = False
+
+    def btn_system_mute_function(self):
+        print('-- [App.btn_system_mute_function]: plugged in')
+        global thread_system_mute, bool_switch_startup_system_mute
+        self.setFocus()
+        if bool_switch_startup_system_mute is True:
+            thread_system_mute[0].stop()
+            if self.write_engaged is False:
+                print('-- [App.btn_system_mute_function] changing bool_switch_startup_system_mute:', bool_switch_startup_system_mute)
+                self.write_var = 'bool_switch_startup_system_mute: false'
+                self.write_changes()
+            self.btn_system_mute.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_system_mute.setStyleSheet(self.btn_menu_style_1)
+            bool_switch_startup_system_mute = False
+        elif bool_switch_startup_system_mute is False:
+            thread_system_mute[0].start()
+            if self.write_engaged is False:
+                print('-- [App.btn_system_mute_function] changing bool_switch_startup_system_mute:', bool_switch_startup_system_mute)
+                self.write_var = 'bool_switch_startup_system_mute: true'
+                self.write_changes()
+            self.btn_system_mute.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_system_mute.setStyleSheet(self.btn_menu_style)
+            bool_switch_startup_system_mute = True
 
     def btn_cpu_mon_temp_function(self):
         print('-- [App.btn_cpu_mon_temp_function]: plugged in')
@@ -3069,16 +3201,36 @@ class App(QMainWindow):
         except Exception as e:
             print(e)
 
+    def feature_pg_execution_policy(self):
+        print('-- [App.feature_pg_execution_policy]: plugged in')
+        self.hide_all_features()
+
+        self.btn_bck_light.hide()
+        self.btn_refresh_recompile.hide()
+        """ connection status """
+        self.btn_con_stat_name.hide()
+        """ connected devices """
+        self.btn_con_stat_kb_img.hide()
+        self.lbl_con_stat_kb.hide()
+        self.btn_con_stat_ms_img.hide()
+        self.lbl_con_stat_mouse.hide()
+        """ side menu """
+        self.btn_feature_page_home.hide()
+        self.btn_feature_page_util.hide()
+        self.btn_feature_page_disks.hide()
+        self.btn_feature_page_networking.hide()
+        self.btn_feature_page_server_status.hide()
+        self.btn_feature_page_event_notification.hide()
+        self.btn_feature_page_settings.hide()
+
+        self.lbl_execution_policy.show()
+        self.btn_execution_policy_0.show()
+        self.btn_execution_policy_1.show()
+
     def feature_pg_home(self):
         print('-- [App.feature_pg_home]: plugged in')
         self.hide_all_features()
         self.btn_feature_page_home.setStyleSheet(self.btn_side_menu_style)
-        # if len(devices_kb) > 0:
-        #     self.btn_con_stat_kb_img.show()
-        #     self.lbl_con_stat_kb.show()
-        # if len(devices_ms) > 0:
-        #     self.btn_con_stat_ms_img.show()
-        #     self.lbl_con_stat_mouse.show()
 
     def feature_pg_util(self):
         print('-- [App.feature_pg_util]: plugged in')
@@ -3255,6 +3407,8 @@ class App(QMainWindow):
         self.lbl_backlight_auto_time_0.show()
         self.lbl_backlight_auto_time_1.show()
         self.lbl_backlight_key_0.show()
+        self.lbl_system_mute.show()
+        self.btn_system_mute.show()
 
     def sanitize_rgb_values(self):
         print('-- [App.sanitize_rgb_values]: plugged in')
@@ -4396,6 +4550,8 @@ class App(QMainWindow):
         global thread_g1_notify, thread_g2_notify, thread_g3_notify, thread_g4_notify, thread_g5_notify, thread_g6_notify
         global thread_temperatures
         global thread_backlight_auto
+        global thread_system_mute
+        global bool_switch_startup_system_mute
         global str_event_notification_run_path_g1, str_event_notification_run_path_g2, str_event_notification_run_path_g3
         global str_event_notification_run_path_g4, str_event_notification_run_path_g5, str_event_notification_run_path_g6
         global str_path_kb_img, str_path_ms_img
@@ -4450,6 +4606,8 @@ class App(QMainWindow):
         thread_compile_devices[0].start()
         temp_thread = TemperatureClass()
         thread_temperatures.append(temp_thread)
+        system_mute = SystemMuteClass()
+        thread_system_mute.append(system_mute)
         print('-- [App.initUI]: waiting to display application')
         while bool_backend_allow_display is False:
             time.sleep(1)
@@ -4661,6 +4819,14 @@ class App(QMainWindow):
         elif bool_vram_temperature is False:
             self.btn_vram_mon_temp.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
             self.lbl_vram_mon_temp.setStyleSheet(self.btn_menu_style_1)
+
+        if bool_switch_startup_system_mute is True:
+            self.btn_system_mute.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_system_mute.setStyleSheet(self.btn_menu_style_1)
+        elif bool_switch_startup_system_mute is False:
+            self.btn_system_mute.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_system_mute.setStyleSheet(self.btn_menu_style)
+
         self.btn_backlight_auto_time_0_str = str(backlight_time_0).strip()
         self.btn_backlight_auto_time_0.setText(backlight_time_0)
         self.btn_backlight_auto_time_1_str = str(backlight_time_1).strip()
@@ -4741,6 +4907,58 @@ class App(QMainWindow):
     def handleCursorMove(self, pos):
         # print('-- [App.handleCursorMove]: plugged in')
         pass
+
+
+class SystemMuteClass(QThread):
+    print('-- [SystemMuteClass]: plugged in')
+
+    def __init__(self):
+        QThread.__init__(self)
+
+    def send_instruction_on(self):
+        # print('-- [EventHandlerG1Notify.send_instruction_on]: plugged in')
+        global sdk, devices_kb, devices_kb_selected
+        if len(devices_kb) >= 1:
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({98: (0, 255, 0)}))
+
+    def send_instruction_off(self):
+        # print('-- [EventHandlerG1Notify.send_instruction_off]: plugged in')
+        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
+        if len(devices_kb) >= 1:
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({98: (255, 0, 0)}))
+
+    def run(self):
+        print('-- [SystemMuteClass.run]: plugged in')
+        while True:
+            cmd_output = []
+            cmd = 'powershell ./check_mute.ps1'
+
+            while True:
+                xcmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                output = xcmd.stdout.readline()
+                if output == '' and xcmd.poll() is not None:
+                    break
+                if output:
+                    cmd_output.append(str(output.decode("utf-8").strip()))
+                else:
+                    break
+                rc = xcmd.poll()
+                for _ in cmd_output:
+                    # print('-- [SystemMuteClass.run] output:', _)
+                    if _ == 'False':
+                        self.send_instruction_on()
+                    elif _ == 'True':
+                        self.send_instruction_off()
+                time.sleep(1)
+
+    def stop(self):
+        print('-- [SystemMuteClass.stop]: plugged in')
+        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
+        try:
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({98: sdk_color_backlight}))
+        except Exception as e:
+            print('-- [SystemMuteClass.stop] Error:', e)
+        self.terminate()
 
 
 class EventHandlerG1Notify(QThread):
@@ -5398,6 +5616,7 @@ class CompileDevicesClass(QThread):
         global thread_backlight_auto
         global devices_kb, devices_ms
         global thread_temperatures
+        global thread_system_mute
 
         print('-- [CompileDevicesClass.stop_all_threads] stopping all threads:', )
         if len(devices_kb) >= 1 or len(devices_ms) >= 1:
@@ -5433,6 +5652,10 @@ class CompileDevicesClass(QThread):
                 thread_temperatures[0].stop()
             except Exception as e:
                 print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
+            try:
+                thread_system_mute[0].stop()
+            except Exception as e:
+                print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
 
     def start_all_threads(self):
         print('-- [CompileDevicesClass.start_all_threads]: plugged in')
@@ -5443,6 +5666,7 @@ class CompileDevicesClass(QThread):
         global bool_backend_config_read_complete, bool_switch_startup_exclusive_control
         global thread_backlight_auto, bool_switch_backlight_auto
         global thread_temperatures, bool_cpu_temperature, bool_vram_temperature
+        global thread_system_mute
 
         if len(devices_kb) > 0:
             thread_sdk_event_handler[0].start()
@@ -5461,6 +5685,8 @@ class CompileDevicesClass(QThread):
                 thread_net_share[0].start()
             if bool_cpu_temperature is True or bool_vram_temperature is True:
                 thread_temperatures[0].start()
+            if bool_switch_startup_system_mute is True:
+                thread_system_mute[0].start()
         if len(devices_kb) > 0 or len(devices_ms) > 0:
             if bool_switch_startup_net_con_ms is True or bool_switch_startup_net_con_kb is True:
                 thread_net_connection[0].start()
@@ -5528,7 +5754,7 @@ class CompileDevicesClass(QThread):
 
     def get_devices(self):
         # print('-- [CompileDevicesClass.get_devices]: plugged in')
-        global sdk, devices_previous, devices_kb, devices_ms, devices_kb_name
+        global sdk, devices_previous, devices_kb, devices_ms, devices_kb_name, bool_execution_policy_show
         fresh_start = False
         if self.bool_backend_comprehensive_enumeration is True:
             device = sdk.get_devices()
@@ -5557,16 +5783,18 @@ class CompileDevicesClass(QThread):
                 print('-- [CompileDevicesClass.get_devices] fresh start: True')
                 if len(devices_kb) > 0:
                     self.lbl_con_stat_kb.setText(str(devices_kb_name[0]))
-                    self.lbl_con_stat_kb.show()
-                    self.btn_con_stat_kb_img.show()
+                    if bool_execution_policy_show is False:
+                        self.lbl_con_stat_kb.show()
+                        self.btn_con_stat_kb_img.show()
                 elif len(devices_kb) < 1:
                     self.lbl_con_stat_kb.setText('')
                     self.lbl_con_stat_kb.hide()
                     self.btn_con_stat_kb_img.hide()
                 if len(devices_ms) > 0:
                     self.lbl_con_stat_mouse.setText(str(devices_ms_name[0]))
-                    self.lbl_con_stat_mouse.show()
-                    self.btn_con_stat_ms_img.show()
+                    if bool_execution_policy_show is False:
+                        self.lbl_con_stat_mouse.show()
+                        self.btn_con_stat_ms_img.show()
                 elif len(devices_ms) < 1:
                     self.lbl_con_stat_mouse.setText('')
                     self.lbl_con_stat_mouse.hide()
@@ -5633,6 +5861,7 @@ class CompileDevicesClass(QThread):
         global bool_backend_allow_display, bool_backend_icue_connected, bool_backend_config_read_complete
         global bool_cpu_temperature, bool_vram_temperature
         global str_path_kb_img, str_path_ms_img
+        global bool_switch_startup_system_mute
 
         startup_loc = '/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/iCUEDisplay.lnk'
         bool_backend_valid_network_adapter_name = False
@@ -5958,6 +6187,10 @@ class CompileDevicesClass(QThread):
                     var = line.replace('str_path_ms_img: ', '')
                     if os.path.exists(var):
                         str_path_ms_img = var
+                if line == 'bool_switch_startup_system_mute: false':
+                    bool_switch_startup_system_mute = False
+                elif line == 'bool_switch_startup_system_mute: true':
+                    bool_switch_startup_system_mute = True
         print('-- [ConfigCompile.config_read] bool_switch_event_notification_g1:', bool_switch_event_notification_g1)
         print('-- [ConfigCompile.read_config] bool_switch_event_notification_g2:', bool_switch_event_notification_g2)
         print('-- [ConfigCompile.read_config] bool_switch_event_notification_g3:', bool_switch_event_notification_g3)
