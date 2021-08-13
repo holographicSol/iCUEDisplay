@@ -4935,9 +4935,15 @@ class SystemMuteClass(QThread):
 
     def send_instruction_off(self):
         # print('-- [EventHandlerG1Notify.send_instruction_off]: plugged in')
-        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
+        global sdk, devices_kb, devices_kb_selected
         if len(devices_kb) >= 1:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({98: (255, 0, 0)}))
+
+    def send_instruction_off_1(self):
+        # print('-- [EventHandlerG1Notify.send_instruction_off]: plugged in')
+        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
+        if len(devices_kb) >= 1:
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({98: sdk_color_backlight}))
 
     def run(self):
         print('-- [SystemMuteClass.run]: plugged in')
@@ -4971,11 +4977,17 @@ class SystemMuteClass(QThread):
                             print('-- [SystemMuteClass.run]: muted')
                             self.bool_mute_prev = True
                             self.send_instruction_off()
-                time.sleep(1)
+
+                    else:
+                        self.bool_mute = None
+                        self.bool_mute_prev = None
+                        self.send_instruction_off_1()
 
             except Exception as e:
                 print('-- [SystemMuteClass.run] Error:', e)
                 time.sleep(1)
+
+            time.sleep(1)
 
     def stop(self):
         print('-- [SystemMuteClass.stop]: plugged in')
