@@ -5081,6 +5081,8 @@ class MediaDisplayClass(QThread):
         self.media_state_prev = -1
         try:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({98: sdk_color_backlight}))
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: sdk_color_backlight}))
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: sdk_color_backlight}))
         except Exception as e:
             print('-- [MediaDisplayClass.stop] Error:', e)
         self.terminate()
