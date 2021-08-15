@@ -24,6 +24,10 @@ from PyQt5.QtGui import QIcon, QCursor, QFont, QPixmap
 from PyQt5.QtCore import Qt, QThread, QSize, QPoint, QCoreApplication, QTimer, QEvent, QObject
 from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QDesktopWidget, QLineEdit, QComboBox, QFileDialog
 import win32gui
+from winrt.windows.media.control import \
+    GlobalSystemMediaTransportControlsSessionManager as MediaManager
+import asyncio
+import winrt.windows.media.control as wmc
 
 info = subprocess.STARTUPINFO()
 info.dwFlags = 1
@@ -143,8 +147,8 @@ bool_backend_icue_connected = False
 bool_backend_icue_connected_previous = None
 bool_backend_config_read_complete = False
 bool_backend_valid_network_adapter_name = False
-bool_switch_startup_system_mute = False
-thread_system_mute = []
+bool_switch_startup_media_display = False
+thread_media_display = []
 thread_compile_devices = []
 thread_disk_rw = []
 thread_cpu_util = []
@@ -225,7 +229,7 @@ if os.path.exists('./py/bin/OpenHardwareMonitorLib.dll'):
         if os.path.exists(dll_in):
             shutil.copyfile(dll_in, dll_out)
             cmd = 'powershell Unblock-File '+dll_out
-            print('cmd', cmd)
+            print('-- running command:', cmd)
             xcmd = subprocess.Popen(cmd, shell=True)
             if os.path.exists(dll_out):
                 shutil.copyfile(dll_out, dll_in)
@@ -237,7 +241,7 @@ if os.path.exists('./py/bin/OpenHardwareMonitorLib.dll'):
         if os.path.exists(dll_in):
             shutil.copyfile(dll_in, dll_out)
             cmd = 'powershell Unblock-File '+dll_out
-            print('cmd', cmd)
+            print('-- running command:', cmd)
             xcmd = subprocess.Popen(cmd, shell=True)
             if os.path.exists(dll_out):
                 shutil.copyfile(dll_out, dll_in)
@@ -249,7 +253,7 @@ if os.path.exists('./py/bin/OpenHardwareMonitorLib.dll'):
         if os.path.exists(dll_in):
             shutil.copyfile(dll_in, dll_out)
             cmd = 'powershell Unblock-File ' + dll_out
-            print('cmd', cmd)
+            print('-- running command:', cmd)
             xcmd = subprocess.Popen(cmd, shell=True)
             if os.path.exists(dll_out):
                 shutil.copyfile(dll_out, dll_in)
@@ -309,7 +313,7 @@ config_data = ['sdk_color_cpu_on: 255,255,0',
                'bool_vram_temperature: False',
                'str_path_kb_img: ',
                'str_path_ms_img: ',
-               'bool_switch_startup_system_mute: false']
+               'bool_switch_startup_media_display: false']
 
 
 def create_new():
@@ -399,7 +403,7 @@ def create_new():
         fo.writelines('PATH: '+py_config_line)
     fo.close()
     py_temp_mon_bat_line = os.path.join('"'+os.getcwd() + '\\py\\python.exe" "'+(os.getcwd()+'\\py\\temp_mon.py"'))
-    print(py_temp_mon_bat_line)
+    print('-- updating temp_mon.bat:', py_temp_mon_bat_line)
     open('./py/temp_mon.bat', 'w').close()
     with open('./py/temp_mon.bat', 'a') as fo:
         fo.writelines(py_temp_mon_bat_line)
@@ -2138,26 +2142,26 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_backlight_auto_time_1)
         ui_object_font_list_s8b.append(self.btn_backlight_auto_time_1)
 
-        self.lbl_system_mute = QPushButton(self)
-        self.lbl_system_mute.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
-        self.lbl_system_mute.resize(126, self.monitor_btn_h)
-        self.lbl_system_mute.setFont(self.font_s8b)
-        self.lbl_system_mute.setText('SHOW SYSTEM MUTE')
-        self.lbl_system_mute.setStyleSheet(self.btn_menu_style)
-        self.lbl_system_mute.clicked.connect(self.btn_system_mute_function)
-        print('-- [App.__init__] created:', self.lbl_system_mute)
-        ui_object_complete.append(self.lbl_system_mute)
-        ui_object_font_list_s8b.append(self.lbl_system_mute)
+        self.lbl_media_display = QPushButton(self)
+        self.lbl_media_display.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.lbl_media_display.resize(126, self.monitor_btn_h)
+        self.lbl_media_display.setFont(self.font_s8b)
+        self.lbl_media_display.setText('Media Display')
+        self.lbl_media_display.setStyleSheet(self.btn_menu_style)
+        self.lbl_media_display.clicked.connect(self.btn_media_display_function)
+        print('-- [App.__init__] created:', self.lbl_media_display)
+        ui_object_complete.append(self.lbl_media_display)
+        ui_object_font_list_s8b.append(self.lbl_media_display)
 
-        self.btn_system_mute = QPushButton(self)
-        self.btn_system_mute.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 126, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
-        self.btn_system_mute.resize(28, 28)
-        self.btn_system_mute.setStyleSheet(self.btn_menu_style)
-        self.btn_system_mute.setIconSize(self.tog_switch_ico_sz)
-        self.btn_system_mute.clicked.connect(self.btn_system_mute_function)
-        print('-- [App.__init__] created:', self.btn_system_mute)
-        self.object_interaction_enabled.append(self.btn_system_mute)
-        ui_object_complete.append(self.btn_system_mute)
+        self.btn_media_display = QPushButton(self)
+        self.btn_media_display.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 126, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.btn_media_display.resize(28, 28)
+        self.btn_media_display.setStyleSheet(self.btn_menu_style)
+        self.btn_media_display.setIconSize(self.tog_switch_ico_sz)
+        self.btn_media_display.clicked.connect(self.btn_media_display_function)
+        print('-- [App.__init__] created:', self.btn_media_display)
+        self.object_interaction_enabled.append(self.btn_media_display)
+        ui_object_complete.append(self.btn_media_display)
 
         self.lbl_event_notification_key_0 = QLabel(self)
         self.lbl_event_notification_key_0.move(self.menu_obj_pos_w + 2, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 20 - 20)
@@ -2690,35 +2694,35 @@ class App(QMainWindow):
             elif _ == 'Unrestricted':
                 bool_execution_policy = True
 
-    def btn_system_mute_function(self):
-        print('-- [App.btn_system_mute_function]: plugged in')
-        global thread_system_mute, bool_switch_startup_system_mute, bool_execution_policy
+    def btn_media_display_function(self):
+        print('-- [App.btn_media_display_function]: plugged in')
+        global thread_media_display, bool_switch_startup_media_display, bool_execution_policy
         self.setFocus()
         self.get_execution_policy()
 
-        if bool_switch_startup_system_mute is True:
-            thread_system_mute[0].stop()
+        if bool_switch_startup_media_display is True:
+            thread_media_display[0].stop()
             if self.write_engaged is False:
-                print('-- [App.btn_system_mute_function] changing bool_switch_startup_system_mute:', bool_switch_startup_system_mute)
-                self.write_var = 'bool_switch_startup_system_mute: false'
+                print('-- [App.btn_media_display_function] changing bool_switch_startup_media_display:', bool_switch_startup_media_display)
+                self.write_var = 'bool_switch_startup_media_display: false'
                 self.write_changes()
-            self.btn_system_mute.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
-            self.lbl_system_mute.setStyleSheet(self.btn_menu_style_1)
-            bool_switch_startup_system_mute = False
+            self.btn_media_display.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_media_display.setStyleSheet(self.btn_menu_style_1)
+            bool_switch_startup_media_display = False
 
-        elif bool_switch_startup_system_mute is False:
-            self.btn_system_mute.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-            self.lbl_system_mute.setStyleSheet(self.btn_menu_style)
+        elif bool_switch_startup_media_display is False:
+            self.btn_media_display.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_media_display.setStyleSheet(self.btn_menu_style)
             if bool_execution_policy is True:
-                thread_system_mute[0].start()
+                thread_media_display[0].start()
                 if self.write_engaged is False:
-                    print('-- [App.btn_system_mute_function] changing bool_switch_startup_system_mute:', bool_switch_startup_system_mute)
-                    self.write_var = 'bool_switch_startup_system_mute: true'
+                    print('-- [App.btn_media_display_function] changing bool_switch_startup_media_display:', bool_switch_startup_media_display)
+                    self.write_var = 'bool_switch_startup_media_display: true'
                     self.write_changes()
-                bool_switch_startup_system_mute = True
+                bool_switch_startup_media_display = True
             else:
-                self.btn_system_mute.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
-                self.lbl_system_mute.setStyleSheet(self.btn_menu_style_1)
+                self.btn_media_display.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+                self.lbl_media_display.setStyleSheet(self.btn_menu_style_1)
 
     def btn_cpu_mon_temp_function(self):
         print('-- [App.btn_cpu_mon_temp_function]: plugged in')
@@ -3417,8 +3421,8 @@ class App(QMainWindow):
         self.lbl_backlight_auto_time_0.show()
         self.lbl_backlight_auto_time_1.show()
         self.lbl_backlight_key_0.show()
-        self.lbl_system_mute.show()
-        self.btn_system_mute.show()
+        self.lbl_media_display.show()
+        self.btn_media_display.show()
 
     def sanitize_rgb_values(self):
         print('-- [App.sanitize_rgb_values]: plugged in')
@@ -3564,7 +3568,7 @@ class App(QMainWindow):
 
         global devices_kb, devices_ms
         global thread_net_connection
-        global thread_system_mute, bool_switch_startup_system_mute
+        global thread_media_display, bool_switch_startup_media_display
 
         if len(devices_kb) > 0:
             for _ in corsairled_id_num_kb_complete:
@@ -3582,9 +3586,9 @@ class App(QMainWindow):
             if bool_switch_startup_net_con_kb is True or bool_switch_startup_net_con_ms is True:
                 thread_net_connection[0].stop()
                 thread_net_connection[0].start()
-            if bool_switch_startup_system_mute is True:
-                thread_system_mute[0].stop()
-                thread_system_mute[0].start()
+            if bool_switch_startup_media_display is True:
+                thread_media_display[0].stop()
+                thread_media_display[0].start()
 
     def btn_bck_light_function(self):
         print('-- [App.btn_bck_light_function]: plugged in')
@@ -4564,8 +4568,8 @@ class App(QMainWindow):
         global thread_g1_notify, thread_g2_notify, thread_g3_notify, thread_g4_notify, thread_g5_notify, thread_g6_notify
         global thread_temperatures
         global thread_backlight_auto
-        global thread_system_mute
-        global bool_switch_startup_system_mute
+        global thread_media_display
+        global bool_switch_startup_media_display
         global str_event_notification_run_path_g1, str_event_notification_run_path_g2, str_event_notification_run_path_g3
         global str_event_notification_run_path_g4, str_event_notification_run_path_g5, str_event_notification_run_path_g6
         global str_path_kb_img, str_path_ms_img
@@ -4620,8 +4624,8 @@ class App(QMainWindow):
         thread_compile_devices[0].start()
         temp_thread = TemperatureClass()
         thread_temperatures.append(temp_thread)
-        system_mute = SystemMuteClass()
-        thread_system_mute.append(system_mute)
+        system_mute = MediaDisplayClass()
+        thread_media_display.append(system_mute)
         print('-- [App.initUI]: waiting to display application')
         while bool_backend_allow_display is False:
             time.sleep(1)
@@ -4834,12 +4838,12 @@ class App(QMainWindow):
             self.btn_vram_mon_temp.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
             self.lbl_vram_mon_temp.setStyleSheet(self.btn_menu_style_1)
 
-        if bool_switch_startup_system_mute is True:
-            self.btn_system_mute.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-            self.lbl_system_mute.setStyleSheet(self.btn_menu_style_1)
-        elif bool_switch_startup_system_mute is False:
-            self.btn_system_mute.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
-            self.lbl_system_mute.setStyleSheet(self.btn_menu_style)
+        if bool_switch_startup_media_display is True:
+            self.btn_media_display.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_media_display.setStyleSheet(self.btn_menu_style_1)
+        elif bool_switch_startup_media_display is False:
+            self.btn_media_display.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_media_display.setStyleSheet(self.btn_menu_style)
 
         self.btn_backlight_auto_time_0_str = str(backlight_time_0).strip()
         self.btn_backlight_auto_time_0.setText(backlight_time_0)
@@ -4923,13 +4927,15 @@ class App(QMainWindow):
         pass
 
 
-class SystemMuteClass(QThread):
-    print('-- [SystemMuteClass]: plugged in')
+class MediaDisplayClass(QThread):
+    print('-- [MediaDisplayClass]: plugged in')
 
     def __init__(self):
         QThread.__init__(self)
         self.bool_mute = None
         self.bool_mute_prev = None
+        self.media_state = -1
+        self.media_state_prev = -1
 
     def send_instruction_on(self):
         # print('-- [EventHandlerG1Notify.send_instruction_on]: plugged in')
@@ -4949,9 +4955,82 @@ class SystemMuteClass(QThread):
         if len(devices_kb) >= 1:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({98: sdk_color_backlight}))
 
+    async def get_media_state(self):
+        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
+        sessions = await MediaManager.request_async()
+
+        current_session = sessions.get_current_session()
+
+        if current_session != None:
+
+            if int(wmc.GlobalSystemMediaTransportControlsSessionPlaybackStatus.PLAYING) == current_session.get_playback_info().playback_status:
+                self.media_state = 1
+                if self.media_state != self.media_state_prev:
+                    print('-- [MediaDisplayClass.run]: PLAYING')
+                    self.media_state_prev = 1
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: (0, 255, 0)}))
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: sdk_color_backlight}))
+
+            if int(wmc.GlobalSystemMediaTransportControlsSessionPlaybackStatus.PAUSED) == current_session.get_playback_info().playback_status:
+                self.media_state = 2
+                if self.media_state != self.media_state_prev:
+                    print('-- [MediaDisplayClass.run]: PAUSED')
+                    self.media_state_prev = 2
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: (255, 255, 0)}))
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: sdk_color_backlight}))
+
+            if int(wmc.GlobalSystemMediaTransportControlsSessionPlaybackStatus.STOPPED) == current_session.get_playback_info().playback_status:
+                self.media_state = 0
+                if self.media_state != self.media_state_prev:
+                    print('-- [MediaDisplayClass.run]: STOPPED')
+                    self.media_state_prev = 0
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: sdk_color_backlight}))
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: (255, 0, 0)}))
+
+            if int(wmc.GlobalSystemMediaTransportControlsSessionPlaybackStatus.CLOSED) == current_session.get_playback_info().playback_status:
+                self.media_state = 0
+                if self.media_state != self.media_state_prev:
+                    print('-- [MediaDisplayClass.run]: CLOSED')
+                    self.media_state_prev = 0
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: sdk_color_backlight}))
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: (255, 0, 0)}))
+
+            if int(wmc.GlobalSystemMediaTransportControlsSessionPlaybackStatus.CHANGING) == current_session.get_playback_info().playback_status:
+                self.media_state = 0
+                if self.media_state != self.media_state_prev:
+                    print('-- [MediaDisplayClass.run]: CHANGING')
+                    self.media_state_prev = 0
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: sdk_color_backlight}))
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: (255, 0, 0)}))
+
+        else:
+            self.media_state = 0
+            if self.media_state != self.media_state_prev:
+                print('-- [MediaDisplayClass.run]: CLOSED')
+                self.media_state_prev = 0
+                if len(devices_kb) >= 1:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: sdk_color_backlight}))
+                if len(devices_kb) >= 1:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: (255, 0, 0)}))
+
     def run(self):
-        print('-- [SystemMuteClass.run]: plugged in')
+        print('-- [MediaDisplayClass.run]: plugged in')
         while True:
+            try:
+                self.current_media_info_1 = asyncio.run(self.get_media_state())
+            except Exception as e:
+                print('-- [MediaDisplayClass.run] Error:', e)
+
             try:
                 """ subprocess """
                 cmd_output = []
@@ -4968,17 +5047,17 @@ class SystemMuteClass(QThread):
 
                 """ parse standard output """
                 for _ in cmd_output:
-                    # print('-- [SystemMuteClass.run] output:', _)
+                    # print('-- [MediaDisplayClass.run] output:', _)
                     if _ == 'False':
                         self.bool_mute = False
                         if self.bool_mute_prev is True or self.bool_mute_prev is None:
-                            print('-- [SystemMuteClass.run]: un-muted')
+                            print('-- [MediaDisplayClass.run]: un-muted')
                             self.bool_mute_prev = False
                             self.send_instruction_on()
                     elif _ == 'True':
                         self.bool_mute = True
                         if self.bool_mute_prev is False or self.bool_mute_prev is None:
-                            print('-- [SystemMuteClass.run]: muted')
+                            print('-- [MediaDisplayClass.run]: muted')
                             self.bool_mute_prev = True
                             self.send_instruction_off()
 
@@ -4988,20 +5067,22 @@ class SystemMuteClass(QThread):
                         self.send_instruction_off_1()
 
             except Exception as e:
-                print('-- [SystemMuteClass.run] Error:', e)
+                print('-- [MediaDisplayClass.run] Error:', e)
                 time.sleep(1)
 
             time.sleep(1)
 
     def stop(self):
-        print('-- [SystemMuteClass.stop]: plugged in')
+        print('-- [MediaDisplayClass.stop]: plugged in')
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
         self.bool_mute = None
         self.bool_mute_prev = None
+        self.media_state = -1
+        self.media_state_prev = -1
         try:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({98: sdk_color_backlight}))
         except Exception as e:
-            print('-- [SystemMuteClass.stop] Error:', e)
+            print('-- [MediaDisplayClass.stop] Error:', e)
         self.terminate()
 
 
@@ -5660,7 +5741,7 @@ class CompileDevicesClass(QThread):
         global thread_backlight_auto
         global devices_kb, devices_ms
         global thread_temperatures
-        global thread_system_mute
+        global thread_media_display
 
         print('-- [CompileDevicesClass.stop_all_threads] stopping all threads:', )
         if len(devices_kb) >= 1 or len(devices_ms) >= 1:
@@ -5697,7 +5778,7 @@ class CompileDevicesClass(QThread):
             except Exception as e:
                 print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
             try:
-                thread_system_mute[0].stop()
+                thread_media_display[0].stop()
             except Exception as e:
                 print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
 
@@ -5710,7 +5791,7 @@ class CompileDevicesClass(QThread):
         global bool_backend_config_read_complete, bool_switch_startup_exclusive_control
         global thread_backlight_auto, bool_switch_backlight_auto
         global thread_temperatures, bool_cpu_temperature, bool_vram_temperature
-        global thread_system_mute
+        global thread_media_display
 
         if len(devices_kb) > 0:
             thread_sdk_event_handler[0].start()
@@ -5729,8 +5810,8 @@ class CompileDevicesClass(QThread):
                 thread_net_share[0].start()
             if bool_cpu_temperature is True or bool_vram_temperature is True:
                 thread_temperatures[0].start()
-            if bool_switch_startup_system_mute is True:
-                thread_system_mute[0].start()
+            if bool_switch_startup_media_display is True:
+                thread_media_display[0].start()
         if len(devices_kb) > 0 or len(devices_ms) > 0:
             if bool_switch_startup_net_con_ms is True or bool_switch_startup_net_con_kb is True:
                 thread_net_connection[0].start()
@@ -5905,7 +5986,7 @@ class CompileDevicesClass(QThread):
         global bool_backend_allow_display, bool_backend_icue_connected, bool_backend_config_read_complete
         global bool_cpu_temperature, bool_vram_temperature
         global str_path_kb_img, str_path_ms_img
-        global bool_switch_startup_system_mute
+        global bool_switch_startup_media_display
 
         startup_loc = '/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/iCUEDisplay.lnk'
         bool_backend_valid_network_adapter_name = False
@@ -6231,10 +6312,10 @@ class CompileDevicesClass(QThread):
                     var = line.replace('str_path_ms_img: ', '')
                     if os.path.exists(var):
                         str_path_ms_img = var
-                if line == 'bool_switch_startup_system_mute: false':
-                    bool_switch_startup_system_mute = False
-                elif line == 'bool_switch_startup_system_mute: true':
-                    bool_switch_startup_system_mute = True
+                if line == 'bool_switch_startup_media_display: false':
+                    bool_switch_startup_media_display = False
+                elif line == 'bool_switch_startup_media_display: true':
+                    bool_switch_startup_media_display = True
         print('-- [ConfigCompile.config_read] bool_switch_event_notification_g1:', bool_switch_event_notification_g1)
         print('-- [ConfigCompile.read_config] bool_switch_event_notification_g2:', bool_switch_event_notification_g2)
         print('-- [ConfigCompile.read_config] bool_switch_event_notification_g3:', bool_switch_event_notification_g3)
