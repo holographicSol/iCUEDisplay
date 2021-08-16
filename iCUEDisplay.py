@@ -148,6 +148,7 @@ bool_backend_icue_connected_previous = None
 bool_backend_config_read_complete = False
 bool_backend_valid_network_adapter_name = False
 bool_switch_startup_media_display = False
+thread_pause_loop = []
 thread_media_display = []
 thread_compile_devices = []
 thread_disk_rw = []
@@ -4569,6 +4570,7 @@ class App(QMainWindow):
         global thread_temperatures
         global thread_backlight_auto
         global thread_media_display
+        global thread_pause_loop
         global bool_switch_startup_media_display
         global str_event_notification_run_path_g1, str_event_notification_run_path_g2, str_event_notification_run_path_g3
         global str_event_notification_run_path_g4, str_event_notification_run_path_g5, str_event_notification_run_path_g6
@@ -4626,6 +4628,8 @@ class App(QMainWindow):
         thread_temperatures.append(temp_thread)
         system_mute = MediaDisplayClass()
         thread_media_display.append(system_mute)
+        pause_loop = PauseLoopClass()
+        thread_pause_loop.append(pause_loop)
         print('-- [App.initUI]: waiting to display application')
         while bool_backend_allow_display is False:
             time.sleep(1)
@@ -4927,6 +4931,28 @@ class App(QMainWindow):
         pass
 
 
+class PauseLoopClass(QThread):
+    print('-- [PauseLoopClass]: plugged in')
+
+    def __init__(self):
+        QThread.__init__(self)
+
+    def run(self):
+        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
+
+        while True:
+            if len(devices_kb) >= 1:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: (255, 255, 0)}))
+            time.sleep(0.6)
+            if len(devices_kb) >= 1:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: sdk_color_backlight}))
+            time.sleep(0.6)
+
+    def stop(self):
+        print('-- [PauseLoopClass.stop]: plugged in')
+        self.terminate()
+
+
 class MediaDisplayClass(QThread):
     print('-- [MediaDisplayClass]: plugged in')
 
@@ -4936,6 +4962,7 @@ class MediaDisplayClass(QThread):
         self.bool_mute_prev = None
         self.media_state = -1
         self.media_state_prev = -1
+
 
     def send_instruction_on(self):
         # print('-- [EventHandlerG1Notify.send_instruction_on]: plugged in')
@@ -4956,7 +4983,7 @@ class MediaDisplayClass(QThread):
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({98: sdk_color_backlight}))
 
     async def get_media_state(self):
-        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
+        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, thread_pause_loop
         sessions = await MediaManager.request_async()
 
         current_session = sessions.get_current_session()
@@ -4968,8 +4995,13 @@ class MediaDisplayClass(QThread):
                 if self.media_state != self.media_state_prev:
                     print('-- [MediaDisplayClass.run]: PLAYING')
                     self.media_state_prev = 1
+                    thread_pause_loop[0].stop()
                     if len(devices_kb) >= 1:
                         sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: (0, 255, 0)}))
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({100: (0, 0, 255)}))
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({102: (0, 0, 255)}))
                     if len(devices_kb) >= 1:
                         sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: sdk_color_backlight}))
 
@@ -4978,8 +5010,11 @@ class MediaDisplayClass(QThread):
                 if self.media_state != self.media_state_prev:
                     print('-- [MediaDisplayClass.run]: PAUSED')
                     self.media_state_prev = 2
+                    thread_pause_loop[0].start()
                     if len(devices_kb) >= 1:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: (255, 255, 0)}))
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({100: (0, 0, 255)}))
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({102: (0, 0, 255)}))
                     if len(devices_kb) >= 1:
                         sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: sdk_color_backlight}))
 
@@ -4988,40 +5023,60 @@ class MediaDisplayClass(QThread):
                 if self.media_state != self.media_state_prev:
                     print('-- [MediaDisplayClass.run]: STOPPED')
                     self.media_state_prev = 0
+                    thread_pause_loop[0].stop()
                     if len(devices_kb) >= 1:
                         sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: sdk_color_backlight}))
                     if len(devices_kb) >= 1:
                         sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: (255, 0, 0)}))
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({100: sdk_color_backlight}))
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({102: sdk_color_backlight}))
 
             if int(wmc.GlobalSystemMediaTransportControlsSessionPlaybackStatus.CLOSED) == current_session.get_playback_info().playback_status:
                 self.media_state = 0
                 if self.media_state != self.media_state_prev:
                     print('-- [MediaDisplayClass.run]: CLOSED')
                     self.media_state_prev = 0
+                    thread_pause_loop[0].stop()
                     if len(devices_kb) >= 1:
                         sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: sdk_color_backlight}))
                     if len(devices_kb) >= 1:
                         sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: (255, 0, 0)}))
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({100: sdk_color_backlight}))
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({102: sdk_color_backlight}))
 
             if int(wmc.GlobalSystemMediaTransportControlsSessionPlaybackStatus.CHANGING) == current_session.get_playback_info().playback_status:
                 self.media_state = 0
                 if self.media_state != self.media_state_prev:
                     print('-- [MediaDisplayClass.run]: CHANGING')
                     self.media_state_prev = 0
+                    thread_pause_loop[0].stop()
                     if len(devices_kb) >= 1:
                         sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: sdk_color_backlight}))
                     if len(devices_kb) >= 1:
                         sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: (255, 0, 0)}))
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({100: sdk_color_backlight}))
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({102: sdk_color_backlight}))
 
         else:
             self.media_state = 0
             if self.media_state != self.media_state_prev:
                 print('-- [MediaDisplayClass.run]: CLOSED')
                 self.media_state_prev = 0
+                thread_pause_loop[0].stop()
                 if len(devices_kb) >= 1:
                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: sdk_color_backlight}))
                 if len(devices_kb) >= 1:
                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: (255, 0, 0)}))
+                if len(devices_kb) >= 1:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({100: sdk_color_backlight}))
+                if len(devices_kb) >= 1:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({102: sdk_color_backlight}))
 
     def run(self):
         print('-- [MediaDisplayClass.run]: plugged in')
@@ -5070,7 +5125,7 @@ class MediaDisplayClass(QThread):
                 print('-- [MediaDisplayClass.run] Error:', e)
                 time.sleep(1)
 
-            time.sleep(1)
+            time.sleep(0.1)
 
     def stop(self):
         print('-- [MediaDisplayClass.stop]: plugged in')
@@ -5083,6 +5138,8 @@ class MediaDisplayClass(QThread):
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({98: sdk_color_backlight}))
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: sdk_color_backlight}))
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: sdk_color_backlight}))
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({100: sdk_color_backlight}))
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({102: sdk_color_backlight}))
         except Exception as e:
             print('-- [MediaDisplayClass.stop] Error:', e)
         self.terminate()
@@ -5744,6 +5801,7 @@ class CompileDevicesClass(QThread):
         global devices_kb, devices_ms
         global thread_temperatures
         global thread_media_display
+        global thread_pause_loop
 
         print('-- [CompileDevicesClass.stop_all_threads] stopping all threads:', )
         if len(devices_kb) >= 1 or len(devices_ms) >= 1:
@@ -5781,6 +5839,10 @@ class CompileDevicesClass(QThread):
                 print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
             try:
                 thread_media_display[0].stop()
+            except Exception as e:
+                print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
+            try:
+                thread_pause_loop[0].stop()
             except Exception as e:
                 print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
 
