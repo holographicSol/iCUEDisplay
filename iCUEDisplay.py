@@ -85,6 +85,9 @@ def initialize_priority():
 avail_w = ()
 avail_h = ()
 ui_object_complete = []
+power_plan = ['', '', '', '']
+# power_plan = []
+power_plan_index = 0
 backlight_time_0 = ''
 backlight_time_1 = ''
 hdd_bytes_type_w = ''
@@ -92,6 +95,7 @@ hdd_bytes_type_r = ''
 hdd_bytes_str = ''
 str_path_kb_img = ''
 str_path_ms_img = ''
+bool_power_plan_interact = False
 bool_execution_policy = True
 bool_execution_policy_show = False
 bool_cpu_temperature = False
@@ -148,6 +152,8 @@ bool_backend_icue_connected_previous = None
 bool_backend_config_read_complete = False
 bool_backend_valid_network_adapter_name = False
 bool_switch_startup_media_display = False
+thread_test_locked = []
+thread_power = []
 thread_pause_loop = []
 thread_media_display = []
 thread_compile_devices = []
@@ -288,7 +294,7 @@ config_data = ['sdk_color_cpu_on: 255,255,0',
                'netshare_startup: true',
                'sdk_color_netshare_on: 255,15,100',
                'bool_switch_backlight: false',
-               'sdk_color_backlight_on: 63,63,63',
+               'sdk_color_backlight_on: 13,13,13',
                'backlight_time_0: 2200',
                'backlight_time_1: 0500',
                'bool_switch_backlight_auto: false',
@@ -314,7 +320,8 @@ config_data = ['sdk_color_cpu_on: 255,255,0',
                'bool_vram_temperature: False',
                'str_path_kb_img: ',
                'str_path_ms_img: ',
-               'bool_switch_startup_media_display: false']
+               'bool_switch_startup_media_display: false',
+               'bool_power_plan_interact: false']
 
 
 def create_new():
@@ -493,7 +500,7 @@ class ObjEveFilter(QObject):
                 avail_h = new_avail_h
                 avail_w = new_avail_w
                 app_width = 560 * multiplier_w
-                app_height = 256 * multiplier_h
+                app_height = 288 * multiplier_h
                 pos_w = ((QDesktopWidget().availableGeometry().width() / 2) - (app_width / 2))
                 pos_h = ((QDesktopWidget().availableGeometry().height() / 2) - (app_height / 2))
                 event_filter_self[0].setGeometry(int(pos_w), int(pos_h), app_width, app_height)
@@ -575,7 +582,7 @@ class App(QMainWindow):
         self.setWindowTitle(self.title)
         """ Main Window Geometry """
         self.width = 560
-        self.height = 256
+        self.height = 288
         self.height_discrete = 180
         self.pos_w = int(((QDesktopWidget().availableGeometry().width() / 2) - (self.width / 2)))
         self.pos_h = int(((QDesktopWidget().availableGeometry().height() / 2) - (self.height / 2)))
@@ -843,8 +850,20 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_feature_page_server_status)
         ui_object_font_list_s8b.append(self.btn_feature_page_server_status)
 
+        self.btn_feature_page_power = QPushButton(self)
+        self.btn_feature_page_power.move(0, 188)
+        self.btn_feature_page_power.resize(126, 28)
+        self.btn_feature_page_power.setFont(self.font_s8b)
+        self.btn_feature_page_power.setText('Power')
+        self.btn_feature_page_power.setStyleSheet(self.btn_side_menu_style_1)
+        self.btn_feature_page_power.clicked.connect(self.feature_page_power_function)
+        print('-- [App.__init__] created:', self.btn_feature_page_power)
+        self.object_interaction_enabled.append(self.btn_feature_page_power)
+        ui_object_complete.append(self.btn_feature_page_power)
+        ui_object_font_list_s8b.append(self.btn_feature_page_power)
+
         self.btn_feature_page_event_notification = QPushButton(self)
-        self.btn_feature_page_event_notification.move(0, 188)
+        self.btn_feature_page_event_notification.move(0, 220)
         self.btn_feature_page_event_notification.resize(126, 28)
         self.btn_feature_page_event_notification.setFont(self.font_s8b)
         self.btn_feature_page_event_notification.setText('Event Notification')
@@ -856,7 +875,7 @@ class App(QMainWindow):
         ui_object_font_list_s8b.append(self.btn_feature_page_event_notification)
 
         self.btn_feature_page_settings = QPushButton(self)
-        self.btn_feature_page_settings.move(0, 220)
+        self.btn_feature_page_settings.move(0, 252)
         self.btn_feature_page_settings.resize(126, 28)
         self.btn_feature_page_settings.setFont(self.font_s8b)
         self.btn_feature_page_settings.setText('Settings')
@@ -2164,6 +2183,27 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_media_display)
         ui_object_complete.append(self.btn_media_display)
 
+        self.lbl_power_plan = QPushButton(self)
+        self.lbl_power_plan.move(self.menu_obj_pos_w + 2, self.height - 8 - self.monitor_btn_h)
+        self.lbl_power_plan.resize(126, self.monitor_btn_h)
+        self.lbl_power_plan.setFont(self.font_s8b)
+        self.lbl_power_plan.setText('Power Plan')
+        self.lbl_power_plan.setStyleSheet(self.btn_menu_style)
+        self.lbl_power_plan.clicked.connect(self.btn_power_plan_function)
+        print('-- [App.__init__] created:', self.lbl_power_plan)
+        ui_object_complete.append(self.lbl_power_plan)
+        ui_object_font_list_s8b.append(self.lbl_power_plan)
+
+        self.btn_power_plan = QPushButton(self)
+        self.btn_power_plan.move(self.menu_obj_pos_w + 2 + 126, self.height - 8 - self.monitor_btn_h)
+        self.btn_power_plan.resize(28, 28)
+        self.btn_power_plan.setStyleSheet(self.btn_menu_style)
+        self.btn_power_plan.setIconSize(self.tog_switch_ico_sz)
+        self.btn_power_plan.clicked.connect(self.btn_power_plan_function)
+        print('-- [App.__init__] created:', self.btn_power_plan)
+        self.object_interaction_enabled.append(self.btn_power_plan)
+        ui_object_complete.append(self.btn_power_plan)
+
         self.lbl_event_notification_key_0 = QLabel(self)
         self.lbl_event_notification_key_0.move(self.menu_obj_pos_w + 2, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 20 - 20)
         self.lbl_event_notification_key_0.resize(300, 20)
@@ -2655,6 +2695,41 @@ class App(QMainWindow):
         self.installEventFilter(self.filter)
 
         self.initUI()
+
+    def btn_power_plan_function(self):
+        print('-- [btn_power_plan_function]: plugged in')
+        global bool_power_plan_interact, thread_power, thread_g1_notify, bool_allow_g1_short
+        self.setFocus()
+
+        if bool_power_plan_interact is True:
+            if self.write_engaged is False:
+                print('-- [App.btn_power_plan_function] changing bool_power_plan_interact:', bool_power_plan_interact)
+                self.write_var = 'bool_power_plan_interact: false'
+                self.write_changes()
+            self.btn_power_plan.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            bool_power_plan_interact = False
+            self.btn_event_notification_g1.setEnabled(True)
+            self.lbl_event_notification_g1.setEnabled(True)
+            self.btn_event_notification_run_g1.setEnabled(True)
+            self.lbl_event_notification_run_g1.setEnabled(True)
+            thread_power[0].stop()
+
+        elif bool_power_plan_interact is False:
+            if self.write_engaged is False:
+                print('-- [App.btn_power_plan_function] changing bool_power_plan_interact:', bool_power_plan_interact)
+                self.write_var = 'bool_power_plan_interact: true'
+                self.write_changes()
+            self.btn_power_plan.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            bool_power_plan_interact = True
+            self.btn_event_notification_g1.setEnabled(False)
+            self.lbl_event_notification_g1.setEnabled(False)
+            self.btn_event_notification_run_g1.setEnabled(False)
+            self.lbl_event_notification_run_g1.setEnabled(False)
+            thread_g1_notify[0].stop()
+            bool_allow_g1_short = False
+            thread_power[0].start()
+
+        print('-- [btn_power_plan_function] setting bool_power_plan_interact:', bool_power_plan_interact)
 
     def btn_execution_policy_0_function(self):
         global bool_execution_policy_show
@@ -3208,6 +3283,8 @@ class App(QMainWindow):
             self.btn_feature_page_networking.setStyleSheet(self.btn_side_menu_style_1)
             self.btn_feature_page_server_status.show()
             self.btn_feature_page_server_status.setStyleSheet(self.btn_side_menu_style_1)
+            self.btn_feature_page_power.show()
+            self.btn_feature_page_power.setStyleSheet(self.btn_side_menu_style_1)
             self.btn_feature_page_event_notification.show()
             self.btn_feature_page_event_notification.setStyleSheet(self.btn_side_menu_style_1)
             self.btn_feature_page_settings.show()
@@ -3215,6 +3292,15 @@ class App(QMainWindow):
 
         except Exception as e:
             print(e)
+
+    def feature_page_power_function(self):
+        print('-- [App.feature_pg_power]: plugged in')
+        self.hide_all_features()
+        self.lbl_settings_bg.show()
+
+        self.btn_feature_page_power.setStyleSheet(self.btn_side_menu_style)
+        self.lbl_power_plan.show()
+        self.btn_power_plan.show()
 
     def feature_pg_execution_policy(self):
         print('-- [App.feature_pg_execution_policy]: plugged in')
@@ -3508,13 +3594,35 @@ class App(QMainWindow):
 
     def isenabled_true(self):
         print('-- [App.isenabled_true]: plugged in')
+        global bool_power_plan_interact
         for _ in self.object_interaction_enabled:
             _.setEnabled(True)
+        if bool_power_plan_interact is True:
+            self.btn_event_notification_g1.setEnabled(False)
+            self.lbl_event_notification_g1.setEnabled(False)
+            self.btn_event_notification_run_g1.setEnabled(False)
+            self.lbl_event_notification_run_g1.setEnabled(False)
+        elif bool_power_plan_interact is False:
+            self.btn_event_notification_g1.setEnabled(True)
+            self.lbl_event_notification_g1.setEnabled(True)
+            self.btn_event_notification_run_g1.setEnabled(True)
+            self.lbl_event_notification_run_g1.setEnabled(True)
 
     def isenabled_false(self):
         print('-- [App.isenabled_false]: plugged in')
+        global bool_power_plan_interact
         for _ in self.object_interaction_enabled:
             _.setEnabled(False)
+        if bool_power_plan_interact is True:
+            self.btn_event_notification_g1.setEnabled(False)
+            self.lbl_event_notification_g1.setEnabled(False)
+            self.btn_event_notification_run_g1.setEnabled(False)
+            self.lbl_event_notification_run_g1.setEnabled(False)
+        elif bool_power_plan_interact is False:
+            self.btn_event_notification_g1.setEnabled(True)
+            self.lbl_event_notification_g1.setEnabled(True)
+            self.btn_event_notification_run_g1.setEnabled(True)
+            self.lbl_event_notification_run_g1.setEnabled(True)
 
     def read_only_true(self):
         print('-- [App.read_only_true]: plugged in')
@@ -3570,6 +3678,7 @@ class App(QMainWindow):
         global devices_kb, devices_ms
         global thread_net_connection
         global thread_media_display, bool_switch_startup_media_display
+        global thread_power, bool_power_plan_interact
 
         if len(devices_kb) > 0:
             for _ in corsairled_id_num_kb_complete:
@@ -3590,6 +3699,9 @@ class App(QMainWindow):
             if bool_switch_startup_media_display is True:
                 thread_media_display[0].stop()
                 thread_media_display[0].start()
+            if bool_power_plan_interact is True:
+                thread_power[0].stop()
+                thread_power[0].start()
 
     def btn_bck_light_function(self):
         print('-- [App.btn_bck_light_function]: plugged in')
@@ -4371,24 +4483,45 @@ class App(QMainWindow):
 
     def g1_function_short(self):
         global thread_g1_notify, bool_allow_g1_short, bool_switch_event_notification_run_g1, str_event_notification_run_path_g1
-        global devices_kb
+        global devices_kb, bool_power_plan_interact, power_plan, power_plan_index
         print('-- [App.g1_function_short]: plugged in')
         if len(devices_kb):
-            thread_g1_notify[0].stop()
-            if bool_allow_g1_short is True:
-                bool_allow_g1_short = False
-                if bool_switch_event_notification_run_g1 is True:
-                    if os.path.exists(str_event_notification_run_path_g1):
-                        print('-- [App.g1_function_short]: attempting to run:', str_event_notification_run_path_g1)
-                        try:
-                            cmd = str_event_notification_run_path_g1
-                            cmd = cmd.strip()
-                            print('running command:', cmd)
-                            xcmd = subprocess.Popen(cmd, shell=True, startupinfo=info)
-                        except Exception as e:
-                            print('-- [App.g1_function_short] Error:', e)
-                    else:
-                        print('-- [App.g1_function_short]: cannot find:', str_event_notification_run_path_g1)
+            if bool_power_plan_interact is False:
+                thread_g1_notify[0].stop()
+                if bool_allow_g1_short is True:
+                    bool_allow_g1_short = False
+                    if bool_switch_event_notification_run_g1 is True:
+                        if os.path.exists(str_event_notification_run_path_g1):
+                            print('-- [App.g1_function_short]: attempting to run:', str_event_notification_run_path_g1)
+                            try:
+                                cmd = str_event_notification_run_path_g1
+                                cmd = cmd.strip()
+                                print('running command:', cmd)
+                                xcmd = subprocess.Popen(cmd, shell=True, startupinfo=info)
+                            except Exception as e:
+                                print('-- [App.g1_function_short] Error:', e)
+                        else:
+                            print('-- [App.g1_function_short]: cannot find:', str_event_notification_run_path_g1)
+
+            elif bool_power_plan_interact is True:
+                print('-- [App.g1_function_short] cycling power plan')
+
+                if power_plan_index < len(power_plan)-1:
+                    power_plan_index += 1
+                else:
+                    power_plan_index = 0
+
+                try:
+                    print('-- [App.g1_function_short] attempting to set power plan:', power_plan[power_plan_index])
+                    x = power_plan[power_plan_index]
+                    x = x.split()
+                    power_plan_guid = x[3].strip()
+                    print('-- [App.g1_function_short] isolating GUID:', power_plan_guid)
+                    cmd = 'powercfg /SETACTIVE '+power_plan_guid
+                    print('running command:', cmd)
+                    xcmd = subprocess.Popen(cmd, shell=True, startupinfo=info)
+                except Exception as e:
+                    print('-- [App.g1_function_short] Error:', e)
 
     def g1_function_long(self):
         global thread_g1_notify, bool_allow_g1_short, devices_kb
@@ -4571,12 +4704,15 @@ class App(QMainWindow):
         global thread_backlight_auto
         global thread_media_display
         global thread_pause_loop
+        global thread_power
         global bool_switch_startup_media_display
         global str_event_notification_run_path_g1, str_event_notification_run_path_g2, str_event_notification_run_path_g3
         global str_event_notification_run_path_g4, str_event_notification_run_path_g5, str_event_notification_run_path_g6
         global str_path_kb_img, str_path_ms_img
+        global bool_power_plan_interact
+        global thread_test_locked
 
-        hdd_mon_thread = HddMonClass( )
+        hdd_mon_thread = HddMonClass()
         thread_disk_rw.append(hdd_mon_thread)
         cpu_mon_thread = CpuMonClass()
         thread_cpu_util.append(cpu_mon_thread)
@@ -4630,10 +4766,24 @@ class App(QMainWindow):
         thread_media_display.append(system_mute)
         pause_loop = PauseLoopClass()
         thread_pause_loop.append(pause_loop)
+        power_thread = PowerClass()
+        thread_power.append(power_thread)
+        test_locked = IsLockedClass()
+        thread_test_locked.append(test_locked)
+        thread_test_locked[0].start()
+
         print('-- [App.initUI]: waiting to display application')
         while bool_backend_allow_display is False:
             time.sleep(1)
         print('-- [App.initUI]: displaying application')
+        if bool_power_plan_interact is True:
+            self.btn_power_plan.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.btn_event_notification_g1.setEnabled(False)
+            self.lbl_event_notification_g1.setEnabled(False)
+            self.btn_event_notification_run_g1.setEnabled(False)
+            self.lbl_event_notification_run_g1.setEnabled(False)
+        if bool_power_plan_interact is False:
+            self.btn_power_plan.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
         if os.path.exists(str_path_kb_img):
             self.btn_con_stat_kb_img.setIcon(QIcon(str_path_kb_img))
         if os.path.exists(str_path_ms_img):
@@ -4931,6 +5081,128 @@ class App(QMainWindow):
         pass
 
 
+class IsLockedClass(QThread):
+    print('-- [IsLockedClass]: plugged in')
+
+    def __init__(self):
+        QThread.__init__(self)
+        self.locked = None
+        self.locked_prev = None
+
+    def run(self):
+        print('-- [IsLockedClass.run]: plugged in')
+        global power_plan, power_plan_index, thread_compile_devices, devices_previous
+        while True:
+            try:
+                process_name = 'LogonUI.exe'
+                callall = 'TASKLIST'
+                outputall = subprocess.check_output(callall)
+                outputstringall = str(outputall)
+
+                if process_name in outputstringall:
+                    self.locked = True
+                    if self.locked != self.locked_prev:
+                        self.locked_prev = True
+                        print("-- [IsLockedClass]: Locked.")
+                        devices_previous = []
+                        thread_compile_devices[0].stop()
+                else:
+                    self.locked = False
+                    if self.locked != self.locked_prev:
+                        self.locked_prev = False
+                        print("-- [IsLockedClass]: Unlocked.")
+                        devices_previous = []
+                        thread_compile_devices[0].start()
+
+            except Exception as e:
+                print("-- [IsLockedClass]: Error:", e)
+            time.sleep(1.5)
+
+    def stop(self):
+        print('-- [IsLockedClass.stop]: plugged in')
+        self.terminate()
+
+
+class PowerClass(QThread):
+    print('-- [PowerClass]: plugged in')
+
+    def __init__(self):
+        QThread.__init__(self)
+        self.active_pp = -1
+        self.active_pp_prev = -1
+
+    def run(self):
+        print('-- [PowerClass.run]: plugged in')
+        global power_plan, power_plan_index
+        while True:
+            try:
+                """ subprocess """
+                cmd_output = []
+                xcmd = subprocess.Popen("powercfg /LIST", stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                while True:
+                    output = xcmd.stdout.readline()
+                    if output == '' and xcmd.poll() is not None:
+                        break
+                    if output:
+                        cmd_output.append(str(output.decode("utf-8").strip()))
+                    else:
+                        break
+                    rc = xcmd.poll()
+                i = 0
+                for _ in cmd_output:
+                    if _.endswith('*'):
+                        # print('-- [PowerClass.run] active power plan:', _)
+                        if 'Power saver' in _:
+                            self.active_pp = 1
+                            if self.active_pp != self.active_pp_prev:
+                                self.active_pp_prev = 1
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 0, 0)}))
+                        elif 'Balanced' in _:
+                            self.active_pp = 2
+                            if self.active_pp != self.active_pp_prev:
+                                self.active_pp_prev = 2
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (0, 255, 0)}))
+                        elif 'High performance' in _:
+                            self.active_pp = 3
+                            if self.active_pp != self.active_pp_prev:
+                                self.active_pp_prev = 3
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (0, 255, 255)}))
+                        elif 'Ultimate Performance' in _:
+                            self.active_pp = 4
+                            if self.active_pp != self.active_pp_prev:
+                                self.active_pp_prev = 4
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 15, 100)}))
+
+                    if _.startswith('Power Scheme GUID:'):
+
+                        if canonical_caseless('Power saver') in canonical_caseless(_) and canonical_caseless('Power saver') not in power_plan:
+                            power_plan[0] = _
+                        if canonical_caseless('Balanced') in canonical_caseless(_) and canonical_caseless('Balanced') not in power_plan:
+                            power_plan[1] = _
+                        if canonical_caseless('High performance') in canonical_caseless(_) and canonical_caseless('High performance') not in power_plan:
+                            power_plan[2] = _
+                        if canonical_caseless('Ultimate Performance') in canonical_caseless(_) and canonical_caseless('Ultimate Performance') not in power_plan:
+                            power_plan[3] = _
+
+                        i += 1
+
+            except Exception as e:
+                print('-- [PowerClass.run] Error:', e)
+
+            time.sleep(1)
+
+    def stop(self):
+        print('-- [PowerClass.stop]: plugged in')
+        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
+        self.active_pp = -1
+        self.active_pp_prev = -1
+        try:
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: sdk_color_backlight}))
+        except Exception as e:
+            print('-- [PowerClass.stop] Error:', e)
+        self.terminate()
+
+
 class PauseLoopClass(QThread):
     print('-- [PauseLoopClass]: plugged in')
 
@@ -4963,21 +5235,20 @@ class MediaDisplayClass(QThread):
         self.media_state = -1
         self.media_state_prev = -1
 
-
     def send_instruction_on(self):
-        # print('-- [EventHandlerG1Notify.send_instruction_on]: plugged in')
+        # print('-- [MediaDisplayClass.send_instruction_on]: plugged in')
         global sdk, devices_kb, devices_kb_selected
         if len(devices_kb) >= 1:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({98: (0, 255, 0)}))
 
     def send_instruction_off(self):
-        # print('-- [EventHandlerG1Notify.send_instruction_off]: plugged in')
+        # print('-- [MediaDisplayClass.send_instruction_off]: plugged in')
         global sdk, devices_kb, devices_kb_selected
         if len(devices_kb) >= 1:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({98: (255, 0, 0)}))
 
     def send_instruction_off_1(self):
-        # print('-- [EventHandlerG1Notify.send_instruction_off]: plugged in')
+        # print('-- [MediaDisplayClass.send_instruction_off]: plugged in')
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
         if len(devices_kb) >= 1:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({98: sdk_color_backlight}))
@@ -5608,6 +5879,7 @@ class SdkEventHandlerClass(QThread):
         # print('-- [SdkEventHandlerClass.on_release]: plugged in')
         global bool_switch_event_notification_g1, bool_switch_event_notification_g2, bool_switch_event_notification_g3
         global bool_switch_event_notification_g4, bool_switch_event_notification_g5, bool_switch_event_notification_g6
+        global bool_power_plan_interact
 
         date_time_now = str(datetime.datetime.now())
         var = date_time_now.split(' ')
@@ -5618,7 +5890,9 @@ class SdkEventHandlerClass(QThread):
             # (notification) short press: reset ledId color and run pertaining function
             if time_now_release < (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
                 print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
-                if bool_switch_event_notification_g1 is True:
+                if bool_switch_event_notification_g1 is True and bool_power_plan_interact is False:
+                    self.g1_function_short()
+                elif bool_power_plan_interact is True:
                     self.g1_function_short()
             # (notification) long release: reset ledId color and disconnect key from function
             elif time_now_release >= (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
@@ -5802,6 +6076,7 @@ class CompileDevicesClass(QThread):
         global thread_temperatures
         global thread_media_display
         global thread_pause_loop
+        global thread_power
 
         print('-- [CompileDevicesClass.stop_all_threads] stopping all threads:', )
         if len(devices_kb) >= 1 or len(devices_ms) >= 1:
@@ -5845,6 +6120,10 @@ class CompileDevicesClass(QThread):
                 thread_pause_loop[0].stop()
             except Exception as e:
                 print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
+            try:
+                thread_power[0].stop()
+            except Exception as e:
+                print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
 
     def start_all_threads(self):
         print('-- [CompileDevicesClass.start_all_threads]: plugged in')
@@ -5856,6 +6135,7 @@ class CompileDevicesClass(QThread):
         global thread_backlight_auto, bool_switch_backlight_auto
         global thread_temperatures, bool_cpu_temperature, bool_vram_temperature
         global thread_media_display
+        global thread_power
 
         if len(devices_kb) > 0:
             thread_sdk_event_handler[0].start()
@@ -5876,6 +6156,8 @@ class CompileDevicesClass(QThread):
                 thread_temperatures[0].start()
             if bool_switch_startup_media_display is True:
                 thread_media_display[0].start()
+            if bool_power_plan_interact is True:
+                thread_power[0].start()
         if len(devices_kb) > 0 or len(devices_ms) > 0:
             if bool_switch_startup_net_con_ms is True or bool_switch_startup_net_con_kb is True:
                 thread_net_connection[0].start()
@@ -6051,6 +6333,7 @@ class CompileDevicesClass(QThread):
         global bool_cpu_temperature, bool_vram_temperature
         global str_path_kb_img, str_path_ms_img
         global bool_switch_startup_media_display
+        global bool_power_plan_interact
 
         startup_loc = '/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/iCUEDisplay.lnk'
         bool_backend_valid_network_adapter_name = False
@@ -6380,6 +6663,10 @@ class CompileDevicesClass(QThread):
                     bool_switch_startup_media_display = False
                 elif line == 'bool_switch_startup_media_display: true':
                     bool_switch_startup_media_display = True
+                if line == 'bool_power_plan_interact: true':
+                    bool_power_plan_interact = True
+                elif line == 'bool_power_plan_interact: false':
+                    bool_power_plan_interact = False
         print('-- [ConfigCompile.config_read] bool_switch_event_notification_g1:', bool_switch_event_notification_g1)
         print('-- [ConfigCompile.read_config] bool_switch_event_notification_g2:', bool_switch_event_notification_g2)
         print('-- [ConfigCompile.read_config] bool_switch_event_notification_g3:', bool_switch_event_notification_g3)
