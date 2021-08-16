@@ -128,3 +128,9 @@ press (0.75 seconds +) will remove the notification and not run the directed cod
 [Run as Admin]
 
 [Resolution: 1920x1080 or higher is recommended]
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+      DEVELOPERS
+[IF running iCUEDisplay.py then for certain media playback functionality you may need to modify a module as follows:]
+[1. Open __init__.py in site-packages\winrt]
+[2. Replace line '_winrt.init_apartment()' with 'pythoncom.CoInitialize()']
