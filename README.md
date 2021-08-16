@@ -134,3 +134,4 @@ press (0.75 seconds +) will remove the notification and not run the directed cod
 [IF running iCUEDisplay.py then for certain media playback functionality you may need to modify a module as follows:]
 [1. Open __init__.py in site-packages\winrt]
 [2. Replace line 'winrt.init_apartment()' with 'pythoncom.CoInitialize()']
+Note the executable has been compiled with the modified module.
