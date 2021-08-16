@@ -1794,6 +1794,33 @@ class App(QMainWindow):
         ui_object_complete.append(self.lbl_net_con_mouse_key_4)
         ui_object_font_list_s7b.append(self.lbl_net_con_mouse_key_4)
 
+        self.lbl_net_con_mouse_key_5 = QLabel(self)
+        self.lbl_net_con_mouse_key_5.move(self.menu_obj_pos_w + 2 + 4 + 10 + 4 + 72 + 4 + 72, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10)
+        self.lbl_net_con_mouse_key_5.resize(10, 10)
+        self.lbl_net_con_mouse_key_5.setStyleSheet("""QLabel {background-color: rgb(255, 100, 0);
+                                                                       color: rgb(150, 150, 150);
+                                                                       border-top:2px solid rgb(10, 10, 10);
+                                                                       border-bottom:2px solid rgb(10, 10, 10);
+                                                                       border-right:2px solid rgb(10, 10, 10);
+                                                                       border-left:2px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_net_con_mouse_key_5)
+        ui_object_complete.append(self.lbl_net_con_mouse_key_5)
+
+        self.lbl_net_con_mouse_key_6 = QLabel(self)
+        self.lbl_net_con_mouse_key_6.move(self.menu_obj_pos_w + 2 + 4 + 10 + 4 + 72 + 4 + 72 + 4 + 10, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10)
+        self.lbl_net_con_mouse_key_6.resize(72, 10)
+        self.lbl_net_con_mouse_key_6.setFont(self.font_s7b)
+        self.lbl_net_con_mouse_key_6.setText('Intermittent')
+        self.lbl_net_con_mouse_key_6.setStyleSheet("""QLabel {background-color: rgb(8, 8, 8);
+                                                                       color: rgb(150, 150, 150);
+                                                                       border-top:0px solid rgb(10, 10, 10);
+                                                                       border-bottom:0px solid rgb(10, 10, 10);
+                                                                       border-right:0px solid rgb(10, 10, 10);
+                                                                       border-left:0px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_net_con_mouse_key_6)
+        ui_object_complete.append(self.lbl_net_con_mouse_key_6)
+        ui_object_font_list_s7b.append(self.lbl_net_con_mouse_key_6)
+
         self.lbl_net_con_mouse = QPushButton(self)
         self.lbl_net_con_mouse.move(self.menu_obj_pos_w + 2, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.lbl_net_con_mouse.resize(240, self.monitor_btn_h)
@@ -2203,6 +2230,118 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.btn_power_plan)
         self.object_interaction_enabled.append(self.btn_power_plan)
         ui_object_complete.append(self.btn_power_plan)
+
+        """ Power Saver """
+        self.lbl_power_plan_key_0 = QLabel(self)
+        self.lbl_power_plan_key_0.move(self.menu_obj_pos_w + 2, self.height - 8 - self.monitor_btn_h - 4 - 10)
+        self.lbl_power_plan_key_0.resize(10, 10)
+        self.lbl_power_plan_key_0.setStyleSheet("""QLabel {background-color: rgb(255, 0, 0);
+                                               color: rgb(150, 150, 150);
+                                               border-top:2px solid rgb(10, 10, 10);
+                                               border-bottom:2px solid rgb(10, 10, 10);
+                                               border-right:2px solid rgb(10, 10, 10);
+                                               border-left:2px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_power_plan_key_0)
+        ui_object_complete.append(self.lbl_power_plan_key_0)
+
+        self.lbl_power_plan_key_1 = QLabel(self)
+        self.lbl_power_plan_key_1.move(self.menu_obj_pos_w + 2 + 4 + 10, self.height - 8 - self.monitor_btn_h - 4 - 10)
+        self.lbl_power_plan_key_1.resize(72, 10)
+        self.lbl_power_plan_key_1.setFont(self.font_s7b)
+        self.lbl_power_plan_key_1.setText('Power Saver')
+        self.lbl_power_plan_key_1.setStyleSheet("""QLabel {background-color: rgb(8, 8, 8);
+                                               color: rgb(150, 150, 150);
+                                               border-top:0px solid rgb(10, 10, 10);
+                                               border-bottom:0px solid rgb(10, 10, 10);
+                                               border-right:0px solid rgb(10, 10, 10);
+                                               border-left:0px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_power_plan_key_1)
+        ui_object_complete.append(self.lbl_power_plan_key_1)
+        ui_object_font_list_s7b.append(self.lbl_power_plan_key_1)
+
+        """ Balanced """
+        self.lbl_power_plan_key_2 = QLabel(self)
+        self.lbl_power_plan_key_2.move(self.menu_obj_pos_w + 2 + 4 + 10 + 4 + 72, self.height - 8 - self.monitor_btn_h - 4 - 10)
+        self.lbl_power_plan_key_2.resize(10, 10)
+        self.lbl_power_plan_key_2.setStyleSheet("""QLabel {background-color: rgb(0, 255, 0);
+                                               color: rgb(150, 150, 150);
+                                               border-top:2px solid rgb(10, 10, 10);
+                                               border-bottom:2px solid rgb(10, 10, 10);
+                                               border-right:2px solid rgb(10, 10, 10);
+                                               border-left:2px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_power_plan_key_2)
+        ui_object_complete.append(self.lbl_power_plan_key_2)
+
+        self.lbl_power_plan_key_3 = QLabel(self)
+        self.lbl_power_plan_key_3.move(self.menu_obj_pos_w + 2 + 4 + 10 + 4 + 72 + 4 + 10, self.height - 8 - self.monitor_btn_h - 4 - 10)
+        self.lbl_power_plan_key_3.resize(72, 10)
+        self.lbl_power_plan_key_3.setFont(self.font_s7b)
+        self.lbl_power_plan_key_3.setText('Balanced')
+        self.lbl_power_plan_key_3.setStyleSheet("""QLabel {background-color: rgb(8, 8, 8);
+                                               color: rgb(150, 150, 150);
+                                               border-top:0px solid rgb(10, 10, 10);
+                                               border-bottom:0px solid rgb(10, 10, 10);
+                                               border-right:0px solid rgb(10, 10, 10);
+                                               border-left:0px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_power_plan_key_3)
+        ui_object_complete.append(self.lbl_power_plan_key_3)
+        ui_object_font_list_s7b.append(self.lbl_power_plan_key_3)
+
+        """ High Power """
+        self.lbl_power_plan_key_4 = QLabel(self)
+        self.lbl_power_plan_key_4.move(self.menu_obj_pos_w + 2 + 4 + 10 + 4 + 72 + 4 + 10 + 4 + 72, self.height - 8 - self.monitor_btn_h - 4 - 10)
+        self.lbl_power_plan_key_4.resize(10, 10)
+        self.lbl_power_plan_key_4.setStyleSheet("""QLabel {background-color: rgb(0, 0, 255);
+                                               color: rgb(150, 150, 150);
+                                               border-top:2px solid rgb(10, 10, 10);
+                                               border-bottom:2px solid rgb(10, 10, 10);
+                                               border-right:2px solid rgb(10, 10, 10);
+                                               border-left:2px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_power_plan_key_4)
+        ui_object_complete.append(self.lbl_power_plan_key_4)
+
+        self.lbl_power_plan_key_5 = QLabel(self)
+        self.lbl_power_plan_key_5.move(self.menu_obj_pos_w + 2 + 4 + 10 + 4 + 72 + 4 + 10 + 4 + 72 + 4 + 10, self.height - 8 - self.monitor_btn_h - 4 - 10)
+        self.lbl_power_plan_key_5.resize(72, 10)
+        self.lbl_power_plan_key_5.setFont(self.font_s7b)
+        self.lbl_power_plan_key_5.setText('High Power')
+        self.lbl_power_plan_key_5.setStyleSheet("""QLabel {background-color: rgb(8, 8, 8);
+                                               color: rgb(150, 150, 150);
+                                               border-top:0px solid rgb(10, 10, 10);
+                                               border-bottom:0px solid rgb(10, 10, 10);
+                                               border-right:0px solid rgb(10, 10, 10);
+                                               border-left:0px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_power_plan_key_5)
+        ui_object_complete.append(self.lbl_power_plan_key_5)
+        ui_object_font_list_s7b.append(self.lbl_power_plan_key_5)
+
+        """ Ultimate Performance """
+        self.lbl_power_plan_key_6 = QLabel(self)
+        self.lbl_power_plan_key_6.move(self.menu_obj_pos_w + 2 + 4 + 10 + 4 + 72 + 4 + 10 + 4 + 72 + 4 + 10 + 4 + 72, self.height - 8 - self.monitor_btn_h - 4 - 10)
+        self.lbl_power_plan_key_6.resize(10, 10)
+        self.lbl_power_plan_key_6.setStyleSheet("""QLabel {background-color: rgb(255, 15, 100);
+                                                       color: rgb(150, 150, 150);
+                                                       border-top:2px solid rgb(10, 10, 10);
+                                                       border-bottom:2px solid rgb(10, 10, 10);
+                                                       border-right:2px solid rgb(10, 10, 10);
+                                                       border-left:2px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_power_plan_key_6)
+        ui_object_complete.append(self.lbl_power_plan_key_6)
+
+        self.lbl_power_plan_key_7 = QLabel(self)
+        self.lbl_power_plan_key_7.move(self.menu_obj_pos_w + 2 + 4 + 10 + 4 + 72 + 4 + 10 + 4 + 72 + 4 + 10 + 4 + 72 + 4 + 10, self.height - 8 - self.monitor_btn_h - 4 - 10)
+        self.lbl_power_plan_key_7.resize(100, 10)
+        self.lbl_power_plan_key_7.setFont(self.font_s7b)
+        self.lbl_power_plan_key_7.setText('Ultimate Performance')
+        self.lbl_power_plan_key_7.setStyleSheet("""QLabel {background-color: rgb(8, 8, 8);
+                                                       color: rgb(150, 150, 150);
+                                                       border-top:0px solid rgb(10, 10, 10);
+                                                       border-bottom:0px solid rgb(10, 10, 10);
+                                                       border-right:0px solid rgb(10, 10, 10);
+                                                       border-left:0px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_power_plan_key_7)
+        ui_object_complete.append(self.lbl_power_plan_key_7)
+        ui_object_font_list_s7b.append(self.lbl_power_plan_key_7)
 
         self.lbl_event_notification_key_0 = QLabel(self)
         self.lbl_event_notification_key_0.move(self.menu_obj_pos_w + 2, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 20 - 20)
@@ -3302,6 +3441,15 @@ class App(QMainWindow):
         self.lbl_power_plan.show()
         self.btn_power_plan.show()
 
+        self.lbl_power_plan_key_0.show()
+        self.lbl_power_plan_key_1.show()
+        self.lbl_power_plan_key_2.show()
+        self.lbl_power_plan_key_3.show()
+        self.lbl_power_plan_key_4.show()
+        self.lbl_power_plan_key_5.show()
+        self.lbl_power_plan_key_6.show()
+        self.lbl_power_plan_key_7.show()
+
     def feature_pg_execution_policy(self):
         print('-- [App.feature_pg_execution_policy]: plugged in')
         self.hide_all_features()
@@ -3443,6 +3591,8 @@ class App(QMainWindow):
         self.lbl_net_con_mouse_key_2.show()
         self.lbl_net_con_mouse_key_3.show()
         self.lbl_net_con_mouse_key_4.show()
+        self.lbl_net_con_mouse_key_5.show()
+        self.lbl_net_con_mouse_key_6.show()
 
     def btn_feature_page_event_notification_function(self):
         print('-- [App.btn_feature_page_event_notification_function]: plugged in')
@@ -5897,7 +6047,7 @@ class SdkEventHandlerClass(QThread):
             # (notification) long release: reset ledId color and disconnect key from function
             elif time_now_release >= (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
                 print('-- [App.on_press] captured event: time_now_1: {0} long released {1}'.format(self.time_now_press, data.keyId))
-                if bool_switch_event_notification_g1 is True:
+                if bool_switch_event_notification_g1 is True and bool_power_plan_interact is False:
                     self.g1_function_long()
         elif self.time_now_release_keyId == 'CorsairKeyId.Kb_G2':
             # (notification) short press: reset ledId color and run pertaining function
