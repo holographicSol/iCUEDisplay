@@ -2343,6 +2343,21 @@ class App(QMainWindow):
         ui_object_complete.append(self.lbl_power_plan_key_7)
         ui_object_font_list_s7b.append(self.lbl_power_plan_key_7)
 
+        self.lbl_power_plan_key_8 = QLabel(self)
+        self.lbl_power_plan_key_8.move(self.menu_obj_pos_w + 2, self.height - 8 - self.monitor_btn_h - 4 - 10 - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.lbl_power_plan_key_8.resize(420, 80)
+        self.lbl_power_plan_key_8.setFont(self.font_s7b)
+        self.lbl_power_plan_key_8.setText('[G1] Key will cycle power plan. It is recommended to properly configure your power plan(s) to\ncompliment this feature, reducing Processor Maximum State for Power Saver.\n\nNote: Enabling this feature will disable G1 Notification and G1 Notification Event Response.')
+        self.lbl_power_plan_key_8.setStyleSheet("""QLabel {background-color: rgb(8, 8, 8);
+                                                               color: rgb(150, 150, 150);
+                                                               border-top:0px solid rgb(10, 10, 10);
+                                                               border-bottom:0px solid rgb(10, 10, 10);
+                                                               border-right:0px solid rgb(10, 10, 10);
+                                                               border-left:0px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_power_plan_key_8)
+        ui_object_complete.append(self.lbl_power_plan_key_8)
+        ui_object_font_list_s7b.append(self.lbl_power_plan_key_8)
+
         self.lbl_event_notification_key_0 = QLabel(self)
         self.lbl_event_notification_key_0.move(self.menu_obj_pos_w + 2, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 20 - 20)
         self.lbl_event_notification_key_0.resize(300, 20)
@@ -3449,6 +3464,7 @@ class App(QMainWindow):
         self.lbl_power_plan_key_5.show()
         self.lbl_power_plan_key_6.show()
         self.lbl_power_plan_key_7.show()
+        self.lbl_power_plan_key_8.show()
 
     def feature_pg_execution_policy(self):
         print('-- [App.feature_pg_execution_policy]: plugged in')
