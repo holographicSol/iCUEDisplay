@@ -440,8 +440,11 @@ def create_new():
         open('./data/event_notification_g6.dat', 'w').close()
     time.sleep(2)
 
+
 first_load = True
 obj_geo_item = []
+obj_icon_geo = []
+obj_icon = []
 prev_multiplier_w = int(1)
 prev_multiplier_h = int(1)
 ui_object_font_list_s6b = []
@@ -455,12 +458,12 @@ class ObjEveFilter(QObject):
     def eventFilter(self, obj, event):
         global event_filter_self, avail_w, avail_h, ui_object_complete, event_filter_self, first_load, obj_geo_item, prev_multiplier_w, prev_multiplier_h
         global ui_object_font_list_s6b, ui_object_font_list_s7b, ui_object_font_list_s8b, ui_object_font_list_s9b
-        global main_pid, first_pass
+        global main_pid
+        global obj_icon_geo, obj_icon
         obj_eve = obj, event
         # Uncomment This Line To See All Object Events
         # print('-- ObjEveFilter(QObject).eventFilter(self, obj, event):', obj_eve)
         if str(obj_eve[1]).startswith('<PyQt5.QtGui.QResizeEvent') or str(obj_eve[1]).startswith('<PyQt5.QtGui.QMoveEvent'):
-            # print('-- [ObjEveFilter]: Handling resize event')
             if first_load is True:
                 first_load = False
                 for _ in ui_object_complete:
@@ -471,7 +474,11 @@ class ObjEveFilter(QObject):
                     # print('[object geometry]', _, obj_geo_width, obj_geo_height, obj_geo_pos_w, obj_geo_pos_h)
                     var = obj_geo_width, obj_geo_height, obj_geo_pos_w, obj_geo_pos_h
                     obj_geo_item.append(var)
-            # print(obj_geo_item)
+                    try:
+                        obj_icon_geo.append(_.iconSize())
+                        obj_icon.append(_)
+                    except:
+                        pass
             # print("previous width:", avail_w)
             # print("previous height:", avail_h)
             new_avail_w = QDesktopWidget().availableGeometry().width()
@@ -491,12 +498,11 @@ class ObjEveFilter(QObject):
             else:
                 multiplier_w = 1
                 multiplier_h = 1
+            multiplier_w = multiplier_h
             # print('multiplier_w:', multiplier_w)
             # print('multiplier_h:', multiplier_h)
+
             if prev_multiplier_w != multiplier_w or prev_multiplier_h != multiplier_h or new_avail_w != avail_w or new_avail_h != avail_h:
-                first_pass = False
-                prev_multiplier_w = multiplier_w
-                prev_multiplier_h = multiplier_h
                 avail_h = new_avail_h
                 avail_w = new_avail_w
                 app_width = 560 * multiplier_w
@@ -527,6 +533,26 @@ class ObjEveFilter(QObject):
                     _.move(new_obj_pos_w, new_obj_pos_h)
                     _.resize(new_obj_w, new_obj_h)
                     i += 1
+
+                i = 0
+                for _ in obj_icon_geo:
+                    try:
+                        geo_var = str(_)
+                        geo_var = geo_var.replace('PyQt5.QtCore.QSize(', '')
+                        geo_var = geo_var.replace(')', '')
+                        geo_var = geo_var.replace(',', '')
+                        geo_var_split = geo_var.split()
+                        icon_sz_w = int(geo_var_split[0])
+                        icon_sz_h = int(geo_var_split[1])
+                        print('-- [ObjEveFilter.eventFilter] original icon_sz_w:', icon_sz_w, '  original icon_sz_h:', icon_sz_h)
+                        icon_size_w = icon_sz_w * multiplier_w
+                        icon_size_h = icon_sz_h * multiplier_h
+                        print('-- [ObjEveFilter.eventFilter] [multiply result] new icon_sz_w:', icon_size_w, '  new icon_sz_h:', icon_size_h)
+                        obj_icon[i].setIconSize(QSize(icon_size_w, icon_size_h))
+                    except Exception as e:
+                        print('-- [ObjEveFilter.eventFilter] object icon size may be inapplicable:', _, e)
+                    i += 1
+
                 font_size_6b = int(6 * multiplier_h)
                 font_size_7b = int(7 * multiplier_h)
                 font_size_8b = int(8 * multiplier_h)
@@ -543,9 +569,11 @@ class ObjEveFilter(QObject):
                     _.setFont(font_s8b)
                 for _ in ui_object_font_list_s9b:
                     _.setFont(font_s9b)
-                # ToDo --> rescale images by multiplier (after finalizing layout)
 
                 # ToDo -->  Geometry set Above. Finalize by displaying the new geometry automatically without user needing to click/move the app for the changes to visibly take effect
+
+                prev_multiplier_w = multiplier_w
+                prev_multiplier_h = multiplier_h
         return False
 
 
@@ -7676,7 +7704,7 @@ class HddMonClass(QThread):
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[self.i_r]: sdk_color_backlight}))
         sdk.set_led_colors_flush_buffer()
 
-    def send_read_instruction_umounted(self):
+    def send_instruction_umounted(self):
         global bool_switch_display_disk_mount
         global sdk, devices_kb, devices_kb_selected
         global corsairled_id_num_hddreadwrite, sdk_color_hddread_on, sdk_color_backlight
@@ -7739,7 +7767,7 @@ class HddMonClass(QThread):
             for _ in alpha_str:
                 if _.upper() not in self.disk_letter_complete:
                     # print(_, self.disk_letter_complete)
-                    self.send_read_instruction_umounted()
+                    self.send_instruction_umounted()
                 self.i_umount += 1
 
         except Exception as e:
@@ -7807,10 +7835,10 @@ class CpuMonClass(QThread):
         try:
             cpu_i = 0
             for _ in corsairled_id_num_cpu:
-                if self.cpu_key[cpu_i] is True:
+                if self.cpu_key[cpu_i] is True and self.cpu_key[cpu_i] != self.cpu_key_prev[cpu_i]:
                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_cpu[cpu_i]: sdk_color_cpu_on}))
                     self.cpu_key_prev[cpu_i] = True
-                elif self.cpu_key[cpu_i] is False:
+                elif self.cpu_key[cpu_i] is False and self.cpu_key[cpu_i] != self.cpu_key_prev[cpu_i]:
                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_cpu[cpu_i]: sdk_color_backlight}))
                     self.cpu_key_prev[cpu_i] = False
                 cpu_i += 1
@@ -7836,6 +7864,8 @@ class CpuMonClass(QThread):
     def stop(self):
         print('-- [CpuMonClass.stop]: plugged in')
         global sdk, devices_kb, devices_kb_selected, corsairled_id_num_cpu, sdk_color_cpu_on, sdk_color_backlight
+        self.cpu_key = [True, False, False, False]
+        self.cpu_key_prev = [None, None, None, None]
         try:
             cpu_i = 0
             for _ in corsairled_id_num_cpu:
