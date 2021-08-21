@@ -16,18 +16,15 @@ import datetime
 import subprocess
 import shutil
 import distutils.dir_util
-from win32api import GetMonitorInfo, MonitorFromPoint, GetSystemMetrics
-from cuesdk import CueSdk
 from cuesdk import CueSdk, CorsairEventId
 from PyQt5 import QtCore
 from PyQt5.QtGui import QIcon, QCursor, QFont, QPixmap
 from PyQt5.QtCore import Qt, QThread, QSize, QPoint, QCoreApplication, QTimer, QEvent, QObject
 from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QDesktopWidget, QLineEdit, QComboBox, QFileDialog
-import win32gui
-from winrt.windows.media.control import \
-    GlobalSystemMediaTransportControlsSessionManager as MediaManager
+from winrt.windows.media.control import GlobalSystemMediaTransportControlsSessionManager as MediaManager
 import asyncio
 import winrt.windows.media.control as wmc
+import keyboard
 
 info = subprocess.STARTUPINFO()
 info.dwFlags = 1
@@ -95,6 +92,15 @@ hdd_bytes_type_r = ''
 hdd_bytes_str = ''
 str_path_kb_img = ''
 str_path_ms_img = ''
+bool_backlight_interact = False
+bool_powershell_interact = False
+bool_led_state_g1_notify = False
+bool_led_state_g2_notify = False
+bool_led_state_g3_notify = False
+bool_led_state_g4_notify = False
+bool_led_state_g5_notify = False
+bool_led_state_g6_notify = False
+bool_show_overlay = False
 bool_power_plan_interact = False
 bool_execution_policy = True
 bool_execution_policy_show = False
@@ -152,6 +158,8 @@ bool_backend_icue_connected_previous = None
 bool_backend_config_read_complete = False
 bool_backend_valid_network_adapter_name = False
 bool_switch_startup_media_display = False
+thread_keyevents = []
+thread_overlay = []
 thread_test_locked = []
 thread_power = []
 thread_pause_loop = []
@@ -321,7 +329,15 @@ config_data = ['sdk_color_cpu_on: 255,255,0',
                'str_path_kb_img: ',
                'str_path_ms_img: ',
                'bool_switch_startup_media_display: false',
-               'bool_power_plan_interact: false']
+               'bool_power_plan_interact: false',
+               'bool_led_state_g1_notify: false',
+               'bool_led_state_g2_notify: false',
+               'bool_led_state_g3_notify: false',
+               'bool_led_state_g4_notify: false',
+               'bool_led_state_g5_notify: false',
+               'bool_led_state_g6_notify: false',
+               'bool_powershell_interact: false',
+               'bool_backlight_interact: false']
 
 
 def create_new():
@@ -585,6 +601,7 @@ class App(QMainWindow):
         global bool_backend_install, event_filter_self, avail_w, avail_h, ui_object_complete
         global ui_object_font_list_s6b, ui_object_font_list_s7b, ui_object_font_list_s8b, ui_object_font_list_s9b
         global bool_execution_policy_show, bool_execution_policy
+
         avail_w = QDesktopWidget().availableGeometry().width()
         avail_h = QDesktopWidget().availableGeometry().height()
         print("-- [App.__init__] available geometry:", 'width=', avail_w, ' height=', avail_h)
@@ -603,6 +620,7 @@ class App(QMainWindow):
         self.timer.timeout.connect(self.pollCursor)
         self.timer.start()
         self.cursor = None
+
         """ Title & Icon """
         self.setWindowIcon(QIcon('./icon.ico'))
         self.title = 'iCUE Display'
@@ -2238,6 +2256,48 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_media_display)
         ui_object_complete.append(self.btn_media_display)
 
+        self.lbl_powershell = QPushButton(self)
+        self.lbl_powershell.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.lbl_powershell.resize(126, self.monitor_btn_h)
+        self.lbl_powershell.setFont(self.font_s8b)
+        self.lbl_powershell.setText('G6 Powershell')
+        self.lbl_powershell.setStyleSheet(self.btn_menu_style)
+        self.lbl_powershell.clicked.connect(self.btn_powershell_function)
+        print('-- [App.__init__] created:', self.lbl_powershell)
+        ui_object_complete.append(self.lbl_powershell)
+        ui_object_font_list_s8b.append(self.lbl_powershell)
+
+        self.btn_powershell = QPushButton(self)
+        self.btn_powershell.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 126, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.btn_powershell.resize(28, 28)
+        self.btn_powershell.setStyleSheet(self.btn_menu_style)
+        self.btn_powershell.setIconSize(self.tog_switch_ico_sz)
+        self.btn_powershell.clicked.connect(self.btn_powershell_function)
+        print('-- [App.__init__] created:', self.btn_powershell)
+        self.object_interaction_enabled.append(self.btn_powershell)
+        ui_object_complete.append(self.btn_powershell)
+
+        self.lbl_g5_backlight = QPushButton(self)
+        self.lbl_g5_backlight.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.lbl_g5_backlight.resize(126, self.monitor_btn_h)
+        self.lbl_g5_backlight.setFont(self.font_s8b)
+        self.lbl_g5_backlight.setText('G5 Backlight')
+        self.lbl_g5_backlight.setStyleSheet(self.btn_menu_style)
+        self.lbl_g5_backlight.clicked.connect(self.btn_g5_backlight_function)
+        print('-- [App.__init__] created:', self.lbl_g5_backlight)
+        ui_object_complete.append(self.lbl_g5_backlight)
+        ui_object_font_list_s8b.append(self.lbl_g5_backlight)
+
+        self.btn_g5_backlight = QPushButton(self)
+        self.btn_g5_backlight.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 126, self.height - 8 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.btn_g5_backlight.resize(28, 28)
+        self.btn_g5_backlight.setStyleSheet(self.btn_menu_style)
+        self.btn_g5_backlight.setIconSize(self.tog_switch_ico_sz)
+        self.btn_g5_backlight.clicked.connect(self.btn_g5_backlight_function)
+        print('-- [App.__init__] created:', self.btn_g5_backlight)
+        self.object_interaction_enabled.append(self.btn_g5_backlight)
+        ui_object_complete.append(self.btn_g5_backlight)
+
         self.lbl_power_plan = QPushButton(self)
         self.lbl_power_plan.move(self.menu_obj_pos_w + 2, self.height - 8 - self.monitor_btn_h)
         self.lbl_power_plan.resize(126, self.monitor_btn_h)
@@ -2375,7 +2435,7 @@ class App(QMainWindow):
         self.lbl_power_plan_key_8.move(self.menu_obj_pos_w + 2, self.height - 8 - self.monitor_btn_h - 4 - 10 - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.lbl_power_plan_key_8.resize(420, 80)
         self.lbl_power_plan_key_8.setFont(self.font_s7b)
-        self.lbl_power_plan_key_8.setText('[G1] Key will cycle power plan. It is recommended to properly configure your power plan(s) to\ncompliment this feature, reducing Processor Maximum State for Power Saver.\n\nNote: Enabling this feature will disable G1 Notification and G1 Notification Event Response.')
+        self.lbl_power_plan_key_8.setText('[G1] Key will cycle power plan. It is recommended to properly configure your power plan(s) to\ncompliment this feature, reducing Processor Maximum State for Power Saver.\n\nNote: Enabling this feature will disable G1 Notification and G1 Notification Event Response.\nSo it is recommended to turn off Event notification for relevant key(s) before enabling.')
         self.lbl_power_plan_key_8.setStyleSheet("""QLabel {background-color: rgb(8, 8, 8);
                                                                color: rgb(150, 150, 150);
                                                                border-top:0px solid rgb(10, 10, 10);
@@ -2458,6 +2518,15 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_event_notification_select_file_g1)
         ui_object_complete.append(self.btn_event_notification_select_file_g1)
 
+        self.btn_event_notification_select_state_g1 = QPushButton(self)
+        self.btn_event_notification_select_state_g1.move(self.menu_obj_pos_w - 5, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20)
+        self.btn_event_notification_select_state_g1.resize(5, 20)
+        self.btn_event_notification_select_state_g1.setStyleSheet(self.btn_menu_style)
+        self.btn_event_notification_select_state_g1.clicked.connect(self.btn_event_notification_select_state_g1_function)
+        print('-- [App.__init__] created:', self.btn_event_notification_select_state_g1)
+        self.object_interaction_enabled.append(self.btn_event_notification_select_state_g1)
+        ui_object_complete.append(self.btn_event_notification_select_state_g1)
+
         self.lbl_event_notification_g2 = QPushButton(self)
         self.lbl_event_notification_g2.move(self.menu_obj_pos_w + 2, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20)
         self.lbl_event_notification_g2.resize(60, 20)
@@ -2519,6 +2588,15 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.btn_event_notification_select_file_g2)
         self.object_interaction_enabled.append(self.btn_event_notification_select_file_g2)
         ui_object_complete.append(self.btn_event_notification_select_file_g2)
+
+        self.btn_event_notification_select_state_g2 = QPushButton(self)
+        self.btn_event_notification_select_state_g2.move(self.menu_obj_pos_w - 5, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20 - 4 - 20)
+        self.btn_event_notification_select_state_g2.resize(5, 20)
+        self.btn_event_notification_select_state_g2.setStyleSheet(self.btn_menu_style)
+        self.btn_event_notification_select_state_g2.clicked.connect(self.btn_event_notification_select_state_g2_function)
+        print('-- [App.__init__] created:', self.btn_event_notification_select_state_g2)
+        self.object_interaction_enabled.append(self.btn_event_notification_select_state_g2)
+        ui_object_complete.append(self.btn_event_notification_select_state_g2)
 
         self.lbl_event_notification_g3 = QPushButton(self)
         self.lbl_event_notification_g3.move(self.menu_obj_pos_w + 2, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20)
@@ -2582,6 +2660,15 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_event_notification_select_file_g3)
         ui_object_complete.append(self.btn_event_notification_select_file_g3)
 
+        self.btn_event_notification_select_state_g3 = QPushButton(self)
+        self.btn_event_notification_select_state_g3.move(self.menu_obj_pos_w - 5, self.height - 8 - 20 - 4 - 20 - 4 - 20 - 4 - 20)
+        self.btn_event_notification_select_state_g3.resize(5, 20)
+        self.btn_event_notification_select_state_g3.setStyleSheet(self.btn_menu_style)
+        self.btn_event_notification_select_state_g3.clicked.connect(self.btn_event_notification_select_state_g3_function)
+        print('-- [App.__init__] created:', self.btn_event_notification_select_state_g3)
+        self.object_interaction_enabled.append(self.btn_event_notification_select_state_g3)
+        ui_object_complete.append(self.btn_event_notification_select_state_g3)
+
         self.lbl_event_notification_g4 = QPushButton(self)
         self.lbl_event_notification_g4.move(self.menu_obj_pos_w + 2, self.height - 8 - 20 - 4 - 20 - 4 - 20)
         self.lbl_event_notification_g4.resize(60, 20)
@@ -2643,6 +2730,15 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.btn_event_notification_select_file_g4)
         self.object_interaction_enabled.append(self.btn_event_notification_select_file_g4)
         ui_object_complete.append(self.btn_event_notification_select_file_g4)
+
+        self.btn_event_notification_select_state_g4 = QPushButton(self)
+        self.btn_event_notification_select_state_g4.move(self.menu_obj_pos_w - 5, self.height - 8 - 20 - 4 - 20 - 4 - 20)
+        self.btn_event_notification_select_state_g4.resize(5, 20)
+        self.btn_event_notification_select_state_g4.setStyleSheet(self.btn_menu_style)
+        self.btn_event_notification_select_state_g4.clicked.connect(self.btn_event_notification_select_state_g4_function)
+        print('-- [App.__init__] created:', self.btn_event_notification_select_state_g4)
+        self.object_interaction_enabled.append(self.btn_event_notification_select_state_g4)
+        ui_object_complete.append(self.btn_event_notification_select_state_g4)
 
         self.lbl_event_notification_g5 = QPushButton(self)
         self.lbl_event_notification_g5.move(self.menu_obj_pos_w + 2, self.height - 8 - 20 - 4 - 20)
@@ -2706,6 +2802,15 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_event_notification_select_file_g5)
         ui_object_complete.append(self.btn_event_notification_select_file_g5)
 
+        self.btn_event_notification_select_state_g5 = QPushButton(self)
+        self.btn_event_notification_select_state_g5.move(self.menu_obj_pos_w - 5, self.height - 8 - 20 - 4 - 20)
+        self.btn_event_notification_select_state_g5.resize(5, 20)
+        self.btn_event_notification_select_state_g5.setStyleSheet(self.btn_menu_style)
+        self.btn_event_notification_select_state_g5.clicked.connect(self.btn_event_notification_select_state_g5_function)
+        print('-- [App.__init__] created:', self.btn_event_notification_select_state_g5)
+        self.object_interaction_enabled.append(self.btn_event_notification_select_state_g5)
+        ui_object_complete.append(self.btn_event_notification_select_state_g5)
+
         self.lbl_event_notification_g6 = QPushButton(self)
         self.lbl_event_notification_g6.move(self.menu_obj_pos_w + 2, self.height - 8 - 20)
         self.lbl_event_notification_g6.resize(60, 20)
@@ -2767,6 +2872,15 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.btn_event_notification_select_file_g6)
         self.object_interaction_enabled.append(self.btn_event_notification_select_file_g6)
         ui_object_complete.append(self.btn_event_notification_select_file_g6)
+
+        self.btn_event_notification_select_state_g6 = QPushButton(self)
+        self.btn_event_notification_select_state_g6.move(self.menu_obj_pos_w - 5, self.height - 8 - 20)
+        self.btn_event_notification_select_state_g6.resize(5, 20)
+        self.btn_event_notification_select_state_g6.setStyleSheet(self.btn_menu_style)
+        self.btn_event_notification_select_state_g6.clicked.connect(self.btn_event_notification_select_state_g6_function)
+        print('-- [App.__init__] created:', self.btn_event_notification_select_state_g6)
+        self.object_interaction_enabled.append(self.btn_event_notification_select_state_g6)
+        ui_object_complete.append(self.btn_event_notification_select_state_g6)
 
         self.btn_cpu_mon.setToolTip('CPU Utilization Monitor\n\nEnables/Disables CPU utilization monitor.')
         self.lbl_cpu_mon.setToolTip('CPU Utilization Monitor\n\nKeypad 1:       0-25%\nKeypad 4:       25-50%\nKeypad 7:       50-75%\nNumlock:       75-100%.')
@@ -2877,6 +2991,196 @@ class App(QMainWindow):
         self.installEventFilter(self.filter)
 
         self.initUI()
+
+    def btn_g5_backlight_function(self):
+        print('-- [btn_g5_backlight_function]: plugged in')
+        global bool_backlight_interact, bool_allow_g5_short, thread_g5_notify
+
+        self.setFocus()
+
+        if bool_backlight_interact is True:
+            if self.write_engaged is False:
+                print('-- [App.btn_powershell_function] changing bool_backlight_interact:', bool_backlight_interact)
+                self.write_var = 'bool_backlight_interact: false'
+                self.write_changes()
+            self.btn_g5_backlight.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            bool_backlight_interact = False
+            self.btn_event_notification_g5.setEnabled(True)
+            self.lbl_event_notification_g5.setEnabled(True)
+            self.btn_event_notification_run_g5.setEnabled(True)
+            self.lbl_event_notification_run_g5.setEnabled(True)
+
+        elif bool_backlight_interact is False:
+            if self.write_engaged is False:
+                print('-- [App.btn_powershell_function] changing bool_backlight_interact:', bool_backlight_interact)
+                self.write_var = 'bool_backlight_interact: true'
+                self.write_changes()
+            self.btn_g5_backlight.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            bool_backlight_interact = True
+            self.btn_event_notification_g5.setEnabled(False)
+            self.lbl_event_notification_g5.setEnabled(False)
+            self.btn_event_notification_run_g5.setEnabled(False)
+            self.lbl_event_notification_run_g5.setEnabled(False)
+            thread_g5_notify[0].stop()
+            bool_allow_g5_short = False
+
+    def btn_powershell_function(self):
+        print('-- [btn_powershell_function]: plugged in')
+        global bool_powershell_interact, bool_allow_g6_short, thread_g6_notify
+
+        self.setFocus()
+
+        if bool_powershell_interact is True:
+            if self.write_engaged is False:
+                print('-- [App.btn_powershell_function] changing bool_powershell_interact:', bool_powershell_interact)
+                self.write_var = 'bool_powershell_interact: false'
+                self.write_changes()
+            self.btn_powershell.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            bool_powershell_interact = False
+            self.btn_event_notification_g6.setEnabled(True)
+            self.lbl_event_notification_g6.setEnabled(True)
+            self.btn_event_notification_run_g6.setEnabled(True)
+            self.lbl_event_notification_run_g6.setEnabled(True)
+
+        elif bool_powershell_interact is False:
+            if self.write_engaged is False:
+                print('-- [App.btn_powershell_function] changing bool_powershell_interact:', bool_powershell_interact)
+                self.write_var = 'bool_powershell_interact: true'
+                self.write_changes()
+            self.btn_powershell.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            bool_powershell_interact = True
+            self.btn_event_notification_g6.setEnabled(False)
+            self.lbl_event_notification_g6.setEnabled(False)
+            self.btn_event_notification_run_g6.setEnabled(False)
+            self.lbl_event_notification_run_g6.setEnabled(False)
+            thread_g6_notify[0].stop()
+            bool_allow_g6_short = False
+
+    def btn_event_notification_select_state_g1_function(self):
+        global bool_led_state_g1_notify
+
+        self.setFocus()
+
+        if bool_led_state_g1_notify is True:
+            if self.write_engaged is False:
+                print('-- [App.btn_event_notification_select_state_g1_function] changing bool_led_state_g1_notify:', bool_led_state_g1_notify)
+                self.write_var = 'bool_led_state_g1_notify: false'
+                self.write_changes()
+            self.btn_event_notification_select_state_g1.setStyleSheet(self.btn_menu_style)
+            bool_led_state_g1_notify = False
+
+        elif bool_led_state_g1_notify is False:
+            if self.write_engaged is False:
+                print('-- [App.btn_event_notification_select_state_g1_function] changing bool_led_state_g1_notify:', bool_led_state_g1_notify)
+                self.write_var = 'bool_led_state_g1_notify: true'
+                self.write_changes()
+            self.btn_event_notification_select_state_g1.setStyleSheet(self.btn_menu_style_1)
+            bool_led_state_g1_notify = True
+
+    def btn_event_notification_select_state_g2_function(self):
+        global bool_led_state_g2_notify
+
+        self.setFocus()
+
+        if bool_led_state_g2_notify is True:
+            if self.write_engaged is False:
+                print('-- [App.btn_event_notification_select_state_g2_function] changing bool_led_state_g2_notify:', bool_led_state_g2_notify)
+                self.write_var = 'bool_led_state_g2_notify: false'
+                self.write_changes()
+            self.btn_event_notification_select_state_g2.setStyleSheet(self.btn_menu_style)
+            bool_led_state_g2_notify = False
+
+        elif bool_led_state_g2_notify is False:
+            if self.write_engaged is False:
+                print('-- [App.btn_event_notification_select_state_g2_function] changing bool_led_state_g2_notify:', bool_led_state_g2_notify)
+                self.write_var = 'bool_led_state_g2_notify: true'
+                self.write_changes()
+            self.btn_event_notification_select_state_g2.setStyleSheet(self.btn_menu_style_1)
+            bool_led_state_g2_notify = True
+
+    def btn_event_notification_select_state_g3_function(self):
+        global bool_led_state_g3_notify
+
+        self.setFocus()
+
+        if bool_led_state_g3_notify is True:
+            if self.write_engaged is False:
+                print('-- [App.btn_event_notification_select_state_g3_function] changing bool_led_state_g3_notify:', bool_led_state_g3_notify)
+                self.write_var = 'bool_led_state_g3_notify: false'
+                self.write_changes()
+            self.btn_event_notification_select_state_g3.setStyleSheet(self.btn_menu_style)
+            bool_led_state_g3_notify = False
+
+        elif bool_led_state_g3_notify is False:
+            if self.write_engaged is False:
+                print('-- [App.btn_event_notification_select_state_g3_function] changing bool_led_state_g3_notify:', bool_led_state_g3_notify)
+                self.write_var = 'bool_led_state_g3_notify: true'
+                self.write_changes()
+            self.btn_event_notification_select_state_g3.setStyleSheet(self.btn_menu_style_1)
+            bool_led_state_g3_notify = True
+
+    def btn_event_notification_select_state_g4_function(self):
+        global bool_led_state_g4_notify
+
+        self.setFocus()
+
+        if bool_led_state_g4_notify is True:
+            if self.write_engaged is False:
+                print('-- [App.btn_event_notification_select_state_g4_function] changing bool_led_state_g4_notify:', bool_led_state_g4_notify)
+                self.write_var = 'bool_led_state_g4_notify: false'
+                self.write_changes()
+            self.btn_event_notification_select_state_g4.setStyleSheet(self.btn_menu_style)
+            bool_led_state_g4_notify = False
+
+        elif bool_led_state_g4_notify is False:
+            if self.write_engaged is False:
+                print('-- [App.btn_event_notification_select_state_g4_function] changing bool_led_state_g4_notify:', bool_led_state_g4_notify)
+                self.write_var = 'bool_led_state_g4_notify: true'
+                self.write_changes()
+            self.btn_event_notification_select_state_g4.setStyleSheet(self.btn_menu_style_1)
+            bool_led_state_g4_notify = True
+
+    def btn_event_notification_select_state_g5_function(self):
+        global bool_led_state_g5_notify
+
+        self.setFocus()
+
+        if bool_led_state_g5_notify is True:
+            if self.write_engaged is False:
+                print('-- [App.btn_event_notification_select_state_g5_function] changing bool_led_state_g5_notify:', bool_led_state_g5_notify)
+                self.write_var = 'bool_led_state_g5_notify: false'
+                self.write_changes()
+            self.btn_event_notification_select_state_g5.setStyleSheet(self.btn_menu_style)
+            bool_led_state_g5_notify = False
+
+        elif bool_led_state_g5_notify is False:
+            if self.write_engaged is False:
+                print('-- [App.btn_event_notification_select_state_g5_function] changing bool_led_state_g5_notify:', bool_led_state_g5_notify)
+                self.write_var = 'bool_led_state_g5_notify: true'
+                self.write_changes()
+            self.btn_event_notification_select_state_g5.setStyleSheet(self.btn_menu_style_1)
+            bool_led_state_g5_notify = True
+
+    def btn_event_notification_select_state_g6_function(self):
+        global bool_led_state_g6_notify
+
+        self.setFocus()
+
+        if bool_led_state_g6_notify is True:
+            if self.write_engaged is False:
+                print('-- [App.btn_event_notification_select_state_g6_function] changing bool_led_state_g6_notify:', bool_led_state_g6_notify)
+                self.write_var = 'bool_led_state_g6_notify: false'
+                self.write_changes()
+            self.btn_event_notification_select_state_g6.setStyleSheet(self.btn_menu_style)
+            bool_led_state_g6_notify = False
+
+        elif bool_led_state_g6_notify is False:
+            if self.write_engaged is False:
+                print('-- [App.btn_event_notification_select_state_g6_function] changing bool_led_state_g6_notify:', bool_led_state_g6_notify)
+                self.write_var = 'bool_led_state_g6_notify: true'
+                self.write_changes()
+            self.btn_event_notification_select_state_g6.setStyleSheet(self.btn_menu_style_1)
+            bool_led_state_g6_notify = True
 
     def btn_power_plan_function(self):
         print('-- [btn_power_plan_function]: plugged in')
@@ -3041,6 +3345,7 @@ class App(QMainWindow):
         print('-- [App.btn_con_stat_kb_img_function]: plugged in')
         global str_path_kb_img
         self.setFocus()
+
         if len(devices_kb) > 0:
             options = QFileDialog.Options()
             fileName, _ = QFileDialog.getOpenFileName(self, "Select Keyboard Image", "", "All Files (*);;Python Files (*.py)", options=options)
@@ -3089,6 +3394,7 @@ class App(QMainWindow):
     def openFileNameDialogG2(self):
         global str_event_notification_run_path_g2, devices_kb
         self.setFocus()
+
         print('-- [App.openFileNameDialogG2]: plugged in')
         if len(devices_kb) > 0:
             options = QFileDialog.Options()
@@ -3227,6 +3533,7 @@ class App(QMainWindow):
                     self.btn_event_notification_g2.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
                     self.lbl_event_notification_g2.setStyleSheet(self.btn_menu_style_1)
                 elif bool_switch_event_notification_g2 is True:
+                    thread_g2_notify[0].stop()
                     bool_switch_event_notification_g2 = False
                     print('-- [App.btn_event_notification_g2_function] changing bool_switch_event_notification_g2: false')
                     self.write_var = 'bool_switch_event_notification_g2: false'
@@ -3269,6 +3576,7 @@ class App(QMainWindow):
                     self.btn_event_notification_g3.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
                     self.lbl_event_notification_g3.setStyleSheet(self.btn_menu_style_1)
                 elif bool_switch_event_notification_g3 is True:
+                    thread_g3_notify[0].stop()
                     bool_switch_event_notification_g3 = False
                     print('-- [App.btn_event_notification_g3_function] changing bool_switch_event_notification_g3: false')
                     self.write_var = 'bool_switch_event_notification_g3: false'
@@ -3311,6 +3619,7 @@ class App(QMainWindow):
                     self.btn_event_notification_g4.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
                     self.lbl_event_notification_g4.setStyleSheet(self.btn_menu_style_1)
                 elif bool_switch_event_notification_g4 is True:
+                    thread_g4_notify[0].stop()
                     bool_switch_event_notification_g4 = False
                     print('-- [App.btn_event_notification_g4_function] changing bool_switch_event_notification_g4: false')
                     self.write_var = 'bool_switch_event_notification_g4: false'
@@ -3353,6 +3662,7 @@ class App(QMainWindow):
                     self.btn_event_notification_g5.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
                     self.lbl_event_notification_g5.setStyleSheet(self.btn_menu_style_1)
                 elif bool_switch_event_notification_g5 is True:
+                    thread_g5_notify[0].stop()
                     bool_switch_event_notification_g5 = False
                     print('-- [App.btn_event_notification_g5_function] changing bool_switch_event_notification_g5: false')
                     self.write_var = 'bool_switch_event_notification_g5: false'
@@ -3395,6 +3705,7 @@ class App(QMainWindow):
                     self.btn_event_notification_g6.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
                     self.lbl_event_notification_g6.setStyleSheet(self.btn_menu_style_1)
                 elif bool_switch_event_notification_g6 is True:
+                    thread_g6_notify[0].stop()
                     bool_switch_event_notification_g6 = False
                     print('-- [App.btn_event_notification_g6_function] changing bool_switch_event_notification_g6: false')
                     self.write_var = 'bool_switch_event_notification_g6: false'
@@ -3680,6 +3991,12 @@ class App(QMainWindow):
         self.lbl_event_notification_fpath_g5.show()
         self.lbl_event_notification_fpath_g6.show()
         self.lbl_event_notification_key_0.show()
+        self.btn_event_notification_select_state_g1.show()
+        self.btn_event_notification_select_state_g2.show()
+        self.btn_event_notification_select_state_g3.show()
+        self.btn_event_notification_select_state_g4.show()
+        self.btn_event_notification_select_state_g5.show()
+        self.btn_event_notification_select_state_g6.show()
 
     def btn_feature_page_settings_function(self):
         print('-- [App.btn_feature_page_settings_function]: plugged in')
@@ -3704,6 +4021,10 @@ class App(QMainWindow):
         self.lbl_backlight_key_0.show()
         self.lbl_media_display.show()
         self.btn_media_display.show()
+        self.lbl_powershell.show()
+        self.btn_powershell.show()
+        self.lbl_g5_backlight.show()
+        self.btn_g5_backlight.show()
 
     def sanitize_rgb_values(self):
         print('-- [App.sanitize_rgb_values]: plugged in')
@@ -3788,7 +4109,7 @@ class App(QMainWindow):
 
     def isenabled_true(self):
         print('-- [App.isenabled_true]: plugged in')
-        global bool_power_plan_interact
+        global bool_power_plan_interact, bool_backlight_interact, bool_powershell_interact
         for _ in self.object_interaction_enabled:
             _.setEnabled(True)
         if bool_power_plan_interact is True:
@@ -3801,6 +4122,27 @@ class App(QMainWindow):
             self.lbl_event_notification_g1.setEnabled(True)
             self.btn_event_notification_run_g1.setEnabled(True)
             self.lbl_event_notification_run_g1.setEnabled(True)
+        if bool_backlight_interact is True:
+            self.btn_event_notification_g5.setEnabled(False)
+            self.lbl_event_notification_g5.setEnabled(False)
+            self.btn_event_notification_run_g5.setEnabled(False)
+            self.lbl_event_notification_run_g5.setEnabled(False)
+        elif bool_backlight_interact is False:
+            self.btn_event_notification_g5.setEnabled(True)
+            self.lbl_event_notification_g5.setEnabled(True)
+            self.btn_event_notification_run_g5.setEnabled(True)
+            self.lbl_event_notification_run_g5.setEnabled(True)
+        if bool_powershell_interact is True:
+            self.btn_event_notification_g6.setEnabled(False)
+            self.lbl_event_notification_g6.setEnabled(False)
+            self.btn_event_notification_run_g6.setEnabled(False)
+            self.lbl_event_notification_run_g6.setEnabled(False)
+        elif bool_powershell_interact is False:
+            self.btn_event_notification_g6.setEnabled(True)
+            self.lbl_event_notification_g6.setEnabled(True)
+            self.btn_event_notification_run_g6.setEnabled(True)
+            self.lbl_event_notification_run_g6.setEnabled(True)
+
 
     def isenabled_false(self):
         print('-- [App.isenabled_false]: plugged in')
@@ -4678,6 +5020,8 @@ class App(QMainWindow):
     def g1_function_short(self):
         global thread_g1_notify, bool_allow_g1_short, bool_switch_event_notification_run_g1, str_event_notification_run_path_g1
         global devices_kb, bool_power_plan_interact, power_plan, power_plan_index
+        self.setFocus()
+
         print('-- [App.g1_function_short]: plugged in')
         if len(devices_kb):
             if bool_power_plan_interact is False:
@@ -4692,6 +5036,7 @@ class App(QMainWindow):
                                 cmd = cmd.strip()
                                 print('running command:', cmd)
                                 xcmd = subprocess.Popen(cmd, shell=True, startupinfo=info)
+
                             except Exception as e:
                                 print('-- [App.g1_function_short] Error:', e)
                         else:
@@ -4699,13 +5044,14 @@ class App(QMainWindow):
 
             elif bool_power_plan_interact is True:
                 print('-- [App.g1_function_short] cycling power plan')
-
-                if power_plan_index < len(power_plan)-1:
+                
+                if power_plan_index < 3:
                     power_plan_index += 1
                 else:
                     power_plan_index = 0
 
                 try:
+                    print('power_plan_index try:', power_plan_index)
                     print('-- [App.g1_function_short] attempting to set power plan:', power_plan[power_plan_index])
                     x = power_plan[power_plan_index]
                     x = x.split()
@@ -4714,6 +5060,7 @@ class App(QMainWindow):
                     cmd = 'powercfg /SETACTIVE '+power_plan_guid
                     print('running command:', cmd)
                     xcmd = subprocess.Popen(cmd, shell=True, startupinfo=info)
+
                 except Exception as e:
                     print('-- [App.g1_function_short] Error:', e)
 
@@ -4743,7 +5090,6 @@ class App(QMainWindow):
                             xcmd = subprocess.Popen(cmd, shell=True, startupinfo=info)
                         except Exception as e:
                             print('-- [App.g2_function_short] Error:', e)
-                    else:
                         print('-- [App.g2_function_short]: cannot find:', str_event_notification_run_path_g2)
 
     def g2_function_long(self):
@@ -4815,24 +5161,27 @@ class App(QMainWindow):
 
     def g5_function_short(self):
         global thread_g5_notify, bool_allow_g5_short, bool_switch_event_notification_run_g5, str_event_notification_run_path_g5
-        global devices_kb
+        global devices_kb, bool_backlight_interact
         print('-- [App.g5_function_short]: plugged in')
         if len(devices_kb):
             thread_g5_notify[0].stop()
-            if bool_allow_g5_short is True:
-                bool_allow_g5_short = False
-                if bool_switch_event_notification_run_g5 is True:
-                    if os.path.exists(str_event_notification_run_path_g5):
-                        print('-- [App.g5_function_short]: attempting to run:', str_event_notification_run_path_g5)
-                        try:
-                            cmd = str_event_notification_run_path_g5
-                            cmd = cmd.strip()
-                            print('running command:', cmd)
-                            xcmd = subprocess.Popen(cmd, shell=True, startupinfo=info)
-                        except Exception as e:
-                            print('-- [App.g5_function_short] Error:', e)
-                    else:
-                        print('-- [App.g5_function_short]: cannot find:', str_event_notification_run_path_g5)
+            if bool_backlight_interact is False:
+                if bool_allow_g5_short is True:
+                    bool_allow_g5_short = False
+                    if bool_switch_event_notification_run_g5 is True:
+                        if os.path.exists(str_event_notification_run_path_g5):
+                            print('-- [App.g5_function_short]: attempting to run:', str_event_notification_run_path_g5)
+                            try:
+                                cmd = str_event_notification_run_path_g5
+                                cmd = cmd.strip()
+                                print('running command:', cmd)
+                                xcmd = subprocess.Popen(cmd, shell=True, startupinfo=info)
+                            except Exception as e:
+                                print('-- [App.g5_function_short] Error:', e)
+                        else:
+                            print('-- [App.g5_function_short]: cannot find:', str_event_notification_run_path_g5)
+            elif bool_backlight_interact is True:
+                self.btn_bck_light_function()
 
     def g5_function_long(self):
         global thread_g5_notify, bool_allow_g5_short, devices_kb
@@ -4843,25 +5192,30 @@ class App(QMainWindow):
             thread_g5_notify[0].stop()
 
     def g6_function_short(self):
-        global thread_g6_notify, bool_allow_g6_short, bool_switch_event_notification_run_g6, str_event_notification_run_path_g6
+        global thread_g6_notify, bool_allow_g6_short, bool_switch_event_notification_run_g6, str_event_notification_run_path_g6, bool_powershell_interact
         global devices_kb
         print('-- [App.g6_function_short]: plugged in')
         if len(devices_kb):
             thread_g6_notify[0].stop()
-            if bool_allow_g6_short is True:
-                bool_allow_g6_short = False
-                if bool_switch_event_notification_run_g6 is True:
-                    if os.path.exists(str_event_notification_run_path_g6):
-                        print('-- [App.g6_function_short]: attempting to run:', str_event_notification_run_path_g6)
-                        try:
-                            cmd = str_event_notification_run_path_g6
-                            cmd = cmd.strip()
-                            print('running command:', cmd)
-                            xcmd = subprocess.Popen(cmd, shell=True, startupinfo=info)
-                        except Exception as e:
-                            print('-- [App.g6_function_short] Error:', e)
-                    else:
-                        print('-- [App.g6_function_short]: cannot find:', str_event_notification_run_path_g6)
+            if bool_powershell_interact is False:
+                if bool_allow_g6_short is True:
+                    bool_allow_g6_short = False
+                    if bool_switch_event_notification_run_g6 is True:
+                        if os.path.exists(str_event_notification_run_path_g6):
+                            print('-- [App.g6_function_short]: attempting to run:', str_event_notification_run_path_g6)
+                            try:
+                                cmd = str_event_notification_run_path_g6
+                                cmd = cmd.strip()
+                                print('running command:', cmd)
+                                xcmd = subprocess.Popen(cmd, shell=True, startupinfo=info)
+                            except Exception as e:
+                                print('-- [App.g6_function_short] Error:', e)
+                        else:
+                            print('-- [App.g6_function_short]: cannot find:', str_event_notification_run_path_g6)
+
+            elif bool_powershell_interact is True:
+                print('-- [App.g6_function_short]: attempting to run start powershell')
+                os.startfile('powershell')
 
     def g6_function_long(self):
         global thread_g6_notify, bool_allow_g6_short, devices_kb
@@ -4899,12 +5253,16 @@ class App(QMainWindow):
         global thread_media_display
         global thread_pause_loop
         global thread_power
+        global thread_test_locked
+        global thread_overlay
+        global thread_keyevents
         global bool_switch_startup_media_display
         global str_event_notification_run_path_g1, str_event_notification_run_path_g2, str_event_notification_run_path_g3
         global str_event_notification_run_path_g4, str_event_notification_run_path_g5, str_event_notification_run_path_g6
         global str_path_kb_img, str_path_ms_img
         global bool_power_plan_interact
-        global thread_test_locked
+        global bool_powershell_interact
+        global bool_backlight_interact
 
         hdd_mon_thread = HddMonClass()
         thread_disk_rw.append(hdd_mon_thread)
@@ -4965,11 +5323,32 @@ class App(QMainWindow):
         test_locked = IsLockedClass()
         thread_test_locked.append(test_locked)
         thread_test_locked[0].start()
+        keyeventsthread = KeyEventClass()
+        thread_keyevents.append(keyeventsthread)
 
         print('-- [App.initUI]: waiting to display application')
         while bool_backend_allow_display is False:
             time.sleep(1)
         print('-- [App.initUI]: displaying application')
+
+        if bool_backlight_interact is True:
+            self.btn_g5_backlight.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.btn_event_notification_g5.setEnabled(False)
+            self.lbl_event_notification_g5.setEnabled(False)
+            self.btn_event_notification_run_g5.setEnabled(False)
+            self.lbl_event_notification_run_g5.setEnabled(False)
+        elif bool_backlight_interact is False:
+            self.btn_g5_backlight.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+
+        if bool_powershell_interact is True:
+            self.btn_powershell.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_event_notification_g6.setEnabled(False)
+            self.btn_event_notification_g6.setEnabled(False)
+            self.btn_event_notification_run_g6.setEnabled(False)
+            self.lbl_event_notification_run_g6.setEnabled(False)
+        elif bool_powershell_interact is False:
+            self.btn_powershell.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+
         if bool_power_plan_interact is True:
             self.btn_power_plan.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
             self.btn_event_notification_g1.setEnabled(False)
@@ -4978,6 +5357,7 @@ class App(QMainWindow):
             self.lbl_event_notification_run_g1.setEnabled(False)
         if bool_power_plan_interact is False:
             self.btn_power_plan.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+
         if os.path.exists(str_path_kb_img):
             self.btn_con_stat_kb_img.setIcon(QIcon(str_path_kb_img))
         if os.path.exists(str_path_ms_img):
@@ -5193,6 +5573,36 @@ class App(QMainWindow):
             self.btn_media_display.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
             self.lbl_media_display.setStyleSheet(self.btn_menu_style)
 
+        if bool_led_state_g1_notify is True:
+            self.btn_event_notification_select_state_g1.setStyleSheet(self.btn_menu_style_1)
+        elif bool_led_state_g1_notify is False:
+            self.btn_event_notification_select_state_g1.setStyleSheet(self.btn_menu_style)
+
+        if bool_led_state_g2_notify is True:
+            self.btn_event_notification_select_state_g2.setStyleSheet(self.btn_menu_style_1)
+        elif bool_led_state_g2_notify is False:
+            self.btn_event_notification_select_state_g2.setStyleSheet(self.btn_menu_style)
+
+        if bool_led_state_g3_notify is True:
+            self.btn_event_notification_select_state_g3.setStyleSheet(self.btn_menu_style_1)
+        elif bool_led_state_g3_notify is False:
+            self.btn_event_notification_select_state_g3.setStyleSheet(self.btn_menu_style)
+
+        if bool_led_state_g4_notify is True:
+            self.btn_event_notification_select_state_g4.setStyleSheet(self.btn_menu_style_1)
+        elif bool_led_state_g4_notify is False:
+            self.btn_event_notification_select_state_g4.setStyleSheet(self.btn_menu_style)
+
+        if bool_led_state_g5_notify is True:
+            self.btn_event_notification_select_state_g5.setStyleSheet(self.btn_menu_style_1)
+        elif bool_led_state_g5_notify is False:
+            self.btn_event_notification_select_state_g5.setStyleSheet(self.btn_menu_style)
+
+        if bool_led_state_g6_notify is True:
+            self.btn_event_notification_select_state_g6.setStyleSheet(self.btn_menu_style_1)
+        elif bool_led_state_g6_notify is False:
+            self.btn_event_notification_select_state_g6.setStyleSheet(self.btn_menu_style)
+
         self.btn_backlight_auto_time_0_str = str(backlight_time_0).strip()
         self.btn_backlight_auto_time_0.setText(backlight_time_0)
         self.btn_backlight_auto_time_1_str = str(backlight_time_1).strip()
@@ -5239,6 +5649,7 @@ class App(QMainWindow):
         self.netshare_mon_rgb_on_str = self.netshare_mon_rgb_on_str.replace(']', '')
         self.qle_netshare_mon_rgb_on.setText(self.netshare_mon_rgb_on_str)
         self.sanitize_passed = False
+
         self.show()
 
     def changeEvent(self, event):
@@ -5275,6 +5686,45 @@ class App(QMainWindow):
         pass
 
 
+class KeyEventClass(QThread):
+    print('-- [KeyEventClass]: plugged in')
+
+    def __init__(self):
+        QThread.__init__(self)
+
+    def capslock_state(self):
+        import ctypes
+        user32_dll = ctypes.WinDLL("User32.dll")
+        vk_capital = 0x14
+        return user32_dll.GetKeyState(vk_capital)
+
+    def capslock_function(self):
+        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
+
+        capslock = self.capslock_state()
+        if ((capslock) & 0xffff) != 0:
+            # print('-- [KeyEventClass.run] capslock state: enabled')
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({37: (255, 255, 0)}))
+        elif ((capslock) & 0xffff) == 0:
+            # print('-- [KeyEventClass.run] capslock state: disabled')
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({37: sdk_color_backlight}))
+
+    def run(self):
+        print('-- [KeyEventClass.run]: plugged in')
+        while True:
+
+            self.capslock_function()
+            """ Example use of keyboard module
+            keyboard.wait('-')
+            print('-- [KeyEventClass.run]: plugged in')
+            """
+            time.sleep(0.1)
+
+    def stop(self):
+        print('-- [KeyEventClass.stop]: plugged in')
+        self.terminate()
+
+
 class IsLockedClass(QThread):
     print('-- [IsLockedClass]: plugged in')
 
@@ -5285,7 +5735,7 @@ class IsLockedClass(QThread):
 
     def run(self):
         print('-- [IsLockedClass.run]: plugged in')
-        global power_plan, power_plan_index, thread_compile_devices, devices_previous
+        global thread_compile_devices, devices_previous
         while True:
             try:
                 process_name = 'LogonUI.exe'
@@ -5348,24 +5798,59 @@ class PowerClass(QThread):
                         # print('-- [PowerClass.run] active power plan:', _)
                         if 'Power saver' in _:
                             self.active_pp = 1
+                            power_plan_index = 0
                             if self.active_pp != self.active_pp_prev:
                                 self.active_pp_prev = 1
                                 sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 0, 0)}))
+
+                                """ Example Overlay Call
+                                open('./system_overlay.dat', 'w').close()
+                                with open('./system_overlay.dat', 'w') as fo:
+                                    fo.writelines('POWER SAVER')
+                                fo.close()
+                                """
+
                         elif 'Balanced' in _:
                             self.active_pp = 2
+                            power_plan_index = 1
                             if self.active_pp != self.active_pp_prev:
                                 self.active_pp_prev = 2
                                 sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (0, 255, 0)}))
+
+                                """ Example Overlay Call
+                                open('./system_overlay.dat', 'w').close()
+                                with open('./system_overlay.dat', 'w') as fo:
+                                    fo.writelines('BALANCED')
+                                fo.close()
+                                """
+
                         elif 'High performance' in _:
                             self.active_pp = 3
+                            power_plan_index = 2
                             if self.active_pp != self.active_pp_prev:
                                 self.active_pp_prev = 3
                                 sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (0, 255, 255)}))
+
+                                """ Example Overlay Call
+                                open('./system_overlay.dat', 'w').close()
+                                with open('./system_overlay.dat', 'w') as fo:
+                                    fo.writelines('HIGH PERFORMANCE')
+                                fo.close()
+                                """
+
                         elif 'Ultimate Performance' in _:
                             self.active_pp = 4
+                            power_plan_index = 3
                             if self.active_pp != self.active_pp_prev:
                                 self.active_pp_prev = 4
                                 sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 15, 100)}))
+
+                                """ Example Overlay Call
+                                open('./system_overlay.dat', 'w').close()
+                                with open('./system_overlay.dat', 'w') as fo:
+                                    fo.writelines('ULTIMATE PERFORMANCE')
+                                fo.close()
+                                """
 
                     if _.startswith('Power Scheme GUID:'):
 
@@ -5630,21 +6115,25 @@ class EventHandlerG1Notify(QThread):
 
     def run(self):
         print('-- [EventHandlerG1Notify.run]: plugged in')
-        global bool_allow_g1_short
+        global bool_allow_g1_short, bool_led_state_g1_notify
         bool_allow_g1_short = True
-        while True:
-            self.send_instruction_off()
-            time.sleep(0.35)
+        if bool_led_state_g1_notify is False:
+            while True:
+                self.send_instruction_off()
+                time.sleep(0.35)
+                self.send_instruction_on()
+                time.sleep(0.35)
+                self.send_instruction_off()
+                time.sleep(0.35)
+                self.send_instruction_on()
+                time.sleep(0.35)
+                self.send_instruction_off()
+                time.sleep(0.35)
+                self.send_instruction_on()
+                time.sleep(0.35)
+                sdk.set_led_colors_flush_buffer()
+        elif bool_led_state_g1_notify is True:
             self.send_instruction_on()
-            time.sleep(0.35)
-            self.send_instruction_off()
-            time.sleep(0.35)
-            self.send_instruction_on()
-            time.sleep(0.35)
-            self.send_instruction_off()
-            time.sleep(0.35)
-            self.send_instruction_on()
-            time.sleep(0.35)
             sdk.set_led_colors_flush_buffer()
 
     def stop(self):
@@ -5654,7 +6143,7 @@ class EventHandlerG1Notify(QThread):
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: sdk_color_backlight}))
             sdk.set_led_colors_flush_buffer()
         except Exception as e:
-            print('-- [EventHandlerG2Notify.stop] Error:', e)
+            print('-- [EventHandlerG1Notify.stop] Error:', e)
             sdk.set_led_colors_flush_buffer()
         sdk.set_led_colors_flush_buffer()
         self.terminate()
@@ -5680,21 +6169,25 @@ class EventHandlerG2Notify(QThread):
 
     def run(self):
         print('-- [EventHandlerG2Notify.run]: plugged in')
-        global bool_allow_g2_short
+        global bool_allow_g2_short, bool_led_state_g2_notify
         bool_allow_g2_short = True
-        while True:
-            self.send_instruction_off()
-            time.sleep(0.35)
+        if bool_led_state_g2_notify is False:
+            while True:
+                self.send_instruction_off()
+                time.sleep(0.35)
+                self.send_instruction_on()
+                time.sleep(0.35)
+                self.send_instruction_off()
+                time.sleep(0.35)
+                self.send_instruction_on()
+                time.sleep(0.35)
+                self.send_instruction_off()
+                time.sleep(0.35)
+                self.send_instruction_on()
+                time.sleep(0.35)
+                sdk.set_led_colors_flush_buffer()
+        elif bool_led_state_g2_notify is True:
             self.send_instruction_on()
-            time.sleep(0.35)
-            self.send_instruction_off()
-            time.sleep(0.35)
-            self.send_instruction_on()
-            time.sleep(0.35)
-            self.send_instruction_off()
-            time.sleep(0.35)
-            self.send_instruction_on()
-            time.sleep(0.35)
             sdk.set_led_colors_flush_buffer()
 
     def stop(self):
@@ -5730,21 +6223,25 @@ class EventHandlerG3Notify(QThread):
 
     def run(self):
         print('-- [EventHandlerG3Notify.run]: plugged in')
-        global bool_allow_g3_short
+        global bool_allow_g3_short, bool_led_state_g3_notify
         bool_allow_g3_short = True
-        while True:
-            self.send_instruction_off()
-            time.sleep(0.35)
+        if bool_led_state_g3_notify is False:
+            while True:
+                self.send_instruction_off()
+                time.sleep(0.35)
+                self.send_instruction_on()
+                time.sleep(0.35)
+                self.send_instruction_off()
+                time.sleep(0.35)
+                self.send_instruction_on()
+                time.sleep(0.35)
+                self.send_instruction_off()
+                time.sleep(0.35)
+                self.send_instruction_on()
+                time.sleep(0.35)
+                sdk.set_led_colors_flush_buffer()
+        elif bool_led_state_g3_notify is True:
             self.send_instruction_on()
-            time.sleep(0.35)
-            self.send_instruction_off()
-            time.sleep(0.35)
-            self.send_instruction_on()
-            time.sleep(0.35)
-            self.send_instruction_off()
-            time.sleep(0.35)
-            self.send_instruction_on()
-            time.sleep(0.35)
             sdk.set_led_colors_flush_buffer()
 
     def stop(self):
@@ -5780,21 +6277,25 @@ class EventHandlerG4Notify(QThread):
 
     def run(self):
         print('-- [EventHandlerG4Notify.run]: plugged in')
-        global bool_allow_g4_short
+        global bool_allow_g4_short, bool_led_state_g4_notify
         bool_allow_g4_short = True
-        while True:
-            self.send_instruction_off()
-            time.sleep(0.35)
+        if bool_led_state_g4_notify is False:
+            while True:
+                self.send_instruction_off()
+                time.sleep(0.35)
+                self.send_instruction_on()
+                time.sleep(0.35)
+                self.send_instruction_off()
+                time.sleep(0.35)
+                self.send_instruction_on()
+                time.sleep(0.35)
+                self.send_instruction_off()
+                time.sleep(0.35)
+                self.send_instruction_on()
+                time.sleep(0.35)
+                sdk.set_led_colors_flush_buffer()
+        elif bool_led_state_g4_notify is True:
             self.send_instruction_on()
-            time.sleep(0.35)
-            self.send_instruction_off()
-            time.sleep(0.35)
-            self.send_instruction_on()
-            time.sleep(0.35)
-            self.send_instruction_off()
-            time.sleep(0.35)
-            self.send_instruction_on()
-            time.sleep(0.35)
             sdk.set_led_colors_flush_buffer()
 
     def stop(self):
@@ -5830,21 +6331,25 @@ class EventHandlerG5Notify(QThread):
 
     def run(self):
         print('-- [EventHandlerG5Notify.run]: plugged in')
-        global bool_allow_g5_short
+        global bool_allow_g5_short, bool_led_state_g5_notify
         bool_allow_g5_short = True
-        while True:
-            self.send_instruction_off()
-            time.sleep(0.35)
+        if bool_led_state_g5_notify is False:
+            while True:
+                self.send_instruction_off()
+                time.sleep(0.35)
+                self.send_instruction_on()
+                time.sleep(0.35)
+                self.send_instruction_off()
+                time.sleep(0.35)
+                self.send_instruction_on()
+                time.sleep(0.35)
+                self.send_instruction_off()
+                time.sleep(0.35)
+                self.send_instruction_on()
+                time.sleep(0.35)
+                sdk.set_led_colors_flush_buffer()
+        elif bool_led_state_g5_notify is True:
             self.send_instruction_on()
-            time.sleep(0.35)
-            self.send_instruction_off()
-            time.sleep(0.35)
-            self.send_instruction_on()
-            time.sleep(0.35)
-            self.send_instruction_off()
-            time.sleep(0.35)
-            self.send_instruction_on()
-            time.sleep(0.35)
             sdk.set_led_colors_flush_buffer()
 
     def stop(self):
@@ -5880,21 +6385,25 @@ class EventHandlerG6Notify(QThread):
 
     def run(self):
         print('-- [EventHandlerG6Notify.run]: plugged in')
-        global bool_allow_g6_short
+        global bool_allow_g6_short, bool_led_state_g6_notify
         bool_allow_g6_short = True
-        while True:
-            self.send_instruction_off()
-            time.sleep(0.35)
+        if bool_led_state_g6_notify is False:
+            while True:
+                self.send_instruction_off()
+                time.sleep(0.35)
+                self.send_instruction_on()
+                time.sleep(0.35)
+                self.send_instruction_off()
+                time.sleep(0.35)
+                self.send_instruction_on()
+                time.sleep(0.35)
+                self.send_instruction_off()
+                time.sleep(0.35)
+                self.send_instruction_on()
+                time.sleep(0.35)
+                sdk.set_led_colors_flush_buffer()
+        elif bool_led_state_g6_notify is True:
             self.send_instruction_on()
-            time.sleep(0.35)
-            self.send_instruction_off()
-            time.sleep(0.35)
-            self.send_instruction_on()
-            time.sleep(0.35)
-            self.send_instruction_off()
-            time.sleep(0.35)
-            self.send_instruction_on()
-            time.sleep(0.35)
             sdk.set_led_colors_flush_buffer()
 
     def stop(self):
@@ -5916,6 +6425,29 @@ class EventHandlerReadFileEvents(QThread):
     def __init__(self):
         QThread.__init__(self)
 
+        self.sanitize_str = ''
+        self.sanitize_passed = False
+
+    def sanitize_rgb_values(self):
+        print('-- [Config_Compile.sanitize_rgb_values]: plugged in')
+        print('-- [Config_Compile.sanitize_rgb_values] attempting to sanitize input:', self.sanitize_str)
+        var_str = self.sanitize_str
+        self.sanitize_passed = False
+        if len(var_str) == 3:
+            if len(var_str[0]) >= 1 and len(var_str[0]) <= 3:
+                if len(var_str[1]) >= 1 and len(var_str[1]) <= 3:
+                    if len(var_str[2]) >= 1 and len(var_str[2]) <= 3:
+                        if var_str[0].isdigit():
+                            if var_str[1].isdigit():
+                                if var_str[2].isdigit():
+                                    var_int_0 = int(var_str[0])
+                                    var_int_1 = int(var_str[1])
+                                    var_int_2 = int(var_str[2])
+                                    if var_int_0 >= 0 and var_int_0 <= 255:
+                                        if var_int_1 >= 0 and var_int_1 <= 255:
+                                            if var_int_2 >= 0 and var_int_2 <= 255:
+                                                self.sanitize_passed = True
+
     def run(self):
         print('-- [EventHandlerReadFileEvents.run]: plugged in')
         global bool_switch_event_notification_g1, bool_switch_event_notification_g2, bool_switch_event_notification_g3
@@ -5924,6 +6456,8 @@ class EventHandlerReadFileEvents(QThread):
         global bool_event_notification_g4, bool_event_notification_g5, bool_event_notification_g6
         global thread_g1_notify, thread_g2_notify, thread_g3_notify, thread_g4_notify, thread_g5_notify, thread_g6_notify
         global devices_kb
+        global sdk_color_g1_event_notification, sdk_color_g2_event_notification, sdk_color_g3_event_notification
+        global sdk_color_g4_event_notification, sdk_color_g5_event_notification, sdk_color_g6_event_notification
 
         if len(devices_kb) > 0:
             while True:
@@ -5937,13 +6471,24 @@ class EventHandlerReadFileEvents(QThread):
                                     if line == 'True':
                                         print('-- [EventHandlerReadFileEvents.run] setting bool_event_notification_g1: true')
                                         bool_event_notification_g1 = True
-                                        break
+                                    if line.startswith('RGB: '):
+                                        self.sanitize_str = line.replace('RGB: ', '')
+                                        self.sanitize_str = self.sanitize_str.split(',')
+                                        self.sanitize_rgb_values()
+                                        if self.sanitize_passed is True:
+                                            sdk_color_g1_event_notification[0] = int(self.sanitize_str[0])
+                                            sdk_color_g1_event_notification[1] = int(self.sanitize_str[1])
+                                            sdk_color_g1_event_notification[2] = int(self.sanitize_str[2])
+                                            print('-- [EventHandlerReadFileEvents.run g1] sdk_color_g1_event_notification passed:', sdk_color_g1_event_notification)
+                                        else:
+                                            print('-- [EventHandlerReadFileEvents.run g1] sdk_color_g1_event_notification failed')
                             if bool_event_notification_g1 is True:
                                 open('./data/event_notification_g1.dat', 'w').close()
                                 bool_event_notification_g1 = False
                                 thread_g1_notify[0].start()
                         except Exception as e:
                             print('-- [EventHandlerReadFileEvents.run g1] Error:', e)
+
                 if bool_switch_event_notification_g2 is True:
                     if os.path.exists('./data/event_notification_g2.dat'):
                         try:
@@ -5953,13 +6498,25 @@ class EventHandlerReadFileEvents(QThread):
                                     if line == 'True':
                                         print('-- [EventHandlerReadFileEvents.run] setting bool_event_notification_g2: true')
                                         bool_event_notification_g2 = True
-                                        break
+                                    if line.startswith('RGB: '):
+                                        self.sanitize_str = line.replace('RGB: ', '')
+                                        self.sanitize_str = self.sanitize_str.split(',')
+                                        self.sanitize_rgb_values()
+                                        if self.sanitize_passed is True:
+                                            sdk_color_g2_event_notification[0] = int(self.sanitize_str[0])
+                                            sdk_color_g2_event_notification[1] = int(self.sanitize_str[1])
+                                            sdk_color_g2_event_notification[2] = int(self.sanitize_str[2])
+                                            print('-- [EventHandlerReadFileEvents.run g2] sdk_color_g2_event_notification passed:', sdk_color_g2_event_notification)
+                                        else:
+                                            print('-- [EventHandlerReadFileEvents.run g2] sdk_color_g2_event_notification failed')
+
                             if bool_event_notification_g2 is True:
                                 open('./data/event_notification_g2.dat', 'w').close()
                                 bool_event_notification_g2 = False
                                 thread_g2_notify[0].start()
                         except Exception as e:
                             print('-- [EventHandlerReadFileEvents.run g2] Error:', e)
+
                 if bool_switch_event_notification_g3 is True:
                     if os.path.exists('./data/event_notification_g3.dat'):
                         try:
@@ -5969,7 +6526,17 @@ class EventHandlerReadFileEvents(QThread):
                                     if line == 'True':
                                         print('-- [EventHandlerReadFileEvents.run] setting bool_event_notification_g3: true')
                                         bool_event_notification_g3 = True
-                                        break
+                                    if line.startswith('RGB: '):
+                                        self.sanitize_str = line.replace('RGB: ', '')
+                                        self.sanitize_str = self.sanitize_str.split(',')
+                                        self.sanitize_rgb_values()
+                                        if self.sanitize_passed is True:
+                                            sdk_color_g3_event_notification[0] = int(self.sanitize_str[0])
+                                            sdk_color_g3_event_notification[1] = int(self.sanitize_str[1])
+                                            sdk_color_g3_event_notification[2] = int(self.sanitize_str[2])
+                                            print('-- [EventHandlerReadFileEvents.run g3] sdk_color_g3_event_notification passed:', sdk_color_g3_event_notification)
+                                        else:
+                                            print('-- [EventHandlerReadFileEvents.run g3] sdk_color_g3_event_notification failed')
                             if bool_event_notification_g3 is True:
                                 open('./data/event_notification_g3.dat', 'w').close()
                                 bool_event_notification_g3 = False
@@ -5985,7 +6552,17 @@ class EventHandlerReadFileEvents(QThread):
                                     if line == 'True':
                                         print('-- [EventHandlerReadFileEvents.run] setting bool_event_notification_g4: true')
                                         bool_event_notification_g4 = True
-                                        break
+                                    if line.startswith('RGB: '):
+                                        self.sanitize_str = line.replace('RGB: ', '')
+                                        self.sanitize_str = self.sanitize_str.split(',')
+                                        self.sanitize_rgb_values()
+                                        if self.sanitize_passed is True:
+                                            sdk_color_g4_event_notification[0] = int(self.sanitize_str[0])
+                                            sdk_color_g4_event_notification[1] = int(self.sanitize_str[1])
+                                            sdk_color_g4_event_notification[2] = int(self.sanitize_str[2])
+                                            print('-- [EventHandlerReadFileEvents.run g4] sdk_color_g4_event_notification passed:', sdk_color_g4_event_notification)
+                                        else:
+                                            print('-- [EventHandlerReadFileEvents.run g4] sdk_color_g4_event_notification failed')
                             if bool_event_notification_g4 is True:
                                 open('./data/event_notification_g4.dat', 'w').close()
                                 bool_event_notification_g4 = False
@@ -6001,7 +6578,17 @@ class EventHandlerReadFileEvents(QThread):
                                     if line == 'True':
                                         print('-- [EventHandlerReadFileEvents.run] setting bool_event_notification_g5: true')
                                         bool_event_notification_g5 = True
-                                        break
+                                    if line.startswith('RGB: '):
+                                        self.sanitize_str = line.replace('RGB: ', '')
+                                        self.sanitize_str = self.sanitize_str.split(',')
+                                        self.sanitize_rgb_values()
+                                        if self.sanitize_passed is True:
+                                            sdk_color_g5_event_notification[0] = int(self.sanitize_str[0])
+                                            sdk_color_g5_event_notification[1] = int(self.sanitize_str[1])
+                                            sdk_color_g5_event_notification[2] = int(self.sanitize_str[2])
+                                            print('-- [EventHandlerReadFileEvents.run g5] sdk_color_g5_event_notification passed:', sdk_color_g5_event_notification)
+                                        else:
+                                            print('-- [EventHandlerReadFileEvents.run g5] sdk_color_g5_event_notification failed')
                             if bool_event_notification_g5 is True:
                                 open('./data/event_notification_g5.dat', 'w').close()
                                 bool_event_notification_g5 = False
@@ -6017,7 +6604,17 @@ class EventHandlerReadFileEvents(QThread):
                                     if line == 'True':
                                         print('-- [EventHandlerReadFileEvents.run] setting bool_event_notification_g6: true')
                                         bool_event_notification_g6 = True
-                                        break
+                                    if line.startswith('RGB: '):
+                                        self.sanitize_str = line.replace('RGB: ', '')
+                                        self.sanitize_str = self.sanitize_str.split(',')
+                                        self.sanitize_rgb_values()
+                                        if self.sanitize_passed is True:
+                                            sdk_color_g6_event_notification[0] = int(self.sanitize_str[0])
+                                            sdk_color_g6_event_notification[1] = int(self.sanitize_str[1])
+                                            sdk_color_g6_event_notification[2] = int(self.sanitize_str[2])
+                                            print('-- [EventHandlerReadFileEvents.run g6] sdk_color_g6_event_notification passed:', sdk_color_g6_event_notification)
+                                        else:
+                                            print('-- [EventHandlerReadFileEvents.run g6] sdk_color_g6_event_notification failed')
                             if bool_event_notification_g6 is True:
                                 open('./data/event_notification_g6.dat', 'w').close()
                                 bool_event_notification_g6 = False
@@ -6074,6 +6671,8 @@ class SdkEventHandlerClass(QThread):
         global bool_switch_event_notification_g1, bool_switch_event_notification_g2, bool_switch_event_notification_g3
         global bool_switch_event_notification_g4, bool_switch_event_notification_g5, bool_switch_event_notification_g6
         global bool_power_plan_interact
+        global bool_powershell_interact
+        global bool_backlight_interact
 
         date_time_now = str(datetime.datetime.now())
         var = date_time_now.split(' ')
@@ -6130,7 +6729,11 @@ class SdkEventHandlerClass(QThread):
             # (notification) short press: reset ledId color and run pertaining function
             if time_now_release < (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
                 print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
-                if bool_switch_event_notification_g5 is True:
+                # if bool_switch_event_notification_g5 is True:
+                #     self.g5_function_short()
+                if bool_switch_event_notification_g5 is True and bool_backlight_interact is False:
+                    self.g5_function_short()
+                elif bool_switch_event_notification_g5 is False and bool_backlight_interact is True:
                     self.g5_function_short()
             # (notification) long release: reset ledId color and disconnect key from function
             elif time_now_release >= (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
@@ -6141,7 +6744,9 @@ class SdkEventHandlerClass(QThread):
             # (notification) short press: reset ledId color and run pertaining function
             if time_now_release < (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
                 print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
-                if bool_switch_event_notification_g6 is True:
+                if bool_switch_event_notification_g6 is True and bool_powershell_interact is False:
+                    self.g6_function_short()
+                elif bool_switch_event_notification_g6 is False and bool_powershell_interact is True:
                     self.g6_function_short()
             # (notification) long release: reset ledId color and disconnect key from function
             elif time_now_release >= (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
@@ -6271,6 +6876,7 @@ class CompileDevicesClass(QThread):
         global thread_media_display
         global thread_pause_loop
         global thread_power
+        global thread_keyevents
 
         print('-- [CompileDevicesClass.stop_all_threads] stopping all threads:', )
         if len(devices_kb) >= 1 or len(devices_ms) >= 1:
@@ -6318,6 +6924,10 @@ class CompileDevicesClass(QThread):
                 thread_power[0].stop()
             except Exception as e:
                 print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
+            try:
+                thread_keyevents[0].stop()
+            except Exception as e:
+                print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
 
     def start_all_threads(self):
         print('-- [CompileDevicesClass.start_all_threads]: plugged in')
@@ -6330,10 +6940,12 @@ class CompileDevicesClass(QThread):
         global thread_temperatures, bool_cpu_temperature, bool_vram_temperature
         global thread_media_display
         global thread_power
+        global thread_keyevents
 
         if len(devices_kb) > 0:
             thread_sdk_event_handler[0].start()
             thread_sdk_event_handler_read_file_events[0].start()
+            thread_keyevents[0].start()
             if bool_switch_startup_hdd_read_write:
                 thread_disk_rw[0].start()
             if bool_switch_startup_cpu_util:
@@ -6528,6 +7140,14 @@ class CompileDevicesClass(QThread):
         global str_path_kb_img, str_path_ms_img
         global bool_switch_startup_media_display
         global bool_power_plan_interact
+        global bool_led_state_g1_notify
+        global bool_led_state_g2_notify
+        global bool_led_state_g3_notify
+        global bool_led_state_g4_notify
+        global bool_led_state_g5_notify
+        global bool_led_state_g6_notify
+        global bool_powershell_interact
+        global bool_backlight_interact
 
         startup_loc = '/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/iCUEDisplay.lnk'
         bool_backend_valid_network_adapter_name = False
@@ -6861,6 +7481,46 @@ class CompileDevicesClass(QThread):
                     bool_power_plan_interact = True
                 elif line == 'bool_power_plan_interact: false':
                     bool_power_plan_interact = False
+
+                if line == 'bool_led_state_g1_notify: true':
+                    bool_led_state_g1_notify = True
+                if line == 'bool_led_state_g1_notify: false':
+                    bool_led_state_g1_notify = False
+
+                if line == 'bool_led_state_g2_notify: true':
+                    bool_led_state_g2_notify = True
+                if line == 'bool_led_state_g2_notify: false':
+                    bool_led_state_g2_notify = False
+
+                if line == 'bool_led_state_g3_notify: true':
+                    bool_led_state_g3_notify = True
+                if line == 'bool_led_state_g3_notify: false':
+                    bool_led_state_g3_notify = False
+
+                if line == 'bool_led_state_g4_notify: true':
+                    bool_led_state_g4_notify = True
+                if line == 'bool_led_state_g4_notify: false':
+                    bool_led_state_g4_notify = False
+
+                if line == 'bool_led_state_g5_notify: true':
+                    bool_led_state_g5_notify = True
+                if line == 'bool_led_state_g5_notify: false':
+                    bool_led_state_g5_notify = False
+
+                if line == 'bool_led_state_g6_notify: true':
+                    bool_led_state_g6_notify = True
+                if line == 'bool_led_state_g6_notify: false':
+                    bool_led_state_g6_notify = False
+
+                if line == 'bool_powershell_interact: true':
+                    bool_powershell_interact = True
+                if line == 'bool_powershell_interact: false':
+                    bool_powershell_interact = False
+
+                if line == 'bool_backlight_interact: true':
+                    bool_backlight_interact = True
+                if line == 'bool_backlight_interact: false':
+                    bool_backlight_interact = False
         print('-- [ConfigCompile.config_read] bool_switch_event_notification_g1:', bool_switch_event_notification_g1)
         print('-- [ConfigCompile.read_config] bool_switch_event_notification_g2:', bool_switch_event_notification_g2)
         print('-- [ConfigCompile.read_config] bool_switch_event_notification_g3:', bool_switch_event_notification_g3)
@@ -7835,10 +8495,10 @@ class CpuMonClass(QThread):
         try:
             cpu_i = 0
             for _ in corsairled_id_num_cpu:
-                if self.cpu_key[cpu_i] is True and self.cpu_key[cpu_i] != self.cpu_key_prev[cpu_i]:
+                if self.cpu_key[cpu_i] is True:
                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_cpu[cpu_i]: sdk_color_cpu_on}))
                     self.cpu_key_prev[cpu_i] = True
-                elif self.cpu_key[cpu_i] is False and self.cpu_key[cpu_i] != self.cpu_key_prev[cpu_i]:
+                elif self.cpu_key[cpu_i] is False:
                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_cpu[cpu_i]: sdk_color_backlight}))
                     self.cpu_key_prev[cpu_i] = False
                 cpu_i += 1
@@ -7864,8 +8524,6 @@ class CpuMonClass(QThread):
     def stop(self):
         print('-- [CpuMonClass.stop]: plugged in')
         global sdk, devices_kb, devices_kb_selected, corsairled_id_num_cpu, sdk_color_cpu_on, sdk_color_backlight
-        self.cpu_key = [True, False, False, False]
-        self.cpu_key_prev = [None, None, None, None]
         try:
             cpu_i = 0
             for _ in corsairled_id_num_cpu:
