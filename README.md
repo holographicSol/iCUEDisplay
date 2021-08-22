@@ -9,7 +9,7 @@ There may be further feature updates in the future.
 Google Drive Early Releases: https://drive.google.com/drive/folders/1xHeI_X5vnpKqQ3vkBz6hw97RnqaPwWNl?usp=sharing
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-![DEMO IMAGE](/image/icue_demo_image_0.png)
+
 
 --------------------------------------------------------------------------------------------------------------------------------------------
       FEATURE OVERVIEW
