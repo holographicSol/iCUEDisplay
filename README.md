@@ -96,18 +96,8 @@ be restarted automatically when device plugged back in]
 ![DEMO IMAGE](/image/icue_demo_image_4.png)
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-      EVENT NOTIFICATION & EVENT RESPONSE
-[Enables slightly advanced users to create small programs that simply write True to any event_notification_gx.dat file in the /data directory
-to receive an event notification (blinking G key) for any possible reason and if requested execute code for event response]
-
-[EVENT NOTIFICATION: A G key will begin blinking until user short or long presses the G key]
-
-[EVENT NOTIFICATION & EVENT RESPONSE: Short pressing the Blinking G key will remove the notification and execute code/start file while a long
-press (0.75 seconds +) will remove the notification and not run the directed code/file]
-
-[EVENT RESPONSE: Requires event notification to be enabled and is also designed to only run code/file once per notification event]
-
-![DEMO IMAGE](/image/icue_demo_image_5.png)
+      POWER
+[Switch Power Plans to save power, G1 key reflects current power plan]
 
 --------------------------------------------------------------------------------------------------------------------------------------------
       SETTINGS
