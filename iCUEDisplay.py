@@ -571,18 +571,18 @@ class App(QMainWindow):
                            border-right:0px solid rgb(0, 0, 0);
                            border-left:0px solid rgb(0, 0, 0);}"""
         """ Title Bar """
-        self.btn_title_bar_style_0 = """QPushButton{background-color: rgb(15, 15, 15);
+        self.btn_title_bar_style_0 = """QPushButton{background-color: rgb(10, 10, 10);
                                                            color: rgb(255, 255, 255);
-                                                           border-bottom:0px solid rgb(20, 20, 20);
-                                                           border-right:2px solid rgb(20, 20, 20);
-                                                           border-top:0px solid rgb(20, 20, 20);
-                                                           border-left:2px solid rgb(20, 20, 20);}"""
+                                                           border-bottom:2px solid rgb(5, 5, 5);
+                                                           border-right:2px solid rgb(5, 5, 5);
+                                                           border-top:2px solid rgb(5, 5, 5);
+                                                           border-left:2px solid rgb(5, 5, 5);}"""
         self.btn_title_bar_style_1 = """QPushButton{background-color: rgb(10, 10, 10);
                                                            color: rgb(200, 200, 200);
-                                                           border-bottom:0px solid rgb(15, 15, 15);
-                                                           border-right:2px solid rgb(15, 15, 15);
-                                                           border-top:0px solid rgb(15, 15, 15);
-                                                           border-left:2px solid rgb(15, 15, 15);}"""
+                                                           border-bottom:2px solid rgb(5, 5, 5);
+                                                           border-right:2px solid rgb(5, 5, 5);
+                                                           border-top:2px solid rgb(5, 5, 5);
+                                                           border-left:2px solid rgb(5, 5, 5);}"""
         """ Status """
         self.btn_status_style = """QPushButton{background-color: rgb(0, 0, 0);
                                                                    color: rgb(200, 200, 200);
@@ -603,17 +603,17 @@ class App(QMainWindow):
                            border-right:2px solid rgb(0, 0, 0);
                            border-left:2px solid rgb(0, 0, 0);}"""
         """ Side Menu """
-        self.btn_side_menu_style = """QPushButton{background-color: rgb(15, 15, 15);
+        self.btn_side_menu_style = """QPushButton{background-color: rgb(17, 17, 17);
                                                    color: rgb(255, 255, 255);
-                                                   border-bottom:2px solid rgb(20, 20, 20);
-                                                   border-right:2px solid rgb(20, 20, 20);
-                                                   border-top:2px solid rgb(20, 20, 20);
-                                                   border-left:2px solid rgb(0, 0, 0);}"""
+                                                   border-bottom:2px solid rgb(0, 0, 10);
+                                                   border-right:2px solid rgb(0, 0, 10);
+                                                   border-top:2px solid rgb(0, 0, 10);
+                                                   border-left:2px solid rgb(0, 0, 10);}"""
         self.btn_side_menu_style_1 = """QPushButton{background-color: rgb(10, 10, 10);
                                                            color: rgb(200, 200, 200);
-                                                           border-bottom:2px solid rgb(15, 15, 15);
-                                                           border-right:2px solid rgb(15, 15, 15);
-                                                           border-top:2px solid rgb(15, 15, 15);
+                                                           border-bottom:2px solid rgb(5, 5, 5);
+                                                           border-right:2px solid rgb(5, 5, 5);
+                                                           border-top:2px solid rgb(5, 5, 5);
                                                            border-left:2px solid rgb(0, 0, 0);}"""
         """ Menu """
         self.lbl_menu_background_style = """QLabel {background-color: rgb(0, 0, 0);
@@ -724,7 +724,7 @@ class App(QMainWindow):
         )
         print('-- [App.__init__] created:', self.btn_minimize)
         ui_object_complete.append(self.btn_minimize)
-
+        
         """ Displays connection to iCUE Service """
         self.btn_con_stat_name = QPushButton(self)
         self.btn_con_stat_name.move(31, 36)
@@ -4046,6 +4046,9 @@ class App(QMainWindow):
         thread_test_locked[0].start()
         keyeventsthread = KeyEventClass()
         thread_keyevents.append(keyeventsthread)
+
+        self.lbl_title.show()
+        self.btn_con_stat_name.show()
 
         print('-- [App.initUI]: waiting to display application')
         while bool_backend_allow_display is False:
