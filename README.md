@@ -99,6 +99,8 @@ be restarted automatically when device plugged back in]
       POWER
 [Switch Power Plans to save power, G1 key reflects current power plan]
 
+![DEMO IMAGE](/image/icue_demo_image_5.png)
+
 --------------------------------------------------------------------------------------------------------------------------------------------
       SETTINGS
 [AUTOMATIC BACKLIGHT: User may set a time for the backlight to turn on and off and may optionally enable the backlight manually]
