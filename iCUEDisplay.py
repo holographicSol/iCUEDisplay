@@ -2153,7 +2153,7 @@ class App(QMainWindow):
         ui_object_font_list_s8b.append(self.lbl_media_display)
 
         self.btn_media_display = QPushButton(self)
-        self.btn_media_display.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 126, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.btn_media_display.move(self.menu_obj_pos_w + 2 + 4 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 126, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.btn_media_display.resize(28, 28)
         self.btn_media_display.setStyleSheet(self.btn_menu_style)
         self.btn_media_display.setIconSize(self.tog_switch_ico_sz)
@@ -2174,7 +2174,7 @@ class App(QMainWindow):
         ui_object_font_list_s8b.append(self.lbl_powershell)
 
         self.btn_powershell = QPushButton(self)
-        self.btn_powershell.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 126, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.btn_powershell.move(self.menu_obj_pos_w + 2 + 4 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 126, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.btn_powershell.resize(28, 28)
         self.btn_powershell.setStyleSheet(self.btn_menu_style)
         self.btn_powershell.setIconSize(self.tog_switch_ico_sz)
@@ -2195,7 +2195,7 @@ class App(QMainWindow):
         ui_object_font_list_s8b.append(self.lbl_g5_backlight)
 
         self.btn_g5_backlight = QPushButton(self)
-        self.btn_g5_backlight.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 126, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.btn_g5_backlight.move(self.menu_obj_pos_w + 2 + 4 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 126, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.btn_g5_backlight.resize(28, 28)
         self.btn_g5_backlight.setStyleSheet(self.btn_menu_style)
         self.btn_g5_backlight.setIconSize(self.tog_switch_ico_sz)
@@ -2216,7 +2216,7 @@ class App(QMainWindow):
         ui_object_font_list_s8b.append(self.lbl_power_plan)
 
         self.btn_power_plan = QPushButton(self)
-        self.btn_power_plan.move(self.menu_obj_pos_w + 2 + 126, self.height - 4 - self.monitor_btn_h)
+        self.btn_power_plan.move(self.menu_obj_pos_w + 2 + 4 + 126, self.height - 4 - self.monitor_btn_h)
         self.btn_power_plan.resize(28, 28)
         self.btn_power_plan.setStyleSheet(self.btn_menu_style)
         self.btn_power_plan.setIconSize(self.tog_switch_ico_sz)
