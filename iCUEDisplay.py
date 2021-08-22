@@ -2732,8 +2732,6 @@ class App(QMainWindow):
             self.btn_feature_page_networking.setStyleSheet(self.btn_side_menu_style_1)
             self.btn_feature_page_power.show()
             self.btn_feature_page_power.setStyleSheet(self.btn_side_menu_style_1)
-            # self.btn_feature_page_gkeys.show()
-            # self.btn_feature_page_gkeys.setStyleSheet(self.btn_side_menu_style_1)
             self.btn_feature_page_settings.show()
             self.btn_feature_page_settings.setStyleSheet(self.btn_side_menu_style_1)
 
@@ -2778,7 +2776,7 @@ class App(QMainWindow):
         self.btn_feature_page_disks.hide()
         self.btn_feature_page_network_traffic.hide()
         self.btn_feature_page_networking.hide()
-        # self.btn_feature_page_gkeys.hide()
+        self.btn_feature_page_power.hide()
         self.btn_feature_page_settings.hide()
 
         self.lbl_execution_policy.show()
