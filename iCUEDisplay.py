@@ -872,29 +872,29 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_feature_page_disks)
         ui_object_font_list_s8b.append(self.btn_feature_page_disks)
 
+        self.btn_feature_page_network_traffic = QPushButton(self)
+        self.btn_feature_page_network_traffic.move(0, 124)
+        self.btn_feature_page_network_traffic.resize(126, 28)
+        self.btn_feature_page_network_traffic.setFont(self.font_s8b)
+        self.btn_feature_page_network_traffic.setText('Network Traffic')
+        self.btn_feature_page_network_traffic.setStyleSheet(self.btn_side_menu_style_1)
+        self.btn_feature_page_network_traffic.clicked.connect(self.btn_feature_page_network_traffic_function)
+        print('-- [App.__init__] created:', self.btn_feature_page_network_traffic)
+        self.object_interaction_enabled.append(self.btn_feature_page_network_traffic)
+        ui_object_complete.append(self.btn_feature_page_network_traffic)
+        ui_object_font_list_s8b.append(self.btn_feature_page_network_traffic)
+
         self.btn_feature_page_networking = QPushButton(self)
-        self.btn_feature_page_networking.move(0, 124)
+        self.btn_feature_page_networking.move(0, 156)
         self.btn_feature_page_networking.resize(126, 28)
         self.btn_feature_page_networking.setFont(self.font_s8b)
-        self.btn_feature_page_networking.setText('Network Traffic')
+        self.btn_feature_page_networking.setText('Networking')
         self.btn_feature_page_networking.setStyleSheet(self.btn_side_menu_style_1)
-        self.btn_feature_page_networking.clicked.connect(self.btn_feature_page_network_traffic_function)
+        self.btn_feature_page_networking.clicked.connect(self.btn_feature_page_networking_function)
         print('-- [App.__init__] created:', self.btn_feature_page_networking)
         self.object_interaction_enabled.append(self.btn_feature_page_networking)
         ui_object_complete.append(self.btn_feature_page_networking)
         ui_object_font_list_s8b.append(self.btn_feature_page_networking)
-
-        self.btn_feature_page_server_status = QPushButton(self)
-        self.btn_feature_page_server_status.move(0, 156)
-        self.btn_feature_page_server_status.resize(126, 28)
-        self.btn_feature_page_server_status.setFont(self.font_s8b)
-        self.btn_feature_page_server_status.setText('Networking')
-        self.btn_feature_page_server_status.setStyleSheet(self.btn_side_menu_style_1)
-        self.btn_feature_page_server_status.clicked.connect(self.btn_feature_page_networking_function)
-        print('-- [App.__init__] created:', self.btn_feature_page_server_status)
-        self.object_interaction_enabled.append(self.btn_feature_page_server_status)
-        ui_object_complete.append(self.btn_feature_page_server_status)
-        ui_object_font_list_s8b.append(self.btn_feature_page_server_status)
 
         self.btn_feature_page_power = QPushButton(self)
         self.btn_feature_page_power.move(0, 188)
@@ -3772,10 +3772,10 @@ class App(QMainWindow):
             self.btn_feature_page_util.setStyleSheet(self.btn_side_menu_style_1)
             self.btn_feature_page_disks.show()
             self.btn_feature_page_disks.setStyleSheet(self.btn_side_menu_style_1)
+            self.btn_feature_page_network_traffic.show()
+            self.btn_feature_page_network_traffic.setStyleSheet(self.btn_side_menu_style_1)
             self.btn_feature_page_networking.show()
             self.btn_feature_page_networking.setStyleSheet(self.btn_side_menu_style_1)
-            self.btn_feature_page_server_status.show()
-            self.btn_feature_page_server_status.setStyleSheet(self.btn_side_menu_style_1)
             self.btn_feature_page_power.show()
             self.btn_feature_page_power.setStyleSheet(self.btn_side_menu_style_1)
             self.btn_feature_page_event_notification.show()
@@ -3822,8 +3822,8 @@ class App(QMainWindow):
         self.btn_feature_page_home.hide()
         self.btn_feature_page_util.hide()
         self.btn_feature_page_disks.hide()
+        self.btn_feature_page_network_traffic.hide()
         self.btn_feature_page_networking.hide()
-        self.btn_feature_page_server_status.hide()
         self.btn_feature_page_event_notification.hide()
         self.btn_feature_page_settings.hide()
 
@@ -3890,7 +3890,7 @@ class App(QMainWindow):
         print('-- [App.btn_feature_page_network_traffic_function]: plugged in')
         self.hide_all_features()
         self.lbl_settings_bg.show()
-        self.btn_feature_page_networking.setStyleSheet(self.btn_side_menu_style)
+        self.btn_feature_page_network_traffic.setStyleSheet(self.btn_side_menu_style)
         self.lbl_network_adapter.show()
         self.cmb_network_adapter_name.show()
         self.btn_network_adapter_refresh.show()
@@ -3924,7 +3924,7 @@ class App(QMainWindow):
         print('-- [App.btn_feature_page_networking_function]: plugged in')
         self.hide_all_features()
         self.lbl_settings_bg.show()
-        self.btn_feature_page_server_status.setStyleSheet(self.btn_side_menu_style)
+        self.btn_feature_page_networking.setStyleSheet(self.btn_side_menu_style)
         self.lbl_net_con_mouse.show()
         self.btn_net_con_mouse.show()
         self.btn_net_con_mouse_led_selected_prev.show()
@@ -5019,12 +5019,12 @@ class App(QMainWindow):
 
     def g1_function_short(self):
         global thread_g1_notify, bool_allow_g1_short, bool_switch_event_notification_run_g1, str_event_notification_run_path_g1
-        global devices_kb, bool_power_plan_interact, power_plan, power_plan_index
+        global devices_kb, bool_power_plan_interact, power_plan, power_plan_index, bool_switch_event_notification_g1
         self.setFocus()
 
         print('-- [App.g1_function_short]: plugged in')
         if len(devices_kb):
-            if bool_power_plan_interact is False:
+            if bool_switch_event_notification_g1 is True:
                 thread_g1_notify[0].stop()
                 if bool_allow_g1_short is True:
                     bool_allow_g1_short = False
@@ -5165,7 +5165,7 @@ class App(QMainWindow):
         print('-- [App.g5_function_short]: plugged in')
         if len(devices_kb):
             thread_g5_notify[0].stop()
-            if bool_backlight_interact is False:
+            if bool_switch_event_notification_g5 is True:
                 if bool_allow_g5_short is True:
                     bool_allow_g5_short = False
                     if bool_switch_event_notification_run_g5 is True:
@@ -5197,7 +5197,7 @@ class App(QMainWindow):
         print('-- [App.g6_function_short]: plugged in')
         if len(devices_kb):
             thread_g6_notify[0].stop()
-            if bool_powershell_interact is False:
+            if bool_switch_event_notification_g6 is True:
                 if bool_allow_g6_short is True:
                     bool_allow_g6_short = False
                     if bool_switch_event_notification_run_g6 is True:
@@ -6683,14 +6683,12 @@ class SdkEventHandlerClass(QThread):
             # (notification) short press: reset ledId color and run pertaining function
             if time_now_release < (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
                 print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
-                if bool_switch_event_notification_g1 is True and bool_power_plan_interact is False:
-                    self.g1_function_short()
-                elif bool_power_plan_interact is True:
+                if bool_switch_event_notification_g1 is True or bool_power_plan_interact is True:
                     self.g1_function_short()
             # (notification) long release: reset ledId color and disconnect key from function
             elif time_now_release >= (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
                 print('-- [App.on_press] captured event: time_now_1: {0} long released {1}'.format(self.time_now_press, data.keyId))
-                if bool_switch_event_notification_g1 is True and bool_power_plan_interact is False:
+                if bool_switch_event_notification_g1 is True or bool_power_plan_interact is True:
                     self.g1_function_long()
         elif self.time_now_release_keyId == 'CorsairKeyId.Kb_G2':
             # (notification) short press: reset ledId color and run pertaining function
@@ -6731,9 +6729,7 @@ class SdkEventHandlerClass(QThread):
                 print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
                 # if bool_switch_event_notification_g5 is True:
                 #     self.g5_function_short()
-                if bool_switch_event_notification_g5 is True and bool_backlight_interact is False:
-                    self.g5_function_short()
-                elif bool_switch_event_notification_g5 is False and bool_backlight_interact is True:
+                if bool_switch_event_notification_g5 is True or bool_backlight_interact is True:
                     self.g5_function_short()
             # (notification) long release: reset ledId color and disconnect key from function
             elif time_now_release >= (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
@@ -6744,9 +6740,7 @@ class SdkEventHandlerClass(QThread):
             # (notification) short press: reset ledId color and run pertaining function
             if time_now_release < (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
                 print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
-                if bool_switch_event_notification_g6 is True and bool_powershell_interact is False:
-                    self.g6_function_short()
-                elif bool_switch_event_notification_g6 is False and bool_powershell_interact is True:
+                if bool_switch_event_notification_g6 is True or bool_powershell_interact is True:
                     self.g6_function_short()
             # (notification) long release: reset ledId color and disconnect key from function
             elif time_now_release >= (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
