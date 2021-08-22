@@ -590,6 +590,12 @@ class App(QMainWindow):
                                                                    border-right:2px solid rgb(0, 0, 0);
                                                                    border-top:2px solid rgb(0, 0, 0);
                                                                    border-left:2px solid rgb(0, 0, 0);}"""
+        self.btn_status_style_0 = """QPushButton{background-color: rgb(0, 0, 0);
+                                   color: rgb(200, 200, 200);
+                                   border-bottom:2px solid rgb(15, 15, 15);
+                                   border-right:2px solid rgb(15, 15, 15);
+                                   border-top:2px solid rgb(15, 15, 15);
+                                   border-left:2px solid rgb(15, 15, 15);}"""
         self.lbl_status_style = """QLabel {background-color: rgb(0, 0, 0);
                            color: rgb(200, 200, 200);
                            border-top:2px solid rgb(0, 0, 0);
@@ -841,10 +847,12 @@ class App(QMainWindow):
         self.btn_con_stat_kb_img = QPushButton(self)
         self.btn_con_stat_kb_img.move(126 + 4, 36)
         self.btn_con_stat_kb_img.resize(64, 64)
-        self.btn_con_stat_kb_img.setIcon(QIcon("./image/kb_corsair_k95_platinum.png"))
+        self.btn_con_stat_kb_img.setIcon(QIcon(""))
         self.icon_sz = QSize(64, 64)
         self.btn_con_stat_kb_img.setIconSize(self.icon_sz)
-        self.btn_con_stat_kb_img.setStyleSheet(self.btn_status_style)
+        self.btn_con_stat_kb_img.setFont(self.font_s8b)
+        self.btn_con_stat_kb_img.setText('+')
+        self.btn_con_stat_kb_img.setStyleSheet(self.btn_status_style_0)
         self.btn_con_stat_kb_img.clicked.connect(self.btn_con_stat_kb_img_function)
         print('-- [App.__init__] created:', self.btn_con_stat_kb_img)
         self.object_interaction_enabled.append(self.btn_con_stat_kb_img)
@@ -863,10 +871,12 @@ class App(QMainWindow):
         self.btn_con_stat_ms_img = QPushButton(self)
         self.btn_con_stat_ms_img.move(126 + 4 + 36 + 180, 36)
         self.btn_con_stat_ms_img.resize(64, 64)
-        self.btn_con_stat_ms_img.setIcon(QIcon("./image/ms_corsair_scimitar_rgb_elite.png"))
+        self.btn_con_stat_ms_img.setIcon(QIcon(""))
         self.icon_sz = QSize(64, 64)
         self.btn_con_stat_ms_img.setIconSize(self.icon_sz)
-        self.btn_con_stat_ms_img.setStyleSheet(self.btn_status_style)
+        self.btn_con_stat_ms_img.setFont(self.font_s8b)
+        self.btn_con_stat_ms_img.setText('+')
+        self.btn_con_stat_ms_img.setStyleSheet(self.btn_status_style_0)
         self.btn_con_stat_ms_img.clicked.connect(self.btn_con_stat_ms_img_function)
         print('-- [App.__init__] created:', self.btn_con_stat_ms_img)
         self.object_interaction_enabled.append(self.btn_con_stat_ms_img)
@@ -2671,6 +2681,8 @@ class App(QMainWindow):
                     self.write_var = 'str_path_kb_img: '+str_path_kb_img
                     self.write_changes()
                     self.btn_con_stat_kb_img.setIcon(QIcon(str_path_kb_img))
+                    self.btn_con_stat_kb_img.setStyleSheet(self.btn_status_style)
+                    self.btn_con_stat_kb_img.setText('')
 
     def btn_con_stat_ms_img_function(self):
         print('-- [App.btn_con_stat_ms_img_function]: plugged in')
@@ -2687,6 +2699,8 @@ class App(QMainWindow):
                     self.write_var = 'str_path_ms_img: ' + str_path_ms_img
                     self.write_changes()
                     self.btn_con_stat_ms_img.setIcon(QIcon(str_path_ms_img))
+                    self.btn_con_stat_ms_img.setStyleSheet(self.btn_status_style)
+                    self.btn_con_stat_ms_img.setText('')
 
     def recompile(self):
         print('-- [App.recompile]: plugged in')
@@ -4055,8 +4069,13 @@ class App(QMainWindow):
 
         if os.path.exists(str_path_kb_img):
             self.btn_con_stat_kb_img.setIcon(QIcon(str_path_kb_img))
+            self.btn_con_stat_kb_img.setStyleSheet(self.btn_status_style)
+            self.btn_con_stat_kb_img.setText('')
         if os.path.exists(str_path_ms_img):
             self.btn_con_stat_ms_img.setIcon(QIcon(str_path_ms_img))
+            self.btn_con_stat_ms_img.setStyleSheet(self.btn_status_style)
+            self.btn_con_stat_ms_img.setText('')
+
         if bool_switch_backlight_auto is False:
             self.btn_backlight_auto.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
             self.lbl_backlight_auto.setStyleSheet(self.btn_menu_style)
