@@ -435,7 +435,7 @@ class ObjEveFilter(QObject):
                 avail_h = new_avail_h
                 avail_w = new_avail_w
                 app_width = 584 * multiplier_w
-                app_height = 324 * multiplier_h
+                app_height = 330 * multiplier_h
                 pos_w = ((QDesktopWidget().availableGeometry().width() / 2) - (app_width / 2))
                 pos_h = ((QDesktopWidget().availableGeometry().height() / 2) - (app_height / 2))
                 event_filter_self[0].setGeometry(int(pos_w), int(pos_h), app_width, app_height)
@@ -543,7 +543,7 @@ class App(QMainWindow):
 
         """ Main Window Geometry """
         self.width = 584
-        self.height = 324
+        self.height = 330
         self.height_discrete = 180
         self.pos_w = int(((QDesktopWidget().availableGeometry().width() / 2) - (self.width / 2)))
         self.pos_h = int(((QDesktopWidget().availableGeometry().height() / 2) - (self.height / 2)))
@@ -845,7 +845,7 @@ class App(QMainWindow):
         ui_object_font_list_s8b.append(self.btn_feature_page_settings)
 
         self.btn_con_stat_kb_img = QPushButton(self)
-        self.btn_con_stat_kb_img.move(126 + 4, 36)
+        self.btn_con_stat_kb_img.move(126 + 4, 38)
         self.btn_con_stat_kb_img.resize(64, 64)
         self.btn_con_stat_kb_img.setIcon(QIcon(""))
         self.icon_sz = QSize(64, 64)
@@ -859,7 +859,7 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_con_stat_kb_img)
 
         self.lbl_con_stat_kb = QLabel(self)
-        self.lbl_con_stat_kb.move(126 + 4 + 64, 36)
+        self.lbl_con_stat_kb.move(126 + 4 + 64, 38)
         self.lbl_con_stat_kb.resize(180, 64)
         self.lbl_con_stat_kb.setFont(self.font_s8b)
         self.lbl_con_stat_kb.setText('')
@@ -869,7 +869,7 @@ class App(QMainWindow):
         ui_object_font_list_s8b.append(self.lbl_con_stat_kb)
 
         self.btn_con_stat_ms_img = QPushButton(self)
-        self.btn_con_stat_ms_img.move(126 + 4 + 36 + 180, 36)
+        self.btn_con_stat_ms_img.move(126 + 4 + 36 + 180, 38)
         self.btn_con_stat_ms_img.resize(64, 64)
         self.btn_con_stat_ms_img.setIcon(QIcon(""))
         self.icon_sz = QSize(64, 64)
@@ -883,7 +883,7 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_con_stat_ms_img)
 
         self.lbl_con_stat_mouse = QLabel(self)
-        self.lbl_con_stat_mouse.move(126 + 4 + 64 + 180 + 36, 36)
+        self.lbl_con_stat_mouse.move(126 + 4 + 64 + 180 + 36, 38)
         self.lbl_con_stat_mouse.resize(150, 64)
         self.lbl_con_stat_mouse.setFont(self.font_s8b)
         self.lbl_con_stat_mouse.setText('')
@@ -2351,7 +2351,7 @@ class App(QMainWindow):
         self.lbl_power_plan_key_8.move(self.menu_obj_pos_w + 2, self.height - 4 - self.monitor_btn_h - 4 - 10 - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.lbl_power_plan_key_8.resize(420, 80)
         self.lbl_power_plan_key_8.setFont(self.font_s7b)
-        self.lbl_power_plan_key_8.setText('[G1] Key will cycle power plan. It is recommended to properly configure your power plan(s) to\ncompliment this feature, reducing Processor Maximum State for Power Saver.\n\nNote: Enabling this feature will disable G1 Notification and G1 Notification Event Response.\nSo it is recommended to turn off Event notification for relevant key(s) before enabling.')
+        self.lbl_power_plan_key_8.setText('[G1] Key will cycle power plan. It is recommended to properly configure your power plan(s) to\ncompliment this feature, reducing Processor Maximum State for Power Saver.')
         self.lbl_power_plan_key_8.setStyleSheet("""QLabel {background-color: rgb(0, 0, 0);
                                                                color: rgb(150, 150, 150);
                                                                border-top:0px solid rgb(10, 10, 10);
