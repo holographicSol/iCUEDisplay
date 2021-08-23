@@ -344,7 +344,7 @@ def create_new():
             if os.path.exists('./iCUEDisplay.lnk'):
                 print('-- [create_new]: starting program')
                 os.startfile(cwd + './iCUEDisplay.lnk')
-                time.sleep(2)
+                # time.sleep(1)
                 bool_backend_install = True
     app_data_path = os.path.join(os.path.expanduser('~'), 'AppData\\Local\\iCUEDisplay\\icue_display_py_config.dat')
     py_config_line = os.path.join(os.getcwd()+'\\py\\temp_sys.dat')
@@ -367,7 +367,7 @@ def create_new():
         fo.writelines(path_for_in_vbs_1 + '\n')
         fo.writelines('Set WshShell = Nothing\n')
     fo.close()
-    time.sleep(2)
+    # time.sleep(2)
 
 
 first_load = True
@@ -921,17 +921,6 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_cpu_mon)
         ui_object_complete.append(self.btn_cpu_mon)
 
-        # self.lbl_util_key_0 = QLabel(self)
-        # self.lbl_util_key_0.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
-        # self.lbl_util_key_0.resize(self.monitor_btn_w, self.monitor_btn_h)
-        # self.lbl_util_key_0.setFont(self.font_s8b)
-        # self.lbl_util_key_0.setText('R G B')
-        # self.lbl_util_key_0.setStyleSheet(self.lbl_menu_key_style)
-        # self.lbl_util_key_0.setAlignment(Qt.AlignCenter)
-        # print('-- [App.__init__] created:', self.lbl_util_key_0)
-        # ui_object_complete.append(self.lbl_util_key_0)
-        # ui_object_font_list_s8b.append(self.lbl_util_key_0)
-
         self.qle_cpu_mon_rgb_on = QLineEdit(self)
         self.qle_cpu_mon_rgb_on.resize(self.monitor_btn_w, self.monitor_btn_h)
         self.qle_cpu_mon_rgb_on.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
@@ -955,13 +944,6 @@ class App(QMainWindow):
         self.object_interaction_readonly.append(self.qle_cpu_led_time_on)
         ui_object_complete.append(self.qle_cpu_led_time_on)
         ui_object_font_list_s8b.append(self.qle_cpu_led_time_on)
-
-        # self.lbl_util_key_9 = QLabel(self)
-        # self.lbl_util_key_9.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 80)
-        # self.lbl_util_key_9.resize(100, 80)
-        # self.lbl_util_key_9.setStyleSheet(self.lbl_menu_key_style)
-        # print('-- [App.__init__] created:', self.lbl_util_key_9)
-        # ui_object_complete.append(self.lbl_util_key_9)
 
         """ blue"""
         self.lbl_util_key_1 = QLabel(self)
@@ -1207,28 +1189,6 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_vram_mon_temp)
         ui_object_complete.append(self.btn_vram_mon_temp)
         ui_object_font_list_s8b.append(self.btn_vram_mon_temp)
-
-        # self.lbl_disk_key_0 = QLabel(self)
-        # self.lbl_disk_key_0.move(self.menu_obj_pos_w + 2 + 88 + 4 + 52 + 4 + 28 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
-        # self.lbl_disk_key_0.resize(self.monitor_btn_w, self.monitor_btn_h)
-        # self.lbl_disk_key_0.setFont(self.font_s8b)
-        # self.lbl_disk_key_0.setText('R G B')
-        # self.lbl_disk_key_0.setStyleSheet(self.lbl_menu_key_style)
-        # self.lbl_disk_key_0.setAlignment(Qt.AlignCenter)
-        # print('-- [App.__init__] created:', self.lbl_disk_key_0)
-        # ui_object_complete.append(self.lbl_disk_key_0)
-        # ui_object_font_list_s8b.append(self.lbl_disk_key_0)
-        #
-        # self.lbl_disk_key_1 = QLabel(self)
-        # self.lbl_disk_key_1.move(self.menu_obj_pos_w + 2 + 88 + 4 + 52 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 52 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
-        # self.lbl_disk_key_1.resize(self.monitor_btn_w, self.monitor_btn_h)
-        # self.lbl_disk_key_1.setFont(self.font_s8b)
-        # self.lbl_disk_key_1.setText('R G B')
-        # self.lbl_disk_key_1.setStyleSheet(self.lbl_menu_key_style)
-        # self.lbl_disk_key_1.setAlignment(Qt.AlignCenter)
-        # print('-- [App.__init__] created:', self.lbl_disk_key_1)
-        # ui_object_complete.append(self.lbl_disk_key_1)
-        # ui_object_font_list_s8b.append(self.lbl_disk_key_1)
 
         """ blue"""
         self.lbl_disk_key_2 = QLabel(self)
@@ -1804,17 +1764,6 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_net_con_mouse)
         ui_object_complete.append(self.btn_net_con_mouse)
 
-        # self.lbl_net_con_mouse_key_0 = QLabel(self)
-        # self.lbl_net_con_mouse_key_0.move(self.menu_obj_pos_w + 2 + 240 + 4 + 28 + 4,  self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
-        # self.lbl_net_con_mouse_key_0.resize(self.monitor_btn_w + 4, self.monitor_btn_h)
-        # self.lbl_net_con_mouse_key_0.setFont(self.font_s8b)
-        # self.lbl_net_con_mouse_key_0.setText('LED')
-        # self.lbl_net_con_mouse_key_0.setStyleSheet(self.lbl_menu_key_style)
-        # self.lbl_net_con_mouse_key_0.setAlignment(Qt.AlignCenter)
-        # print('-- [App.__init__] created:', self.lbl_net_con_mouse_key_0)
-        # ui_object_complete.append(self.lbl_net_con_mouse_key_0)
-        # ui_object_font_list_s8b.append(self.lbl_net_con_mouse_key_0)
-
         self.btn_net_con_mouse_led_selected_prev = QPushButton(self)
         self.btn_net_con_mouse_led_selected_prev.move(self.menu_obj_pos_w + 2 + 240 + 4 + 28 + 4,  self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.btn_net_con_mouse_led_selected_prev.resize(20, 28)
@@ -1866,73 +1815,6 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_net_con_kb)
         ui_object_complete.append(self.btn_net_con_kb)
 
-        # self.lbl_netshare_key_5 = QLabel(self)
-        # self.lbl_netshare_key_5.move(self.menu_obj_pos_w + 2, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 60)
-        # self.lbl_netshare_key_5.resize(158, 60)
-        # self.lbl_netshare_key_5.setStyleSheet(self.lbl_menu_key_style)
-        # print('-- [App.__init__] created:', self.lbl_netshare_key_5)
-        # ui_object_complete.append(self.lbl_netshare_key_5)
-
-        # self.lbl_netshare_key_1 = QLabel(self)
-        # self.lbl_netshare_key_1.move(self.menu_obj_pos_w + 6, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 50)
-        # self.lbl_netshare_key_1.resize(150, 10)
-        # self.lbl_netshare_key_1.setFont(self.font_s7b)
-        # self.lbl_netshare_key_1.setText('[HOME]                   User Shares')
-        # self.lbl_netshare_key_1.setStyleSheet("""QLabel {background-color: rgb(0, 0, 0);
-        #                                        color: rgb(150, 150, 150);
-        #                                        border-top:0px solid rgb(10, 10, 10);
-        #                                        border-bottom:0px solid rgb(10, 10, 10);
-        #                                        border-right:0px solid rgb(10, 10, 10);
-        #                                        border-left:0px solid rgb(10, 10, 10);}""")
-        # print('-- [App.__init__] created:', self.lbl_netshare_key_1)
-        # ui_object_complete.append(self.lbl_netshare_key_1)
-        # ui_object_font_list_s7b.append(self.lbl_netshare_key_1)
-        #
-        # self.lbl_netshare_key_2 = QLabel(self)
-        # self.lbl_netshare_key_2.move(self.menu_obj_pos_w + 6, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 40)
-        # self.lbl_netshare_key_2.resize(150, 10)
-        # self.lbl_netshare_key_2.setFont(self.font_s7b)
-        # self.lbl_netshare_key_2.setText('[PAUSE BREAK]   Default Shares')
-        # self.lbl_netshare_key_2.setStyleSheet("""QLabel {background-color: rgb(0, 0, 0);
-        #                                        color: rgb(150, 150, 150);
-        #                                        border-top:0px solid rgb(10, 10, 10);
-        #                                        border-bottom:0px solid rgb(10, 10, 10);
-        #                                        border-right:0px solid rgb(10, 10, 10);
-        #                                        border-left:0px solid rgb(10, 10, 10);}""")
-        # print('-- [App.__init__] created:', self.lbl_netshare_key_2)
-        # ui_object_complete.append(self.lbl_netshare_key_2)
-        # ui_object_font_list_s7b.append(self.lbl_netshare_key_2)
-        #
-        # self.lbl_netshare_key_3 = QLabel(self)
-        # self.lbl_netshare_key_3.move(self.menu_obj_pos_w + 6, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 30)
-        # self.lbl_netshare_key_3.resize(150, 10)
-        # self.lbl_netshare_key_3.setFont(self.font_s7b)
-        # self.lbl_netshare_key_3.setText('[SCROLL LOCK]   $Admin')
-        # self.lbl_netshare_key_3.setStyleSheet("""QLabel {background-color: rgb(0, 0, 0);
-        #                                        color: rgb(150, 150, 150);
-        #                                        border-top:0px solid rgb(10, 10, 10);
-        #                                        border-bottom:0px solid rgb(10, 10, 10);
-        #                                        border-right:0px solid rgb(10, 10, 10);
-        #                                        border-left:0px solid rgb(10, 10, 10);}""")
-        # print('-- [App.__init__] created:', self.lbl_netshare_key_3)
-        # ui_object_complete.append(self.lbl_netshare_key_3)
-        # ui_object_font_list_s7b.append(self.lbl_netshare_key_3)
-        #
-        # self.lbl_netshare_key_4 = QLabel(self)
-        # self.lbl_netshare_key_4.move(self.menu_obj_pos_w + 6, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 20)
-        # self.lbl_netshare_key_4.resize(150, 10)
-        # self.lbl_netshare_key_4.setFont(self.font_s7b)
-        # self.lbl_netshare_key_4.setText('[PRINT SCREEN]  $IPC')
-        # self.lbl_netshare_key_4.setStyleSheet("""QLabel {background-color: rgb(0, 0, 0);
-        #                                        color: rgb(150, 150, 150);
-        #                                        border-top:0px solid rgb(10, 10, 10);
-        #                                        border-bottom:0px solid rgb(10, 10, 10);
-        #                                        border-right:0px solid rgb(10, 10, 10);
-        #                                        border-left:0px solid rgb(10, 10, 10);}""")
-        # print('-- [App.__init__] created:', self.lbl_netshare_key_4)
-        # ui_object_complete.append(self.lbl_netshare_key_4)
-        # ui_object_font_list_s7b.append(self.lbl_netshare_key_4)
-
         self.lbl_netshare_mon = QPushButton(self)
         self.lbl_netshare_mon.move(self.menu_obj_pos_w + 2, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
         self.lbl_netshare_mon.resize(126, self.monitor_btn_h)
@@ -1953,17 +1835,6 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.btn_netshare_mon)
         self.object_interaction_enabled.append(self.btn_netshare_mon)
         ui_object_complete.append(self.btn_netshare_mon)
-
-        # self.lbl_netshare_key_0 = QLabel(self)
-        # self.lbl_netshare_key_0.move(self.menu_obj_pos_w + 2 + 126 + 4 + 28 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
-        # self.lbl_netshare_key_0.resize(self.monitor_btn_w, self.monitor_btn_h)
-        # self.lbl_netshare_key_0.setFont(self.font_s8b)
-        # self.lbl_netshare_key_0.setText('R G B')
-        # self.lbl_netshare_key_0.setStyleSheet(self.lbl_menu_key_style)
-        # self.lbl_netshare_key_0.setAlignment(Qt.AlignCenter)
-        # print('-- [App.__init__] created:', self.lbl_netshare_key_0)
-        # ui_object_complete.append(self.lbl_netshare_key_0)
-        # ui_object_font_list_s8b.append(self.lbl_netshare_key_0)
 
         self.qle_netshare_mon_rgb_on = QLineEdit(self)
         self.qle_netshare_mon_rgb_on.resize(self.monitor_btn_w, self.monitor_btn_h)
@@ -2061,17 +1932,6 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_backlight_sub)
         ui_object_complete.append(self.btn_backlight_sub)
 
-        # self.lbl_backlight_key_0 = QLabel(self)
-        # self.lbl_backlight_key_0.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
-        # self.lbl_backlight_key_0.resize(self.monitor_btn_w, self.monitor_btn_h)
-        # self.lbl_backlight_key_0.setFont(self.font_s8b)
-        # self.lbl_backlight_key_0.setText('R G B')
-        # self.lbl_backlight_key_0.setStyleSheet(self.lbl_menu_key_style)
-        # self.lbl_backlight_key_0.setAlignment(Qt.AlignCenter)
-        # print('-- [App.__init__] created:', self.lbl_backlight_key_0)
-        # ui_object_complete.append(self.lbl_backlight_key_0)
-        # ui_object_font_list_s8b.append(self.lbl_backlight_key_0)
-
         self.qle_backlight_rgb_on = QLineEdit(self)
         self.qle_backlight_rgb_on.resize(self.monitor_btn_w, self.monitor_btn_h)
         self.qle_backlight_rgb_on.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4, self.height - 4 - self.monitor_btn_h)
@@ -2105,16 +1965,6 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_backlight_auto)
         ui_object_complete.append(self.btn_backlight_auto)
 
-        # self.lbl_backlight_auto_time_0 = QLabel(self)
-        # self.lbl_backlight_auto_time_0.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 92 + 4 + 28 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
-        # self.lbl_backlight_auto_time_0.resize(42, self.monitor_btn_h)
-        # self.lbl_backlight_auto_time_0.setFont(self.font_s7b)
-        # self.lbl_backlight_auto_time_0.setText('Time 0:')
-        # self.lbl_backlight_auto_time_0.setStyleSheet(self.lbl_menu_key_style)
-        # print('-- [App.__init__] created:', self.lbl_backlight_auto_time_0)
-        # ui_object_complete.append(self.lbl_backlight_auto_time_0)
-        # ui_object_font_list_s7b.append(self.lbl_backlight_auto_time_0)
-
         self.btn_backlight_auto_time_0 = QLineEdit(self)
         self.btn_backlight_auto_time_0.resize(42, self.monitor_btn_h)
         self.btn_backlight_auto_time_0.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 92 + 4 + 28 + 4, self.height - 4 - self.monitor_btn_h)
@@ -2127,16 +1977,6 @@ class App(QMainWindow):
         self.object_interaction_readonly.append(self.btn_backlight_auto_time_0)
         ui_object_complete.append(self.btn_backlight_auto_time_0)
         ui_object_font_list_s8b.append(self.btn_backlight_auto_time_0)
-
-        # self.lbl_backlight_auto_time_1 = QLabel(self)
-        # self.lbl_backlight_auto_time_1.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 92 + 4 + 28 + 4 + 42 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
-        # self.lbl_backlight_auto_time_1.resize(42, self.monitor_btn_h)
-        # self.lbl_backlight_auto_time_1.setFont(self.font_s7b)
-        # self.lbl_backlight_auto_time_1.setText('Time 1:')
-        # self.lbl_backlight_auto_time_1.setStyleSheet(self.lbl_menu_key_style)
-        # print('-- [App.__init__] created:', self.lbl_backlight_auto_time_1)
-        # ui_object_complete.append(self.lbl_backlight_auto_time_1)
-        # ui_object_font_list_s7b.append(self.lbl_backlight_auto_time_1)
 
         self.btn_backlight_auto_time_1 = QLineEdit(self)
         self.btn_backlight_auto_time_1.resize(42, self.monitor_btn_h)
@@ -2823,8 +2663,6 @@ class App(QMainWindow):
         self.lbl_vram_mon_temp.show()
         self.btn_cpu_mon_temp.show()
         self.btn_vram_mon_temp.show()
-
-        # self.lbl_util_key_0.show()
         self.lbl_util_key_1.show()
         self.lbl_util_key_2.show()
         self.lbl_util_key_3.show()
@@ -2833,7 +2671,6 @@ class App(QMainWindow):
         self.lbl_util_key_6.show()
         self.lbl_util_key_7.show()
         self.lbl_util_key_8.show()
-        # self.lbl_util_key_9.show()
 
     def btn_feature_page_disk_util(self):
         print('-- [App.btn_feature_page_disk_util]: plugged in')
@@ -2847,8 +2684,6 @@ class App(QMainWindow):
         self.qle_hdd_led_time_on.show()
         self.lbl_hdd_read_mon.show()
         self.qle_hdd_read_mon_rgb_on.show()
-        # self.lbl_disk_key_0.show()
-        # self.lbl_disk_key_1.show()
         self.lbl_disk_key_2.show()
         self.lbl_disk_key_3.show()
 
@@ -2901,24 +2736,12 @@ class App(QMainWindow):
         self.lbl_netshare_mon.show()
         self.btn_netshare_mon.show()
         self.qle_netshare_mon_rgb_on.show()
-        # self.lbl_netshare_key_0.show()
-        # self.lbl_netshare_key_1.show()
-        # self.lbl_netshare_key_2.show()
-        # self.lbl_netshare_key_3.show()
-        # self.lbl_netshare_key_4.show()
-        # self.lbl_netshare_key_5.show()
-        # self.lbl_net_con_mouse_key_0.show()
         self.lbl_net_con_mouse_key_1.show()
         self.lbl_net_con_mouse_key_2.show()
         self.lbl_net_con_mouse_key_3.show()
         self.lbl_net_con_mouse_key_4.show()
         self.lbl_net_con_mouse_key_5.show()
         self.lbl_net_con_mouse_key_6.show()
-
-    # def btn_feature_page_gkeys_function(self):
-    #     self.hide_all_features()
-    #     self.lbl_settings_bg.show()
-    #     self.btn_feature_page_gkeys.setStyleSheet(self.btn_side_menu_style)
 
     def btn_feature_page_settings_function(self):
         print('-- [App.btn_feature_page_settings_function]: plugged in')
@@ -2938,9 +2761,6 @@ class App(QMainWindow):
         self.btn_backlight_auto.show()
         self.btn_backlight_auto_time_0.show()
         self.btn_backlight_auto_time_1.show()
-        # self.lbl_backlight_auto_time_0.show()
-        # self.lbl_backlight_auto_time_1.show()
-        # self.lbl_backlight_key_0.show()
         self.lbl_media_display.show()
         self.btn_media_display.show()
         self.lbl_powershell.show()
@@ -4052,7 +3872,7 @@ class App(QMainWindow):
 
         print('-- [App.initUI]: waiting to display application')
         while bool_backend_allow_display is False:
-            time.sleep(1)
+            time.sleep(0.1)
         print('-- [App.initUI]: displaying application')
 
         if bool_backlight_interact is True:
@@ -4729,56 +4549,56 @@ class SdkEventHandlerClass(QThread):
         time_now_release = float(var)
         self.time_now_release_keyId = str(data.keyId).strip()
         if self.time_now_release_keyId == 'CorsairKeyId.Kb_G1':
-            # (notification) short press: reset ledId color and run pertaining function
+            # short press: reset ledId color and run pertaining function
             if time_now_release < (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
                 print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
                 self.g1_function_short()
-            # (notification) long release: reset ledId color and disconnect key from function
+            # long release: reset ledId color and disconnect key from function
             elif time_now_release >= (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
                 print('-- [App.on_press] captured event: time_now_1: {0} long released {1}'.format(self.time_now_press, data.keyId))
                 self.g1_function_long()
         elif self.time_now_release_keyId == 'CorsairKeyId.Kb_G2':
-            # (notification) short press: reset ledId color and run pertaining function
+            # short press: reset ledId color and run pertaining function
             if time_now_release < (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
                 print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
                 self.g2_function_short()
-            # (notification) long release: reset ledId color and disconnect key from function
+            # long release: reset ledId color and disconnect key from function
             elif time_now_release >= (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
                 print('-- [App.on_press] captured event: time_now_1: {0} long released {1}'.format(self.time_now_press, data.keyId))
                 self.g2_function_long()
         elif self.time_now_release_keyId == 'CorsairKeyId.Kb_G3':
-            # (notification) short press: reset ledId color and run pertaining function
+            # short press: reset ledId color and run pertaining function
             if time_now_release < (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
                 print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
                 self.g3_function_short()
-            # (notification) long release: reset ledId color and disconnect key from function
+            # long release: reset ledId color and disconnect key from function
             elif time_now_release >= (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
                 print('-- [App.on_press] captured event: time_now_1: {0} long released {1}'.format(self.time_now_press, data.keyId))
                 self.g3_function_long()
         elif self.time_now_release_keyId == 'CorsairKeyId.Kb_G4':
-            # (notification) short press: reset ledId color and run pertaining function
+            # short press: reset ledId color and run pertaining function
             if time_now_release < (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
                 print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
                 self.g4_function_short()
-            # (notification) long release: reset ledId color and disconnect key from function
+            # long release: reset ledId color and disconnect key from function
             elif time_now_release >= (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
                 print('-- [App.on_press] captured event: time_now_1: {0} long released {1}'.format(self.time_now_press, data.keyId))
                 self.g4_function_long()
         elif self.time_now_release_keyId == 'CorsairKeyId.Kb_G5':
-            # (notification) short press: reset ledId color and run pertaining function
+            # short press: reset ledId color and run pertaining function
             if time_now_release < (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
                 print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
                 self.g5_function_short()
-            # (notification) long release: reset ledId color and disconnect key from function
+            # long release: reset ledId color and disconnect key from function
             elif time_now_release >= (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
                 print('-- [App.on_press] captured event: time_now_1: {0} long released {1}'.format(self.time_now_press, data.keyId))
                 self.g5_function_long()
         elif self.time_now_release_keyId == 'CorsairKeyId.Kb_G6':
-            # (notification) short press: reset ledId color and run pertaining function
+            # short press: reset ledId color and run pertaining function
             if time_now_release < (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
                 print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
                 self.g6_function_short()
-            # (notification) long release: reset ledId color and disconnect key from function
+            # long release: reset ledId color and disconnect key from function
             elif time_now_release >= (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
                 print('-- [App.on_press] captured event: time_now_1: {0} long released {1}'.format(self.time_now_press, data.keyId))
                 self.g6_function_long()
@@ -4973,7 +4793,6 @@ class CompileDevicesClass(QThread):
 
         if len(devices_kb) > 0:
             thread_sdk_event_handler[0].start()
-            # thread_sdk_event_handler_read_file_events[0].start()
             thread_keyevents[0].start()
             if bool_switch_startup_hdd_read_write:
                 thread_disk_rw[0].start()
@@ -5020,7 +4839,7 @@ class CompileDevicesClass(QThread):
             self.lbl_con_stat_kb.hide()
             self.btn_con_stat_ms_img.hide()
             self.btn_con_stat_kb_img.hide()
-            time.sleep(2)
+            time.sleep(0.1)
             self.attempt_connect()
         elif connected:
             sdk.request_control()
@@ -5109,7 +4928,7 @@ class CompileDevicesClass(QThread):
                     self.entry_sequence()
                     devices_previous = device
                     self.stop_all_threads()
-                    time.sleep(2)
+                    # time.sleep(2)
                     self.start_all_threads()
 
     def sanitize_rgb_values(self):
@@ -5489,10 +5308,9 @@ class CompileDevicesClass(QThread):
                     self.attempt_connect()
                 else:
                     print('-- [CompileDevicesClass.run] bool_backend_config_read_complete:', bool_backend_config_read_complete)
-                time.sleep(1)
             except Exception as e:
                 print('[-- [CompileDevicesClass.run] Error:', e)
-            time.sleep(3)
+            time.sleep(1)
 
     def stop(self):
         print('-- [CompileDevicesClass.stop]: plugged in')
@@ -5569,7 +5387,7 @@ class TemperatureClass(QThread):
                 except Exception as e:
                     print('-- [TemperatureClass.run] Error:', e)
             self.send_instruction()
-            time.sleep(3)
+            time.sleep(1)
 
     def stop(self):
         print('-- [TemperatureClass.stop]: plugged in')
@@ -5693,9 +5511,9 @@ class NetShareClass(QThread):
                     self.send_instruction()
                 except Exception as e:
                     print('-- [NetShareClass.run] Error:', e)
-                time.sleep(2)
-            else:
                 time.sleep(1)
+            else:
+                time.sleep(2)
 
     def send_instruction(self):
         # print('-- [NetShareClass.send_instruction]: plugged in')
@@ -6101,9 +5919,9 @@ class InternetConnectionClass(QThread):
                     self.ping_fail_i = 0
                     self.ping()
                     self.send_instruction()
-                    time.sleep(1.25)
+                    time.sleep(1)
                 else:
-                    time.sleep(3)
+                    time.sleep(2)
             except Exception as e:
                 print('-- [InternetConnectionClass.stop] Error:', e)
 
