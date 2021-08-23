@@ -91,6 +91,7 @@ hdd_bytes_type_r = ''
 hdd_bytes_str = ''
 str_path_kb_img = ''
 str_path_ms_img = ''
+bool_switch_fahrenheit = False
 bool_backlight_interact = False
 bool_powershell_interact = False
 bool_show_overlay = False
@@ -263,7 +264,8 @@ config_data = ['sdk_color_cpu_on: 255,255,0',
                'bool_switch_startup_media_display: false',
                'bool_power_plan_interact: false',
                'bool_powershell_interact: false',
-               'bool_backlight_interact: false']
+               'bool_backlight_interact: false',
+               'bool_switch_fahrenheit: false']
 
 
 def create_new():
@@ -820,17 +822,17 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_feature_page_networking)
         ui_object_font_list_s8b.append(self.btn_feature_page_networking)
 
-        self.btn_feature_page_power = QPushButton(self)
-        self.btn_feature_page_power.move(0, self.height - 4 - 28 - 4 - 28)
-        self.btn_feature_page_power.resize(126, 28)
-        self.btn_feature_page_power.setFont(self.font_s8b)
-        self.btn_feature_page_power.setText('Power')
-        self.btn_feature_page_power.setStyleSheet(self.btn_side_menu_style_1)
-        self.btn_feature_page_power.clicked.connect(self.feature_page_power_function)
-        print('-- [App.__init__] created:', self.btn_feature_page_power)
-        self.object_interaction_enabled.append(self.btn_feature_page_power)
-        ui_object_complete.append(self.btn_feature_page_power)
-        ui_object_font_list_s8b.append(self.btn_feature_page_power)
+        self.btn_feature_page_gkeys = QPushButton(self)
+        self.btn_feature_page_gkeys.move(0, self.height - 4 - 28 - 4 - 28)
+        self.btn_feature_page_gkeys.resize(126, 28)
+        self.btn_feature_page_gkeys.setFont(self.font_s8b)
+        self.btn_feature_page_gkeys.setText('G Keys')
+        self.btn_feature_page_gkeys.setStyleSheet(self.btn_side_menu_style_1)
+        self.btn_feature_page_gkeys.clicked.connect(self.feature_page_gkeys_function)
+        print('-- [App.__init__] created:', self.btn_feature_page_gkeys)
+        self.object_interaction_enabled.append(self.btn_feature_page_gkeys)
+        ui_object_complete.append(self.btn_feature_page_gkeys)
+        ui_object_font_list_s8b.append(self.btn_feature_page_gkeys)
 
         self.btn_feature_page_settings = QPushButton(self)
         self.btn_feature_page_settings.move(0, self.height - 4 - 28)
@@ -962,7 +964,7 @@ class App(QMainWindow):
         self.lbl_util_key_2.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 10 + 4 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 30)
         self.lbl_util_key_2.resize(self.monitor_btn_w, 10)
         self.lbl_util_key_2.setFont(self.font_s7b)
-        self.lbl_util_key_2.setText('< 30c')
+        self.lbl_util_key_2.setText('<30c')
         self.lbl_util_key_2.setStyleSheet("""QLabel {background-color: rgb(0, 0, 0);
                                                    color: rgb(150, 150, 150);
                                                    border-top:0px solid rgb(10, 10, 10);
@@ -990,7 +992,7 @@ class App(QMainWindow):
         self.lbl_util_key_4.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 10 + 4 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 4 - 30)
         self.lbl_util_key_4.resize(self.monitor_btn_w, 10)
         self.lbl_util_key_4.setFont(self.font_s7b)
-        self.lbl_util_key_4.setText('>=30c, <50c')
+        self.lbl_util_key_4.setText('>=30c  <50c')
         self.lbl_util_key_4.setStyleSheet("""QLabel {background-color: rgb(0, 0, 0);
                                                            color: rgb(150, 150, 150);
                                                            border-top:0px solid rgb(10, 10, 10);
@@ -1018,7 +1020,7 @@ class App(QMainWindow):
         self.lbl_util_key_6.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 10 + 4 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 4 - 10 - 4 - 30)
         self.lbl_util_key_6.resize(self.monitor_btn_w, 10)
         self.lbl_util_key_6.setFont(self.font_s7b)
-        self.lbl_util_key_6.setText('>=50c, <70c')
+        self.lbl_util_key_6.setText('>=50c  <70c')
         self.lbl_util_key_6.setStyleSheet("""QLabel {background-color: rgb(0, 0, 0);
                                                                    color: rgb(150, 150, 150);
                                                                    border-top:0px solid rgb(10, 10, 10);
@@ -1855,7 +1857,7 @@ class App(QMainWindow):
         ui_object_font_list_s8b.append(self.qle_netshare_mon_rgb_on)
 
         self.lbl_exclusive_con = QPushButton(self)
-        self.lbl_exclusive_con.move(self.menu_obj_pos_w + 2, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.lbl_exclusive_con.move(self.menu_obj_pos_w + 2, self.height - (4 * 7) - (self.monitor_btn_h * 7))
         self.lbl_exclusive_con.resize(126, self.monitor_btn_h)
         self.lbl_exclusive_con.setFont(self.font_s8b)
         self.lbl_exclusive_con.setText('Exclusive Access')
@@ -1866,7 +1868,7 @@ class App(QMainWindow):
         ui_object_font_list_s8b.append(self.lbl_exclusive_con)
 
         self.btn_exclusive_con = QPushButton(self)
-        self.btn_exclusive_con.move(self.menu_obj_pos_w + 2 + 126 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.btn_exclusive_con.move(self.menu_obj_pos_w + 2 + 126 + 4, self.height - (4 * 7) - (self.monitor_btn_h * 7))
         self.btn_exclusive_con.resize(28, 28)
         self.btn_exclusive_con.setStyleSheet(self.btn_menu_style)
         self.btn_exclusive_con.setIconSize(self.tog_switch_ico_sz)
@@ -1876,7 +1878,7 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_exclusive_con)
 
         self.lbl_run_startup = QPushButton(self)
-        self.lbl_run_startup.move(self.menu_obj_pos_w + 2, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.lbl_run_startup.move(self.menu_obj_pos_w + 2, self.height - (4 * 6) - (self.monitor_btn_h * 6))
         self.lbl_run_startup.resize(126, self.monitor_btn_h)
         self.lbl_run_startup.setFont(self.font_s8b)
         self.lbl_run_startup.setText('Automatic Startup')
@@ -1887,7 +1889,7 @@ class App(QMainWindow):
         ui_object_font_list_s8b.append(self.lbl_run_startup)
 
         self.btn_run_startup = QPushButton(self)
-        self.btn_run_startup.move(self.menu_obj_pos_w + 2 + 126 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.btn_run_startup.move(self.menu_obj_pos_w + 2 + 126 + 4, self.height - (4 * 6) - (self.monitor_btn_h * 6))
         self.btn_run_startup.resize(28, 28)
         self.btn_run_startup.setStyleSheet(self.btn_menu_style)
         self.btn_run_startup.setIconSize(self.tog_switch_ico_sz)
@@ -1897,7 +1899,7 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_run_startup)
 
         self.lbl_start_minimized = QPushButton(self)
-        self.lbl_start_minimized.move(self.menu_obj_pos_w + 2, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.lbl_start_minimized.move(self.menu_obj_pos_w + 2, self.height - (4 * 5) - (self.monitor_btn_h * 5))
         self.lbl_start_minimized.resize(126, self.monitor_btn_h)
         self.lbl_start_minimized.setFont(self.font_s8b)
         self.lbl_start_minimized.setText('Start Minimized')
@@ -1908,7 +1910,7 @@ class App(QMainWindow):
         ui_object_font_list_s8b.append(self.lbl_start_minimized)
 
         self.btn_start_minimized = QPushButton(self)
-        self.btn_start_minimized.move(self.menu_obj_pos_w + 2 + 126 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.btn_start_minimized.move(self.menu_obj_pos_w + 2 + 126 + 4, self.height - (4 * 5) - (self.monitor_btn_h * 5))
         self.btn_start_minimized.resize(28, 28)
         self.btn_start_minimized.setStyleSheet(self.btn_menu_style)
         self.btn_start_minimized.setIconSize(self.tog_switch_ico_sz)
@@ -1998,7 +2000,7 @@ class App(QMainWindow):
         ui_object_font_list_s8b.append(self.btn_backlight_auto_time_1)
 
         self.lbl_media_display = QPushButton(self)
-        self.lbl_media_display.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.lbl_media_display.move(self.menu_obj_pos_w + 2, self.height - (4 * 4) - (self.monitor_btn_h * 4))
         self.lbl_media_display.resize(126, self.monitor_btn_h)
         self.lbl_media_display.setFont(self.font_s8b)
         self.lbl_media_display.setText('Media Display')
@@ -2010,7 +2012,7 @@ class App(QMainWindow):
         self.lbl_media_display.setToolTip('Media Display\n\nEnables/Disables Media Display.\n\nDisplays media states from any application that utilizes the global media player controller.')
 
         self.btn_media_display = QPushButton(self)
-        self.btn_media_display.move(self.menu_obj_pos_w + 2 + 4 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 126, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.btn_media_display.move(self.menu_obj_pos_w + 2 + 4 + 126, self.height - (4 * 4) - (self.monitor_btn_h * 4))
         self.btn_media_display.resize(28, 28)
         self.btn_media_display.setStyleSheet(self.btn_menu_style)
         self.btn_media_display.setIconSize(self.tog_switch_ico_sz)
@@ -2020,8 +2022,31 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_media_display)
         self.btn_media_display.setToolTip('Media Display\n\nEnables/Disables Media Display.')
 
+        self.lbl_fahrenheit = QPushButton(self)
+        self.lbl_fahrenheit.move(self.menu_obj_pos_w + 2, self.height - (4 * 3) - (self.monitor_btn_h * 3))
+        self.lbl_fahrenheit.resize(126, self.monitor_btn_h)
+        self.lbl_fahrenheit.setFont(self.font_s8b)
+        self.lbl_fahrenheit.setText('Fahrenheit')
+        self.lbl_fahrenheit.setStyleSheet(self.btn_menu_style)
+        self.lbl_fahrenheit.clicked.connect(self.btn_fahrenheit_function)
+        print('-- [App.__init__] created:', self.lbl_fahrenheit)
+        ui_object_complete.append(self.lbl_fahrenheit)
+        ui_object_font_list_s8b.append(self.lbl_fahrenheit)
+        # self.lbl_fahrenheit.setToolTip('Media Display\n\nEnables/Disables Media Display.\n\nDisplays media states from any application that utilizes the global media player controller.')
+
+        self.btn_fahrenheit = QPushButton(self)
+        self.btn_fahrenheit.move(self.menu_obj_pos_w + 2 + 4 + 126, self.height - (4 * 3) - (self.monitor_btn_h * 3))
+        self.btn_fahrenheit.resize(28, 28)
+        self.btn_fahrenheit.setStyleSheet(self.btn_menu_style)
+        self.btn_fahrenheit.setIconSize(self.tog_switch_ico_sz)
+        self.btn_fahrenheit.clicked.connect(self.btn_fahrenheit_function)
+        print('-- [App.__init__] created:', self.btn_fahrenheit)
+        self.object_interaction_enabled.append(self.btn_fahrenheit)
+        ui_object_complete.append(self.btn_fahrenheit)
+        # self.btn_fahrenheit.setToolTip('Media Display\n\nEnables/Disables Media Display.')
+
         self.lbl_powershell = QPushButton(self)
-        self.lbl_powershell.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.lbl_powershell.move(self.menu_obj_pos_w + 2, self.height - (4 * 1) - (self.monitor_btn_h * 1))
         self.lbl_powershell.resize(126, self.monitor_btn_h)
         self.lbl_powershell.setFont(self.font_s8b)
         self.lbl_powershell.setText('G6 Powershell')
@@ -2033,7 +2058,7 @@ class App(QMainWindow):
         self.lbl_powershell.setToolTip('G6 Powershell\n\nEnables/Disables G6 Powershell.\n\nShort press G6 spawns administrator Powershell window if iCUE Display is running as admin.')
 
         self.btn_powershell = QPushButton(self)
-        self.btn_powershell.move(self.menu_obj_pos_w + 2 + 4 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 126, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.btn_powershell.move(self.menu_obj_pos_w + 2 + 4 + 126, self.height - (4 * 1) - (self.monitor_btn_h * 1))
         self.btn_powershell.resize(28, 28)
         self.btn_powershell.setStyleSheet(self.btn_menu_style)
         self.btn_powershell.setIconSize(self.tog_switch_ico_sz)
@@ -2044,7 +2069,7 @@ class App(QMainWindow):
         self.btn_powershell.setToolTip('G6 Powershell\n\nEnables/Disables G6 Powershell.')
 
         self.lbl_g5_backlight = QPushButton(self)
-        self.lbl_g5_backlight.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.lbl_g5_backlight.move(self.menu_obj_pos_w + 2, self.height - (4 * 2) - (self.monitor_btn_h * 2))
         self.lbl_g5_backlight.resize(126, self.monitor_btn_h)
         self.lbl_g5_backlight.setFont(self.font_s8b)
         self.lbl_g5_backlight.setText('G5 Backlight')
@@ -2056,7 +2081,7 @@ class App(QMainWindow):
         self.lbl_g5_backlight.setToolTip('G5 Backlight\n\nEnables/Disables G5 Backlight.\n\nG5 will turn on/off iCUE Displays backlight feature for use in low light conditions.')
 
         self.btn_g5_backlight = QPushButton(self)
-        self.btn_g5_backlight.move(self.menu_obj_pos_w + 2 + 4 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 126, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.btn_g5_backlight.move(self.menu_obj_pos_w + 2 + 4 + 126, self.height - (4 * 2) - (self.monitor_btn_h * 2))
         self.btn_g5_backlight.resize(28, 28)
         self.btn_g5_backlight.setStyleSheet(self.btn_menu_style)
         self.btn_g5_backlight.setIconSize(self.tog_switch_ico_sz)
@@ -2067,7 +2092,7 @@ class App(QMainWindow):
         self.btn_g5_backlight.setToolTip('G5 Backlight\n\nEnables/Disables G5 Backlight.')
 
         self.lbl_power_plan = QPushButton(self)
-        self.lbl_power_plan.move(self.menu_obj_pos_w + 2, self.height - 4 - self.monitor_btn_h)
+        self.lbl_power_plan.move(self.menu_obj_pos_w + 2, self.height - (4 * 6) - (self.monitor_btn_h * 6))
         self.lbl_power_plan.resize(126, self.monitor_btn_h)
         self.lbl_power_plan.setFont(self.font_s8b)
         self.lbl_power_plan.setText('G1 Power Plan')
@@ -2076,10 +2101,10 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.lbl_power_plan)
         ui_object_complete.append(self.lbl_power_plan)
         ui_object_font_list_s8b.append(self.lbl_power_plan)
-        self.lbl_power_plan.setToolTip('G1 Power Plan\n\nEnables/Disables G1 Power Plan.\n\nG1 key LED will reflect the current power plan while a short press will change the power plan.')
+        self.lbl_power_plan.setToolTip('G1 Power Plan\n\nEnables/Disables G1 Power Plan.\n\nG1 key LED will reflect the current power plan while a short press will change the power plan.\n\nIt is recommended to properly configure your power plan(s) to compliment this feature, reducing Processor Maximum State for Power Saver.')
 
         self.btn_power_plan = QPushButton(self)
-        self.btn_power_plan.move(self.menu_obj_pos_w + 2 + 4 + 126, self.height - 4 - self.monitor_btn_h)
+        self.btn_power_plan.move(self.menu_obj_pos_w + 2 + 4 + 126, self.height - (4 * 6) - (self.monitor_btn_h * 6))
         self.btn_power_plan.resize(28, 28)
         self.btn_power_plan.setStyleSheet(self.btn_menu_style)
         self.btn_power_plan.setIconSize(self.tog_switch_ico_sz)
@@ -2091,7 +2116,7 @@ class App(QMainWindow):
 
         """ Power Saver """
         self.lbl_power_plan_key_0 = QLabel(self)
-        self.lbl_power_plan_key_0.move(self.menu_obj_pos_w + 2, self.height - 4 - self.monitor_btn_h - 4 - 10)
+        self.lbl_power_plan_key_0.move(self.menu_obj_pos_w + 2, self.height - (4 * 6) - (self.monitor_btn_h * 6) - 4 - 10)
         self.lbl_power_plan_key_0.resize(10, 10)
         self.lbl_power_plan_key_0.setStyleSheet("""QLabel {background-color: rgb(255, 0, 0);
                                                color: rgb(150, 150, 150);
@@ -2103,7 +2128,7 @@ class App(QMainWindow):
         ui_object_complete.append(self.lbl_power_plan_key_0)
 
         self.lbl_power_plan_key_1 = QLabel(self)
-        self.lbl_power_plan_key_1.move(self.menu_obj_pos_w + 2 + 4 + 10, self.height - 4 - self.monitor_btn_h - 4 - 10)
+        self.lbl_power_plan_key_1.move(self.menu_obj_pos_w + 2 + 4 + 10, self.height - (4 * 6) - (self.monitor_btn_h * 6) - 4 - 10)
         self.lbl_power_plan_key_1.resize(72, 10)
         self.lbl_power_plan_key_1.setFont(self.font_s7b)
         self.lbl_power_plan_key_1.setText('Power Saver')
@@ -2119,7 +2144,7 @@ class App(QMainWindow):
 
         """ Balanced """
         self.lbl_power_plan_key_2 = QLabel(self)
-        self.lbl_power_plan_key_2.move(self.menu_obj_pos_w + 2 + 4 + 10 + 4 + 72, self.height - 4 - self.monitor_btn_h - 4 - 10)
+        self.lbl_power_plan_key_2.move(self.menu_obj_pos_w + 2 + 4 + 10 + 4 + 72, self.height - (4 * 6) - (self.monitor_btn_h * 6) - 4 - 10)
         self.lbl_power_plan_key_2.resize(10, 10)
         self.lbl_power_plan_key_2.setStyleSheet("""QLabel {background-color: rgb(0, 255, 0);
                                                color: rgb(150, 150, 150);
@@ -2131,7 +2156,7 @@ class App(QMainWindow):
         ui_object_complete.append(self.lbl_power_plan_key_2)
 
         self.lbl_power_plan_key_3 = QLabel(self)
-        self.lbl_power_plan_key_3.move(self.menu_obj_pos_w + 2 + 4 + 10 + 4 + 72 + 4 + 10, self.height - 4 - self.monitor_btn_h - 4 - 10)
+        self.lbl_power_plan_key_3.move(self.menu_obj_pos_w + 2 + 4 + 10 + 4 + 72 + 4 + 10, self.height - (4 * 6) - (self.monitor_btn_h * 6) - 4 - 10)
         self.lbl_power_plan_key_3.resize(72, 10)
         self.lbl_power_plan_key_3.setFont(self.font_s7b)
         self.lbl_power_plan_key_3.setText('Balanced')
@@ -2147,7 +2172,7 @@ class App(QMainWindow):
 
         """ High Power """
         self.lbl_power_plan_key_4 = QLabel(self)
-        self.lbl_power_plan_key_4.move(self.menu_obj_pos_w + 2 + 4 + 10 + 4 + 72 + 4 + 10 + 4 + 72, self.height - 4 - self.monitor_btn_h - 4 - 10)
+        self.lbl_power_plan_key_4.move(self.menu_obj_pos_w + 2 + 4 + 10 + 4 + 72 + 4 + 10 + 4 + 72, self.height - (4 * 6) - (self.monitor_btn_h * 6) - 4 - 10)
         self.lbl_power_plan_key_4.resize(10, 10)
         self.lbl_power_plan_key_4.setStyleSheet("""QLabel {background-color: rgb(0, 0, 255);
                                                color: rgb(150, 150, 150);
@@ -2159,7 +2184,7 @@ class App(QMainWindow):
         ui_object_complete.append(self.lbl_power_plan_key_4)
 
         self.lbl_power_plan_key_5 = QLabel(self)
-        self.lbl_power_plan_key_5.move(self.menu_obj_pos_w + 2 + 4 + 10 + 4 + 72 + 4 + 10 + 4 + 72 + 4 + 10, self.height - 4 - self.monitor_btn_h - 4 - 10)
+        self.lbl_power_plan_key_5.move(self.menu_obj_pos_w + 2 + 4 + 10 + 4 + 72 + 4 + 10 + 4 + 72 + 4 + 10, self.height - (4 * 6) - (self.monitor_btn_h * 6) - 4 - 10)
         self.lbl_power_plan_key_5.resize(72, 10)
         self.lbl_power_plan_key_5.setFont(self.font_s7b)
         self.lbl_power_plan_key_5.setText('High Power')
@@ -2175,7 +2200,7 @@ class App(QMainWindow):
 
         """ Ultimate Performance """
         self.lbl_power_plan_key_6 = QLabel(self)
-        self.lbl_power_plan_key_6.move(self.menu_obj_pos_w + 2 + 4 + 10 + 4 + 72 + 4 + 10 + 4 + 72 + 4 + 10 + 4 + 72, self.height - 4 - self.monitor_btn_h - 4 - 10)
+        self.lbl_power_plan_key_6.move(self.menu_obj_pos_w + 2 + 4 + 10 + 4 + 72 + 4 + 10 + 4 + 72 + 4 + 10 + 4 + 72, self.height - (4 * 6) - (self.monitor_btn_h * 6) - 4 - 10)
         self.lbl_power_plan_key_6.resize(10, 10)
         self.lbl_power_plan_key_6.setStyleSheet("""QLabel {background-color: rgb(255, 15, 100);
                                                        color: rgb(150, 150, 150);
@@ -2187,7 +2212,7 @@ class App(QMainWindow):
         ui_object_complete.append(self.lbl_power_plan_key_6)
 
         self.lbl_power_plan_key_7 = QLabel(self)
-        self.lbl_power_plan_key_7.move(self.menu_obj_pos_w + 2 + 4 + 10 + 4 + 72 + 4 + 10 + 4 + 72 + 4 + 10 + 4 + 72 + 4 + 10, self.height - 4 - self.monitor_btn_h - 4 - 10)
+        self.lbl_power_plan_key_7.move(self.menu_obj_pos_w + 2 + 4 + 10 + 4 + 72 + 4 + 10 + 4 + 72 + 4 + 10 + 4 + 72 + 4 + 10, self.height - (4 * 6) - (self.monitor_btn_h * 6) - 4 - 10)
         self.lbl_power_plan_key_7.resize(100, 10)
         self.lbl_power_plan_key_7.setFont(self.font_s7b)
         self.lbl_power_plan_key_7.setText('Ultimate Performance')
@@ -2200,21 +2225,6 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.lbl_power_plan_key_7)
         ui_object_complete.append(self.lbl_power_plan_key_7)
         ui_object_font_list_s7b.append(self.lbl_power_plan_key_7)
-
-        self.lbl_power_plan_key_8 = QLabel(self)
-        self.lbl_power_plan_key_8.move(self.menu_obj_pos_w + 2, self.height - 4 - self.monitor_btn_h - 4 - 10 - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
-        self.lbl_power_plan_key_8.resize(420, 80)
-        self.lbl_power_plan_key_8.setFont(self.font_s7b)
-        self.lbl_power_plan_key_8.setText('[G1] Key will cycle power plan. It is recommended to properly configure your power plan(s) to\ncompliment this feature, reducing Processor Maximum State for Power Saver.')
-        self.lbl_power_plan_key_8.setStyleSheet("""QLabel {background-color: rgb(0, 0, 0);
-                                                               color: rgb(150, 150, 150);
-                                                               border-top:0px solid rgb(10, 10, 10);
-                                                               border-bottom:0px solid rgb(10, 10, 10);
-                                                               border-right:0px solid rgb(10, 10, 10);
-                                                               border-left:0px solid rgb(10, 10, 10);}""")
-        print('-- [App.__init__] created:', self.lbl_power_plan_key_8)
-        ui_object_complete.append(self.lbl_power_plan_key_8)
-        ui_object_font_list_s7b.append(self.lbl_power_plan_key_8)
 
         self.btn_cpu_mon.setToolTip('CPU Utilization Monitor\n\nEnables/Disables CPU utilization monitor.')
         self.lbl_cpu_mon.setToolTip('CPU Utilization Monitor\n\nKeypad 1:       0-25%\nKeypad 4:       25-50%\nKeypad 7:       50-75%\nNumlock:       75-100%.')
@@ -2326,6 +2336,36 @@ class App(QMainWindow):
         self.installEventFilter(self.filter)
 
         self.initUI()
+
+    def btn_fahrenheit_function(self):
+        print('-- [btn_fahrenheit_function]: plugged in')
+        global bool_switch_fahrenheit
+
+        self.setFocus()
+
+        if bool_switch_fahrenheit is True:
+            if self.write_engaged is False:
+                print('-- [App.btn_fahrenheit_function] changing bool_switch_fahrenheit:', bool_switch_fahrenheit)
+                self.write_var = 'bool_switch_fahrenheit: false'
+                self.write_changes()
+            self.btn_fahrenheit.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.lbl_util_key_8.setText('>70c')
+            self.lbl_util_key_6.setText('>=50c  <70c')
+            self.lbl_util_key_4.setText('>=30c  <50c')
+            self.lbl_util_key_2.setText('<30c')
+            bool_switch_fahrenheit = False
+
+        elif bool_switch_fahrenheit is False:
+            if self.write_engaged is False:
+                print('-- [App.btn_fahrenheit_function] changing bool_switch_fahrenheit:', bool_switch_fahrenheit)
+                self.write_var = 'bool_switch_fahrenheit: true'
+                self.write_changes()
+            self.btn_fahrenheit.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_util_key_8.setText('>158f')
+            self.lbl_util_key_6.setText('>=122f  <158f')
+            self.lbl_util_key_4.setText('>=86f   <122f')
+            self.lbl_util_key_2.setText('<86f')
+            bool_switch_fahrenheit = True
 
     def btn_g5_backlight_function(self):
         print('-- [btn_g5_backlight_function]: plugged in')
@@ -2599,20 +2639,20 @@ class App(QMainWindow):
             self.btn_feature_page_network_traffic.setStyleSheet(self.btn_side_menu_style_1)
             self.btn_feature_page_networking.show()
             self.btn_feature_page_networking.setStyleSheet(self.btn_side_menu_style_1)
-            self.btn_feature_page_power.show()
-            self.btn_feature_page_power.setStyleSheet(self.btn_side_menu_style_1)
+            self.btn_feature_page_gkeys.show()
+            self.btn_feature_page_gkeys.setStyleSheet(self.btn_side_menu_style_1)
             self.btn_feature_page_settings.show()
             self.btn_feature_page_settings.setStyleSheet(self.btn_side_menu_style_1)
 
         except Exception as e:
             print(e)
 
-    def feature_page_power_function(self):
-        print('-- [App.feature_pg_power]: plugged in')
+    def feature_page_gkeys_function(self):
+        print('-- [App.feature_page_gkeys_function]: plugged in')
         self.hide_all_features()
         self.lbl_settings_bg.show()
 
-        self.btn_feature_page_power.setStyleSheet(self.btn_side_menu_style)
+        self.btn_feature_page_gkeys.setStyleSheet(self.btn_side_menu_style)
         self.lbl_power_plan.show()
         self.btn_power_plan.show()
 
@@ -2624,7 +2664,11 @@ class App(QMainWindow):
         self.lbl_power_plan_key_5.show()
         self.lbl_power_plan_key_6.show()
         self.lbl_power_plan_key_7.show()
-        self.lbl_power_plan_key_8.show()
+
+        self.lbl_powershell.show()
+        self.btn_powershell.show()
+        self.lbl_g5_backlight.show()
+        self.btn_g5_backlight.show()
 
     def feature_pg_execution_policy(self):
         print('-- [App.feature_pg_execution_policy]: plugged in')
@@ -2645,7 +2689,7 @@ class App(QMainWindow):
         self.btn_feature_page_disks.hide()
         self.btn_feature_page_network_traffic.hide()
         self.btn_feature_page_networking.hide()
-        self.btn_feature_page_power.hide()
+        self.btn_feature_page_gkeys.hide()
         self.btn_feature_page_settings.hide()
 
         self.lbl_execution_policy.show()
@@ -2778,10 +2822,8 @@ class App(QMainWindow):
         self.btn_backlight_auto_time_1.show()
         self.lbl_media_display.show()
         self.btn_media_display.show()
-        self.lbl_powershell.show()
-        self.btn_powershell.show()
-        self.lbl_g5_backlight.show()
-        self.btn_g5_backlight.show()
+        self.lbl_fahrenheit.show()
+        self.btn_fahrenheit.show()
 
     def sanitize_rgb_values(self):
         print('-- [App.sanitize_rgb_values]: plugged in')
@@ -3833,6 +3875,7 @@ class App(QMainWindow):
         global bool_power_plan_interact
         global bool_powershell_interact
         global bool_backlight_interact
+        global bool_switch_fahrenheit
 
         hdd_mon_thread = HddMonClass()
         thread_disk_rw.append(hdd_mon_thread)
@@ -3889,6 +3932,15 @@ class App(QMainWindow):
         while bool_backend_allow_display is False:
             time.sleep(0.1)
         print('-- [App.initUI]: displaying application')
+
+        if bool_switch_fahrenheit is True:
+            self.btn_fahrenheit.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.lbl_util_key_8.setText('>158f')
+            self.lbl_util_key_6.setText('>=122f, <158f')
+            self.lbl_util_key_4.setText('>=86f, <122f')
+            self.lbl_util_key_2.setText('<86f')
+        elif bool_switch_fahrenheit is False:
+            self.btn_fahrenheit.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
         if bool_backlight_interact is True:
             self.btn_g5_backlight.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
@@ -4987,6 +5039,7 @@ class CompileDevicesClass(QThread):
         global bool_power_plan_interact
         global bool_powershell_interact
         global bool_backlight_interact
+        global bool_switch_fahrenheit
 
         startup_loc = '/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/iCUEDisplay.lnk'
         bool_backend_valid_network_adapter_name = False
@@ -5269,6 +5322,11 @@ class CompileDevicesClass(QThread):
                     bool_backlight_interact = True
                 if line == 'bool_backlight_interact: false':
                     bool_backlight_interact = False
+
+                if line == 'bool_switch_fahrenheit: true':
+                    bool_switch_fahrenheit = True
+                if line == 'bool_switch_fahrenheit: false':
+                    bool_switch_fahrenheit = False
 
         print('-- [ConfigCompile.read_config] sdk_color_cpu_on:', sdk_color_cpu_on)
         print('-- [ConfigCompile.read_config] timing_cpu_util:', timing_cpu_util)
