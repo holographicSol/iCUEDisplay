@@ -1067,6 +1067,7 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.lbl_cpu_mon_temp)
         ui_object_complete.append(self.lbl_cpu_mon_temp)
         ui_object_font_list_s8b.append(self.lbl_cpu_mon_temp)
+        self.lbl_cpu_mon_temp.setToolTip('CPU Temperature\n\nEnable/Disable CPU Temperature Monitor')
 
         self.btn_cpu_mon_temp = QPushButton(self)
         self.btn_cpu_mon_temp.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 100 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
@@ -1077,6 +1078,7 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.btn_cpu_mon_temp)
         self.object_interaction_enabled.append(self.btn_cpu_mon_temp)
         ui_object_complete.append(self.btn_cpu_mon_temp)
+        self.btn_cpu_mon_temp.setToolTip('CPU Temperature\n\nEnable/Disable CPU Temperature Monitor')
 
         self.lbl_dram_mon = QPushButton(self)
         self.lbl_dram_mon.move(self.menu_obj_pos_w + 2, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
@@ -1178,6 +1180,7 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.lbl_vram_mon_temp)
         ui_object_complete.append(self.lbl_vram_mon_temp)
         ui_object_font_list_s8b.append(self.lbl_vram_mon_temp)
+        self.lbl_vram_mon_temp.setToolTip('GPU Temperature\n\nEnables/Disables GPU Temperature Monitor.')
 
         self.btn_vram_mon_temp = QPushButton(self)
         self.btn_vram_mon_temp.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 100 + 4, self.height - 4 - self.monitor_btn_h)
@@ -1189,6 +1192,7 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_vram_mon_temp)
         ui_object_complete.append(self.btn_vram_mon_temp)
         ui_object_font_list_s8b.append(self.btn_vram_mon_temp)
+        self.btn_vram_mon_temp.setToolTip('GPU Temperature\n\nEnables/Disables GPU Temperature Monitor.')
 
         """ blue"""
         self.lbl_disk_key_2 = QLabel(self)
@@ -1228,6 +1232,7 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.lbl_hdd_mon_sub)
         ui_object_complete.append(self.lbl_hdd_mon_sub)
         ui_object_font_list_s8b.append(self.lbl_hdd_mon_sub)
+        self.lbl_hdd_mon_sub.setToolTip('Disk Monitor\n\nEnables/Disables Disk Monitor.\n\nDisk Monitor displays mounted drives that have an assigned disk letter, disk reads & disk writes.\nThis information is displayed on the alpha area of the keyboard')
 
         self.btn_hdd_mon = QPushButton(self)
         self.btn_hdd_mon.move(self.menu_obj_pos_w + 2 + 88 + 4, self.height - 4 - self.monitor_btn_h)
@@ -1238,6 +1243,7 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.btn_hdd_mon)
         self.object_interaction_enabled.append(self.btn_hdd_mon)
         ui_object_complete.append(self.btn_hdd_mon)
+        self.btn_hdd_mon.setToolTip('Disk Monitor\n\nEnables/Disables Disk Monitor.')
 
         self.lbl_hdd_write_mon = QLabel(self)
         self.lbl_hdd_write_mon.move(self.menu_obj_pos_w + 2 + 88 + 4 + 28 + 4, self.height - 4 - self.monitor_btn_h)
@@ -2001,6 +2007,7 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.lbl_media_display)
         ui_object_complete.append(self.lbl_media_display)
         ui_object_font_list_s8b.append(self.lbl_media_display)
+        self.lbl_media_display.setToolTip('Media Display\n\nEnables/Disables Media Display.\n\nDisplays media states from any application that utilizes the global media player controller.')
 
         self.btn_media_display = QPushButton(self)
         self.btn_media_display.move(self.menu_obj_pos_w + 2 + 4 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 126, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
@@ -2011,6 +2018,7 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.btn_media_display)
         self.object_interaction_enabled.append(self.btn_media_display)
         ui_object_complete.append(self.btn_media_display)
+        self.btn_media_display.setToolTip('Media Display\n\nEnables/Disables Media Display.')
 
         self.lbl_powershell = QPushButton(self)
         self.lbl_powershell.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
@@ -2022,6 +2030,7 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.lbl_powershell)
         ui_object_complete.append(self.lbl_powershell)
         ui_object_font_list_s8b.append(self.lbl_powershell)
+        self.lbl_powershell.setToolTip('G6 Powershell\n\nEnables/Disables G6 Powershell.\n\nShort press G6 spawns administrator Powershell window if iCUE Display is running as admin.')
 
         self.btn_powershell = QPushButton(self)
         self.btn_powershell.move(self.menu_obj_pos_w + 2 + 4 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 126, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
@@ -2032,6 +2041,7 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.btn_powershell)
         self.object_interaction_enabled.append(self.btn_powershell)
         ui_object_complete.append(self.btn_powershell)
+        self.btn_powershell.setToolTip('G6 Powershell\n\nEnables/Disables G6 Powershell.')
 
         self.lbl_g5_backlight = QPushButton(self)
         self.lbl_g5_backlight.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
@@ -2043,6 +2053,7 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.lbl_g5_backlight)
         ui_object_complete.append(self.lbl_g5_backlight)
         ui_object_font_list_s8b.append(self.lbl_g5_backlight)
+        self.lbl_g5_backlight.setToolTip('G5 Backlight\n\nEnables/Disables G5 Backlight.\n\nG5 will turn on/off iCUE Displays backlight feature for use in low light conditions.')
 
         self.btn_g5_backlight = QPushButton(self)
         self.btn_g5_backlight.move(self.menu_obj_pos_w + 2 + 4 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 126, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
@@ -2053,6 +2064,7 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.btn_g5_backlight)
         self.object_interaction_enabled.append(self.btn_g5_backlight)
         ui_object_complete.append(self.btn_g5_backlight)
+        self.btn_g5_backlight.setToolTip('G5 Backlight\n\nEnables/Disables G5 Backlight.')
 
         self.lbl_power_plan = QPushButton(self)
         self.lbl_power_plan.move(self.menu_obj_pos_w + 2, self.height - 4 - self.monitor_btn_h)
@@ -2064,6 +2076,7 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.lbl_power_plan)
         ui_object_complete.append(self.lbl_power_plan)
         ui_object_font_list_s8b.append(self.lbl_power_plan)
+        self.lbl_power_plan.setToolTip('G1 Power Plan\n\nEnables/Disables G1 Power Plan.\n\nG1 key LED will reflect the current power plan while a short press will change the power plan.')
 
         self.btn_power_plan = QPushButton(self)
         self.btn_power_plan.move(self.menu_obj_pos_w + 2 + 4 + 126, self.height - 4 - self.monitor_btn_h)
@@ -2074,6 +2087,7 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.btn_power_plan)
         self.object_interaction_enabled.append(self.btn_power_plan)
         ui_object_complete.append(self.btn_power_plan)
+        self.btn_power_plan.setToolTip('G1 Power Plan\n\nEnables/Disables G1 Power Plan.')
 
         """ Power Saver """
         self.lbl_power_plan_key_0 = QLabel(self)
@@ -2238,10 +2252,11 @@ class App(QMainWindow):
         self.btn_run_startup.setToolTip('Start Automatically\n\nEnables/Disables iCUE-Display automatic startup.')
         self.lbl_start_minimized.setToolTip('Start Minimized\n\nWhen launching iCUE-Display, the\napplication will be minimized to taskbar.\n\nThis Feature is useful when automatic\nstartup is also enabled.')
         self.btn_start_minimized.setToolTip('Start Minimized\n\nEnables/Disables iCUE-Display window starting minimized\nwhen launched.')
-        self.lbl_netshare_mon.setToolTip("Network Share Monitor\n\nPrntScr: IPC$ Default Share\nScrLck: ADMIN$ Default Share\nPause/Break: Disks Default Share\nHome: Non-Default Shares")
+        self.lbl_netshare_mon.setToolTip("Network Share Monitor\n\nPrntScr:           IPC$ Default Share\nScrLck:            ADMIN$ Default Share\nPause/Break:  Disks Default Share\nHome:            Non-Default Shares")
         self.btn_netshare_mon.setToolTip('Network Share Monitor\n\nEnables/Disables iCUE-Display Network Share Monitor.')
+        self.qle_netshare_mon_rgb_on.setToolTip('Network Share Monitor\n\nSet RGB color values for when an indication\nlight is ON.')
         self.btn_bck_light.setToolTip('Backlight\n\nEnable/Disable')
-        self.btn_refresh_recompile.setToolTip('Refresh\n\n')
+        self.btn_refresh_recompile.setToolTip('Refresh\n')
         self.cpu_led_color_str = ""
         self.dram_led_color_str = ""
         self.vram_led_color_str = ""
