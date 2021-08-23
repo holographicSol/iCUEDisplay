@@ -964,7 +964,7 @@ class App(QMainWindow):
         self.lbl_util_key_2.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 10 + 4 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 30)
         self.lbl_util_key_2.resize(self.monitor_btn_w, 10)
         self.lbl_util_key_2.setFont(self.font_s7b)
-        self.lbl_util_key_2.setText('<30c')
+        self.lbl_util_key_2.setText('<30°C')
         self.lbl_util_key_2.setStyleSheet("""QLabel {background-color: rgb(0, 0, 0);
                                                    color: rgb(150, 150, 150);
                                                    border-top:0px solid rgb(10, 10, 10);
@@ -992,7 +992,7 @@ class App(QMainWindow):
         self.lbl_util_key_4.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 10 + 4 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 4 - 30)
         self.lbl_util_key_4.resize(self.monitor_btn_w, 10)
         self.lbl_util_key_4.setFont(self.font_s7b)
-        self.lbl_util_key_4.setText('>=30c  <50c')
+        self.lbl_util_key_4.setText('>=30°C  <50°C')
         self.lbl_util_key_4.setStyleSheet("""QLabel {background-color: rgb(0, 0, 0);
                                                            color: rgb(150, 150, 150);
                                                            border-top:0px solid rgb(10, 10, 10);
@@ -1020,7 +1020,7 @@ class App(QMainWindow):
         self.lbl_util_key_6.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 10 + 4 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 4 - 10 - 4 - 30)
         self.lbl_util_key_6.resize(self.monitor_btn_w, 10)
         self.lbl_util_key_6.setFont(self.font_s7b)
-        self.lbl_util_key_6.setText('>=50c  <70c')
+        self.lbl_util_key_6.setText('>=50°C  <70°C')
         self.lbl_util_key_6.setStyleSheet("""QLabel {background-color: rgb(0, 0, 0);
                                                                    color: rgb(150, 150, 150);
                                                                    border-top:0px solid rgb(10, 10, 10);
@@ -1048,7 +1048,7 @@ class App(QMainWindow):
         self.lbl_util_key_8.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 10 + 4 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10 - 4 - 10 - 4 - 10 - 4 - 30)
         self.lbl_util_key_8.resize(self.monitor_btn_w, 10)
         self.lbl_util_key_8.setFont(self.font_s7b)
-        self.lbl_util_key_8.setText('>70c')
+        self.lbl_util_key_8.setText('>70°C')
         self.lbl_util_key_8.setStyleSheet("""QLabel {background-color: rgb(0, 0, 0);
                                                                            color: rgb(150, 150, 150);
                                                                            border-top:0px solid rgb(10, 10, 10);
@@ -2349,10 +2349,10 @@ class App(QMainWindow):
                 self.write_var = 'bool_switch_fahrenheit: false'
                 self.write_changes()
             self.btn_fahrenheit.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
-            self.lbl_util_key_8.setText('>70c')
-            self.lbl_util_key_6.setText('>=50c  <70c')
-            self.lbl_util_key_4.setText('>=30c  <50c')
-            self.lbl_util_key_2.setText('<30c')
+            self.lbl_util_key_8.setText('>70°C')
+            self.lbl_util_key_6.setText('>=50°C  <70°C')
+            self.lbl_util_key_4.setText('>=30°C  <50°C')
+            self.lbl_util_key_2.setText('<30°C')
             bool_switch_fahrenheit = False
 
         elif bool_switch_fahrenheit is False:
@@ -2361,10 +2361,10 @@ class App(QMainWindow):
                 self.write_var = 'bool_switch_fahrenheit: true'
                 self.write_changes()
             self.btn_fahrenheit.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-            self.lbl_util_key_8.setText('>158f')
-            self.lbl_util_key_6.setText('>=122f  <158f')
-            self.lbl_util_key_4.setText('>=86f   <122f')
-            self.lbl_util_key_2.setText('<86f')
+            self.lbl_util_key_8.setText('>158°F')
+            self.lbl_util_key_6.setText('>=122°F  <158°F')
+            self.lbl_util_key_4.setText('>=86°F   <122°F')
+            self.lbl_util_key_2.setText('<86°F')
             bool_switch_fahrenheit = True
 
     def btn_g5_backlight_function(self):
@@ -3935,10 +3935,10 @@ class App(QMainWindow):
 
         if bool_switch_fahrenheit is True:
             self.btn_fahrenheit.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-            self.lbl_util_key_8.setText('>158f')
-            self.lbl_util_key_6.setText('>=122f, <158f')
-            self.lbl_util_key_4.setText('>=86f, <122f')
-            self.lbl_util_key_2.setText('<86f')
+            self.lbl_util_key_8.setText('>158°F')
+            self.lbl_util_key_6.setText('>=122°F  <158°F')
+            self.lbl_util_key_4.setText('>=86°F    <122°F')
+            self.lbl_util_key_2.setText('<86°F')
         elif bool_switch_fahrenheit is False:
             self.btn_fahrenheit.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
