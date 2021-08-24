@@ -98,7 +98,9 @@ be restarted automatically when device plugged back in]
 --------------------------------------------------------------------------------------------------------------------------------------------
       G Keys
 [G1 key reflects current power plan. Switch Power Plans to save power.]
+
 [G5 Backlight for low light conditions.]
+
 [G6 Powershell.]
 
 ![DEMO IMAGE](/image/icue_demo_image_5.png)
@@ -106,14 +108,15 @@ be restarted automatically when device plugged back in]
 --------------------------------------------------------------------------------------------------------------------------------------------
       SETTINGS
 [Intelligent Media Controls reflect currecnt media state. Requires media applications that utilize Windows 10 global media controller.]
+
 [AUTOMATIC BACKLIGHT: User may set a time for the backlight to turn on and off and may optionally enable the backlight manually]
 
 ![DEMO IMAGE](/image/icue_demo_image_6.png)
 
 --------------------------------------------------------------------------------------------------------------------------------------------
       DISPLAY
-iCUE capable Keyboard & Mouse will be displayed when connected and provided iCUE service is running. The iCUE logo reflects iCUE Display's
-connection status the the iCUE service.
+[iCUE capable Keyboard & Mouse will be displayed when connected and provided iCUE service is running. The iCUE logo reflects iCUE Display's
+connection status the the iCUE service.]
 
 ![DEMO IMAGE](/image/icue_demo_image_7.png)
 
