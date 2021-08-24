@@ -141,3 +141,9 @@ connection status the the iCUE service.]
 [2. Replace line 'winrt.init_apartment()' with 'pythoncom.CoInitialize()']
 Note the executable has been compiled with the modified module.
 
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+      Extra Considerations
+[Zero data collection.]
+
+[Never calls home.]
