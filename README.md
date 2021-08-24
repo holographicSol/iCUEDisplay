@@ -144,6 +144,4 @@ Note the executable has been compiled with the modified module.
 
 --------------------------------------------------------------------------------------------------------------------------------------------
       Extra Considerations
-[Zero data collection.]
-
-[Never calls home.]
+Zero data collection & never calls home.
