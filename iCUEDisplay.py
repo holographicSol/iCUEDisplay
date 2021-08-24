@@ -1198,7 +1198,7 @@ class App(QMainWindow):
 
         """ blue"""
         self.lbl_disk_key_2 = QLabel(self)
-        self.lbl_disk_key_2.move(self.menu_obj_pos_w + 2, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.lbl_disk_key_2.move(self.menu_obj_pos_w + 2, self.height - 4 - self.monitor_btn_h - 4 - 10)
         self.lbl_disk_key_2.resize(10, 10)
         self.lbl_disk_key_2.setStyleSheet("""QLabel {background-color: rgb(0, 0, 255);
                                                            color: rgb(150, 150, 150);
@@ -1210,7 +1210,7 @@ class App(QMainWindow):
         ui_object_complete.append(self.lbl_disk_key_2)
 
         self.lbl_disk_key_3 = QLabel(self)
-        self.lbl_disk_key_3.move(self.menu_obj_pos_w + 2 + 4 + 10, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
+        self.lbl_disk_key_3.move(self.menu_obj_pos_w + 2 + 4 + 10, self.height - 4 - self.monitor_btn_h - 4 - 10)
         self.lbl_disk_key_3.resize(self.monitor_btn_w * 2, 10)
         self.lbl_disk_key_3.setFont(self.font_s7b)
         self.lbl_disk_key_3.setText('Mounted Drive Letters')
@@ -2256,7 +2256,7 @@ class App(QMainWindow):
         self.btn_net_con_mouse_led_selected_prev.setToolTip('Internet Connection Monitor\n\nSelect Previous mouse LED in which to\ndisplay internet connection status.')
         self.btn_net_con_mouse_led_selected_next.setToolTip('Internet Connection Monitor\n\nSelect Next mouse LED in which to\ndisplay internet connection status.')
         self.lbl_net_con_mouse_led_selected.setToolTip('Internet Connection Monitor\n\nDisplays which mouse LED will display internet connection status.')
-        self.lbl_exclusive_con.setToolTip('Exclusive Control\n\nThis setting when enabled gives iCUE-Display full\ncontrol of connected iCUE devices.\n\nThis is recommended however you may leave this\noption disabled if you have particular customization preferences.')
+        self.lbl_exclusive_con.setToolTip('Exclusive Control\n\nThis setting when enabled gives iCUE-Display full\ncontrol of connected iCUE devices.\n\nIt is recommended to keep this option enabled unless you know what you are doing.')
         self.btn_exclusive_con.setToolTip('Exclusive Control\n\nEnables/Disables iCUE-Display exclusive control.')
         self.lbl_run_startup.setToolTip('Start Automatically\n\niCUE-Display can start automatically when you log in.')
         self.btn_run_startup.setToolTip('Start Automatically\n\nEnables/Disables iCUE-Display automatic startup.')
@@ -4160,555 +4160,6 @@ class App(QMainWindow):
         pass
 
 
-class KeyEventClass(QThread):
-    print('-- [KeyEventClass]: plugged in')
-
-    def __init__(self):
-        QThread.__init__(self)
-
-    def capslock_state(self):
-        import ctypes
-        user32_dll = ctypes.WinDLL("User32.dll")
-        vk_capital = 0x14
-        return user32_dll.GetKeyState(vk_capital)
-
-    def capslock_function(self):
-        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
-
-        capslock = self.capslock_state()
-        if ((capslock) & 0xffff) != 0:
-            # print('-- [KeyEventClass.run] capslock state: enabled')
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({37: (255, 255, 0)}))
-        elif ((capslock) & 0xffff) == 0:
-            # print('-- [KeyEventClass.run] capslock state: disabled')
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({37: sdk_color_backlight}))
-
-    def run(self):
-        print('-- [KeyEventClass.run]: plugged in')
-        while True:
-
-            self.capslock_function()
-            """ Example use of keyboard module
-            keyboard.wait('-')
-            print('-- [KeyEventClass.run]: plugged in')
-            """
-            time.sleep(0.1)
-
-    def stop(self):
-        print('-- [KeyEventClass.stop]: plugged in')
-        self.terminate()
-
-
-class IsLockedClass(QThread):
-    print('-- [IsLockedClass]: plugged in')
-
-    def __init__(self):
-        QThread.__init__(self)
-        self.locked = None
-        self.locked_prev = None
-
-    def run(self):
-        print('-- [IsLockedClass.run]: plugged in')
-        global thread_compile_devices, devices_previous
-        while True:
-            try:
-                process_name = 'LogonUI.exe'
-                callall = 'TASKLIST'
-                outputall = subprocess.check_output(callall)
-                outputstringall = str(outputall)
-
-                if process_name in outputstringall:
-                    self.locked = True
-                    if self.locked != self.locked_prev:
-                        self.locked_prev = True
-                        print("-- [IsLockedClass]: Locked.")
-                        devices_previous = []
-                        thread_compile_devices[0].stop()
-                else:
-                    self.locked = False
-                    if self.locked != self.locked_prev:
-                        self.locked_prev = False
-                        print("-- [IsLockedClass]: Unlocked.")
-                        devices_previous = []
-                        thread_compile_devices[0].start()
-
-            except Exception as e:
-                print("-- [IsLockedClass]: Error:", e)
-            time.sleep(1.5)
-
-    def stop(self):
-        print('-- [IsLockedClass.stop]: plugged in')
-        self.terminate()
-
-
-class PowerClass(QThread):
-    print('-- [PowerClass]: plugged in')
-
-    def __init__(self):
-        QThread.__init__(self)
-        self.active_pp = -1
-        self.active_pp_prev = -1
-
-    def run(self):
-        print('-- [PowerClass.run]: plugged in')
-        global power_plan, power_plan_index
-        while True:
-            try:
-                """ subprocess """
-                cmd_output = []
-                xcmd = subprocess.Popen("powercfg /LIST", stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-                while True:
-                    output = xcmd.stdout.readline()
-                    if output == '' and xcmd.poll() is not None:
-                        break
-                    if output:
-                        cmd_output.append(str(output.decode("utf-8").strip()))
-                    else:
-                        break
-                    rc = xcmd.poll()
-                i = 0
-                for _ in cmd_output:
-                    if _.endswith('*'):
-                        # print('-- [PowerClass.run] active power plan:', _)
-                        if 'Power saver' in _:
-                            self.active_pp = 1
-                            power_plan_index = 0
-                            if self.active_pp != self.active_pp_prev:
-                                self.active_pp_prev = 1
-                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 0, 0)}))
-
-                                """ Example Overlay Call
-                                open('./system_overlay.dat', 'w').close()
-                                with open('./system_overlay.dat', 'w') as fo:
-                                    fo.writelines('POWER SAVER')
-                                fo.close()
-                                """
-
-                        elif 'Balanced' in _:
-                            self.active_pp = 2
-                            power_plan_index = 1
-                            if self.active_pp != self.active_pp_prev:
-                                self.active_pp_prev = 2
-                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (0, 255, 0)}))
-
-                                """ Example Overlay Call
-                                open('./system_overlay.dat', 'w').close()
-                                with open('./system_overlay.dat', 'w') as fo:
-                                    fo.writelines('BALANCED')
-                                fo.close()
-                                """
-
-                        elif 'High performance' in _:
-                            self.active_pp = 3
-                            power_plan_index = 2
-                            if self.active_pp != self.active_pp_prev:
-                                self.active_pp_prev = 3
-                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (0, 255, 255)}))
-
-                                """ Example Overlay Call
-                                open('./system_overlay.dat', 'w').close()
-                                with open('./system_overlay.dat', 'w') as fo:
-                                    fo.writelines('HIGH PERFORMANCE')
-                                fo.close()
-                                """
-
-                        elif 'Ultimate Performance' in _:
-                            self.active_pp = 4
-                            power_plan_index = 3
-                            if self.active_pp != self.active_pp_prev:
-                                self.active_pp_prev = 4
-                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 15, 100)}))
-
-                                """ Example Overlay Call
-                                open('./system_overlay.dat', 'w').close()
-                                with open('./system_overlay.dat', 'w') as fo:
-                                    fo.writelines('ULTIMATE PERFORMANCE')
-                                fo.close()
-                                """
-
-                    if _.startswith('Power Scheme GUID:'):
-
-                        if canonical_caseless('Power saver') in canonical_caseless(_) and canonical_caseless('Power saver') not in power_plan:
-                            power_plan[0] = _
-                        if canonical_caseless('Balanced') in canonical_caseless(_) and canonical_caseless('Balanced') not in power_plan:
-                            power_plan[1] = _
-                        if canonical_caseless('High performance') in canonical_caseless(_) and canonical_caseless('High performance') not in power_plan:
-                            power_plan[2] = _
-                        if canonical_caseless('Ultimate Performance') in canonical_caseless(_) and canonical_caseless('Ultimate Performance') not in power_plan:
-                            power_plan[3] = _
-
-                        i += 1
-
-            except Exception as e:
-                print('-- [PowerClass.run] Error:', e)
-
-            time.sleep(1)
-
-    def stop(self):
-        print('-- [PowerClass.stop]: plugged in')
-        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
-        self.active_pp = -1
-        self.active_pp_prev = -1
-        try:
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: sdk_color_backlight}))
-        except Exception as e:
-            print('-- [PowerClass.stop] Error:', e)
-        self.terminate()
-
-
-class PauseLoopClass(QThread):
-    print('-- [PauseLoopClass]: plugged in')
-
-    def __init__(self):
-        QThread.__init__(self)
-
-    def run(self):
-        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
-
-        while True:
-            if len(devices_kb) >= 1:
-                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: (255, 255, 0)}))
-            time.sleep(0.6)
-            if len(devices_kb) >= 1:
-                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: sdk_color_backlight}))
-            time.sleep(0.6)
-
-    def stop(self):
-        print('-- [PauseLoopClass.stop]: plugged in')
-        self.terminate()
-
-
-class MediaDisplayClass(QThread):
-    print('-- [MediaDisplayClass]: plugged in')
-
-    def __init__(self):
-        QThread.__init__(self)
-        self.bool_mute = None
-        self.bool_mute_prev = None
-        self.media_state = -1
-        self.media_state_prev = -1
-
-    def send_instruction_on(self):
-        # print('-- [MediaDisplayClass.send_instruction_on]: plugged in')
-        global sdk, devices_kb, devices_kb_selected
-        if len(devices_kb) >= 1:
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({98: (0, 255, 0)}))
-
-    def send_instruction_off(self):
-        # print('-- [MediaDisplayClass.send_instruction_off]: plugged in')
-        global sdk, devices_kb, devices_kb_selected
-        if len(devices_kb) >= 1:
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({98: (255, 0, 0)}))
-
-    def send_instruction_off_1(self):
-        # print('-- [MediaDisplayClass.send_instruction_off]: plugged in')
-        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
-        if len(devices_kb) >= 1:
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({98: sdk_color_backlight}))
-
-    async def get_media_state(self):
-        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, thread_pause_loop
-        sessions = await MediaManager.request_async()
-
-        current_session = sessions.get_current_session()
-
-        if current_session != None:
-
-            if int(wmc.GlobalSystemMediaTransportControlsSessionPlaybackStatus.PLAYING) == current_session.get_playback_info().playback_status:
-                self.media_state = 1
-                if self.media_state != self.media_state_prev:
-                    print('-- [MediaDisplayClass.run]: PLAYING')
-                    self.media_state_prev = 1
-                    thread_pause_loop[0].stop()
-                    if len(devices_kb) >= 1:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: (0, 255, 0)}))
-                    if len(devices_kb) >= 1:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({100: (0, 0, 255)}))
-                    if len(devices_kb) >= 1:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({102: (0, 0, 255)}))
-                    if len(devices_kb) >= 1:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: sdk_color_backlight}))
-
-            if int(wmc.GlobalSystemMediaTransportControlsSessionPlaybackStatus.PAUSED) == current_session.get_playback_info().playback_status:
-                self.media_state = 2
-                if self.media_state != self.media_state_prev:
-                    print('-- [MediaDisplayClass.run]: PAUSED')
-                    self.media_state_prev = 2
-                    thread_pause_loop[0].start()
-                    if len(devices_kb) >= 1:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({100: (0, 0, 255)}))
-                    if len(devices_kb) >= 1:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({102: (0, 0, 255)}))
-                    if len(devices_kb) >= 1:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: sdk_color_backlight}))
-
-            if int(wmc.GlobalSystemMediaTransportControlsSessionPlaybackStatus.STOPPED) == current_session.get_playback_info().playback_status:
-                self.media_state = 0
-                if self.media_state != self.media_state_prev:
-                    print('-- [MediaDisplayClass.run]: STOPPED')
-                    self.media_state_prev = 0
-                    thread_pause_loop[0].stop()
-                    if len(devices_kb) >= 1:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: sdk_color_backlight}))
-                    if len(devices_kb) >= 1:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: (255, 0, 0)}))
-                    if len(devices_kb) >= 1:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({100: sdk_color_backlight}))
-                    if len(devices_kb) >= 1:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({102: sdk_color_backlight}))
-
-            if int(wmc.GlobalSystemMediaTransportControlsSessionPlaybackStatus.CLOSED) == current_session.get_playback_info().playback_status:
-                self.media_state = 0
-                if self.media_state != self.media_state_prev:
-                    print('-- [MediaDisplayClass.run]: CLOSED')
-                    self.media_state_prev = 0
-                    thread_pause_loop[0].stop()
-                    if len(devices_kb) >= 1:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: sdk_color_backlight}))
-                    if len(devices_kb) >= 1:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: (255, 0, 0)}))
-                    if len(devices_kb) >= 1:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({100: sdk_color_backlight}))
-                    if len(devices_kb) >= 1:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({102: sdk_color_backlight}))
-
-            if int(wmc.GlobalSystemMediaTransportControlsSessionPlaybackStatus.CHANGING) == current_session.get_playback_info().playback_status:
-                self.media_state = 0
-                if self.media_state != self.media_state_prev:
-                    print('-- [MediaDisplayClass.run]: CHANGING')
-                    self.media_state_prev = 0
-                    thread_pause_loop[0].stop()
-                    if len(devices_kb) >= 1:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: sdk_color_backlight}))
-                    if len(devices_kb) >= 1:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: (255, 0, 0)}))
-                    if len(devices_kb) >= 1:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({100: sdk_color_backlight}))
-                    if len(devices_kb) >= 1:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({102: sdk_color_backlight}))
-
-        else:
-            self.media_state = 0
-            if self.media_state != self.media_state_prev:
-                print('-- [MediaDisplayClass.run]: CLOSED')
-                self.media_state_prev = 0
-                thread_pause_loop[0].stop()
-                if len(devices_kb) >= 1:
-                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: sdk_color_backlight}))
-                if len(devices_kb) >= 1:
-                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: (255, 0, 0)}))
-                if len(devices_kb) >= 1:
-                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({100: sdk_color_backlight}))
-                if len(devices_kb) >= 1:
-                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({102: sdk_color_backlight}))
-
-    def run(self):
-        print('-- [MediaDisplayClass.run]: plugged in')
-        while True:
-            try:
-                self.current_media_info_1 = asyncio.run(self.get_media_state())
-            except Exception as e:
-                print('-- [MediaDisplayClass.run] Error:', e)
-
-            try:
-                """ subprocess """
-                cmd_output = []
-                cmd = 'powershell ./check_mute.ps1'
-                xcmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-                output = xcmd.stdout.readline()
-                if output == '' and xcmd.poll() is not None:
-                    break
-                if output:
-                    cmd_output.append(str(output.decode("utf-8").strip()))
-                else:
-                    break
-                rc = xcmd.poll()
-
-                """ parse standard output """
-                for _ in cmd_output:
-                    # print('-- [MediaDisplayClass.run] output:', _)
-                    if _ == 'False':
-                        self.bool_mute = False
-                        if self.bool_mute_prev is True or self.bool_mute_prev is None:
-                            print('-- [MediaDisplayClass.run]: un-muted')
-                            self.bool_mute_prev = False
-                            self.send_instruction_on()
-                    elif _ == 'True':
-                        self.bool_mute = True
-                        if self.bool_mute_prev is False or self.bool_mute_prev is None:
-                            print('-- [MediaDisplayClass.run]: muted')
-                            self.bool_mute_prev = True
-                            self.send_instruction_off()
-
-                    else:
-                        self.bool_mute = None
-                        self.bool_mute_prev = None
-                        self.send_instruction_off_1()
-
-            except Exception as e:
-                print('-- [MediaDisplayClass.run] Error:', e)
-                time.sleep(1)
-
-            time.sleep(0.1)
-
-    def stop(self):
-        print('-- [MediaDisplayClass.stop]: plugged in')
-        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
-        self.bool_mute = None
-        self.bool_mute_prev = None
-        self.media_state = -1
-        self.media_state_prev = -1
-        try:
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({98: sdk_color_backlight}))
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: sdk_color_backlight}))
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: sdk_color_backlight}))
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({100: sdk_color_backlight}))
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({102: sdk_color_backlight}))
-        except Exception as e:
-            print('-- [MediaDisplayClass.stop] Error:', e)
-        self.terminate()
-
-
-class SdkEventHandlerClass(QThread):
-    print('-- [SdkEventHandlerClass]: plugged in')
-
-    def __init__(self, g1_function_short, g1_function_long,
-                 g2_function_short, g2_function_long,
-                 g3_function_short, g3_function_long,
-                 g4_function_short, g4_function_long,
-                 g5_function_short, g5_function_long,
-                 g6_function_short, g6_function_long):
-        QThread.__init__(self)
-
-        self.g1_function_short = g1_function_short
-        self.g1_function_long = g1_function_long
-        self.g2_function_short = g2_function_short
-        self.g2_function_long = g2_function_long
-        self.g3_function_short = g3_function_short
-        self.g3_function_long = g3_function_long
-        self.g4_function_short = g4_function_short
-        self.g4_function_long = g4_function_long
-        self.g5_function_short = g5_function_short
-        self.g5_function_long = g5_function_long
-        self.g6_function_short = g6_function_short
-        self.g6_function_long = g6_function_long
-        self.time_now_press = float()
-        self.time_now_press_keyId = ''
-        self.time_now_release = float()
-        self.time_now_release_keyId = ''
-        self.eId = []
-
-    def on_press(self, event_id, data):
-        # print('-- [SdkEventHandlerClass.on_press]: plugged in')
-        date_time_now = str(datetime.datetime.now())
-        var = date_time_now.split(' ')
-        var = var[1].split(':')[2]
-        self.time_now_press = float(var)
-        self.time_now_press_keyId = str(data.keyId).strip()
-        print('-- [SdkEventHandlerClass.on_press] captured event: time_now_0: {0} pressed {1}'.format(self.time_now_press, data.keyId))
-
-    def on_release(self, event_id, data):
-        # print('-- [SdkEventHandlerClass.on_release]: plugged in')
-
-        date_time_now = str(datetime.datetime.now())
-        var = date_time_now.split(' ')
-        var = var[1].split(':')[2]
-        time_now_release = float(var)
-        self.time_now_release_keyId = str(data.keyId).strip()
-        if self.time_now_release_keyId == 'CorsairKeyId.Kb_G1':
-            # short press: reset ledId color and run pertaining function
-            if time_now_release < (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
-                print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
-                self.g1_function_short()
-            # long release: reset ledId color and disconnect key from function
-            elif time_now_release >= (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
-                print('-- [App.on_press] captured event: time_now_1: {0} long released {1}'.format(self.time_now_press, data.keyId))
-                self.g1_function_long()
-        elif self.time_now_release_keyId == 'CorsairKeyId.Kb_G2':
-            # short press: reset ledId color and run pertaining function
-            if time_now_release < (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
-                print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
-                self.g2_function_short()
-            # long release: reset ledId color and disconnect key from function
-            elif time_now_release >= (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
-                print('-- [App.on_press] captured event: time_now_1: {0} long released {1}'.format(self.time_now_press, data.keyId))
-                self.g2_function_long()
-        elif self.time_now_release_keyId == 'CorsairKeyId.Kb_G3':
-            # short press: reset ledId color and run pertaining function
-            if time_now_release < (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
-                print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
-                self.g3_function_short()
-            # long release: reset ledId color and disconnect key from function
-            elif time_now_release >= (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
-                print('-- [App.on_press] captured event: time_now_1: {0} long released {1}'.format(self.time_now_press, data.keyId))
-                self.g3_function_long()
-        elif self.time_now_release_keyId == 'CorsairKeyId.Kb_G4':
-            # short press: reset ledId color and run pertaining function
-            if time_now_release < (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
-                print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
-                self.g4_function_short()
-            # long release: reset ledId color and disconnect key from function
-            elif time_now_release >= (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
-                print('-- [App.on_press] captured event: time_now_1: {0} long released {1}'.format(self.time_now_press, data.keyId))
-                self.g4_function_long()
-        elif self.time_now_release_keyId == 'CorsairKeyId.Kb_G5':
-            # short press: reset ledId color and run pertaining function
-            if time_now_release < (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
-                print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
-                self.g5_function_short()
-            # long release: reset ledId color and disconnect key from function
-            elif time_now_release >= (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
-                print('-- [App.on_press] captured event: time_now_1: {0} long released {1}'.format(self.time_now_press, data.keyId))
-                self.g5_function_long()
-        elif self.time_now_release_keyId == 'CorsairKeyId.Kb_G6':
-            # short press: reset ledId color and run pertaining function
-            if time_now_release < (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
-                print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
-                self.g6_function_short()
-            # long release: reset ledId color and disconnect key from function
-            elif time_now_release >= (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
-                print('-- [App.on_press] captured event: time_now_1: {0} long released {1}'.format(self.time_now_press, data.keyId))
-                self.g6_function_long()
-
-    def sdk_event_handler(self, event_id, data):
-        if event_id == CorsairEventId.KeyEvent:
-            # print('-- [SdkEventHandlerClass.sdk_event_handler] Event:', event_id, data.keyId, "pressed" if data.isPressed else "released")
-            self.eId = event_id
-            if data.isPressed:
-                self.on_press(event_id, data)
-            else:
-                self.on_release(event_id, data)
-        elif event_id == CorsairEventId.DeviceConnectionStatusChangedEvent:
-            print("-- [SdkEventHandlerClass.sdk_event_handler]: Device id: %s   Status: %s" % (data.deviceId.decode(), "connected" if data.isConnected else "disconnected"))
-        else:
-            print("-- [SdkEventHandlerClass.sdk_event_handler]: invalid event")
-
-    def run(self):
-        global sdk, devices_kb, devices_kb_name
-        connected = sdk.connect()
-        if not connected:
-            err = sdk.get_last_error()
-            print("-- [SdkEventHandlerClass.run]: handshake failed: %s" % err)
-            return
-        subscribed = sdk.subscribe_for_events(self.sdk_event_handler)
-        if not subscribed:
-            err = sdk.get_last_error()
-            print("-- [SdkEventHandlerClass.run]: subscribe for events error: %s" % err)
-            return
-        while True:
-            input_str = input()
-        sdk.unsubscribe_from_events()
-
-    def stop(self):
-        print('-- [SdkEventHandlerClass.stop]: plugged in')
-        global sdk
-        try:
-            sdk.unsubscribe_from_events()
-        except Exception as e:
-            print(e)
-        self.terminate()
-
-
 class CompileDevicesClass(QThread):
     print('-- [CompileDevicesClass]: plugged in')
 
@@ -5389,6 +4840,555 @@ class CompileDevicesClass(QThread):
         print('-- [CompileDevicesClass.stop]: plugged in')
         self.stop_all_threads()
         print('-- [CompileDevicesClass.stop] terminating')
+        self.terminate()
+
+
+class SdkEventHandlerClass(QThread):
+    print('-- [SdkEventHandlerClass]: plugged in')
+
+    def __init__(self, g1_function_short, g1_function_long,
+                 g2_function_short, g2_function_long,
+                 g3_function_short, g3_function_long,
+                 g4_function_short, g4_function_long,
+                 g5_function_short, g5_function_long,
+                 g6_function_short, g6_function_long):
+        QThread.__init__(self)
+
+        self.g1_function_short = g1_function_short
+        self.g1_function_long = g1_function_long
+        self.g2_function_short = g2_function_short
+        self.g2_function_long = g2_function_long
+        self.g3_function_short = g3_function_short
+        self.g3_function_long = g3_function_long
+        self.g4_function_short = g4_function_short
+        self.g4_function_long = g4_function_long
+        self.g5_function_short = g5_function_short
+        self.g5_function_long = g5_function_long
+        self.g6_function_short = g6_function_short
+        self.g6_function_long = g6_function_long
+        self.time_now_press = float()
+        self.time_now_press_keyId = ''
+        self.time_now_release = float()
+        self.time_now_release_keyId = ''
+        self.eId = []
+
+    def on_press(self, event_id, data):
+        # print('-- [SdkEventHandlerClass.on_press]: plugged in')
+        date_time_now = str(datetime.datetime.now())
+        var = date_time_now.split(' ')
+        var = var[1].split(':')[2]
+        self.time_now_press = float(var)
+        self.time_now_press_keyId = str(data.keyId).strip()
+        print('-- [SdkEventHandlerClass.on_press] captured event: time_now_0: {0} pressed {1}'.format(self.time_now_press, data.keyId))
+
+    def on_release(self, event_id, data):
+        # print('-- [SdkEventHandlerClass.on_release]: plugged in')
+
+        date_time_now = str(datetime.datetime.now())
+        var = date_time_now.split(' ')
+        var = var[1].split(':')[2]
+        time_now_release = float(var)
+        self.time_now_release_keyId = str(data.keyId).strip()
+        if self.time_now_release_keyId == 'CorsairKeyId.Kb_G1':
+            # short press: reset ledId color and run pertaining function
+            if time_now_release < (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
+                self.g1_function_short()
+            # long release: reset ledId color and disconnect key from function
+            elif time_now_release >= (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} long released {1}'.format(self.time_now_press, data.keyId))
+                self.g1_function_long()
+        elif self.time_now_release_keyId == 'CorsairKeyId.Kb_G2':
+            # short press: reset ledId color and run pertaining function
+            if time_now_release < (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
+                self.g2_function_short()
+            # long release: reset ledId color and disconnect key from function
+            elif time_now_release >= (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} long released {1}'.format(self.time_now_press, data.keyId))
+                self.g2_function_long()
+        elif self.time_now_release_keyId == 'CorsairKeyId.Kb_G3':
+            # short press: reset ledId color and run pertaining function
+            if time_now_release < (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
+                self.g3_function_short()
+            # long release: reset ledId color and disconnect key from function
+            elif time_now_release >= (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} long released {1}'.format(self.time_now_press, data.keyId))
+                self.g3_function_long()
+        elif self.time_now_release_keyId == 'CorsairKeyId.Kb_G4':
+            # short press: reset ledId color and run pertaining function
+            if time_now_release < (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
+                self.g4_function_short()
+            # long release: reset ledId color and disconnect key from function
+            elif time_now_release >= (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} long released {1}'.format(self.time_now_press, data.keyId))
+                self.g4_function_long()
+        elif self.time_now_release_keyId == 'CorsairKeyId.Kb_G5':
+            # short press: reset ledId color and run pertaining function
+            if time_now_release < (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
+                self.g5_function_short()
+            # long release: reset ledId color and disconnect key from function
+            elif time_now_release >= (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} long released {1}'.format(self.time_now_press, data.keyId))
+                self.g5_function_long()
+        elif self.time_now_release_keyId == 'CorsairKeyId.Kb_G6':
+            # short press: reset ledId color and run pertaining function
+            if time_now_release < (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
+                self.g6_function_short()
+            # long release: reset ledId color and disconnect key from function
+            elif time_now_release >= (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} long released {1}'.format(self.time_now_press, data.keyId))
+                self.g6_function_long()
+
+    def sdk_event_handler(self, event_id, data):
+        if event_id == CorsairEventId.KeyEvent:
+            # print('-- [SdkEventHandlerClass.sdk_event_handler] Event:', event_id, data.keyId, "pressed" if data.isPressed else "released")
+            self.eId = event_id
+            if data.isPressed:
+                self.on_press(event_id, data)
+            else:
+                self.on_release(event_id, data)
+        elif event_id == CorsairEventId.DeviceConnectionStatusChangedEvent:
+            print("-- [SdkEventHandlerClass.sdk_event_handler]: Device id: %s   Status: %s" % (data.deviceId.decode(), "connected" if data.isConnected else "disconnected"))
+        else:
+            print("-- [SdkEventHandlerClass.sdk_event_handler]: invalid event")
+
+    def run(self):
+        global sdk, devices_kb, devices_kb_name
+        connected = sdk.connect()
+        if not connected:
+            err = sdk.get_last_error()
+            print("-- [SdkEventHandlerClass.run]: handshake failed: %s" % err)
+            return
+        subscribed = sdk.subscribe_for_events(self.sdk_event_handler)
+        if not subscribed:
+            err = sdk.get_last_error()
+            print("-- [SdkEventHandlerClass.run]: subscribe for events error: %s" % err)
+            return
+        while True:
+            input_str = input()
+        sdk.unsubscribe_from_events()
+
+    def stop(self):
+        print('-- [SdkEventHandlerClass.stop]: plugged in')
+        global sdk
+        try:
+            sdk.unsubscribe_from_events()
+        except Exception as e:
+            print(e)
+        self.terminate()
+
+
+class KeyEventClass(QThread):
+    print('-- [KeyEventClass]: plugged in')
+
+    def __init__(self):
+        QThread.__init__(self)
+
+    def capslock_state(self):
+        import ctypes
+        user32_dll = ctypes.WinDLL("User32.dll")
+        vk_capital = 0x14
+        return user32_dll.GetKeyState(vk_capital)
+
+    def capslock_function(self):
+        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
+
+        capslock = self.capslock_state()
+        if ((capslock) & 0xffff) != 0:
+            # print('-- [KeyEventClass.run] capslock state: enabled')
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({37: (255, 255, 0)}))
+        elif ((capslock) & 0xffff) == 0:
+            # print('-- [KeyEventClass.run] capslock state: disabled')
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({37: sdk_color_backlight}))
+
+    def run(self):
+        print('-- [KeyEventClass.run]: plugged in')
+        while True:
+
+            self.capslock_function()
+            """ Example use of keyboard module
+            keyboard.wait('-')
+            print('-- [KeyEventClass.run]: plugged in')
+            """
+            time.sleep(0.1)
+
+    def stop(self):
+        print('-- [KeyEventClass.stop]: plugged in')
+        self.terminate()
+
+
+class IsLockedClass(QThread):
+    print('-- [IsLockedClass]: plugged in')
+
+    def __init__(self):
+        QThread.__init__(self)
+        self.locked = None
+        self.locked_prev = None
+
+    def run(self):
+        print('-- [IsLockedClass.run]: plugged in')
+        global thread_compile_devices, devices_previous
+        while True:
+            try:
+                process_name = 'LogonUI.exe'
+                callall = 'TASKLIST'
+                outputall = subprocess.check_output(callall)
+                outputstringall = str(outputall)
+
+                if process_name in outputstringall:
+                    self.locked = True
+                    if self.locked != self.locked_prev:
+                        self.locked_prev = True
+                        print("-- [IsLockedClass]: Locked.")
+                        devices_previous = []
+                        thread_compile_devices[0].stop()
+                else:
+                    self.locked = False
+                    if self.locked != self.locked_prev:
+                        self.locked_prev = False
+                        print("-- [IsLockedClass]: Unlocked.")
+                        devices_previous = []
+                        thread_compile_devices[0].start()
+
+            except Exception as e:
+                print("-- [IsLockedClass]: Error:", e)
+            time.sleep(1.5)
+
+    def stop(self):
+        print('-- [IsLockedClass.stop]: plugged in')
+        self.terminate()
+
+
+class PowerClass(QThread):
+    print('-- [PowerClass]: plugged in')
+
+    def __init__(self):
+        QThread.__init__(self)
+        self.active_pp = -1
+        self.active_pp_prev = -1
+
+    def run(self):
+        print('-- [PowerClass.run]: plugged in')
+        global power_plan, power_plan_index
+        while True:
+            try:
+                """ subprocess """
+                cmd_output = []
+                xcmd = subprocess.Popen("powercfg /LIST", stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                while True:
+                    output = xcmd.stdout.readline()
+                    if output == '' and xcmd.poll() is not None:
+                        break
+                    if output:
+                        cmd_output.append(str(output.decode("utf-8").strip()))
+                    else:
+                        break
+                    rc = xcmd.poll()
+                i = 0
+                for _ in cmd_output:
+                    if _.endswith('*'):
+                        # print('-- [PowerClass.run] active power plan:', _)
+                        if 'Power saver' in _:
+                            self.active_pp = 1
+                            power_plan_index = 0
+                            if self.active_pp != self.active_pp_prev:
+                                self.active_pp_prev = 1
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 0, 0)}))
+
+                                """ Example Overlay Call
+                                open('./system_overlay.dat', 'w').close()
+                                with open('./system_overlay.dat', 'w') as fo:
+                                    fo.writelines('POWER SAVER')
+                                fo.close()
+                                """
+
+                        elif 'Balanced' in _:
+                            self.active_pp = 2
+                            power_plan_index = 1
+                            if self.active_pp != self.active_pp_prev:
+                                self.active_pp_prev = 2
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (0, 255, 0)}))
+
+                                """ Example Overlay Call
+                                open('./system_overlay.dat', 'w').close()
+                                with open('./system_overlay.dat', 'w') as fo:
+                                    fo.writelines('BALANCED')
+                                fo.close()
+                                """
+
+                        elif 'High performance' in _:
+                            self.active_pp = 3
+                            power_plan_index = 2
+                            if self.active_pp != self.active_pp_prev:
+                                self.active_pp_prev = 3
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (0, 255, 255)}))
+
+                                """ Example Overlay Call
+                                open('./system_overlay.dat', 'w').close()
+                                with open('./system_overlay.dat', 'w') as fo:
+                                    fo.writelines('HIGH PERFORMANCE')
+                                fo.close()
+                                """
+
+                        elif 'Ultimate Performance' in _:
+                            self.active_pp = 4
+                            power_plan_index = 3
+                            if self.active_pp != self.active_pp_prev:
+                                self.active_pp_prev = 4
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 15, 100)}))
+
+                                """ Example Overlay Call
+                                open('./system_overlay.dat', 'w').close()
+                                with open('./system_overlay.dat', 'w') as fo:
+                                    fo.writelines('ULTIMATE PERFORMANCE')
+                                fo.close()
+                                """
+
+                    if _.startswith('Power Scheme GUID:'):
+
+                        if canonical_caseless('Power saver') in canonical_caseless(_) and canonical_caseless('Power saver') not in power_plan:
+                            power_plan[0] = _
+                        if canonical_caseless('Balanced') in canonical_caseless(_) and canonical_caseless('Balanced') not in power_plan:
+                            power_plan[1] = _
+                        if canonical_caseless('High performance') in canonical_caseless(_) and canonical_caseless('High performance') not in power_plan:
+                            power_plan[2] = _
+                        if canonical_caseless('Ultimate Performance') in canonical_caseless(_) and canonical_caseless('Ultimate Performance') not in power_plan:
+                            power_plan[3] = _
+
+                        i += 1
+
+            except Exception as e:
+                print('-- [PowerClass.run] Error:', e)
+
+            time.sleep(1)
+
+    def stop(self):
+        print('-- [PowerClass.stop]: plugged in')
+        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
+        self.active_pp = -1
+        self.active_pp_prev = -1
+        try:
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: sdk_color_backlight}))
+        except Exception as e:
+            print('-- [PowerClass.stop] Error:', e)
+        self.terminate()
+
+
+class PauseLoopClass(QThread):
+    print('-- [PauseLoopClass]: plugged in')
+
+    def __init__(self):
+        QThread.__init__(self)
+
+    def run(self):
+        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
+
+        while True:
+            if len(devices_kb) >= 1:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: (255, 255, 0)}))
+            time.sleep(0.6)
+            if len(devices_kb) >= 1:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: sdk_color_backlight}))
+            time.sleep(0.6)
+
+    def stop(self):
+        print('-- [PauseLoopClass.stop]: plugged in')
+        self.terminate()
+
+
+class MediaDisplayClass(QThread):
+    print('-- [MediaDisplayClass]: plugged in')
+
+    def __init__(self):
+        QThread.__init__(self)
+        self.bool_mute = None
+        self.bool_mute_prev = None
+        self.media_state = -1
+        self.media_state_prev = -1
+
+    def send_instruction_on(self):
+        # print('-- [MediaDisplayClass.send_instruction_on]: plugged in')
+        global sdk, devices_kb, devices_kb_selected
+        if len(devices_kb) >= 1:
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({98: (0, 255, 0)}))
+
+    def send_instruction_off(self):
+        # print('-- [MediaDisplayClass.send_instruction_off]: plugged in')
+        global sdk, devices_kb, devices_kb_selected
+        if len(devices_kb) >= 1:
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({98: (255, 0, 0)}))
+
+    def send_instruction_off_1(self):
+        # print('-- [MediaDisplayClass.send_instruction_off]: plugged in')
+        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
+        if len(devices_kb) >= 1:
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({98: sdk_color_backlight}))
+
+    async def get_media_state(self):
+        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, thread_pause_loop
+        sessions = await MediaManager.request_async()
+
+        current_session = sessions.get_current_session()
+
+        if current_session != None:
+
+            if int(wmc.GlobalSystemMediaTransportControlsSessionPlaybackStatus.PLAYING) == current_session.get_playback_info().playback_status:
+                self.media_state = 1
+                if self.media_state != self.media_state_prev:
+                    print('-- [MediaDisplayClass.run]: PLAYING')
+                    self.media_state_prev = 1
+                    thread_pause_loop[0].stop()
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: (0, 255, 0)}))
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({100: (0, 0, 255)}))
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({102: (0, 0, 255)}))
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: sdk_color_backlight}))
+
+            if int(wmc.GlobalSystemMediaTransportControlsSessionPlaybackStatus.PAUSED) == current_session.get_playback_info().playback_status:
+                self.media_state = 2
+                if self.media_state != self.media_state_prev:
+                    print('-- [MediaDisplayClass.run]: PAUSED')
+                    self.media_state_prev = 2
+                    thread_pause_loop[0].start()
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({100: (255, 100, 0)}))
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({102: (255, 100, 0)}))
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: sdk_color_backlight}))
+
+            if int(wmc.GlobalSystemMediaTransportControlsSessionPlaybackStatus.STOPPED) == current_session.get_playback_info().playback_status:
+                self.media_state = 0
+                if self.media_state != self.media_state_prev:
+                    print('-- [MediaDisplayClass.run]: STOPPED')
+                    self.media_state_prev = 0
+                    thread_pause_loop[0].stop()
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: sdk_color_backlight}))
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: (255, 0, 0)}))
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({100: sdk_color_backlight}))
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({102: sdk_color_backlight}))
+
+            if int(wmc.GlobalSystemMediaTransportControlsSessionPlaybackStatus.CLOSED) == current_session.get_playback_info().playback_status:
+                self.media_state = 0
+                if self.media_state != self.media_state_prev:
+                    print('-- [MediaDisplayClass.run]: CLOSED')
+                    self.media_state_prev = 0
+                    thread_pause_loop[0].stop()
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: sdk_color_backlight}))
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: (255, 0, 0)}))
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({100: sdk_color_backlight}))
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({102: sdk_color_backlight}))
+
+            if int(wmc.GlobalSystemMediaTransportControlsSessionPlaybackStatus.CHANGING) == current_session.get_playback_info().playback_status:
+                self.media_state = 0
+                if self.media_state != self.media_state_prev:
+                    print('-- [MediaDisplayClass.run]: CHANGING')
+                    self.media_state_prev = 0
+                    thread_pause_loop[0].stop()
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: sdk_color_backlight}))
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: (255, 0, 0)}))
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({100: sdk_color_backlight}))
+                    if len(devices_kb) >= 1:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({102: sdk_color_backlight}))
+
+        else:
+            self.media_state = 0
+            if self.media_state != self.media_state_prev:
+                print('-- [MediaDisplayClass.run]: CLOSED')
+                self.media_state_prev = 0
+                thread_pause_loop[0].stop()
+                if len(devices_kb) >= 1:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: sdk_color_backlight}))
+                if len(devices_kb) >= 1:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: (255, 0, 0)}))
+                if len(devices_kb) >= 1:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({100: sdk_color_backlight}))
+                if len(devices_kb) >= 1:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({102: sdk_color_backlight}))
+
+    def run(self):
+        print('-- [MediaDisplayClass.run]: plugged in')
+        while True:
+            try:
+                self.current_media_info_1 = asyncio.run(self.get_media_state())
+            except Exception as e:
+                print('-- [MediaDisplayClass.run] Error:', e)
+
+            try:
+                """ subprocess """
+                cmd_output = []
+                cmd = 'powershell ./check_mute.ps1'
+                xcmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                output = xcmd.stdout.readline()
+                if output == '' and xcmd.poll() is not None:
+                    break
+                if output:
+                    cmd_output.append(str(output.decode("utf-8").strip()))
+                else:
+                    break
+                rc = xcmd.poll()
+
+                """ parse standard output """
+                for _ in cmd_output:
+                    # print('-- [MediaDisplayClass.run] output:', _)
+                    if _ == 'False':
+                        self.bool_mute = False
+                        if self.bool_mute_prev is True or self.bool_mute_prev is None:
+                            print('-- [MediaDisplayClass.run]: un-muted')
+                            self.bool_mute_prev = False
+                            self.send_instruction_on()
+                    elif _ == 'True':
+                        self.bool_mute = True
+                        if self.bool_mute_prev is False or self.bool_mute_prev is None:
+                            print('-- [MediaDisplayClass.run]: muted')
+                            self.bool_mute_prev = True
+                            self.send_instruction_off()
+
+                    else:
+                        self.bool_mute = None
+                        self.bool_mute_prev = None
+                        self.send_instruction_off_1()
+
+            except Exception as e:
+                print('-- [MediaDisplayClass.run] Error:', e)
+                time.sleep(1)
+
+            time.sleep(0.1)
+
+    def stop(self):
+        print('-- [MediaDisplayClass.stop]: plugged in')
+        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
+        self.bool_mute = None
+        self.bool_mute_prev = None
+        self.media_state = -1
+        self.media_state_prev = -1
+        try:
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({98: sdk_color_backlight}))
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: sdk_color_backlight}))
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: sdk_color_backlight}))
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({100: sdk_color_backlight}))
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({102: sdk_color_backlight}))
+        except Exception as e:
+            print('-- [MediaDisplayClass.stop] Error:', e)
         self.terminate()
 
 
