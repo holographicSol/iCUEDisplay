@@ -91,6 +91,14 @@ hdd_bytes_type_r = ''
 hdd_bytes_str = ''
 str_path_kb_img = ''
 str_path_ms_img = ''
+g_key_pressed = ''
+time_now_press = float()
+bool_onpress_clause_g1 = False
+bool_onpress_clause_g2 = False
+bool_onpress_clause_g3 = False
+bool_onpress_clause_g4 = False
+bool_onpress_clause_g5 = False
+bool_onpress_clause_g6 = False
 bool_switch_fahrenheit = False
 bool_backlight_interact = False
 bool_powershell_interact = False
@@ -122,6 +130,7 @@ bool_backend_icue_connected_previous = None
 bool_backend_config_read_complete = False
 bool_backend_valid_network_adapter_name = False
 bool_switch_startup_media_display = False
+thread_gkey_pressed = []
 thread_keyevents = []
 thread_overlay = []
 thread_test_locked = []
@@ -2045,63 +2054,17 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_fahrenheit)
         # self.btn_fahrenheit.setToolTip('Media Display\n\nEnables/Disables Media Display.')
 
-        self.lbl_powershell = QPushButton(self)
-        self.lbl_powershell.move(self.menu_obj_pos_w + 2, self.height - (4 * 1) - (self.monitor_btn_h * 1))
-        self.lbl_powershell.resize(126, self.monitor_btn_h)
-        self.lbl_powershell.setFont(self.font_s8b)
-        self.lbl_powershell.setText('G6 Powershell')
-        self.lbl_powershell.setStyleSheet(self.btn_menu_style)
-        self.lbl_powershell.clicked.connect(self.btn_powershell_function)
-        print('-- [App.__init__] created:', self.lbl_powershell)
-        ui_object_complete.append(self.lbl_powershell)
-        ui_object_font_list_s8b.append(self.lbl_powershell)
-        self.lbl_powershell.setToolTip('G6 Powershell\n\nEnables/Disables G6 Powershell.\n\nShort press G6 spawns administrator Powershell window if iCUE Display is running as admin.')
-
-        self.btn_powershell = QPushButton(self)
-        self.btn_powershell.move(self.menu_obj_pos_w + 2 + 4 + 126, self.height - (4 * 1) - (self.monitor_btn_h * 1))
-        self.btn_powershell.resize(28, 28)
-        self.btn_powershell.setStyleSheet(self.btn_menu_style)
-        self.btn_powershell.setIconSize(self.tog_switch_ico_sz)
-        self.btn_powershell.clicked.connect(self.btn_powershell_function)
-        print('-- [App.__init__] created:', self.btn_powershell)
-        self.object_interaction_enabled.append(self.btn_powershell)
-        ui_object_complete.append(self.btn_powershell)
-        self.btn_powershell.setToolTip('G6 Powershell\n\nEnables/Disables G6 Powershell.')
-
-        self.lbl_g5_backlight = QPushButton(self)
-        self.lbl_g5_backlight.move(self.menu_obj_pos_w + 2, self.height - (4 * 2) - (self.monitor_btn_h * 2))
-        self.lbl_g5_backlight.resize(126, self.monitor_btn_h)
-        self.lbl_g5_backlight.setFont(self.font_s8b)
-        self.lbl_g5_backlight.setText('G5 Backlight')
-        self.lbl_g5_backlight.setStyleSheet(self.btn_menu_style)
-        self.lbl_g5_backlight.clicked.connect(self.btn_g5_backlight_function)
-        print('-- [App.__init__] created:', self.lbl_g5_backlight)
-        ui_object_complete.append(self.lbl_g5_backlight)
-        ui_object_font_list_s8b.append(self.lbl_g5_backlight)
-        self.lbl_g5_backlight.setToolTip('G5 Backlight\n\nEnables/Disables G5 Backlight.\n\nG5 will turn on/off iCUE Displays backlight feature for use in low light conditions.')
-
-        self.btn_g5_backlight = QPushButton(self)
-        self.btn_g5_backlight.move(self.menu_obj_pos_w + 2 + 4 + 126, self.height - (4 * 2) - (self.monitor_btn_h * 2))
-        self.btn_g5_backlight.resize(28, 28)
-        self.btn_g5_backlight.setStyleSheet(self.btn_menu_style)
-        self.btn_g5_backlight.setIconSize(self.tog_switch_ico_sz)
-        self.btn_g5_backlight.clicked.connect(self.btn_g5_backlight_function)
-        print('-- [App.__init__] created:', self.btn_g5_backlight)
-        self.object_interaction_enabled.append(self.btn_g5_backlight)
-        ui_object_complete.append(self.btn_g5_backlight)
-        self.btn_g5_backlight.setToolTip('G5 Backlight\n\nEnables/Disables G5 Backlight.')
-
         self.lbl_power_plan = QPushButton(self)
         self.lbl_power_plan.move(self.menu_obj_pos_w + 2, self.height - (4 * 6) - (self.monitor_btn_h * 6))
         self.lbl_power_plan.resize(126, self.monitor_btn_h)
         self.lbl_power_plan.setFont(self.font_s8b)
-        self.lbl_power_plan.setText('G1 Power Plan')
+        self.lbl_power_plan.setText('G1 Power')
         self.lbl_power_plan.setStyleSheet(self.btn_menu_style)
         self.lbl_power_plan.clicked.connect(self.btn_power_plan_function)
         print('-- [App.__init__] created:', self.lbl_power_plan)
         ui_object_complete.append(self.lbl_power_plan)
         ui_object_font_list_s8b.append(self.lbl_power_plan)
-        self.lbl_power_plan.setToolTip('G1 Power Plan\n\nEnables/Disables G1 Power Plan.\n\nG1 key LED will reflect the current power plan while a short press will change the power plan.\n\nIt is recommended to properly configure your power plan(s) to compliment this feature, reducing Processor Maximum State for Power Saver.')
+        self.lbl_power_plan.setToolTip('G1 Power\n\nEnables/Disables G1 Power Plan.\n\nG1 key LED will reflect the current power plan while a short press will change the power plan.\n\nIt is recommended to properly configure your power plan(s) to compliment this feature, reducing Processor Maximum State for Power Saver.\n\nShort Press: Cycle Power Plan\n1 Second [Yellow G1]: Hibernate/Sleep\n2 Seconds [Amber G1]: Restart\n3 Seconds [Red G1]: Shutdown\n4 Seconds [White G1]: Cancel')
 
         self.btn_power_plan = QPushButton(self)
         self.btn_power_plan.move(self.menu_obj_pos_w + 2 + 4 + 126, self.height - (4 * 6) - (self.monitor_btn_h * 6))
@@ -2225,6 +2188,52 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.lbl_power_plan_key_7)
         ui_object_complete.append(self.lbl_power_plan_key_7)
         ui_object_font_list_s7b.append(self.lbl_power_plan_key_7)
+
+        self.lbl_powershell = QPushButton(self)
+        self.lbl_powershell.move(self.menu_obj_pos_w + 2, self.height - (4 * 1) - (self.monitor_btn_h * 1))
+        self.lbl_powershell.resize(126, self.monitor_btn_h)
+        self.lbl_powershell.setFont(self.font_s8b)
+        self.lbl_powershell.setText('G6 Powershell')
+        self.lbl_powershell.setStyleSheet(self.btn_menu_style)
+        self.lbl_powershell.clicked.connect(self.btn_powershell_function)
+        print('-- [App.__init__] created:', self.lbl_powershell)
+        ui_object_complete.append(self.lbl_powershell)
+        ui_object_font_list_s8b.append(self.lbl_powershell)
+        self.lbl_powershell.setToolTip('G6 Powershell\n\nEnables/Disables G6 Powershell.\n\nShort press G6 spawns administrator Powershell window if iCUE Display is running as admin.')
+
+        self.lbl_g5_backlight = QPushButton(self)
+        self.lbl_g5_backlight.move(self.menu_obj_pos_w + 2, self.height - (4 * 2) - (self.monitor_btn_h * 2))
+        self.lbl_g5_backlight.resize(126, self.monitor_btn_h)
+        self.lbl_g5_backlight.setFont(self.font_s8b)
+        self.lbl_g5_backlight.setText('G5 Backlight')
+        self.lbl_g5_backlight.setStyleSheet(self.btn_menu_style)
+        self.lbl_g5_backlight.clicked.connect(self.btn_g5_backlight_function)
+        print('-- [App.__init__] created:', self.lbl_g5_backlight)
+        ui_object_complete.append(self.lbl_g5_backlight)
+        ui_object_font_list_s8b.append(self.lbl_g5_backlight)
+        self.lbl_g5_backlight.setToolTip('G5 Backlight\n\nEnables/Disables G5 Backlight.\n\nG5 will turn on/off iCUE Displays backlight feature for use in low light conditions.')
+
+        self.btn_g5_backlight = QPushButton(self)
+        self.btn_g5_backlight.move(self.menu_obj_pos_w + 2 + 4 + 126, self.height - (4 * 2) - (self.monitor_btn_h * 2))
+        self.btn_g5_backlight.resize(28, 28)
+        self.btn_g5_backlight.setStyleSheet(self.btn_menu_style)
+        self.btn_g5_backlight.setIconSize(self.tog_switch_ico_sz)
+        self.btn_g5_backlight.clicked.connect(self.btn_g5_backlight_function)
+        print('-- [App.__init__] created:', self.btn_g5_backlight)
+        self.object_interaction_enabled.append(self.btn_g5_backlight)
+        ui_object_complete.append(self.btn_g5_backlight)
+        self.btn_g5_backlight.setToolTip('G5 Backlight\n\nEnables/Disables G5 Backlight.')
+
+        self.btn_powershell = QPushButton(self)
+        self.btn_powershell.move(self.menu_obj_pos_w + 2 + 4 + 126, self.height - (4 * 1) - (self.monitor_btn_h * 1))
+        self.btn_powershell.resize(28, 28)
+        self.btn_powershell.setStyleSheet(self.btn_menu_style)
+        self.btn_powershell.setIconSize(self.tog_switch_ico_sz)
+        self.btn_powershell.clicked.connect(self.btn_powershell_function)
+        print('-- [App.__init__] created:', self.btn_powershell)
+        self.object_interaction_enabled.append(self.btn_powershell)
+        ui_object_complete.append(self.btn_powershell)
+        self.btn_powershell.setToolTip('G6 Powershell\n\nEnables/Disables G6 Powershell.')
 
         self.btn_cpu_mon.setToolTip('CPU Utilization Monitor\n\nEnables/Disables CPU utilization monitor.')
         self.lbl_cpu_mon.setToolTip('CPU Utilization Monitor\n\nKeypad 1:       0-25%\nKeypad 4:       25-50%\nKeypad 7:       50-75%\nNumlock:       75-100%.')
@@ -3806,6 +3815,15 @@ class App(QMainWindow):
 
     def g1_function_long(self):
         print('-- [App.g1_function_long]: plugged in')
+        os.system('shutdown /h')
+
+    def g1_function_long_2sec(self):
+        print('-- [App.g1_function_long_2sec]: plugged in')
+        os.system('shutdown /r /t 0')
+
+    def g1_function_long_3sec(self):
+        print('-- [App.g1_function_long_3sec]: plugged in')
+        os.system('shutdown /s /t 0')
 
     def g2_function_short(self):
         print('-- [App.g2_function_short]: plugged in')
@@ -3813,17 +3831,35 @@ class App(QMainWindow):
     def g2_function_long(self):
         print('-- [App.g2_function_long]: plugged in')
 
+    def g2_function_long_2sec(self):
+        print('-- [App.g2_function_long_2sec]: plugged in')
+
+    def g2_function_long_3sec(self):
+        print('-- [App.g2_function_long_3sec]: plugged in')
+
     def g3_function_short(self):
         print('-- [App.g3_function_short]: plugged in')
 
     def g3_function_long(self):
         print('-- [App.g3_function_long]: plugged in')
 
+    def g3_function_long_2sec(self):
+        print('-- [App.g3_function_long_2sec]: plugged in')
+
+    def g3_function_long_3sec(self):
+        print('-- [App.g3_function_long_3sec]: plugged in')
+
     def g4_function_short(self):
         print('-- [App.g4_function_short]: plugged in')
 
     def g4_function_long(self):
         print('-- [App.g4_function_long]: plugged in')
+
+    def g4_function_long_2sec(self):
+        print('-- [App.g4_function_long_2sec]: plugged in')
+
+    def g4_function_long_3sec(self):
+        print('-- [App.g4_function_long_3sec]: plugged in')
 
     def g5_function_short(self):
         global bool_backlight_interact
@@ -3835,6 +3871,12 @@ class App(QMainWindow):
     def g5_function_long(self):
         print('-- [App.g5_function_long]: plugged in')
 
+    def g5_function_long_2sec(self):
+        print('-- [App.g5_function_long_2sec]: plugged in')
+
+    def g5_function_long_3sec(self):
+        print('-- [App.g5_function_long_3sec]: plugged in')
+
     def g6_function_short(self):
         global bool_powershell_interact
         print('-- [App.g6_function_short]: plugged in')
@@ -3844,6 +3886,12 @@ class App(QMainWindow):
 
     def g6_function_long(self):
         print('-- [App.g6_function_long]: plugged in')
+
+    def g6_function_long_2sec(self):
+        print('-- [App.g6_function_long_2sec]: plugged in')
+
+    def g6_function_long_3sec(self):
+        print('-- [App.g6_function_long_3sec]: plugged in')
 
     def initUI(self):
         print('-- [App.initUI]: plugged in')
@@ -3876,6 +3924,7 @@ class App(QMainWindow):
         global bool_powershell_interact
         global bool_backlight_interact
         global bool_switch_fahrenheit
+        global thread_gkey_pressed
 
         hdd_mon_thread = HddMonClass()
         thread_disk_rw.append(hdd_mon_thread)
@@ -3896,7 +3945,14 @@ class App(QMainWindow):
                                                         self.g3_function_short, self.g3_function_long,
                                                         self.g4_function_short, self.g4_function_long,
                                                         self.g5_function_short, self.g5_function_long,
-                                                        self.g6_function_short, self.g6_function_long)
+                                                        self.g6_function_short, self.g6_function_long,
+                                                 self.g1_function_long_3sec, self.g2_function_long_3sec,
+                                                 self.g3_function_long_3sec, self.g4_function_long_3sec,
+                                                 self.g5_function_long_3sec, self.g6_function_long_3sec,
+                                                 self.g1_function_long_2sec, self.g2_function_long_2sec,
+                                                 self.g3_function_long_2sec, self.g4_function_long_2sec,
+                                                 self.g5_function_long_2sec, self.g6_function_long_2sec
+                                                 )
         thread_sdk_event_handler.append(sdk_event_handler)
         backlight_auto = BackLightClass(self.color_all_id,
                                         self.btn_bck_light,
@@ -3924,6 +3980,8 @@ class App(QMainWindow):
         thread_test_locked[0].start()
         keyeventsthread = KeyEventClass()
         thread_keyevents.append(keyeventsthread)
+        on_gkey_pressed_thread = OnPressClass()
+        thread_gkey_pressed.append(on_gkey_pressed_thread)
 
         self.lbl_title.show()
         self.btn_con_stat_name.show()
@@ -4843,6 +4901,195 @@ class CompileDevicesClass(QThread):
         self.terminate()
 
 
+class OnPressClass(QThread):
+    print('-- [OnPressClass]: plugged in')
+
+    def __init__(self):
+        QThread.__init__(self)
+
+    def run(self):
+        print('-- [OnPressClass.run]: plugged in')
+        global g_key_pressed, time_now_press, sdk, devices_kb, devices_kb_selected, sdk_color_backlight
+        global bool_onpress_clause_g1, bool_onpress_clause_g2, bool_onpress_clause_g3
+        global bool_onpress_clause_g4, bool_onpress_clause_g5, bool_onpress_clause_g6
+
+        bool_catch_1 = False
+        bool_catch_2 = False
+        bool_catch_3 = False
+        bool_catch_4 = False
+
+        try:
+            while True:
+                date_time_now = str(datetime.datetime.now())
+                var = date_time_now.split(' ')
+                var = var[1].split(':')[2]
+                time_now_press_hold = float(var)
+
+                if time_now_press_hold > (time_now_press + 1.0) and time_now_press_hold < (time_now_press + 2.0):
+                    if bool_catch_1 is False:
+                        bool_catch_1 = True
+                        print('-- [SdkEventHandlerClass.on_press] hold 1:', g_key_pressed)
+                        if g_key_pressed == 'CorsairKeyId.Kb_G1':
+                            bool_onpress_clause_g1 = True
+                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 255, 0)}))
+                            sdk.set_led_colors_flush_buffer()
+                        if g_key_pressed == 'CorsairKeyId.Kb_G2':
+                            bool_onpress_clause_g2 = True
+                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 255, 0)}))
+                            sdk.set_led_colors_flush_buffer()
+                        if g_key_pressed == 'CorsairKeyId.Kb_G3':
+                            bool_onpress_clause_g3 = True
+                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: (255, 255, 0)}))
+                            sdk.set_led_colors_flush_buffer()
+                        if g_key_pressed == 'CorsairKeyId.Kb_G4':
+                            bool_onpress_clause_g4 = True
+                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: (255, 255, 0)}))
+                            sdk.set_led_colors_flush_buffer()
+                        if g_key_pressed == 'CorsairKeyId.Kb_G5':
+                            bool_onpress_clause_g5 = True
+                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: (255, 255, 0)}))
+                            sdk.set_led_colors_flush_buffer()
+                        if g_key_pressed == 'CorsairKeyId.Kb_G6':
+                            bool_onpress_clause_g6 = True
+                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: (255, 255, 0)}))
+                            sdk.set_led_colors_flush_buffer()
+
+                if time_now_press_hold > (time_now_press + 2.0) and time_now_press_hold < (time_now_press + 3.0):
+                    if bool_catch_2 is False:
+                        bool_catch_2 = True
+                        print('-- [SdkEventHandlerClass.on_press] hold 2:', g_key_pressed)
+                        if g_key_pressed == 'CorsairKeyId.Kb_G1':
+                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 100, 0)}))
+                            sdk.set_led_colors_flush_buffer()
+                        if g_key_pressed == 'CorsairKeyId.Kb_G2':
+                            bool_onpress_clause_g2 = True
+                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 100, 0)}))
+                            sdk.set_led_colors_flush_buffer()
+                        if g_key_pressed == 'CorsairKeyId.Kb_G3':
+                            bool_onpress_clause_g3 = True
+                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: (255, 100, 0)}))
+                            sdk.set_led_colors_flush_buffer()
+                        if g_key_pressed == 'CorsairKeyId.Kb_G4':
+                            bool_onpress_clause_g4 = True
+                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: (255, 100, 0)}))
+                            sdk.set_led_colors_flush_buffer()
+                        if g_key_pressed == 'CorsairKeyId.Kb_G5':
+                            bool_onpress_clause_g5 = True
+                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: (255, 100, 0)}))
+                            sdk.set_led_colors_flush_buffer()
+                        if g_key_pressed == 'CorsairKeyId.Kb_G6':
+                            bool_onpress_clause_g6 = True
+                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: (255, 100, 0)}))
+                            sdk.set_led_colors_flush_buffer()
+
+                if time_now_press_hold > (time_now_press + 3.0) and time_now_press_hold < (time_now_press + 4.0):
+                    if bool_catch_3 is False:
+                        bool_catch_3 = True
+                        print('-- [SdkEventHandlerClass.on_press] hold 3:', g_key_pressed)
+                        if g_key_pressed == 'CorsairKeyId.Kb_G1':
+                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 0, 0)}))
+                            sdk.set_led_colors_flush_buffer()
+                        if g_key_pressed == 'CorsairKeyId.Kb_G2':
+                            bool_onpress_clause_g2 = True
+                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 0, 0)}))
+                            sdk.set_led_colors_flush_buffer()
+                        if g_key_pressed == 'CorsairKeyId.Kb_G3':
+                            bool_onpress_clause_g3 = True
+                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: (255, 0, 0)}))
+                            sdk.set_led_colors_flush_buffer()
+                        if g_key_pressed == 'CorsairKeyId.Kb_G4':
+                            bool_onpress_clause_g4 = True
+                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: (255, 0, 0)}))
+                            sdk.set_led_colors_flush_buffer()
+                        if g_key_pressed == 'CorsairKeyId.Kb_G5':
+                            bool_onpress_clause_g5 = True
+                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: (255, 0, 0)}))
+                            sdk.set_led_colors_flush_buffer()
+                        if g_key_pressed == 'CorsairKeyId.Kb_G6':
+                            bool_onpress_clause_g6 = True
+                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: (255, 0, 0)}))
+                            sdk.set_led_colors_flush_buffer()
+
+                if time_now_press_hold > (time_now_press + 4.0) and time_now_press_hold < (time_now_press + 5.0):
+                    if bool_catch_4 is False:
+                        bool_catch_4 = True
+                        print('-- [SdkEventHandlerClass.on_press] hold 4:', g_key_pressed)
+                        if g_key_pressed == 'CorsairKeyId.Kb_G1':
+                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 255, 255)}))
+                            sdk.set_led_colors_flush_buffer()
+                        if g_key_pressed == 'CorsairKeyId.Kb_G2':
+                            bool_onpress_clause_g2 = True
+                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 255, 255)}))
+                            sdk.set_led_colors_flush_buffer()
+                        if g_key_pressed == 'CorsairKeyId.Kb_G3':
+                            bool_onpress_clause_g3 = True
+                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: (255, 255, 255)}))
+                            sdk.set_led_colors_flush_buffer()
+                        if g_key_pressed == 'CorsairKeyId.Kb_G4':
+                            bool_onpress_clause_g4 = True
+                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: (255, 255, 255)}))
+                            sdk.set_led_colors_flush_buffer()
+                        if g_key_pressed == 'CorsairKeyId.Kb_G5':
+                            bool_onpress_clause_g5 = True
+                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: (255, 255, 255)}))
+                            sdk.set_led_colors_flush_buffer()
+                        if g_key_pressed == 'CorsairKeyId.Kb_G6':
+                            bool_onpress_clause_g6 = True
+                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: (255, 255, 255)}))
+                            sdk.set_led_colors_flush_buffer()
+
+        except Exception as e:
+            print('-- [OnPressClass.run] Error:', e)
+
+        g_key_pressed = ''
+        if bool_onpress_clause_g1 is True:
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: sdk_color_backlight}))
+        if bool_onpress_clause_g2 is True:
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: sdk_color_backlight}))
+        if bool_onpress_clause_g3 is True:
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: sdk_color_backlight}))
+        if bool_onpress_clause_g4 is True:
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: sdk_color_backlight}))
+        if bool_onpress_clause_g5 is True:
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: sdk_color_backlight}))
+        if bool_onpress_clause_g6 is True:
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: sdk_color_backlight}))
+        sdk.set_led_colors_flush_buffer()
+        bool_onpress_clause_g1 = False
+        bool_onpress_clause_g2 = False
+        bool_onpress_clause_g3 = False
+        bool_onpress_clause_g4 = False
+        bool_onpress_clause_g5 = False
+        bool_onpress_clause_g6 = False
+
+    def stop(self):
+        print('-- [OnPressClass.stop]: plugged in')
+        global g_key_pressed
+        global bool_onpress_clause_g1, bool_onpress_clause_g2, bool_onpress_clause_g3
+        global bool_onpress_clause_g4, bool_onpress_clause_g5, bool_onpress_clause_g6
+        if bool_onpress_clause_g1 is True:
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: sdk_color_backlight}))
+        if bool_onpress_clause_g2 is True:
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: sdk_color_backlight}))
+        if bool_onpress_clause_g3 is True:
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: sdk_color_backlight}))
+        if bool_onpress_clause_g4 is True:
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: sdk_color_backlight}))
+        if bool_onpress_clause_g5 is True:
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: sdk_color_backlight}))
+        if bool_onpress_clause_g6 is True:
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: sdk_color_backlight}))
+        sdk.set_led_colors_flush_buffer()
+        bool_onpress_clause_g1 = False
+        bool_onpress_clause_g2 = False
+        bool_onpress_clause_g3 = False
+        bool_onpress_clause_g4 = False
+        bool_onpress_clause_g5 = False
+        bool_onpress_clause_g6 = False
+        g_key_pressed = ''
+        self.terminate()
+
+
 class SdkEventHandlerClass(QThread):
     print('-- [SdkEventHandlerClass]: plugged in')
 
@@ -4851,7 +5098,13 @@ class SdkEventHandlerClass(QThread):
                  g3_function_short, g3_function_long,
                  g4_function_short, g4_function_long,
                  g5_function_short, g5_function_long,
-                 g6_function_short, g6_function_long):
+                 g6_function_short, g6_function_long,
+                 g1_function_long_3sec, g2_function_long_3sec,
+                 g3_function_long_3sec, g4_function_long_3sec,
+                 g5_function_long_3sec, g6_function_long_3sec,
+                 g1_function_long_2sec, g2_function_long_2sec,
+                 g3_function_long_2sec, g4_function_long_2sec,
+                 g5_function_long_2sec, g6_function_long_2sec):
         QThread.__init__(self)
 
         self.g1_function_short = g1_function_short
@@ -4866,14 +5119,28 @@ class SdkEventHandlerClass(QThread):
         self.g5_function_long = g5_function_long
         self.g6_function_short = g6_function_short
         self.g6_function_long = g6_function_long
+        self.g1_function_long_3sec = g1_function_long_3sec
+        self.g2_function_long_3sec = g2_function_long_3sec
+        self.g3_function_long_3sec = g3_function_long_3sec
+        self.g4_function_long_3sec = g4_function_long_3sec
+        self.g5_function_long_3sec = g5_function_long_3sec
+        self.g6_function_long_3sec = g6_function_long_3sec
+        self.g1_function_long_2sec = g1_function_long_2sec
+        self.g2_function_long_2sec = g2_function_long_2sec
+        self.g3_function_long_2sec = g3_function_long_2sec
+        self.g4_function_long_2sec = g4_function_long_2sec
+        self.g5_function_long_2sec = g5_function_long_2sec
+        self.g6_function_long_2sec = g6_function_long_2sec
         self.time_now_press = float()
         self.time_now_press_keyId = ''
         self.time_now_release = float()
         self.time_now_release_keyId = ''
         self.eId = []
+        self.time_now_press_hold = float()
 
     def on_press(self, event_id, data):
         # print('-- [SdkEventHandlerClass.on_press]: plugged in')
+        global sdk, devices_kb, devices_kb_selected, g_key_pressed, thread_gkey_pressed, time_now_press
         date_time_now = str(datetime.datetime.now())
         var = date_time_now.split(' ')
         var = var[1].split(':')[2]
@@ -4881,68 +5148,142 @@ class SdkEventHandlerClass(QThread):
         self.time_now_press_keyId = str(data.keyId).strip()
         print('-- [SdkEventHandlerClass.on_press] captured event: time_now_0: {0} pressed {1}'.format(self.time_now_press, data.keyId))
 
+        g_key_pressed = str(data.keyId).strip()
+        time_now_press = self.time_now_press
+
+        thread_gkey_pressed[0].start()
+
     def on_release(self, event_id, data):
+        global thread_gkey_pressed
         # print('-- [SdkEventHandlerClass.on_release]: plugged in')
+
+        thread_gkey_pressed[0].stop()
 
         date_time_now = str(datetime.datetime.now())
         var = date_time_now.split(' ')
         var = var[1].split(':')[2]
         time_now_release = float(var)
         self.time_now_release_keyId = str(data.keyId).strip()
+
         if self.time_now_release_keyId == 'CorsairKeyId.Kb_G1':
-            # short press: reset ledId color and run pertaining function
-            if time_now_release < (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
+            if time_now_release < (self.time_now_press + 1.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                 print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
                 self.g1_function_short()
-            # long release: reset ledId color and disconnect key from function
-            elif time_now_release >= (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
-                print('-- [App.on_press] captured event: time_now_1: {0} long released {1}'.format(self.time_now_press, data.keyId))
+
+            elif time_now_release >= (self.time_now_press + 1.0) and time_now_release < (self.time_now_press + 2.0) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} long released 1 seconds {1}'.format(self.time_now_press, data.keyId))
                 self.g1_function_long()
+
+            elif time_now_release >= (self.time_now_press + 2.0) and time_now_release < (self.time_now_press + 3.0) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} long released 2 seconds {1}'.format(self.time_now_press, data.keyId))
+                self.g1_function_long_2sec()
+
+            elif time_now_release >= (self.time_now_press + 3.0) and time_now_release < (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} long released 3 seconds {1}'.format(self.time_now_press, data.keyId))
+                self.g1_function_long_3sec()
+
+            elif time_now_release >= (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} long released 4 seconds (ignore) {1}'.format(self.time_now_press, data.keyId))
+
         elif self.time_now_release_keyId == 'CorsairKeyId.Kb_G2':
-            # short press: reset ledId color and run pertaining function
-            if time_now_release < (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
+            if time_now_release < (self.time_now_press + 1.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                 print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
                 self.g2_function_short()
-            # long release: reset ledId color and disconnect key from function
-            elif time_now_release >= (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
-                print('-- [App.on_press] captured event: time_now_1: {0} long released {1}'.format(self.time_now_press, data.keyId))
+
+            elif time_now_release >= (self.time_now_press + 1.0) and time_now_release < (self.time_now_press + 2.0) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} long released 1 seconds {1}'.format(self.time_now_press, data.keyId))
                 self.g2_function_long()
+
+            elif time_now_release >= (self.time_now_press + 2.0) and time_now_release < (self.time_now_press + 3.0) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} long released 2 seconds {1}'.format(self.time_now_press, data.keyId))
+                self.g2_function_long_2sec()
+
+            elif time_now_release >= (self.time_now_press + 3.0) and time_now_release < (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} long released 3 seconds {1}'.format(self.time_now_press, data.keyId))
+                self.g2_function_long_3sec()
+
+            elif time_now_release >= (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} long released 4 seconds (ignore) {1}'.format(self.time_now_press, data.keyId))
+
         elif self.time_now_release_keyId == 'CorsairKeyId.Kb_G3':
-            # short press: reset ledId color and run pertaining function
-            if time_now_release < (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
+            if time_now_release < (self.time_now_press + 1.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                 print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
                 self.g3_function_short()
-            # long release: reset ledId color and disconnect key from function
-            elif time_now_release >= (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
-                print('-- [App.on_press] captured event: time_now_1: {0} long released {1}'.format(self.time_now_press, data.keyId))
+
+            elif time_now_release >= (self.time_now_press + 1.0) and time_now_release < (self.time_now_press + 2.0) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} long released 1 seconds {1}'.format(self.time_now_press, data.keyId))
                 self.g3_function_long()
+
+            elif time_now_release >= (self.time_now_press + 2.0) and time_now_release < (self.time_now_press + 3.0) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} long released 2 seconds {1}'.format(self.time_now_press, data.keyId))
+                self.g3_function_long_2sec()
+
+            elif time_now_release >= (self.time_now_press + 3.0) and time_now_release < (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} long released 3 seconds {1}'.format(self.time_now_press, data.keyId))
+                self.g3_function_long_3sec()
+
+            elif time_now_release >= (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} long released 4 seconds (ignore) {1}'.format(self.time_now_press, data.keyId))
+
         elif self.time_now_release_keyId == 'CorsairKeyId.Kb_G4':
-            # short press: reset ledId color and run pertaining function
-            if time_now_release < (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
+            if time_now_release < (self.time_now_press + 1.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                 print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
                 self.g4_function_short()
-            # long release: reset ledId color and disconnect key from function
-            elif time_now_release >= (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
-                print('-- [App.on_press] captured event: time_now_1: {0} long released {1}'.format(self.time_now_press, data.keyId))
+
+            elif time_now_release >= (self.time_now_press + 1.0) and time_now_release < (self.time_now_press + 2.0) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} long released 1 seconds {1}'.format(self.time_now_press, data.keyId))
                 self.g4_function_long()
+
+            elif time_now_release >= (self.time_now_press + 2.0) and time_now_release < (self.time_now_press + 3.0) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} long released 2 seconds {1}'.format(self.time_now_press, data.keyId))
+                self.g4_function_long_2sec()
+
+            elif time_now_release >= (self.time_now_press + 3.0) and time_now_release < (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} long released 3 seconds {1}'.format(self.time_now_press, data.keyId))
+                self.g4_function_long_3sec()
+
+            elif time_now_release >= (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} long released 4 seconds (ignore) {1}'.format(self.time_now_press, data.keyId))
+
         elif self.time_now_release_keyId == 'CorsairKeyId.Kb_G5':
-            # short press: reset ledId color and run pertaining function
-            if time_now_release < (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
+            if time_now_release < (self.time_now_press + 1.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                 print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
                 self.g5_function_short()
-            # long release: reset ledId color and disconnect key from function
-            elif time_now_release >= (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
-                print('-- [App.on_press] captured event: time_now_1: {0} long released {1}'.format(self.time_now_press, data.keyId))
+
+            elif time_now_release >= (self.time_now_press + 1.0) and time_now_release < (self.time_now_press + 2.0) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} long released 1 seconds {1}'.format(self.time_now_press, data.keyId))
                 self.g5_function_long()
+
+            elif time_now_release >= (self.time_now_press + 2.0) and time_now_release < (self.time_now_press + 3.0) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} long released 2 seconds {1}'.format(self.time_now_press, data.keyId))
+                self.g5_function_long_2sec()
+
+            elif time_now_release >= (self.time_now_press + 3.0) and time_now_release < (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} long released 3 seconds {1}'.format(self.time_now_press, data.keyId))
+                self.g5_function_long_3sec()
+
+            elif time_now_release >= (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} long released 4 seconds (ignore) {1}'.format(self.time_now_press, data.keyId))
+
         elif self.time_now_release_keyId == 'CorsairKeyId.Kb_G6':
-            # short press: reset ledId color and run pertaining function
-            if time_now_release < (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
+            if time_now_release < (self.time_now_press + 1.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                 print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
                 self.g6_function_short()
-            # long release: reset ledId color and disconnect key from function
-            elif time_now_release >= (self.time_now_press + 0.75) and self.time_now_press_keyId == self.time_now_release_keyId:
-                print('-- [App.on_press] captured event: time_now_1: {0} long released {1}'.format(self.time_now_press, data.keyId))
+
+            elif time_now_release >= (self.time_now_press + 1.0) and time_now_release < (self.time_now_press + 2.0) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} long released 1 seconds {1}'.format(self.time_now_press, data.keyId))
                 self.g6_function_long()
+
+            elif time_now_release >= (self.time_now_press + 2.0) and time_now_release < (self.time_now_press + 3.0) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} long released 2 seconds {1}'.format(self.time_now_press, data.keyId))
+                self.g6_function_long_2sec()
+
+            elif time_now_release >= (self.time_now_press + 3.0) and time_now_release < (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} long released 3 seconds {1}'.format(self.time_now_press, data.keyId))
+                self.g6_function_long_3sec()
+
+            elif time_now_release >= (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
+                print('-- [App.on_press] captured event: time_now_1: {0} long released 4 seconds (ignore) {1}'.format(self.time_now_press, data.keyId))
 
     def sdk_event_handler(self, event_id, data):
         if event_id == CorsairEventId.KeyEvent:
@@ -5074,7 +5415,7 @@ class PowerClass(QThread):
 
     def run(self):
         print('-- [PowerClass.run]: plugged in')
-        global power_plan, power_plan_index
+        global power_plan, power_plan_index, devices_kb, devices_kb_selected, sdk, bool_onpress_clause_g1
         while True:
             try:
                 """ subprocess """
@@ -5096,7 +5437,8 @@ class PowerClass(QThread):
                         if 'Power saver' in _:
                             self.active_pp = 1
                             power_plan_index = 0
-                            if self.active_pp != self.active_pp_prev:
+                            # if self.active_pp != self.active_pp_prev:
+                            if bool_onpress_clause_g1 is not True:
                                 self.active_pp_prev = 1
                                 sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 0, 0)}))
 
@@ -5110,7 +5452,8 @@ class PowerClass(QThread):
                         elif 'Balanced' in _:
                             self.active_pp = 2
                             power_plan_index = 1
-                            if self.active_pp != self.active_pp_prev:
+                            # if self.active_pp != self.active_pp_prev:
+                            if bool_onpress_clause_g1 is not True:
                                 self.active_pp_prev = 2
                                 sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (0, 255, 0)}))
 
@@ -5124,7 +5467,8 @@ class PowerClass(QThread):
                         elif 'High performance' in _:
                             self.active_pp = 3
                             power_plan_index = 2
-                            if self.active_pp != self.active_pp_prev:
+                            # if self.active_pp != self.active_pp_prev:
+                            if bool_onpress_clause_g1 is not True:
                                 self.active_pp_prev = 3
                                 sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (0, 255, 255)}))
 
@@ -5138,7 +5482,8 @@ class PowerClass(QThread):
                         elif 'Ultimate Performance' in _:
                             self.active_pp = 4
                             power_plan_index = 3
-                            if self.active_pp != self.active_pp_prev:
+                            # if self.active_pp != self.active_pp_prev:
+                            if bool_onpress_clause_g1 is not True:
                                 self.active_pp_prev = 4
                                 sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 15, 100)}))
 
