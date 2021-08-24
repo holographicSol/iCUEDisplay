@@ -107,7 +107,7 @@ be restarted automatically when device plugged back in]
 
 --------------------------------------------------------------------------------------------------------------------------------------------
       SETTINGS
-[Intelligent Media Controls reflect currecnt media state. Requires media applications that utilize Windows 10 global media controller.]
+[Intelligent Media Controls reflect current media state. Requires media applications that utilize Windows 10 global media controller.]
 
 [AUTOMATIC BACKLIGHT: User may set a time for the backlight to turn on and off and may optionally enable the backlight manually]
 
