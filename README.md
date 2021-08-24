@@ -97,7 +97,7 @@ be restarted automatically when device plugged back in]
 
 --------------------------------------------------------------------------------------------------------------------------------------------
       G Keys
-[G1 key reflects current power plan. Switch Power Plans to save power.]
+[G1 key. Intelligent Macro reflects current power plan and switches power plans to save power or increase performance quickly.]
 
 [G5 Backlight for low light conditions.]
 
