@@ -5693,13 +5693,10 @@ class ExclusiveG2KeyEventClass_1(QThread):
         kb_event = ''
         while kb_event == '':
             try:
-                if keyboard.read_key() == 'esc':
-                    break
-                else:
-                    kb_event = str(keyboard.read_key())
+                kb_event = str(keyboard.read_key())
             except Exception as e:
                 print('-- [ExclusiveG2KeyEventClass.run] Error:', e)
-            time.sleep(1000000)
+            time.sleep(1)
 
         if len(kb_event) == 1:
             if kb_event in alpha_str:
@@ -5798,13 +5795,10 @@ class ExclusiveG2KeyEventClass(QThread):
         kb_event = ''
         while kb_event == '':
             try:
-                if keyboard.read_key() == 'esc':
-                    break
-                else:
-                    kb_event = str(keyboard.read_key())
+                kb_event = str(keyboard.read_key())
             except Exception as e:
                 print('-- [ExclusiveG2KeyEventClass.run] Error:', e)
-            time.sleep(1000000)
+            time.sleep(1)
 
         if len(kb_event) == 1:
             if kb_event in alpha_str:
