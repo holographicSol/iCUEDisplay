@@ -5504,7 +5504,7 @@ class ExclusiveG2KeyEventClass_1(QThread):
         print('-- [ExclusiveG2KeyEventClass_1.run]: plugged in')
 
         # --> Todo [MOUNT] Replace Time Sleep With Condition Statement/Loop Until Condition Is Met
-        time.sleep(3)
+        time.sleep(2)
 
         """ arm """
         try:
@@ -5584,7 +5584,7 @@ class ExclusiveG2KeyEventClass(QThread):
         print('-- [ExclusiveG2KeyEventClass.run]: plugged in')
 
         # --> Todo [UNMOUNT] Replace Time Sleep With Condition Statement/Loop Until Condition Is Met
-        time.sleep(3)
+        time.sleep(2)
 
         try:
             """ arm """
