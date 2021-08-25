@@ -5504,9 +5504,9 @@ class ExclusiveG2KeyEventClass_1(QThread):
         global bool_switch_startup_hdd_read_write, disk_guid, bool_hdd_dead
         print('-- [ExclusiveG2KeyEventClass_1.run]: plugged in')
 
-        # --> Todo [UNMOUNT] Replace Time Sleep With Condition Statement/Loop Until Condition Is Met
+        # --> Todo [MOUNT] Replace Time Sleep With Condition Statement/Loop Until Condition Is Met
         time.sleep(2)
-        
+
         if bool_hdd_dead is False:
             while bool_hdd_dead is False:
                 print('-- [ExclusiveG2KeyEventClass_1.run] bool_hdd_dead:', bool_hdd_dead)
