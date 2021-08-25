@@ -5503,11 +5503,12 @@ class ExclusiveG2KeyEventClass_1(QThread):
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, corsairled_id_num_hddreadwrite
         global bool_switch_startup_hdd_read_write, disk_guid, bool_hdd_dead
         print('-- [ExclusiveG2KeyEventClass_1.run]: plugged in')
+
+        time.sleep(2)
         if bool_hdd_dead is False:
             while bool_hdd_dead is False:
                 print('-- [ExclusiveG2KeyEventClass_1.run] bool_hdd_dead:', bool_hdd_dead)
                 time.sleep(0.5)
-
 
         """ arm """
         try:
@@ -5585,6 +5586,8 @@ class ExclusiveG2KeyEventClass(QThread):
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, corsairled_id_num_hddreadwrite
         global bool_switch_startup_hdd_read_write, disk_guid, bool_hdd_dead
         print('-- [ExclusiveG2KeyEventClass.run]: plugged in')
+
+        time.sleep(2)
 
         if bool_hdd_dead is False:
             while bool_hdd_dead is False:
