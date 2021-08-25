@@ -95,7 +95,6 @@ str_path_ms_img = ''
 g_key_pressed = ''
 umount_alpha = ''
 time_now_press = float()
-bool_hdd_dead = False
 bool_switch_g2_disks = False
 bool_onpress_clause_g1 = False
 bool_onpress_clause_g2 = False
@@ -5501,16 +5500,11 @@ class ExclusiveG2KeyEventClass_1(QThread):
 
     def run(self):
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, corsairled_id_num_hddreadwrite
-        global bool_switch_startup_hdd_read_write, disk_guid, bool_hdd_dead
+        global bool_switch_startup_hdd_read_write, disk_guid
         print('-- [ExclusiveG2KeyEventClass_1.run]: plugged in')
 
         # --> Todo [MOUNT] Replace Time Sleep With Condition Statement/Loop Until Condition Is Met
-        time.sleep(2)
-
-        if bool_hdd_dead is False:
-            while bool_hdd_dead is False:
-                print('-- [ExclusiveG2KeyEventClass_1.run] bool_hdd_dead:', bool_hdd_dead)
-                time.sleep(0.5)
+        time.sleep(3)
 
         """ arm """
         try:
@@ -5586,16 +5580,11 @@ class ExclusiveG2KeyEventClass(QThread):
 
     def run(self):
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, corsairled_id_num_hddreadwrite
-        global bool_switch_startup_hdd_read_write, disk_guid, bool_hdd_dead
+        global bool_switch_startup_hdd_read_write, disk_guid
         print('-- [ExclusiveG2KeyEventClass.run]: plugged in')
 
         # --> Todo [UNMOUNT] Replace Time Sleep With Condition Statement/Loop Until Condition Is Met
-        time.sleep(2)
-
-        if bool_hdd_dead is False:
-            while bool_hdd_dead is False:
-                print('-- [ExclusiveG2KeyEventClass.run] bool_hdd_dead:', bool_hdd_dead)
-                time.sleep(0.5)
+        time.sleep(3)
 
         try:
             """ arm """
@@ -6766,8 +6755,6 @@ class InternetConnectionClass(QThread):
 
 class HddMonClass(QThread):
     print('-- [HddMonClass]: plugged in')
-    global bool_hdd_dead
-    bool_hdd_dead = False
 
     def __init__(self):
         QThread.__init__(self)
@@ -6912,18 +6899,21 @@ class HddMonClass(QThread):
 
     def stop(self):
         print('-- [HddMonClass.stop]: plugged in')
-        global sdk, devices_kb, devices_kb_selected, sdk_color_hddread_on, sdk_color_hddwrite_on, sdk_color_backlight, corsairled_id_num_hddreadwrite, bool_hdd_dead
+        global sdk, devices_kb, devices_kb_selected, sdk_color_hddread_on, sdk_color_hddwrite_on, sdk_color_backlight, corsairled_id_num_hddreadwrite
         try:
             hdd_i = 0
             for _ in corsairled_id_num_hddreadwrite:
                 sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[hdd_i]: sdk_color_backlight}))
                 hdd_i += 1
-            sdk.set_led_colors_flush_buffer()
         except Exception as e:
             print('-- [HddMonClass.stop] Error:', e)
             pass
+        try:
+            sdk.set_led_colors_flush_buffer()
+        except Exception as e:
+            print('-- [HddMonClass.stop] Error:', e)
+
         print('-- [HddMonClass.stop] terminating')
-        bool_hdd_dead = True
         self.terminate()
 
 
