@@ -5639,8 +5639,8 @@ class CompileDiskGUIDDictionaryListClass(QThread):
                                         # print('live key:', disk_let)
                                         if disk_let != dict_str:
                                             print('-- [CompileDiskGUIDDictionaryListClass.run] update key value pair:', disk_guid[iguid], '>>', disk_let, guid)
-                                            del disk_guid[iguid]
-                                            disk_guid.append({disk_let: guid})
+                                            disk_guid[iguid] = {disk_let: guid}
+                                            # disk_guid.append({disk_let: guid})
                                 except Exception as e:
                                     pass
                                 iguid += 1
@@ -5696,7 +5696,7 @@ class ExclusiveG2KeyEventClass_1(QThread):
                 kb_event = str(keyboard.read_key())
             except Exception as e:
                 print('-- [ExclusiveG2KeyEventClass.run] Error:', e)
-            time.sleep(1)
+            time.sleep(0.1)
 
         if len(kb_event) == 1:
             if kb_event in alpha_str:
@@ -5798,7 +5798,7 @@ class ExclusiveG2KeyEventClass(QThread):
                 kb_event = str(keyboard.read_key())
             except Exception as e:
                 print('-- [ExclusiveG2KeyEventClass.run] Error:', e)
-            time.sleep(1)
+            time.sleep(0.1)
 
         if len(kb_event) == 1:
             if kb_event in alpha_str:
