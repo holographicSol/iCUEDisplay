@@ -5022,130 +5022,229 @@ class OnPressClass(QThread):
                         print('-- [SdkEventHandlerClass.on_press] hold 1:', g_key_pressed)
                         if g_key_pressed == 'CorsairKeyId.Kb_G1':
                             bool_onpress_clause_g1 = True
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 255, 0)}))
-                            sdk.set_led_colors_flush_buffer()
+                            try:
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 255, 0)}))
+                                sdk.set_led_colors_flush_buffer()
+                            except Exception as e:
+                                print('-- [SdkEventHandlerClass.on_press]  Error:', e)
                         if g_key_pressed == 'CorsairKeyId.Kb_G2':
                             bool_onpress_clause_g2 = True
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 255, 0)}))
-                            sdk.set_led_colors_flush_buffer()
+                            try:
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 255, 0)}))
+                                sdk.set_led_colors_flush_buffer()
+                            except Exception as e:
+                                print('-- [SdkEventHandlerClass.on_press]  Error:', e)
                         if g_key_pressed == 'CorsairKeyId.Kb_G3':
                             bool_onpress_clause_g3 = True
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: (255, 255, 0)}))
-                            sdk.set_led_colors_flush_buffer()
+                            try:
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: (255, 255, 0)}))
+                                sdk.set_led_colors_flush_buffer()
+                            except Exception as e:
+                                print('-- [SdkEventHandlerClass.on_press]  Error:', e)
                         if g_key_pressed == 'CorsairKeyId.Kb_G4':
                             bool_onpress_clause_g4 = True
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: (255, 255, 0)}))
-                            sdk.set_led_colors_flush_buffer()
+                            try:
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: (255, 255, 0)}))
+                                sdk.set_led_colors_flush_buffer()
+                            except Exception as e:
+                                print('-- [SdkEventHandlerClass.on_press]  Error:', e)
                         if g_key_pressed == 'CorsairKeyId.Kb_G5':
                             bool_onpress_clause_g5 = True
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: (255, 255, 0)}))
-                            sdk.set_led_colors_flush_buffer()
+                            try:
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: (255, 255, 0)}))
+                                sdk.set_led_colors_flush_buffer()
+                            except Exception as e:
+                                print('-- [SdkEventHandlerClass.on_press]  Error:', e)
                         if g_key_pressed == 'CorsairKeyId.Kb_G6':
                             bool_onpress_clause_g6 = True
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: (255, 255, 0)}))
-                            sdk.set_led_colors_flush_buffer()
+                            try:
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: (255, 255, 0)}))
+                                sdk.set_led_colors_flush_buffer()
+                            except Exception as e:
+                                print('-- [SdkEventHandlerClass.on_press]  Error:', e)
 
                 if time_now_press_hold > (time_now_press + 2.0) and time_now_press_hold < (time_now_press + 3.0):
                     if bool_catch_2 is False:
                         bool_catch_2 = True
                         print('-- [SdkEventHandlerClass.on_press] hold 2:', g_key_pressed)
                         if g_key_pressed == 'CorsairKeyId.Kb_G1':
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 100, 0)}))
-                            sdk.set_led_colors_flush_buffer()
+                            bool_onpress_clause_g1 = True
+                            try:
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 100, 0)}))
+                                sdk.set_led_colors_flush_buffer()
+                            except Exception as e:
+                                print('-- [SdkEventHandlerClass.on_press]  Error:', e)
                         if g_key_pressed == 'CorsairKeyId.Kb_G2':
                             bool_onpress_clause_g2 = True
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 100, 0)}))
-                            sdk.set_led_colors_flush_buffer()
+                            try:
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 100, 0)}))
+                                sdk.set_led_colors_flush_buffer()
+                            except Exception as e:
+                                print('-- [SdkEventHandlerClass.on_press]  Error:', e)
                         if g_key_pressed == 'CorsairKeyId.Kb_G3':
                             bool_onpress_clause_g3 = True
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: (255, 100, 0)}))
-                            sdk.set_led_colors_flush_buffer()
+                            try:
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: (255, 100, 0)}))
+                                sdk.set_led_colors_flush_buffer()
+                            except Exception as e:
+                                print('-- [SdkEventHandlerClass.on_press]  Error:', e)
                         if g_key_pressed == 'CorsairKeyId.Kb_G4':
                             bool_onpress_clause_g4 = True
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: (255, 100, 0)}))
-                            sdk.set_led_colors_flush_buffer()
+                            try:
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: (255, 100, 0)}))
+                                sdk.set_led_colors_flush_buffer()
+                            except Exception as e:
+                                print('-- [SdkEventHandlerClass.on_press]  Error:', e)
                         if g_key_pressed == 'CorsairKeyId.Kb_G5':
                             bool_onpress_clause_g5 = True
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: (255, 100, 0)}))
-                            sdk.set_led_colors_flush_buffer()
+                            try:
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: (255, 100, 0)}))
+                                sdk.set_led_colors_flush_buffer()
+                            except Exception as e:
+                                print('-- [SdkEventHandlerClass.on_press]  Error:', e)
                         if g_key_pressed == 'CorsairKeyId.Kb_G6':
                             bool_onpress_clause_g6 = True
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: (255, 100, 0)}))
-                            sdk.set_led_colors_flush_buffer()
+                            try:
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: (255, 100, 0)}))
+                                sdk.set_led_colors_flush_buffer()
+                            except Exception as e:
+                                print('-- [SdkEventHandlerClass.on_press]  Error:', e)
 
                 if time_now_press_hold > (time_now_press + 3.0) and time_now_press_hold < (time_now_press + 4.0):
                     if bool_catch_3 is False:
                         bool_catch_3 = True
                         print('-- [SdkEventHandlerClass.on_press] hold 3:', g_key_pressed)
                         if g_key_pressed == 'CorsairKeyId.Kb_G1':
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 0, 0)}))
-                            sdk.set_led_colors_flush_buffer()
+                            bool_onpress_clause_g1 = True
+                            try:
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 0, 0)}))
+                                sdk.set_led_colors_flush_buffer()
+                            except Exception as e:
+                                print('-- [SdkEventHandlerClass.on_press]  Error:', e)
                         if g_key_pressed == 'CorsairKeyId.Kb_G2':
                             bool_onpress_clause_g2 = True
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 0, 0)}))
-                            sdk.set_led_colors_flush_buffer()
+                            try:
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 0, 0)}))
+                                sdk.set_led_colors_flush_buffer()
+                            except Exception as e:
+                                print('-- [SdkEventHandlerClass.on_press]  Error:', e)
                         if g_key_pressed == 'CorsairKeyId.Kb_G3':
                             bool_onpress_clause_g3 = True
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: (255, 0, 0)}))
-                            sdk.set_led_colors_flush_buffer()
+                            try:
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: (255, 0, 0)}))
+                                sdk.set_led_colors_flush_buffer()
+                            except Exception as e:
+                                print('-- [SdkEventHandlerClass.on_press]  Error:', e)
                         if g_key_pressed == 'CorsairKeyId.Kb_G4':
                             bool_onpress_clause_g4 = True
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: (255, 0, 0)}))
-                            sdk.set_led_colors_flush_buffer()
+                            try:
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: (255, 0, 0)}))
+                                sdk.set_led_colors_flush_buffer()
+                            except Exception as e:
+                                print('-- [SdkEventHandlerClass.on_press]  Error:', e)
                         if g_key_pressed == 'CorsairKeyId.Kb_G5':
                             bool_onpress_clause_g5 = True
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: (255, 0, 0)}))
-                            sdk.set_led_colors_flush_buffer()
+                            try:
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: (255, 0, 0)}))
+                                sdk.set_led_colors_flush_buffer()
+                            except Exception as e:
+                                print('-- [SdkEventHandlerClass.on_press]  Error:', e)
                         if g_key_pressed == 'CorsairKeyId.Kb_G6':
                             bool_onpress_clause_g6 = True
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: (255, 0, 0)}))
-                            sdk.set_led_colors_flush_buffer()
+                            try:
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: (255, 0, 0)}))
+                                sdk.set_led_colors_flush_buffer()
+                            except Exception as e:
+                                print('-- [SdkEventHandlerClass.on_press]  Error:', e)
 
                 if time_now_press_hold > (time_now_press + 4.0) and time_now_press_hold < (time_now_press + 5.0):
                     if bool_catch_4 is False:
                         bool_catch_4 = True
                         print('-- [SdkEventHandlerClass.on_press] hold 4:', g_key_pressed)
                         if g_key_pressed == 'CorsairKeyId.Kb_G1':
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 255, 255)}))
-                            sdk.set_led_colors_flush_buffer()
+                            bool_onpress_clause_g1 = True
+                            try:
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 255, 255)}))
+                                sdk.set_led_colors_flush_buffer()
+                            except Exception as e:
+                                print('-- [SdkEventHandlerClass.on_press]  Error:', e)
                         if g_key_pressed == 'CorsairKeyId.Kb_G2':
                             bool_onpress_clause_g2 = True
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 255, 255)}))
-                            sdk.set_led_colors_flush_buffer()
+                            try:
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 255, 255)}))
+                                sdk.set_led_colors_flush_buffer()
+                            except Exception as e:
+                                print('-- [SdkEventHandlerClass.on_press]  Error:', e)
                         if g_key_pressed == 'CorsairKeyId.Kb_G3':
                             bool_onpress_clause_g3 = True
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: (255, 255, 255)}))
-                            sdk.set_led_colors_flush_buffer()
+                            try:
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: (255, 255, 255)}))
+                                sdk.set_led_colors_flush_buffer()
+                            except Exception as e:
+                                print('-- [SdkEventHandlerClass.on_press]  Error:', e)
                         if g_key_pressed == 'CorsairKeyId.Kb_G4':
                             bool_onpress_clause_g4 = True
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: (255, 255, 255)}))
-                            sdk.set_led_colors_flush_buffer()
+                            try:
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: (255, 255, 255)}))
+                                sdk.set_led_colors_flush_buffer()
+                            except Exception as e:
+                                print('-- [SdkEventHandlerClass.on_press]  Error:', e)
                         if g_key_pressed == 'CorsairKeyId.Kb_G5':
                             bool_onpress_clause_g5 = True
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: (255, 255, 255)}))
-                            sdk.set_led_colors_flush_buffer()
+                            try:
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: (255, 255, 255)}))
+                                sdk.set_led_colors_flush_buffer()
+                            except Exception as e:
+                                print('-- [SdkEventHandlerClass.on_press]  Error:', e)
                         if g_key_pressed == 'CorsairKeyId.Kb_G6':
                             bool_onpress_clause_g6 = True
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: (255, 255, 255)}))
-                            sdk.set_led_colors_flush_buffer()
+                            try:
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: (255, 255, 255)}))
+                                sdk.set_led_colors_flush_buffer()
+                            except Exception as e:
+                                print('-- [SdkEventHandlerClass.on_press]  Error:', e)
 
         except Exception as e:
             print('-- [OnPressClass.run] Error:', e)
 
         g_key_pressed = ''
         if bool_onpress_clause_g1 is True:
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: sdk_color_backlight}))
-        if bool_onpress_clause_g2 is True:
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: sdk_color_backlight}))
-        if bool_onpress_clause_g3 is True:
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: sdk_color_backlight}))
-        if bool_onpress_clause_g4 is True:
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: sdk_color_backlight}))
-        if bool_onpress_clause_g5 is True:
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: sdk_color_backlight}))
-        if bool_onpress_clause_g6 is True:
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: sdk_color_backlight}))
-        sdk.set_led_colors_flush_buffer()
+            try:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: sdk_color_backlight}))
+                sdk.set_led_colors_flush_buffer()
+            except Exception as e:
+                print('-- [SdkEventHandlerClass.on_press]  Error:', e)
+        elif bool_onpress_clause_g2 is True:
+            try:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: sdk_color_backlight}))
+                sdk.set_led_colors_flush_buffer()
+            except Exception as e:
+                print('-- [SdkEventHandlerClass.on_press]  Error:', e)
+        elif bool_onpress_clause_g3 is True:
+            try:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: sdk_color_backlight}))
+                sdk.set_led_colors_flush_buffer()
+            except Exception as e:
+                print('-- [SdkEventHandlerClass.on_press]  Error:', e)
+        elif bool_onpress_clause_g4 is True:
+            try:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: sdk_color_backlight}))
+                sdk.set_led_colors_flush_buffer()
+            except Exception as e:
+                print('-- [SdkEventHandlerClass.on_press]  Error:', e)
+        elif bool_onpress_clause_g5 is True:
+            try:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: sdk_color_backlight}))
+                sdk.set_led_colors_flush_buffer()
+            except Exception as e:
+                print('-- [SdkEventHandlerClass.on_press]  Error:', e)
+        elif bool_onpress_clause_g6 is True:
+            try:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: sdk_color_backlight}))
+                sdk.set_led_colors_flush_buffer()
+            except Exception as e:
+                print('-- [SdkEventHandlerClass.on_press]  Error:', e)
+
         bool_onpress_clause_g1 = False
         bool_onpress_clause_g2 = False
         bool_onpress_clause_g3 = False
@@ -5160,20 +5259,44 @@ class OnPressClass(QThread):
         global bool_onpress_clause_g4, bool_onpress_clause_g5, bool_onpress_clause_g6
         try:
             if bool_onpress_clause_g1 is True:
-                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: sdk_color_backlight}))
+                try:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: sdk_color_backlight}))
+                    sdk.set_led_colors_flush_buffer()
+                except Exception as e:
+                    print('-- [SdkEventHandlerClass.on_press]  Error:', e)
             if bool_onpress_clause_g2 is True:
-                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: sdk_color_backlight}))
+                try:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: sdk_color_backlight}))
+                    sdk.set_led_colors_flush_buffer()
+                except Exception as e:
+                    print('-- [SdkEventHandlerClass.on_press]  Error:', e)
             if bool_onpress_clause_g3 is True:
-                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: sdk_color_backlight}))
+                try:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: sdk_color_backlight}))
+                    sdk.set_led_colors_flush_buffer()
+                except Exception as e:
+                    print('-- [SdkEventHandlerClass.on_press]  Error:', e)
             if bool_onpress_clause_g4 is True:
-                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: sdk_color_backlight}))
+                try:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: sdk_color_backlight}))
+                    sdk.set_led_colors_flush_buffer()
+                except Exception as e:
+                    print('-- [SdkEventHandlerClass.on_press]  Error:', e)
             if bool_onpress_clause_g5 is True:
-                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: sdk_color_backlight}))
+                try:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: sdk_color_backlight}))
+                    sdk.set_led_colors_flush_buffer()
+                except Exception as e:
+                    print('-- [SdkEventHandlerClass.on_press]  Error:', e)
             if bool_onpress_clause_g6 is True:
-                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: sdk_color_backlight}))
+                try:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: sdk_color_backlight}))
+                    sdk.set_led_colors_flush_buffer()
+                except Exception as e:
+                    print('-- [SdkEventHandlerClass.on_press]  Error:', e)
         except Exception as e:
             print(e)
-        sdk.set_led_colors_flush_buffer()
+
         bool_onpress_clause_g1 = False
         bool_onpress_clause_g2 = False
         bool_onpress_clause_g3 = False
@@ -5252,7 +5375,10 @@ class SdkEventHandlerClass(QThread):
         global thread_gkey_pressed
         # print('-- [SdkEventHandlerClass.on_release]: plugged in')
 
-        thread_gkey_pressed[0].stop()
+        try:
+            thread_gkey_pressed[0].stop()
+        except Exception as e:
+            print('-- [SdkEventHandlerClass.on_press] Error:', e)
 
         date_time_now = str(datetime.datetime.now())
         var = date_time_now.split(' ')
@@ -5509,16 +5635,18 @@ class ExclusiveG2KeyEventClass_1(QThread):
         """ arm """
         try:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 255, 0)}))
+            sdk.set_led_colors_flush_buffer()
         except Exception as e:
             print(e)
         g2_function_long_i = 0
         for _ in corsairled_id_num_hddreadwrite:
             try:
                 sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: (255, 255, 0)}))
+                sdk.set_led_colors_flush_buffer()
             except Exception as e:
                 print(e)
             g2_function_long_i += 1
-        sdk.set_led_colors_flush_buffer()
+
         kb_event = ''
         i = 0
         while True:
@@ -5552,17 +5680,21 @@ class ExclusiveG2KeyEventClass_1(QThread):
                     except Exception as e:
                         pass
                     i += 1
-        try:
-            """ disarm """
-            g2_function_long_i = 0
-            for _ in corsairled_id_num_hddreadwrite:
+
+        """ disarm """
+        g2_function_long_i = 0
+        for _ in corsairled_id_num_hddreadwrite:
+            try:
                 sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: sdk_color_backlight}))
-                g2_function_long_i += 1
+                sdk.set_led_colors_flush_buffer()
+            except Exception as e:
+                print('-- [ExclusiveG2KeyEventClass.run] Error:', e)
+            g2_function_long_i += 1
+        try:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: sdk_color_backlight}))
-            # sdk.set_led_colors_flush_buffer()
+            sdk.set_led_colors_flush_buffer()
         except Exception as e:
-            print('-- [ExclusiveG2KeyEventClass_1.run] Error:', e)
-        sdk.set_led_colors_flush_buffer()
+            print('-- [ExclusiveG2KeyEventClass.run] Error:', e)
 
         if bool_switch_startup_hdd_read_write is True:
             thread_disk_rw[0].start()
@@ -5589,16 +5721,17 @@ class ExclusiveG2KeyEventClass(QThread):
         try:
             """ arm """
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 100, 0)}))
+            sdk.set_led_colors_flush_buffer()
         except Exception as e:
             print('-- [ExclusiveG2KeyEventClass.run] Error:', e)
         g2_function_long_i = 0
         for _ in corsairled_id_num_hddreadwrite:
             try:
                 sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: (255, 100, 0)}))
+                sdk.set_led_colors_flush_buffer()
             except Exception as e:
                 print('-- [ExclusiveG2KeyEventClass.run] Error:', e)
             g2_function_long_i += 1
-        sdk.set_led_colors_flush_buffer()
 
         kb_event = ''
 
@@ -5619,17 +5752,20 @@ class ExclusiveG2KeyEventClass(QThread):
                     cmd = 'mountvol '+umount_path+' /D'
                     os.system(cmd)
 
-        try:
-            """ disarm """
-            g2_function_long_i = 0
-            for _ in corsairled_id_num_hddreadwrite:
+        """ disarm """
+        g2_function_long_i = 0
+        for _ in corsairled_id_num_hddreadwrite:
+            try:
                 sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: sdk_color_backlight}))
-                g2_function_long_i += 1
+                sdk.set_led_colors_flush_buffer()
+            except Exception as e:
+                print('-- [ExclusiveG2KeyEventClass.run] Error:', e)
+            g2_function_long_i += 1
+        try:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: sdk_color_backlight}))
-            # sdk.set_led_colors_flush_buffer()
+            sdk.set_led_colors_flush_buffer()
         except Exception as e:
             print('-- [ExclusiveG2KeyEventClass.run] Error:', e)
-        sdk.set_led_colors_flush_buffer()
 
         if bool_switch_startup_hdd_read_write is True:
             thread_disk_rw[0].start()
@@ -6900,18 +7036,15 @@ class HddMonClass(QThread):
     def stop(self):
         print('-- [HddMonClass.stop]: plugged in')
         global sdk, devices_kb, devices_kb_selected, sdk_color_hddread_on, sdk_color_hddwrite_on, sdk_color_backlight, corsairled_id_num_hddreadwrite
-        try:
-            hdd_i = 0
-            for _ in corsairled_id_num_hddreadwrite:
+
+        hdd_i = 0
+        for _ in corsairled_id_num_hddreadwrite:
+            try:
                 sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[hdd_i]: sdk_color_backlight}))
-                hdd_i += 1
-        except Exception as e:
-            print('-- [HddMonClass.stop] Error:', e)
-            pass
-        try:
-            sdk.set_led_colors_flush_buffer()
-        except Exception as e:
-            print('-- [HddMonClass.stop] Error:', e)
+                sdk.set_led_colors_flush_buffer()
+            except Exception as e:
+                print('-- [HddMonClass.stop] Error:', e)
+            hdd_i += 1
 
         print('-- [HddMonClass.stop] terminating')
         self.terminate()
