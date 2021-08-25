@@ -95,6 +95,7 @@ str_path_ms_img = ''
 g_key_pressed = ''
 umount_alpha = ''
 time_now_press = float()
+bool_hdd_dead = False
 bool_switch_g2_disks = False
 bool_onpress_clause_g1 = False
 bool_onpress_clause_g2 = False
@@ -3887,6 +3888,11 @@ class App(QMainWindow):
 
     def g2_function_long(self):
         print('-- [App.g2_function_long]: plugged in')
+        global thread_disk_rw, thread_exclusive_gkey_event, thread_exclusive_gkey_event_1
+        thread_exclusive_gkey_event[0].stop()
+        thread_exclusive_gkey_event_1[0].stop()
+        thread_disk_rw[0].stop()
+        thread_exclusive_gkey_event_1[0].start()
 
     def g2_function_long_2sec(self):
         print('-- [App.g2_function_long_2sec]: plugged in')
@@ -3894,15 +3900,10 @@ class App(QMainWindow):
         thread_exclusive_gkey_event[0].stop()
         thread_exclusive_gkey_event_1[0].stop()
         thread_disk_rw[0].stop()
-        thread_exclusive_gkey_event_1[0].start()
+        thread_exclusive_gkey_event[0].start()
 
     def g2_function_long_3sec(self):
         print('-- [App.g2_function_long_3sec]: plugged in')
-        global thread_disk_rw, thread_exclusive_gkey_event, thread_exclusive_gkey_event_1
-        thread_exclusive_gkey_event[0].stop()
-        thread_exclusive_gkey_event_1[0].stop()
-        thread_disk_rw[0].stop()
-        thread_exclusive_gkey_event[0].start()
 
     def g3_function_short(self):
         print('-- [App.g3_function_short]: plugged in')
@@ -5158,18 +5159,21 @@ class OnPressClass(QThread):
         global g_key_pressed
         global bool_onpress_clause_g1, bool_onpress_clause_g2, bool_onpress_clause_g3
         global bool_onpress_clause_g4, bool_onpress_clause_g5, bool_onpress_clause_g6
-        if bool_onpress_clause_g1 is True:
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: sdk_color_backlight}))
-        if bool_onpress_clause_g2 is True:
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: sdk_color_backlight}))
-        if bool_onpress_clause_g3 is True:
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: sdk_color_backlight}))
-        if bool_onpress_clause_g4 is True:
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: sdk_color_backlight}))
-        if bool_onpress_clause_g5 is True:
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: sdk_color_backlight}))
-        if bool_onpress_clause_g6 is True:
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: sdk_color_backlight}))
+        try:
+            if bool_onpress_clause_g1 is True:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: sdk_color_backlight}))
+            if bool_onpress_clause_g2 is True:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: sdk_color_backlight}))
+            if bool_onpress_clause_g3 is True:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: sdk_color_backlight}))
+            if bool_onpress_clause_g4 is True:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: sdk_color_backlight}))
+            if bool_onpress_clause_g5 is True:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: sdk_color_backlight}))
+            if bool_onpress_clause_g6 is True:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: sdk_color_backlight}))
+        except Exception as e:
+            print(e)
         sdk.set_led_colors_flush_buffer()
         bool_onpress_clause_g1 = False
         bool_onpress_clause_g2 = False
@@ -5232,6 +5236,7 @@ class SdkEventHandlerClass(QThread):
     def on_press(self, event_id, data):
         # print('-- [SdkEventHandlerClass.on_press]: plugged in')
         global sdk, devices_kb, devices_kb_selected, g_key_pressed, thread_gkey_pressed, time_now_press
+
         date_time_now = str(datetime.datetime.now())
         var = date_time_now.split(' ')
         var = var[1].split(':')[2]
@@ -5438,66 +5443,49 @@ class CompileDiskGUIDDictionaryListClass(QThread):
                 else:
                     break
                 rc = xcmd.poll()
-
             # parse subprocess output
             guid = ''
             disk_let = ''
             i_1 = 0
             for _ in cmd_output:
                 # print('-- [CompileDiskGUIDDictionaryListClass.run] raw output:', _)
-
                 if len(_) == 3:
                     if os.path.exists(_):
                         # if cmd_output[i-1].startswith('\\\\'):  # and os.path.exists(_+'\\')
                         icmd = i_1 - 1
                         guid = cmd_output[icmd]
                         disk_let = _
-
                         # print('-- [CompileDiskGUIDDictionaryListClass.run] raw output:', _, guid)
-
                         # Create a list of all values in list of dictionaries
                         list_of_all_values = [value for elem in disk_guid for value in elem.values()]
-
                         # add dictionary to list
                         if guid not in list_of_all_values:
                             if guid.startswith('\\\\'):
                                 # print('appending:', disk_let, guid)
                                 disk_guid.append({disk_let: guid})
-
                         # else update key value pair in list
                         elif guid in list_of_all_values:
                             # print('check')
-
                             iguid = 0
                             for disk_guids in disk_guid:
                                 # print(disk_guid[iguid])
                                 try:
-
                                     dict_str = str(disk_guid[iguid])
                                     dict_str = dict_str.replace("{'", "")
                                     dict_str = dict_str[:1]
                                     dict_str = dict_str+':\\'
                                     # print('dict key:', dict_str)
-
                                     if disk_guid[iguid][dict_str] == guid:
                                         # print('target:', disk_guid[iguid])
-
                                         # print('live key:', disk_let)
                                         if disk_let != dict_str:
                                             print('-- [CompileDiskGUIDDictionaryListClass.run] update key value pair:', disk_guid[iguid], '>>', disk_let, guid)
                                             del disk_guid[iguid]
                                             disk_guid.append({disk_let: guid})
-
                                 except Exception as e:
                                     pass
-
                                 iguid += 1
                 i_1 += 1
-
-            # i_3 = 0
-            # for _ in disk_guid:
-            #     print('-- [CompileDiskGUIDDictionaryListClass.run] dictionary:', _)
-            #     i_3 += 1
             time.sleep(2)
 
     def stop(self):
@@ -5513,32 +5501,35 @@ class ExclusiveG2KeyEventClass_1(QThread):
 
     def run(self):
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, corsairled_id_num_hddreadwrite
-        global bool_switch_startup_hdd_read_write, disk_guid
+        global bool_switch_startup_hdd_read_write, disk_guid, bool_hdd_dead
         print('-- [ExclusiveG2KeyEventClass_1.run]: plugged in')
+        if bool_hdd_dead is False:
+            while bool_hdd_dead is False:
+                print('-- [ExclusiveG2KeyEventClass_1.run] bool_hdd_dead:', bool_hdd_dead)
+                time.sleep(0.5)
 
+
+        """ arm """
         try:
-            """ arm """
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 100, 0)}))
-            g2_function_long_i = 0
-            for _ in corsairled_id_num_hddreadwrite:
-                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: (255, 100, 0)}))
-                g2_function_long_i += 1
-            # sdk.set_led_colors_flush_buffer()
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 255, 0)}))
         except Exception as e:
-            print('-- [ExclusiveG2KeyEventClass_1.run] Error:', e)
+            print(e)
+        g2_function_long_i = 0
+        for _ in corsairled_id_num_hddreadwrite:
+            try:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: (255, 255, 0)}))
+            except Exception as e:
+                print(e)
+            g2_function_long_i += 1
         sdk.set_led_colors_flush_buffer()
-
         kb_event = ''
-
         i = 0
         while True:
             kb_event = str(keyboard.read_key())
-            print(i, 'wait')
             if kb_event != '':
                 break
             time.sleep(0.1)
             i += 1
-
         if len(kb_event) == 1:
             if kb_event in alpha_str:
                 mount_alpha = kb_event+':\\'
@@ -5554,21 +5545,16 @@ class ExclusiveG2KeyEventClass_1(QThread):
                         # print('mount_alpha:', mount_alpha)ggzgddzgzzee
                         if canonical_caseless(dict_str) == canonical_caseless(mount_alpha):
                             print('target:', _)
-
                             guid = disk_guid[i][dict_str]
                             print('guid:', guid)
                             dict_str = dict_str.replace('\\', '')
-
                             cmd = str("powershell mountvol "+dict_str+" '"+guid+"'")
                             print('cmd:', cmd)
-
                             print('-- [ExclusiveG2KeyEventClass_1.run] running command:', cmd)
                             os.system(cmd)
-
                     except Exception as e:
                         pass
                     i += 1
-
         try:
             """ disarm """
             g2_function_long_i = 0
@@ -5597,18 +5583,26 @@ class ExclusiveG2KeyEventClass(QThread):
 
     def run(self):
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, corsairled_id_num_hddreadwrite
-        global bool_switch_startup_hdd_read_write, disk_guid
+        global bool_switch_startup_hdd_read_write, disk_guid, bool_hdd_dead
         print('-- [ExclusiveG2KeyEventClass.run]: plugged in')
+
+        if bool_hdd_dead is False:
+            while bool_hdd_dead is False:
+                print('-- [ExclusiveG2KeyEventClass.run] bool_hdd_dead:', bool_hdd_dead)
+                time.sleep(0.5)
 
         try:
             """ arm """
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 0, 0)}))
-            g2_function_long_i = 0
-            for _ in corsairled_id_num_hddreadwrite:
-                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: (255, 0, 0)}))
-                g2_function_long_i += 1
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 100, 0)}))
         except Exception as e:
             print('-- [ExclusiveG2KeyEventClass.run] Error:', e)
+        g2_function_long_i = 0
+        for _ in corsairled_id_num_hddreadwrite:
+            try:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: (255, 100, 0)}))
+            except Exception as e:
+                print('-- [ExclusiveG2KeyEventClass.run] Error:', e)
+            g2_function_long_i += 1
         sdk.set_led_colors_flush_buffer()
 
         kb_event = ''
@@ -5616,7 +5610,6 @@ class ExclusiveG2KeyEventClass(QThread):
         i = 0
         while True:
             kb_event = str(keyboard.read_key())
-            print(i, 'wait')
             if kb_event != '':
                 break
             time.sleep(0.1)
@@ -6767,6 +6760,8 @@ class InternetConnectionClass(QThread):
 
 class HddMonClass(QThread):
     print('-- [HddMonClass]: plugged in')
+    global bool_hdd_dead
+    bool_hdd_dead = False
 
     def __init__(self):
         QThread.__init__(self)
@@ -6911,7 +6906,7 @@ class HddMonClass(QThread):
 
     def stop(self):
         print('-- [HddMonClass.stop]: plugged in')
-        global sdk, devices_kb, devices_kb_selected, sdk_color_hddread_on, sdk_color_hddwrite_on, sdk_color_backlight, corsairled_id_num_hddreadwrite
+        global sdk, devices_kb, devices_kb_selected, sdk_color_hddread_on, sdk_color_hddwrite_on, sdk_color_backlight, corsairled_id_num_hddreadwrite, bool_hdd_dead
         try:
             hdd_i = 0
             for _ in corsairled_id_num_hddreadwrite:
@@ -6922,6 +6917,7 @@ class HddMonClass(QThread):
             print('-- [HddMonClass.stop] Error:', e)
             pass
         print('-- [HddMonClass.stop] terminating')
+        bool_hdd_dead = True
         self.terminate()
 
 
