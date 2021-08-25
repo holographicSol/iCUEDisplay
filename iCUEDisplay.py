@@ -723,7 +723,8 @@ class App(QMainWindow):
         self.btn_quit.resize(28, 28)
         self.btn_quit.setIcon(QIcon("./image/img_close.png"))
         self.btn_quit.setIconSize(QSize(8, 8))
-        self.btn_quit.clicked.connect(QCoreApplication.instance().quit)
+        self.btn_quit.clicked.connect(self.icuedisplay_quit_function)
+        # self.btn_quit.clicked.connect(QCoreApplication.instance().quit)
         self.btn_quit.setStyleSheet(
             """QPushButton{background-color: rgb(0, 0, 0);
                border:0px solid rgb(0, 0, 0);}"""
@@ -2376,6 +2377,20 @@ class App(QMainWindow):
         self.installEventFilter(self.filter)
 
         self.initUI()
+
+    def icuedisplay_quit_function(self):
+        global thread_compile_devices, thread_keyevents, thread_exclusive_gkey_event, thread_exclusive_gkey_event_1
+        global thread_gkey_pressed, thread_sdk_event_handler, thread_test_locked
+
+        thread_keyevents[0].stop()
+        thread_exclusive_gkey_event[0].stop()
+        thread_exclusive_gkey_event_1[0].stop()
+        thread_gkey_pressed[0].stop()
+        thread_sdk_event_handler[0].stop()
+        thread_test_locked[0].stop()
+        thread_compile_devices[0].stop()
+
+        self.QCoreApplication.instance().quit
 
     def btn_fahrenheit_function(self):
         print('-- [btn_fahrenheit_function]: plugged in')
@@ -5005,17 +5020,23 @@ class CompileDevicesClass(QThread):
         devices_kb = []
         devices_ms = []
         while True:
-            try:
-                if bool_backend_config_read_complete is False:
+
+            if bool_backend_config_read_complete is False:
+
+                try:
                     self.read_config()
-                elif bool_backend_config_read_complete is True:
-                    bool_backend_allow_display = True
+                except Exception as e:
+                    print('[-- [CompileDevicesClass.run] Error running read_config:', e)
+
+            elif bool_backend_config_read_complete is True:
+                bool_backend_allow_display = True
+
+                try:
                     self.btn_refresh_recompile.setStyleSheet(self.btn_title_bar_style_1)
                     self.attempt_connect()
-                else:
-                    print('-- [CompileDevicesClass.run] bool_backend_config_read_complete:', bool_backend_config_read_complete)
-            except Exception as e:
-                print('[-- [CompileDevicesClass.run] Error:', e)
+                except Exception as e:
+                    print('[-- [CompileDevicesClass.run] Error running attempt_connect:', e)
+
             time.sleep(1)
 
     def stop(self):
@@ -5639,8 +5660,12 @@ class CompileDiskGUIDDictionaryListClass(QThread):
                                         # print('live key:', disk_let)
                                         if disk_let != dict_str:
                                             print('-- [CompileDiskGUIDDictionaryListClass.run] update key value pair:', disk_guid[iguid], '>>', disk_let, guid)
-                                            disk_guid[iguid] = {disk_let: guid}
-                                            # disk_guid.append({disk_let: guid})
+                                            try:
+                                                del disk_guid[iguid]
+                                                disk_guid.append({disk_let: guid})
+                                            except Exception as e:
+                                                print('-- [CompileDiskGUIDDictionaryListClass.run] Error:', e)
+
                                 except Exception as e:
                                     pass
                                 iguid += 1
@@ -5696,7 +5721,7 @@ class ExclusiveG2KeyEventClass_1(QThread):
                 kb_event = str(keyboard.read_key())
             except Exception as e:
                 print('-- [ExclusiveG2KeyEventClass.run] Error:', e)
-            time.sleep(0.1)
+            time.sleep(1)
 
         if len(kb_event) == 1:
             if kb_event in alpha_str:
@@ -5721,6 +5746,7 @@ class ExclusiveG2KeyEventClass_1(QThread):
                             print('-- [ExclusiveG2KeyEventClass_1.run] running command:', cmd)
                             os.system(cmd)
                     except Exception as e:
+                        print('-- [ExclusiveG2KeyEventClass_1.run] Error:', e)
                         pass
                     i += 1
 
@@ -5798,16 +5824,19 @@ class ExclusiveG2KeyEventClass(QThread):
                 kb_event = str(keyboard.read_key())
             except Exception as e:
                 print('-- [ExclusiveG2KeyEventClass.run] Error:', e)
-            time.sleep(0.1)
+            time.sleep(1)
 
         if len(kb_event) == 1:
             if kb_event in alpha_str:
-                umount_alpha = kb_event
-                umount_path = umount_alpha + ':'
-                print('-- [ExclusiveG2KeyEventClass.run] umount:', umount_alpha)
-                if os.path.exists(umount_path):
-                    cmd = 'mountvol '+umount_path+' /D'
-                    os.system(cmd)
+                try:
+                    umount_alpha = kb_event
+                    umount_path = umount_alpha + ':'
+                    print('-- [ExclusiveG2KeyEventClass.run] umount:', umount_alpha)
+                    if os.path.exists(umount_path):
+                        cmd = 'mountvol '+umount_path+' /D'
+                        os.system(cmd)
+                except Exception as e:
+                    print('-- [ExclusiveG2KeyEventClass_1.run] running command:', cmd)
 
         print('-- [ExclusiveG2KeyEventClass.run]: disarmed')
 
@@ -6971,6 +7000,9 @@ class HddMonClass(QThread):
 
     def run(self):
         print('-- [HddMonClass.run]: plugged in')
+
+        sdk.set_led_colors_flush_buffer()
+
         # pythoncom.CoInitialize()
         global devices_kb
         while True:
@@ -7033,6 +7065,7 @@ class HddMonClass(QThread):
                     if len(disk_letter_0) >= 2:
                         disk_letter_0 = disk_letter_0[1].replace(':', '')
                         self.disk_letter_complete.append(disk_letter_0)
+                        # print(disk_letter_0)
                 if objItem.DiskWriteBytesPersec is not None:
                     if objItem.DiskReadBytesPersec is not None:
                         if '_Total' not in objItem.Name:
@@ -7080,7 +7113,8 @@ class HddMonClass(QThread):
 
         except Exception as e:
             print('-- [HddMonClass.get_stat] Error:', e)
-            sdk.set_led_colors_flush_buffer()
+
+        sdk.set_led_colors_flush_buffer()
 
     def convert_bytes(self, num):
         global hdd_bytes_type_w, hdd_bytes_type_r, hdd_bytes_str
