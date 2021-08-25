@@ -82,6 +82,7 @@ def initialize_priority():
 avail_w = ()
 avail_h = ()
 ui_object_complete = []
+disk_guid = []
 power_plan = ['', '', '', '']
 power_plan_index = 0
 backlight_time_0 = ''
@@ -92,7 +93,9 @@ hdd_bytes_str = ''
 str_path_kb_img = ''
 str_path_ms_img = ''
 g_key_pressed = ''
+umount_alpha = ''
 time_now_press = float()
+bool_switch_g2_disks = False
 bool_onpress_clause_g1 = False
 bool_onpress_clause_g2 = False
 bool_onpress_clause_g3 = False
@@ -130,6 +133,9 @@ bool_backend_icue_connected_previous = None
 bool_backend_config_read_complete = False
 bool_backend_valid_network_adapter_name = False
 bool_switch_startup_media_display = False
+thread_exclusive_gkey_event_1 = []
+thread_disk_guid = []
+thread_exclusive_gkey_event = []
 thread_gkey_pressed = []
 thread_keyevents = []
 thread_overlay = []
@@ -274,7 +280,8 @@ config_data = ['sdk_color_cpu_on: 255,255,0',
                'bool_power_plan_interact: false',
                'bool_powershell_interact: false',
                'bool_backlight_interact: false',
-               'bool_switch_fahrenheit: false']
+               'bool_switch_fahrenheit: false',
+               'bool_switch_g2_disks: false']
 
 
 def create_new():
@@ -2077,6 +2084,29 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_power_plan)
         self.btn_power_plan.setToolTip('G1 Power Plan\n\nEnables/Disables G1 Power Plan.')
 
+        self.lbl_g2_disk = QPushButton(self)
+        self.lbl_g2_disk.move(self.menu_obj_pos_w + 2, self.height - (4 * 5) - (self.monitor_btn_h * 5))
+        self.lbl_g2_disk.resize(126, self.monitor_btn_h)
+        self.lbl_g2_disk.setFont(self.font_s8b)
+        self.lbl_g2_disk.setText('G2 Disks')
+        self.lbl_g2_disk.setStyleSheet(self.btn_menu_style)
+        self.lbl_g2_disk.clicked.connect(self.btn_g2_disk_function)
+        print('-- [App.__init__] created:', self.lbl_g2_disk)
+        ui_object_complete.append(self.lbl_g2_disk)
+        ui_object_font_list_s8b.append(self.lbl_g2_disk)
+        self.lbl_power_plan.setToolTip('G2 Disks\n\nEnables/Disables G2 Disks\n\n1 Second Hold [Yellow G2]: (in development)\n2 Seconds [Amber G2]: Mount\n3 Seconds [Red G2]: Unmount\n4 Seconds [White G1]: Cancel\n\nNote: Only drives that have been unmounted while iCUE Display has been running can be mounted.\nAny drive assigned a Disk Letter can be mounted/unmounted when the alpha keys reflect your expressed intent.\n\niCUE Display is still in development. It is recommended to turn off Disk Monitor and Network Traffic if using this feature until this feature is finished.')
+
+        self.btn_g2_disk = QPushButton(self)
+        self.btn_g2_disk.move(self.menu_obj_pos_w + 2 + 4 + 126, self.height - (4 * 5) - (self.monitor_btn_h * 5))
+        self.btn_g2_disk.resize(28, 28)
+        self.btn_g2_disk.setStyleSheet(self.btn_menu_style)
+        self.btn_g2_disk.setIconSize(self.tog_switch_ico_sz)
+        self.btn_g2_disk.clicked.connect(self.btn_g2_disk_function)
+        print('-- [App.__init__] created:', self.btn_g2_disk)
+        self.object_interaction_enabled.append(self.btn_g2_disk)
+        ui_object_complete.append(self.btn_g2_disk)
+        self.btn_g2_disk.setToolTip('G2 Disks\n\nEnables/Disables G2 Disks.')
+
         """ Power Saver """
         self.lbl_power_plan_key_0 = QLabel(self)
         self.lbl_power_plan_key_0.move(self.menu_obj_pos_w + 2, self.height - (4 * 6) - (self.monitor_btn_h * 6) - 4 - 10)
@@ -2445,6 +2475,30 @@ class App(QMainWindow):
 
         print('-- [btn_power_plan_function] setting bool_power_plan_interact:', bool_power_plan_interact)
 
+    def btn_g2_disk_function(self):
+        print('-- [btn_g2_disk_function]: plugged in')
+        global bool_switch_g2_disks
+        self.setFocus()
+
+        if bool_switch_g2_disks is True:
+            if self.write_engaged is False:
+                print('-- [App.btn_g2_disk_function] changing bool_switch_g2_disks:', bool_switch_g2_disks)
+                self.write_var = 'bool_switch_g2_disks: false'
+                self.write_changes()
+            self.btn_g2_disk.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            bool_switch_g2_disks = False
+
+        elif bool_switch_g2_disks is False:
+            if self.write_engaged is False:
+                print('-- [App.btn_g2_disk_function] changing bool_switch_g2_disks:', bool_switch_g2_disks)
+                self.write_var = 'bool_switch_g2_disks: true'
+                self.write_changes()
+            self.btn_g2_disk.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            bool_switch_g2_disks = True
+
+        print('-- [btn_power_plan_function] setting bool_switch_g2_disks:', bool_switch_g2_disks)
+
+
     def btn_execution_policy_0_function(self):
         global bool_execution_policy_show
         print('-- [btn_execution_policy_0_function] unrestricted execution policy accepted: plugged in')
@@ -2678,6 +2732,9 @@ class App(QMainWindow):
         self.btn_powershell.show()
         self.lbl_g5_backlight.show()
         self.btn_g5_backlight.show()
+
+        self.lbl_g2_disk.show()
+        self.btn_g2_disk.show()
 
     def feature_pg_execution_policy(self):
         print('-- [App.feature_pg_execution_policy]: plugged in')
@@ -3833,9 +3890,19 @@ class App(QMainWindow):
 
     def g2_function_long_2sec(self):
         print('-- [App.g2_function_long_2sec]: plugged in')
+        global thread_disk_rw, thread_exclusive_gkey_event, thread_exclusive_gkey_event_1
+        thread_exclusive_gkey_event[0].stop()
+        thread_exclusive_gkey_event_1[0].stop()
+        thread_disk_rw[0].stop()
+        thread_exclusive_gkey_event_1[0].start()
 
     def g2_function_long_3sec(self):
         print('-- [App.g2_function_long_3sec]: plugged in')
+        global thread_disk_rw, thread_exclusive_gkey_event, thread_exclusive_gkey_event_1
+        thread_exclusive_gkey_event[0].stop()
+        thread_exclusive_gkey_event_1[0].stop()
+        thread_disk_rw[0].stop()
+        thread_exclusive_gkey_event[0].start()
 
     def g3_function_short(self):
         print('-- [App.g3_function_short]: plugged in')
@@ -3925,6 +3992,10 @@ class App(QMainWindow):
         global bool_backlight_interact
         global bool_switch_fahrenheit
         global thread_gkey_pressed
+        global bool_switch_g2_disks
+        global thread_exclusive_gkey_event
+        global thread_disk_guid
+        global thread_exclusive_gkey_event_1
 
         hdd_mon_thread = HddMonClass()
         thread_disk_rw.append(hdd_mon_thread)
@@ -3982,7 +4053,15 @@ class App(QMainWindow):
         thread_keyevents.append(keyeventsthread)
         on_gkey_pressed_thread = OnPressClass()
         thread_gkey_pressed.append(on_gkey_pressed_thread)
+        exclusive_gkey_event_thread = ExclusiveG2KeyEventClass()
+        thread_exclusive_gkey_event.append(exclusive_gkey_event_thread)
+        exclusive_gkey_event_thread_1 = ExclusiveG2KeyEventClass_1()
+        thread_exclusive_gkey_event_1.append(exclusive_gkey_event_thread_1)
 
+        disk_guid_thread = CompileDiskGUIDDictionaryListClass()
+        thread_disk_guid.append(disk_guid_thread)
+        thread_disk_guid[0].start()
+        
         self.lbl_title.show()
         self.btn_con_stat_name.show()
 
@@ -3990,6 +4069,11 @@ class App(QMainWindow):
         while bool_backend_allow_display is False:
             time.sleep(0.1)
         print('-- [App.initUI]: displaying application')
+
+        if bool_switch_g2_disks is True:
+            self.btn_g2_disk.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+        elif bool_switch_g2_disks is False:
+            self.btn_g2_disk.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
         if bool_switch_fahrenheit is True:
             self.btn_fahrenheit.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
@@ -4549,6 +4633,7 @@ class CompileDevicesClass(QThread):
         global bool_powershell_interact
         global bool_backlight_interact
         global bool_switch_fahrenheit
+        global bool_switch_g2_disks
 
         startup_loc = '/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/iCUEDisplay.lnk'
         bool_backend_valid_network_adapter_name = False
@@ -4836,6 +4921,12 @@ class CompileDevicesClass(QThread):
                     bool_switch_fahrenheit = True
                 if line == 'bool_switch_fahrenheit: false':
                     bool_switch_fahrenheit = False
+
+                if line == 'bool_switch_g2_disks: true':
+                    bool_switch_g2_disks = True
+                if line == 'bool_switch_g2_disks: false':
+                    bool_switch_g2_disks = False
+
 
         print('-- [ConfigCompile.read_config] sdk_color_cpu_on:', sdk_color_cpu_on)
         print('-- [ConfigCompile.read_config] timing_cpu_util:', timing_cpu_util)
@@ -5324,6 +5415,242 @@ class SdkEventHandlerClass(QThread):
         self.terminate()
 
 
+class CompileDiskGUIDDictionaryListClass(QThread):
+    print('-- [CompileDiskGUIDDictionaryListClass]: plugged in')
+
+    def __init__(self):
+        QThread.__init__(self)
+
+    def run(self):
+        print('-- [CompileDiskGUIDDictionaryListClass.run]: plugged in')
+        global disk_guid
+
+        while True:
+            # subprocess
+            cmd_output = []
+            xcmd = subprocess.Popen("powershell mountvol", stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            while True:
+                output = xcmd.stdout.readline()
+                if output == '' and xcmd.poll() is not None:
+                    break
+                if output:
+                    cmd_output.append(str(output.decode("utf-8").strip()))
+                else:
+                    break
+                rc = xcmd.poll()
+
+            # parse subprocess output
+            guid = ''
+            disk_let = ''
+            i_1 = 0
+            for _ in cmd_output:
+                # print('-- [CompileDiskGUIDDictionaryListClass.run] raw output:', _)
+
+                if len(_) == 3:
+                    if os.path.exists(_):
+                        # if cmd_output[i-1].startswith('\\\\'):  # and os.path.exists(_+'\\')
+                        icmd = i_1 - 1
+                        guid = cmd_output[icmd]
+                        disk_let = _
+
+                        # print('-- [CompileDiskGUIDDictionaryListClass.run] raw output:', _, guid)
+
+                        # Create a list of all values in list of dictionaries
+                        list_of_all_values = [value for elem in disk_guid for value in elem.values()]
+
+                        # add dictionary to list
+                        if guid not in list_of_all_values:
+                            if guid.startswith('\\\\'):
+                                # print('appending:', disk_let, guid)
+                                disk_guid.append({disk_let: guid})
+
+                        # else update key value pair in list
+                        elif guid in list_of_all_values:
+                            # print('check')
+
+                            iguid = 0
+                            for disk_guids in disk_guid:
+                                # print(disk_guid[iguid])
+                                try:
+
+                                    dict_str = str(disk_guid[iguid])
+                                    dict_str = dict_str.replace("{'", "")
+                                    dict_str = dict_str[:1]
+                                    dict_str = dict_str+':\\'
+                                    # print('dict key:', dict_str)
+
+                                    if disk_guid[iguid][dict_str] == guid:
+                                        # print('target:', disk_guid[iguid])
+
+                                        # print('live key:', disk_let)
+                                        if disk_let != dict_str:
+                                            print('-- [CompileDiskGUIDDictionaryListClass.run] update key value pair:', disk_guid[iguid], '>>', disk_let, guid)
+                                            del disk_guid[iguid]
+                                            disk_guid.append({disk_let: guid})
+
+                                except Exception as e:
+                                    pass
+
+                                iguid += 1
+                i_1 += 1
+
+            # i_3 = 0
+            # for _ in disk_guid:
+            #     print('-- [CompileDiskGUIDDictionaryListClass.run] dictionary:', _)
+            #     i_3 += 1
+            time.sleep(2)
+
+    def stop(self):
+        print('-- [CompileDiskGUIDDictionaryListClass.stop]: plugged in')
+        self.terminate()
+
+
+class ExclusiveG2KeyEventClass_1(QThread):
+    print('-- [ExclusiveG2KeyEventClass_1]: plugged in')
+
+    def __init__(self):
+        QThread.__init__(self)
+
+    def run(self):
+        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, corsairled_id_num_hddreadwrite
+        global bool_switch_startup_hdd_read_write, disk_guid
+        print('-- [ExclusiveG2KeyEventClass_1.run]: plugged in')
+
+        try:
+            """ arm """
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 100, 0)}))
+            g2_function_long_i = 0
+            for _ in corsairled_id_num_hddreadwrite:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: (255, 100, 0)}))
+                g2_function_long_i += 1
+            # sdk.set_led_colors_flush_buffer()
+        except Exception as e:
+            print('-- [ExclusiveG2KeyEventClass_1.run] Error:', e)
+        sdk.set_led_colors_flush_buffer()
+
+        kb_event = ''
+
+        i = 0
+        while True:
+            kb_event = str(keyboard.read_key())
+            print(i, 'wait')
+            if kb_event != '':
+                break
+            time.sleep(0.1)
+            i += 1
+
+        if len(kb_event) == 1:
+            if kb_event in alpha_str:
+                mount_alpha = kb_event+':\\'
+                print('-- [ExclusiveG2KeyEventClass_1.run] mount:', mount_alpha)
+                i = 0
+                for _ in disk_guid:
+                    try:
+                        dict_str = str(_)
+                        dict_str = dict_str.replace("{'", "")
+                        dict_str = dict_str[:1]
+                        dict_str = dict_str + ':\\'
+                        # print('dict key:', dict_str)
+                        # print('mount_alpha:', mount_alpha)ggzgddzgzzee
+                        if canonical_caseless(dict_str) == canonical_caseless(mount_alpha):
+                            print('target:', _)
+
+                            guid = disk_guid[i][dict_str]
+                            print('guid:', guid)
+                            dict_str = dict_str.replace('\\', '')
+
+                            cmd = str("powershell mountvol "+dict_str+" '"+guid+"'")
+                            print('cmd:', cmd)
+
+                            print('-- [ExclusiveG2KeyEventClass_1.run] running command:', cmd)
+                            os.system(cmd)
+
+                    except Exception as e:
+                        pass
+                    i += 1
+
+        try:
+            """ disarm """
+            g2_function_long_i = 0
+            for _ in corsairled_id_num_hddreadwrite:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: sdk_color_backlight}))
+                g2_function_long_i += 1
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: sdk_color_backlight}))
+            # sdk.set_led_colors_flush_buffer()
+        except Exception as e:
+            print('-- [ExclusiveG2KeyEventClass_1.run] Error:', e)
+        sdk.set_led_colors_flush_buffer()
+
+        if bool_switch_startup_hdd_read_write is True:
+            thread_disk_rw[0].start()
+
+    def stop(self):
+        print('-- [ExclusiveG2KeyEventClass_1.stop]: plugged in')
+        self.terminate()
+
+
+class ExclusiveG2KeyEventClass(QThread):
+    print('-- [ExclusiveG2KeyEventClass]: plugged in')
+
+    def __init__(self):
+        QThread.__init__(self)
+
+    def run(self):
+        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, corsairled_id_num_hddreadwrite
+        global bool_switch_startup_hdd_read_write, disk_guid
+        print('-- [ExclusiveG2KeyEventClass.run]: plugged in')
+
+        try:
+            """ arm """
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 0, 0)}))
+            g2_function_long_i = 0
+            for _ in corsairled_id_num_hddreadwrite:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: (255, 0, 0)}))
+                g2_function_long_i += 1
+        except Exception as e:
+            print('-- [ExclusiveG2KeyEventClass.run] Error:', e)
+        sdk.set_led_colors_flush_buffer()
+
+        kb_event = ''
+
+        i = 0
+        while True:
+            kb_event = str(keyboard.read_key())
+            print(i, 'wait')
+            if kb_event != '':
+                break
+            time.sleep(0.1)
+            i += 1
+
+        if len(kb_event) == 1:
+            if kb_event in alpha_str:
+                umount_alpha = kb_event
+                umount_path = umount_alpha + ':'
+                print('-- [ExclusiveG2KeyEventClass.run] umount:', umount_alpha)
+                if os.path.exists(umount_path):
+                    cmd = 'mountvol '+umount_path+' /D'
+                    os.system(cmd)
+
+        try:
+            """ disarm """
+            g2_function_long_i = 0
+            for _ in corsairled_id_num_hddreadwrite:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: sdk_color_backlight}))
+                g2_function_long_i += 1
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: sdk_color_backlight}))
+            # sdk.set_led_colors_flush_buffer()
+        except Exception as e:
+            print('-- [ExclusiveG2KeyEventClass.run] Error:', e)
+        sdk.set_led_colors_flush_buffer()
+
+        if bool_switch_startup_hdd_read_write is True:
+            thread_disk_rw[0].start()
+
+    def stop(self):
+        print('-- [ExclusiveG2KeyEventClass.stop]: plugged in')
+        self.terminate()
+
+
 class KeyEventClass(QThread):
     print('-- [KeyEventClass]: plugged in')
 
@@ -5354,7 +5681,6 @@ class KeyEventClass(QThread):
             self.capslock_function()
             """ Example use of keyboard module
             keyboard.wait('-')
-            print('-- [KeyEventClass.run]: plugged in')
             """
             time.sleep(0.1)
 
