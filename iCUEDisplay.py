@@ -134,9 +134,10 @@ bool_backend_icue_connected_previous = None
 bool_backend_config_read_complete = False
 bool_backend_valid_network_adapter_name = False
 bool_switch_startup_media_display = False
-thread_exclusive_gkey_event_1 = []
+thread_exclusive_gkey_event_eject = []
+thread_exclusive_gkey_event_mount = []
 thread_disk_guid = []
-thread_exclusive_gkey_event = []
+thread_exclusive_gkey_event_unmount = []
 thread_gkey_pressed = []
 thread_keyevents = []
 thread_overlay = []
@@ -2096,7 +2097,7 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.lbl_g2_disk)
         ui_object_complete.append(self.lbl_g2_disk)
         ui_object_font_list_s8b.append(self.lbl_g2_disk)
-        self.lbl_g2_disk.setToolTip('G2 Disks\n\nEnables/Disables G2 Disks\n\n1 Second Hold [Yellow G2]: Mount\n2 Seconds [Amber G2]: Unmount\n4 Seconds [White G1]: Cancel\n\nNote: Only drives that have been unmounted while iCUE Display has been running can be mounted.\nAny drive assigned a Disk Letter can be mounted/unmounted when the alpha keys reflect your expressed intent.')
+        self.lbl_g2_disk.setToolTip('G2 Disks\n\nEnables/Disables G2 Disks\n\n1 Second Hold [Yellow G2]: Eject\n2 Seconds [Amber G2]: Mount\n3 Seconds [Red]: Unmount\n4 Seconds [White G1]: Cancel\n\nNote: Only drives that have been unmounted while iCUE Display has been running can be mounted.\nAny drive assigned a Disk Letter can be ejected/mounted/unmounted when the alpha keys reflect your expressed intent.')
 
         self.btn_g2_disk = QPushButton(self)
         self.btn_g2_disk.move(self.menu_obj_pos_w + 2 + 4 + 126, self.height - (4 * 5) - (self.monitor_btn_h * 5))
@@ -2379,12 +2380,12 @@ class App(QMainWindow):
         self.initUI()
 
     def icuedisplay_quit_function(self):
-        global thread_compile_devices, thread_keyevents, thread_exclusive_gkey_event, thread_exclusive_gkey_event_1
+        global thread_compile_devices, thread_keyevents, thread_exclusive_gkey_event_unmount, thread_exclusive_gkey_event_mount
         global thread_gkey_pressed, thread_sdk_event_handler, thread_test_locked
 
         thread_keyevents[0].stop()
-        thread_exclusive_gkey_event[0].stop()
-        thread_exclusive_gkey_event_1[0].stop()
+        thread_exclusive_gkey_event_unmount[0].stop()
+        thread_exclusive_gkey_event_mount[0].stop()
         thread_gkey_pressed[0].stop()
         thread_sdk_event_handler[0].stop()
         thread_test_locked[0].stop()
@@ -3903,16 +3904,20 @@ class App(QMainWindow):
 
     def g2_function_long(self):
         print('-- [App.g2_function_long]: plugged in')
-        global thread_disk_rw, thread_exclusive_gkey_event, thread_exclusive_gkey_event_1, bool_exclsuive_g2key_allow
+        global thread_disk_rw, thread_exclusive_gkey_event_eject, thread_exclusive_gkey_event_unmount, thread_exclusive_gkey_event_mount, bool_exclsuive_g2key_allow
         print('bool_exclsuive_g2key_allow:', bool_exclsuive_g2key_allow)
         if bool_exclsuive_g2key_allow is True:
             bool_exclsuive_g2key_allow = False
             try:
-                thread_exclusive_gkey_event[0].stop()
+                thread_exclusive_gkey_event_eject[0].stop()
             except Exception as e:
                 print('-- [App.g2_function_long] Error:', e)
             try:
-                thread_exclusive_gkey_event_1[0].stop()
+                thread_exclusive_gkey_event_unmount[0].stop()
+            except Exception as e:
+                print('-- [App.g2_function_long] Error:', e)
+            try:
+                thread_exclusive_gkey_event_mount[0].stop()
             except Exception as e:
                 print('-- [App.g2_function_long] Error:', e)
             try:
@@ -3920,23 +3925,27 @@ class App(QMainWindow):
             except Exception as e:
                 print('-- [App.g2_function_long] Error:', e)
             try:
-                thread_exclusive_gkey_event_1[0].start()
+                thread_exclusive_gkey_event_eject[0].start()
             except Exception as e:
                 print('-- [App.g2_function_long] Error:', e)
             bool_exclsuive_g2key_allow = True
 
     def g2_function_long_2sec(self):
         print('-- [App.g2_function_long_2sec]: plugged in')
-        global thread_disk_rw, thread_exclusive_gkey_event, thread_exclusive_gkey_event_1, bool_exclsuive_g2key_allow
+        global thread_disk_rw, thread_exclusive_gkey_event_eject, thread_exclusive_gkey_event_unmount, thread_exclusive_gkey_event_mount, bool_exclsuive_g2key_allow
         print('bool_exclsuive_g2key_allow:', bool_exclsuive_g2key_allow)
         if bool_exclsuive_g2key_allow is True:
             bool_exclsuive_g2key_allow = False
             try:
-                thread_exclusive_gkey_event[0].stop()
+                thread_exclusive_gkey_event_eject[0].stop()
             except Exception as e:
                 print('-- [App.g2_function_long] Error:', e)
             try:
-                thread_exclusive_gkey_event_1[0].stop()
+                thread_exclusive_gkey_event_unmount[0].stop()
+            except Exception as e:
+                print('-- [App.g2_function_long] Error:', e)
+            try:
+                thread_exclusive_gkey_event_mount[0].stop()
             except Exception as e:
                 print('-- [App.g2_function_long] Error:', e)
             try:
@@ -3944,13 +3953,34 @@ class App(QMainWindow):
             except Exception as e:
                 print('-- [App.g2_function_long] Error:', e)
             try:
-                thread_exclusive_gkey_event[0].start()
+                thread_exclusive_gkey_event_mount[0].start()
             except Exception as e:
                 print('-- [App.g2_function_long] Error:', e)
             bool_exclsuive_g2key_allow = True
 
     def g2_function_long_3sec(self):
         print('-- [App.g2_function_long_3sec]: plugged in')
+        global thread_disk_rw, thread_exclusive_gkey_event_unmount, thread_exclusive_gkey_event_mount, bool_exclsuive_g2key_allow
+        print('bool_exclsuive_g2key_allow:', bool_exclsuive_g2key_allow)
+        if bool_exclsuive_g2key_allow is True:
+            bool_exclsuive_g2key_allow = False
+            try:
+                thread_exclusive_gkey_event_unmount[0].stop()
+            except Exception as e:
+                print('-- [App.g2_function_long] Error:', e)
+            try:
+                thread_exclusive_gkey_event_mount[0].stop()
+            except Exception as e:
+                print('-- [App.g2_function_long] Error:', e)
+            try:
+                thread_disk_rw[0].stop()
+            except Exception as e:
+                print('-- [App.g2_function_long] Error:', e)
+            try:
+                thread_exclusive_gkey_event_unmount[0].start()
+            except Exception as e:
+                print('-- [App.g2_function_long] Error:', e)
+            bool_exclsuive_g2key_allow = True
 
     def g3_function_short(self):
         print('-- [App.g3_function_short]: plugged in')
@@ -4041,9 +4071,10 @@ class App(QMainWindow):
         global bool_switch_fahrenheit
         global thread_gkey_pressed
         global bool_switch_g2_disks
-        global thread_exclusive_gkey_event
+        global thread_exclusive_gkey_event_unmount
         global thread_disk_guid
-        global thread_exclusive_gkey_event_1
+        global thread_exclusive_gkey_event_mount
+        global thread_exclusive_gkey_event_eject
 
         hdd_mon_thread = HddMonClass()
         thread_disk_rw.append(hdd_mon_thread)
@@ -4101,10 +4132,13 @@ class App(QMainWindow):
         thread_keyevents.append(keyeventsthread)
         on_gkey_pressed_thread = OnPressClass()
         thread_gkey_pressed.append(on_gkey_pressed_thread)
-        exclusive_gkey_event_thread = ExclusiveG2KeyEventClass()
-        thread_exclusive_gkey_event.append(exclusive_gkey_event_thread)
-        exclusive_gkey_event_thread_1 = ExclusiveG2KeyEventClass_1()
-        thread_exclusive_gkey_event_1.append(exclusive_gkey_event_thread_1)
+
+        exclusive_gkey_event_eject_thread = ExclusiveG2KeyEventEjectClass()
+        thread_exclusive_gkey_event_eject.append(exclusive_gkey_event_eject_thread)
+        exclusive_gkey_event_unmount_thread = ExclusiveG2KeyEventUnMountClass()
+        thread_exclusive_gkey_event_unmount.append(exclusive_gkey_event_unmount_thread)
+        exclusive_gkey_event_mount_thread = ExclusiveG2KeyEventMountClass()
+        thread_exclusive_gkey_event_mount.append(exclusive_gkey_event_mount_thread)
 
         disk_guid_thread = CompileDiskGUIDDictionaryListClass()
         thread_disk_guid.append(disk_guid_thread)
@@ -5677,8 +5711,8 @@ class CompileDiskGUIDDictionaryListClass(QThread):
         self.terminate()
 
 
-class ExclusiveG2KeyEventClass_1(QThread):
-    print('-- [ExclusiveG2KeyEventClass_1]: plugged in')
+class ExclusiveG2KeyEventMountClass(QThread):
+    print('-- [ExclusiveG2KeyEventMountClass]: plugged in')
 
     def __init__(self):
         QThread.__init__(self)
@@ -5688,45 +5722,45 @@ class ExclusiveG2KeyEventClass_1(QThread):
         global bool_switch_startup_hdd_read_write, disk_guid
         global thread_disk_rw
 
-        print('-- [ExclusiveG2KeyEventClass_1.run]: plugged in')
+        print('-- [ExclusiveG2KeyEventMountClass.run]: plugged in')
 
         sdk.set_led_colors_flush_buffer()
 
         try:
             """ arm """
-            print('-- [ExclusiveG2KeyEventClass_1.run]: trace 1')
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 255, 0)}))
+            print('-- [ExclusiveG2KeyEventMountClass.run]: trace 1')
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 100, 0)}))
         except Exception as e:
-            print('-- [ExclusiveG2KeyEventClass_1.run] Error:', e)
+            print('-- [ExclusiveG2KeyEventMountClass.run] Error:', e)
 
-        print('-- [ExclusiveG2KeyEventClass_1.run]: trace 2')
+        print('-- [ExclusiveG2KeyEventMountClass.run]: trace 2')
 
         sdk.set_led_colors_flush_buffer()
 
         g2_function_long_i = 0
         for _ in corsairled_id_num_hddreadwrite:
             try:
-                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: (255, 255, 0)}))
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: (255, 100, 0)}))
             except Exception as e:
-                print('-- [ExclusiveG2KeyEventClass_1.run] Error:', e)
+                print('-- [ExclusiveG2KeyEventMountClass.run] Error:', e)
             g2_function_long_i += 1
 
         sdk.set_led_colors_flush_buffer()
 
-        print('-- [ExclusiveG2KeyEventClass_1.run]: armed')
+        print('-- [ExclusiveG2KeyEventMountClass.run]: armed')
 
         kb_event = ''
         while kb_event == '':
             try:
                 kb_event = str(keyboard.read_key())
             except Exception as e:
-                print('-- [ExclusiveG2KeyEventClass.run] Error:', e)
+                print('-- [ExclusiveG2KeyEventMountClass.run] Error:', e)
             time.sleep(1)
 
         if len(kb_event) == 1:
             if kb_event in alpha_str:
                 mount_alpha = kb_event+':\\'
-                print('-- [ExclusiveG2KeyEventClass_1.run] mount:', mount_alpha)
+                print('-- [ExclusiveG2KeyEventMountClass.run] mount:', mount_alpha)
                 i = 0
                 for _ in disk_guid:
                     try:
@@ -5743,14 +5777,14 @@ class ExclusiveG2KeyEventClass_1(QThread):
                             dict_str = dict_str.replace('\\', '')
                             cmd = str("powershell mountvol "+dict_str+" '"+guid+"'")
                             print('cmd:', cmd)
-                            print('-- [ExclusiveG2KeyEventClass_1.run] running command:', cmd)
+                            print('-- [ExclusiveG2KeyEventMountClass.run] running command:', cmd)
                             os.system(cmd)
                     except Exception as e:
-                        print('-- [ExclusiveG2KeyEventClass_1.run] Error:', e)
+                        print('-- [ExclusiveG2KeyEventMountClass.run] Error:', e)
                         pass
                     i += 1
 
-        print('-- [ExclusiveG2KeyEventClass_1.run]: disarmed')
+        print('-- [ExclusiveG2KeyEventMountClass.run]: disarmed')
 
         sdk.set_led_colors_flush_buffer()
 
@@ -5760,7 +5794,7 @@ class ExclusiveG2KeyEventClass_1(QThread):
             try:
                 sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: sdk_color_backlight}))
             except Exception as e:
-                print('-- [ExclusiveG2KeyEventClass.run] Error:', e)
+                print('-- [ExclusiveG2KeyEventMountClass.run] Error:', e)
             g2_function_long_i += 1
 
         sdk.set_led_colors_flush_buffer()
@@ -5768,7 +5802,7 @@ class ExclusiveG2KeyEventClass_1(QThread):
         try:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: sdk_color_backlight}))
         except Exception as e:
-            print('-- [ExclusiveG2KeyEventClass.run] Error:', e)
+            print('-- [ExclusiveG2KeyEventMountClass.run] Error:', e)
 
         sdk.set_led_colors_flush_buffer()
 
@@ -5777,12 +5811,12 @@ class ExclusiveG2KeyEventClass_1(QThread):
             thread_disk_rw[0].start()
 
     def stop(self):
-        print('-- [ExclusiveG2KeyEventClass_1.stop]: plugged in')
+        print('-- [ExclusiveG2KeyEventMountClass.stop]: plugged in')
         self.terminate()
 
 
-class ExclusiveG2KeyEventClass(QThread):
-    print('-- [ExclusiveG2KeyEventClass]: plugged in')
+class ExclusiveG2KeyEventEjectClass(QThread):
+    print('-- [ExclusiveG2KeyEventEjectClass]: plugged in')
 
     def __init__(self):
         QThread.__init__(self)
@@ -5790,55 +5824,57 @@ class ExclusiveG2KeyEventClass(QThread):
     def run(self):
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, corsairled_id_num_hddreadwrite
         global bool_switch_startup_hdd_read_write, disk_guid, thread_disk_rw
-        print('-- [ExclusiveG2KeyEventClass.run]: plugged in')
+        print('-- [ExclusiveG2KeyEventEjectClass.run]: plugged in')
 
         sdk.set_led_colors_flush_buffer()
 
         try:
             """ arm """
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 100, 0)}))
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 255, 0)}))
         except Exception as e:
-            print('-- [ExclusiveG2KeyEventClass.run] Error:', e)
+            print('-- [ExclusiveG2KeyEventEjectClass.run] Error:', e)
 
-        print('-- [ExclusiveG2KeyEventClass.run]: trace 1')
+        print('-- [ExclusiveG2KeyEventEjectClass.run]: trace 1')
 
         sdk.set_led_colors_flush_buffer()
 
         g2_function_long_i = 0
         for _ in corsairled_id_num_hddreadwrite:
             try:
-                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: (255, 100, 0)}))
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: (255, 255, 0)}))
             except Exception as e:
-                print('-- [ExclusiveG2KeyEventClass.run] Error:', e)
+                print('-- [ExclusiveG2KeyEventEjectClass.run] Error:', e)
             g2_function_long_i += 1
 
-        print('-- [ExclusiveG2KeyEventClass.run]: trace 2')
+        print('-- [ExclusiveG2KeyEventEjectClass.run]: trace 2')
 
         sdk.set_led_colors_flush_buffer()
 
-        print('-- [ExclusiveG2KeyEventClass.run]: armed')
+        print('-- [ExclusiveG2KeyEventEjectClass.run]: armed')
 
         kb_event = ''
         while kb_event == '':
             try:
                 kb_event = str(keyboard.read_key())
             except Exception as e:
-                print('-- [ExclusiveG2KeyEventClass.run] Error:', e)
+                print('-- [ExclusiveG2KeyEventEjectClass.run] Error:', e)
             time.sleep(1)
 
         if len(kb_event) == 1:
             if kb_event in alpha_str:
                 try:
-                    umount_alpha = kb_event
-                    umount_path = umount_alpha + ':'
-                    print('-- [ExclusiveG2KeyEventClass.run] umount:', umount_alpha)
-                    if os.path.exists(umount_path):
-                        cmd = 'mountvol '+umount_path+' /D'
-                        os.system(cmd)
+                    eject_alpha = kb_event
+                    eject_alpha = eject_alpha + ':'
+                    if os.path.exists(eject_alpha):
+                        print('-- [ExclusiveG2KeyEventEjectClass.run] ejecting:', eject_alpha)
+                        cmd_0 = "powershell "+"$Eject = New-Object -comObject Shell.Application; $Eject.NameSpace(17).ParseName("
+                        cmd_1 = "'"+eject_alpha+"'"
+                        cmd_2 = cmd_0 + cmd_1+").InvokeVerb('Eject')"
+                        os.system(cmd_2)
                 except Exception as e:
-                    print('-- [ExclusiveG2KeyEventClass_1.run] running command:', cmd)
+                    print('-- [ExclusiveG2KeyEventEjectClass.run] running command:', cmd)
 
-        print('-- [ExclusiveG2KeyEventClass.run]: disarmed')
+        print('-- [ExclusiveG2KeyEventEjectClass.run]: disarmed')
 
         sdk.set_led_colors_flush_buffer()
 
@@ -5848,7 +5884,7 @@ class ExclusiveG2KeyEventClass(QThread):
             try:
                 sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: sdk_color_backlight}))
             except Exception as e:
-                print('-- [ExclusiveG2KeyEventClass.run] Error:', e)
+                print('-- [ExclusiveG2KeyEventEjectClass.run] Error:', e)
             g2_function_long_i += 1
 
         sdk.set_led_colors_flush_buffer()
@@ -5856,7 +5892,7 @@ class ExclusiveG2KeyEventClass(QThread):
         try:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: sdk_color_backlight}))
         except Exception as e:
-            print('-- [ExclusiveG2KeyEventClass.run] Error:', e)
+            print('-- [ExclusiveG2KeyEventEjectClass.run] Error:', e)
 
         sdk.set_led_colors_flush_buffer()
 
@@ -5865,7 +5901,95 @@ class ExclusiveG2KeyEventClass(QThread):
             thread_disk_rw[0].start()
 
     def stop(self):
-        print('-- [ExclusiveG2KeyEventClass.stop]: plugged in')
+        print('-- [ExclusiveG2KeyEventEjectClass.stop]: plugged in')
+        self.terminate()
+
+
+class ExclusiveG2KeyEventUnMountClass(QThread):
+    print('-- [ExclusiveG2KeyEventUnMountClass]: plugged in')
+
+    def __init__(self):
+        QThread.__init__(self)
+
+    def run(self):
+        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, corsairled_id_num_hddreadwrite
+        global bool_switch_startup_hdd_read_write, disk_guid, thread_disk_rw
+        print('-- [ExclusiveG2KeyEventUnMountClass.run]: plugged in')
+
+        sdk.set_led_colors_flush_buffer()
+
+        try:
+            """ arm """
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 0, 0)}))
+        except Exception as e:
+            print('-- [ExclusiveG2KeyEventUnMountClass.run] Error:', e)
+
+        print('-- [ExclusiveG2KeyEventUnMountClass.run]: trace 1')
+
+        sdk.set_led_colors_flush_buffer()
+
+        g2_function_long_i = 0
+        for _ in corsairled_id_num_hddreadwrite:
+            try:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: (255, 0, 0)}))
+            except Exception as e:
+                print('-- [ExclusiveG2KeyEventUnMountClass.run] Error:', e)
+            g2_function_long_i += 1
+
+        print('-- [ExclusiveG2KeyEventUnMountClass.run]: trace 2')
+
+        sdk.set_led_colors_flush_buffer()
+
+        print('-- [ExclusiveG2KeyEventUnMountClass.run]: armed')
+
+        kb_event = ''
+        while kb_event == '':
+            try:
+                kb_event = str(keyboard.read_key())
+            except Exception as e:
+                print('-- [ExclusiveG2KeyEventUnMountClass.run] Error:', e)
+            time.sleep(1)
+
+        if len(kb_event) == 1:
+            if kb_event in alpha_str:
+                try:
+                    umount_alpha = kb_event
+                    umount_path = umount_alpha + ':'
+                    print('-- [ExclusiveG2KeyEventUnMountClass.run] umount:', umount_alpha)
+                    if os.path.exists(umount_path):
+                        cmd = 'mountvol '+umount_path+' /D'
+                        os.system(cmd)
+                except Exception as e:
+                    print('-- [ExclusiveG2KeyEventUnMountClass.run] running command:', cmd)
+
+        print('-- [ExclusiveG2KeyEventUnMountClass.run]: disarmed')
+
+        sdk.set_led_colors_flush_buffer()
+
+        """ disarm """
+        g2_function_long_i = 0
+        for _ in corsairled_id_num_hddreadwrite:
+            try:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: sdk_color_backlight}))
+            except Exception as e:
+                print('-- [ExclusiveG2KeyEventUnMountClass.run] Error:', e)
+            g2_function_long_i += 1
+
+        sdk.set_led_colors_flush_buffer()
+
+        try:
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: sdk_color_backlight}))
+        except Exception as e:
+            print('-- [ExclusiveG2KeyEventUnMountClass.run] Error:', e)
+
+        sdk.set_led_colors_flush_buffer()
+
+        if bool_switch_startup_hdd_read_write is True:
+            time.sleep(1)
+            thread_disk_rw[0].start()
+
+    def stop(self):
+        print('-- [ExclusiveG2KeyEventUnMountClass.stop]: plugged in')
         self.terminate()
 
 
@@ -7054,6 +7178,7 @@ class HddMonClass(QThread):
     def get_stat(self):
         # print('-- [HddMonClass.get_stat]: plugged in')
         global alpha_str, hdd_bytes_type_w, hdd_bytes_type_r, hdd_bytes_str
+        # print('-'*100)
         try:
             self.disk_letter_complete = []
             wmis = win32com.client.Dispatch("WbemScripting.SWbemLocator")
