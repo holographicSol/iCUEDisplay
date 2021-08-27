@@ -2104,7 +2104,7 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.lbl_g2_disk)
         ui_object_complete.append(self.lbl_g2_disk)
         ui_object_font_list_s8b.append(self.lbl_g2_disk)
-        self.lbl_g2_disk.setToolTip('G2 Disks\n\nEnables/Disables G2 Disks\n\n1 Second Hold [Yellow G2]: Eject\n2 Seconds [Amber G2]: Mount\n3 Seconds [Red G2]: Unmount\n4 Seconds [White G2]: Cancel\n\nNote: Only drives that have been unmounted while iCUE Display has been running can be mounted.\nAny drive assigned a Disk Letter can be ejected/mounted/unmounted when the alpha keys reflect your expressed intent.\n\nWARNING: EXPERIMANTAL')
+        self.lbl_g2_disk.setToolTip('G2 Disks\n\nEnables/Disables G2 Disks\n\nShort Press Or Any Non-Alpha Key To Disarm. (ESC or Short press recommended)\n1 Second Hold [Yellow G2]: Eject\n2 Seconds [Amber G2]: Mount (Only un-mounted drives can be mounted, you may not mount an ejected drive).\n3 Seconds [Red G2]: Unmount (Un-mounted drives will not be automatically mounted by Windows until next reboot.\n4 Seconds [White G2]: Cancel\n\nNote: Only drives that have been unmounted while iCUE Display has been running can be mounted.\nAny drive assigned a Disk Letter can be ejected/mounted/unmounted when the alpha keys reflect your expressed intent.\n\nWARNING: This Feature Is Experimental')
 
         self.btn_g2_disk = QPushButton(self)
         self.btn_g2_disk.move(self.menu_obj_pos_w + 2 + 4 + 126, self.height - (4 * 5) - (self.monitor_btn_h * 5))
@@ -2511,6 +2511,18 @@ class App(QMainWindow):
                 self.write_changes()
             self.btn_g2_disk.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
             bool_switch_g2_disks = False
+            try:
+                thread_eject[0].stop()
+            except Exception as e:
+                print('error stopping thread_eject:', e)
+            try:
+                thread_mount[0].stop()
+            except Exception as e:
+                print('error stopping thread_mount:', e)
+            try:
+                thread_unmount[0].stop()
+            except Exception as e:
+                print('error stopping thread_unmount:', e)
 
         elif bool_switch_g2_disks is False:
             if self.write_engaged is False:
@@ -2521,7 +2533,6 @@ class App(QMainWindow):
             bool_switch_g2_disks = True
 
         print('-- [btn_power_plan_function] setting bool_switch_g2_disks:', bool_switch_g2_disks)
-
 
     def btn_execution_policy_0_function(self):
         global bool_execution_policy_show
@@ -4425,6 +4436,18 @@ class CompileDevicesClass(QThread):
         print('-- [CompileDevicesClass.stop_all_threads] stopping all threads:', )
         if len(devices_kb) >= 1 or len(devices_ms) >= 1:
             try:
+                thread_eject[0].stop()
+            except Exception as e:
+                print('error stopping thread_eject:', e)
+            try:
+                thread_mount[0].stop()
+            except Exception as e:
+                print('error stopping thread_mount:', e)
+            try:
+                thread_unmount[0].stop()
+            except Exception as e:
+                print('error stopping thread_unmount:', e)
+            try:
                 thread_disk_rw[0].stop()
             except Exception as e:
                 print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
@@ -5097,8 +5120,7 @@ class SdkEventG2_Eject(QThread):
         kb_event = ''
         bool_g2_input = True
         while bool_g2_input is True:
-            time.sleep(0.1)
-        print(kb_event)
+            time.sleep(0)
 
         print('-- [SdkEventG2_Eject.run] kb_event:', kb_event)
 
@@ -5214,8 +5236,7 @@ class SdkEventG2_Mount(QThread):
         kb_event = ''
         bool_g2_input = True
         while bool_g2_input is True:
-            time.sleep(0.1)
-        print(kb_event)
+            time.sleep(0)
 
         print('-- [SdkEventG2_Mount.run] kb_event:', )
 
@@ -5341,8 +5362,7 @@ class SdkEventG2_Unmount(QThread):
         kb_event = ''
         bool_g2_input = True
         while bool_g2_input is True:
-            time.sleep(0.1)
-        print(kb_event)
+            time.sleep(0)
 
         print('-- [SdkEventG2_Unmount.run] kb_event:', kb_event)
 
