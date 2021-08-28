@@ -78,6 +78,12 @@ def initialize_priority():
     win32process.SetPriorityClass(handle, priority_classes[4])
     print('-- [initialize_priority]: settings win32process priority class:', priority_classes[4])
 
+bool_instruction_eject = False
+bool_instruction_eject_end = False
+bool_instruction_mount = False
+bool_instruction_mount_end = False
+bool_instruction_unmount = False
+bool_instruction_unmount_end = False
 
 bool_g2_input = False
 kb_event = False
@@ -137,6 +143,7 @@ bool_backend_icue_connected_previous = None
 bool_backend_config_read_complete = False
 bool_backend_valid_network_adapter_name = False
 bool_switch_startup_media_display = False
+thread_sdk_instruction = []
 thread_eject = []
 thread_mount = []
 thread_unmount = []
@@ -4100,6 +4107,10 @@ class App(QMainWindow):
 
         unmount_thread = SdkEventG2_Unmount()
         thread_unmount.append(unmount_thread)
+
+        sdk_instruction_thread = SdkSendInstructionClass()
+        thread_sdk_instruction.append(sdk_instruction_thread)
+        thread_sdk_instruction[0].start()
         
         self.lbl_title.show()
         self.btn_con_stat_name.show()
@@ -4593,6 +4604,9 @@ class CompileDevicesClass(QThread):
         global corsairled_id_num_ms_complete, corsairled_id_num_kb_complete
         global sdk_color_backlight
         global sdk_color_backlight, bool_switch_backlight, sdk_color_backlight_on
+
+        zone_id = [170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188]
+
         if len(devices_kb) >= 1:
             for _ in corsairled_id_num_kb_complete:
                 itm = [{_: (255, 255, 255)}]
@@ -4618,11 +4632,18 @@ class CompileDevicesClass(QThread):
         time.sleep(1)
         if len(devices_kb) >= 1:
             for _ in corsairled_id_num_kb_complete:
-                itm = [{_: sdk_color_backlight}]
-                try:
-                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], itm[0])
-                except Exception as e:
-                    print(e)
+                if _ not in zone_id:
+                    itm = [{_: sdk_color_backlight}]
+                    try:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], itm[0])
+                    except Exception as e:
+                        print(e)
+                else:
+                    itm = [{_: (0, 0, 0)}]
+                    try:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], itm[0])
+                    except Exception as e:
+                        print(e)
             try:
                 sdk.set_led_colors_flush_buffer()
             except Exception as e:
@@ -5100,6 +5121,152 @@ class CompileDevicesClass(QThread):
         self.terminate()
 
 
+class SdkSendInstructionClass(QThread):
+    print('-- [SdkSendInstructionClass]: plugged in')
+
+    def __init__(self):
+        QThread.__init__(self)
+
+    def run(self):
+        print('-- [SdkSendInstructionClass.run]: plugged in')
+
+        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
+
+        global corsairled_id_num_hddreadwrite
+
+        global bool_instruction_eject, bool_instruction_eject_end, bool_instruction_mount, bool_instruction_mount_end, bool_instruction_unmount, bool_instruction_unmount_end
+
+        while True:
+
+            if bool_instruction_eject is True:
+                bool_instruction_eject = False
+                try:
+                    """ arm """
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 255, 0)}))
+                except Exception as e:
+                    print('-- [SdkEventG2_Eject.run] Error:', e)
+
+                g2_function_long_i = 0
+                for _ in corsairled_id_num_hddreadwrite:
+                    try:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: (255, 255, 0)}))
+                    except Exception as e:
+                        print('-- [SdkEventG2_Eject.run] Error:', e)
+                    g2_function_long_i += 1
+
+                try:
+                    sdk.set_led_colors_flush_buffer()
+                except Exception as e:
+                    print(e)
+
+            if bool_instruction_eject_end is True:
+                bool_instruction_eject_end = False
+                g2_function_long_i = 0
+                for _ in corsairled_id_num_hddreadwrite:
+                    try:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: sdk_color_backlight}))
+                    except Exception as e:
+                        print('-- [SdkEventG2_Eject.run] Error:', e)
+                    g2_function_long_i += 1
+
+                try:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: sdk_color_backlight}))
+                except Exception as e:
+                    print('-- [SdkEventG2_Eject.run] Error:', e)
+
+                try:
+                    sdk.set_led_colors_flush_buffer()
+                except Exception as e:
+                    print(e)
+
+            if bool_instruction_mount is True:
+                bool_instruction_mount = False
+                try:
+                    """ arm """
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 100, 0)}))
+                except Exception as e:
+                    print('-- [SdkEventG2_Eject.run] Error:', e)
+
+                g2_function_long_i = 0
+                for _ in corsairled_id_num_hddreadwrite:
+                    try:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: (255, 100, 0)}))
+                    except Exception as e:
+                        print('-- [SdkEventG2_Eject.run] Error:', e)
+                    g2_function_long_i += 1
+
+                try:
+                    sdk.set_led_colors_flush_buffer()
+                except Exception as e:
+                    print(e)
+
+            if bool_instruction_mount_end is True:
+                bool_instruction_mount_end = False
+                g2_function_long_i = 0
+                for _ in corsairled_id_num_hddreadwrite:
+                    try:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: sdk_color_backlight}))
+                    except Exception as e:
+                        print('-- [SdkEventG2_Eject.run] Error:', e)
+                    g2_function_long_i += 1
+
+                try:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: sdk_color_backlight}))
+                except Exception as e:
+                    print('-- [SdkEventG2_Eject.run] Error:', e)
+
+                try:
+                    sdk.set_led_colors_flush_buffer()
+                except Exception as e:
+                    print(e)
+
+            if bool_instruction_unmount is True:
+                bool_instruction_unmount = False
+                try:
+                    """ arm """
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 0, 0)}))
+                except Exception as e:
+                    print('-- [SdkEventG2_Eject.run] Error:', e)
+
+                g2_function_long_i = 0
+                for _ in corsairled_id_num_hddreadwrite:
+                    try:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: (255, 0, 0)}))
+                    except Exception as e:
+                        print('-- [SdkEventG2_Eject.run] Error:', e)
+                    g2_function_long_i += 1
+
+                try:
+                    sdk.set_led_colors_flush_buffer()
+                except Exception as e:
+                    print(e)
+
+            if bool_instruction_unmount_end is True:
+                bool_instruction_unmount_end = False
+                g2_function_long_i = 0
+                for _ in corsairled_id_num_hddreadwrite:
+                    try:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: sdk_color_backlight}))
+                    except Exception as e:
+                        print('-- [SdkEventG2_Eject.run] Error:', e)
+                    g2_function_long_i += 1
+
+                try:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: sdk_color_backlight}))
+                except Exception as e:
+                    print('-- [SdkEventG2_Eject.run] Error:', e)
+
+                try:
+                    sdk.set_led_colors_flush_buffer()
+                except Exception as e:
+                    print(e)
+
+            time.sleep(0.01)
+
+    def stop(self):
+        print('-- [SdkSendInstructionClass.stop]: plugged in')
+
+
 class SdkEventG2_Eject(QThread):
     print('-- [SdkEventG2_Eject]: plugged in')
 
@@ -5108,33 +5275,17 @@ class SdkEventG2_Eject(QThread):
         self.kb_event = ''
 
     def run(self):
+        print('-- [SdkEventG2_Eject.run]: plugged in')
+
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, corsairled_id_num_hddreadwrite
         global disk_guid
         global bool_alpha_stage_engaged
         global bool_g2_input, kb_event
+        global bool_instruction_eject, bool_instruction_eject_end
 
         bool_alpha_stage_engaged = True
 
-        print('-- [SdkEventG2_Eject.run]: plugged in')
-
-        try:
-            """ arm """
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 255, 0)}))
-        except Exception as e:
-            print('-- [SdkEventG2_Eject.run] Error:', e)
-
-        g2_function_long_i = 0
-        for _ in corsairled_id_num_hddreadwrite:
-            try:
-                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: (255, 255, 0)}))
-            except Exception as e:
-                print('-- [SdkEventG2_Eject.run] Error:', e)
-            g2_function_long_i += 1
-
-        try:
-            sdk.set_led_colors_flush_buffer()
-        except Exception as e:
-            print(e)
+        bool_instruction_eject = True
 
         print('-- [SdkEventG2_Eject.run]: armed')
 
@@ -5168,49 +5319,17 @@ class SdkEventG2_Eject(QThread):
 
         print('-- [SdkEventG2_Eject.run]: disarmed')
 
-        """ disarm """
-        g2_function_long_i = 0
-        for _ in corsairled_id_num_hddreadwrite:
-            try:
-                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: sdk_color_backlight}))
-            except Exception as e:
-                print('-- [SdkEventG2_Eject.run] Error:', e)
-            g2_function_long_i += 1
-
-        try:
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: sdk_color_backlight}))
-        except Exception as e:
-            print('-- [SdkEventG2_Eject.run] Error:', e)
-
-        try:
-            sdk.set_led_colors_flush_buffer()
-        except Exception as e:
-            print(e)
+        bool_instruction_eject_end = True
 
         bool_alpha_stage_engaged = False
 
     def stop(self):
         print('-- [SdkEventG2_Eject.stop]: plugged in')
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, bool_alpha_stage_engaged, bool_g2_input
+        global bool_instruction_eject_end
         bool_g2_input = False
-        """ disarm """
-        g2_function_long_i = 0
-        for _ in corsairled_id_num_hddreadwrite:
-            try:
-                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: sdk_color_backlight}))
-            except Exception as e:
-                print('-- [SdkEventG2_Eject.stop] Error:', e)
-            g2_function_long_i += 1
 
-        try:
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: sdk_color_backlight}))
-        except Exception as e:
-            print('-- [SdkEventG2_Eject.stop] Error:', e)
-
-        try:
-            sdk.set_led_colors_flush_buffer()
-        except Exception as e:
-            print(e)
+        bool_instruction_eject_end = True
 
         bool_alpha_stage_engaged = False
 
@@ -5224,33 +5343,15 @@ class SdkEventG2_Mount(QThread):
         QThread.__init__(self)
 
     def run(self):
+        print('-- [SdkEventG2_Mount.run]: plugged in')
+
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, corsairled_id_num_hddreadwrite
         global disk_guid
-        global bool_alpha_stage_engaged, bool_g2_input, kb_event
+        global bool_alpha_stage_engaged, bool_g2_input, kb_event, bool_instruction_mount, bool_instruction_mount_end
 
         bool_alpha_stage_engaged = True
 
-        print('-- [SdkEventG2_Mount.run]: plugged in')
-
-        try:
-            """ arm """
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 100, 0)}))
-            # sdk.set_led_colors_flush_buffer()
-        except Exception as e:
-            print('-- [SdkEventG2_Mount.run] Error:', e)
-
-        g2_function_long_i = 0
-        for _ in corsairled_id_num_hddreadwrite:
-            try:
-                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: (255, 100, 0)}))
-            except Exception as e:
-                print('-- [SdkEventG2_Mount.run] Error:', e)
-            g2_function_long_i += 1
-
-        try:
-            sdk.set_led_colors_flush_buffer()
-        except Exception as e:
-            print(e)
+        bool_instruction_mount = True
 
         print('-- [SdkEventG2_Mount.run]: armed')
 
@@ -5294,50 +5395,16 @@ class SdkEventG2_Mount(QThread):
 
         print('-- [SdkEventG2_Mount.run]: disarmed')
 
-        """ disarm """
-        g2_function_long_i = 0
-        for _ in corsairled_id_num_hddreadwrite:
-            try:
-                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: sdk_color_backlight}))
-            except Exception as e:
-                print('-- [SdkEventG2_Mount.run] Error:', e)
-            g2_function_long_i += 1
-
-        try:
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: sdk_color_backlight}))
-        except Exception as e:
-            print('-- [SdkEventG2_Mount.run] Error:', e)
-
-        try:
-            sdk.set_led_colors_flush_buffer()
-        except Exception as e:
-            print(e)
+        bool_instruction_mount_end = True
 
         bool_alpha_stage_engaged = False
 
     def stop(self):
         print('-- [SdkEventG2_Mount.stop]: plugged in')
-        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, bool_alpha_stage_engaged, bool_g2_input
+        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, bool_alpha_stage_engaged, bool_g2_input, bool_instruction_mount_end
         bool_g2_input = False
 
-        """ disarm """
-        g2_function_long_i = 0
-        for _ in corsairled_id_num_hddreadwrite:
-            try:
-                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: sdk_color_backlight}))
-            except Exception as e:
-                print('-- [SdkEventG2_Mount.stop] Error:', e)
-            g2_function_long_i += 1
-
-        try:
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: sdk_color_backlight}))
-        except Exception as e:
-            print('-- [SdkEventG2_Mount.stop] Error:', e)
-
-        try:
-            sdk.set_led_colors_flush_buffer()
-        except Exception as e:
-            print(e)
+        bool_instruction_mount_end = True
 
         bool_alpha_stage_engaged = False
 
@@ -5351,32 +5418,15 @@ class SdkEventG2_Unmount(QThread):
         QThread.__init__(self)
 
     def run(self):
+        print('-- [SdkEventG2_Unmount.run]: plugged in')
+
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, corsairled_id_num_hddreadwrite
         global disk_guid
-        global bool_alpha_stage_engaged, bool_g2_input, kb_event
+        global bool_alpha_stage_engaged, bool_g2_input, kb_event, bool_instruction_unmount, bool_instruction_unmount_end
 
         bool_alpha_stage_engaged = True
 
-        print('-- [SdkEventG2_Unmount.run]: plugged in')
-
-        try:
-            """ arm """
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 0, 0)}))
-        except Exception as e:
-            print('-- [SdkEventG2_Unmount.run] Error:', e)
-
-        g2_function_long_i = 0
-        for _ in corsairled_id_num_hddreadwrite:
-            try:
-                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: (255, 0, 0)}))
-            except Exception as e:
-                print('-- [SdkEventG2_Unmount.run] Error:', e)
-            g2_function_long_i += 1
-
-        try:
-            sdk.set_led_colors_flush_buffer()
-        except Exception as e:
-            print(e)
+        bool_instruction_unmount = True
 
         print('-- [SdkEventG2_Unmount.run]: armed')
 
@@ -5405,50 +5455,16 @@ class SdkEventG2_Unmount(QThread):
 
         print('-- [SdkEventG2_Unmount.run]: disarmed')
 
-        """ disarm """
-        g2_function_long_i = 0
-        for _ in corsairled_id_num_hddreadwrite:
-            try:
-                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: sdk_color_backlight}))
-            except Exception as e:
-                print('-- [SdkEventG2_Unmount.run] Error:', e)
-            g2_function_long_i += 1
-
-        try:
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: sdk_color_backlight}))
-        except Exception as e:
-            print('-- [SdkEventG2_Unmount.run] Error:', e)
-
-        try:
-            sdk.set_led_colors_flush_buffer()
-        except Exception as e:
-            print(e)
+        bool_instruction_unmount_end = True
 
         bool_alpha_stage_engaged = False
 
     def stop(self):
         print('-- [SdkEventG2_Unmount.stop]: plugged in')
-        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, bool_alpha_stage_engaged, bool_g2_input
+        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, bool_alpha_stage_engaged, bool_g2_input, bool_instruction_unmount_end
         bool_g2_input = False
 
-        """ disarm """
-        g2_function_long_i = 0
-        for _ in corsairled_id_num_hddreadwrite:
-            try:
-                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[g2_function_long_i]: sdk_color_backlight}))
-            except Exception as e:
-                print('-- [SdkEventG2_Unmount.stop] Error:', e)
-            g2_function_long_i += 1
-
-        try:
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: sdk_color_backlight}))
-        except Exception as e:
-            print('-- [SdkEventG2_Unmount.stop] Error:', e)
-
-        try:
-            sdk.set_led_colors_flush_buffer()
-        except Exception as e:
-            print(e)
+        bool_instruction_unmount_end = True
 
         bool_alpha_stage_engaged = False
 
