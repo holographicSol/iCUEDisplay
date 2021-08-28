@@ -5424,12 +5424,14 @@ class SdkEventG2_Eject(QThread):
     def stop(self):
         print('-- [SdkEventG2_Eject.stop]: plugged in')
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, bool_alpha_stage_engaged, bool_g2_input
-        global bool_instruction_eject_end
+        global bool_instruction_eject_end, notification_key
         bool_g2_input = False
 
         bool_instruction_eject_end = True
 
         bool_alpha_stage_engaged = False
+
+        notification_key = 2
 
         self.terminate()
 
@@ -5510,11 +5512,15 @@ class SdkEventG2_Mount(QThread):
     def stop(self):
         print('-- [SdkEventG2_Mount.stop]: plugged in')
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, bool_alpha_stage_engaged, bool_g2_input, bool_instruction_mount_end
+        global notification_key
+
         bool_g2_input = False
 
         bool_instruction_mount_end = True
 
         bool_alpha_stage_engaged = False
+
+        notification_key = 2
 
         self.terminate()
 
@@ -5580,11 +5586,15 @@ class SdkEventG2_Unmount(QThread):
     def stop(self):
         print('-- [SdkEventG2_Unmount.stop]: plugged in')
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, bool_alpha_stage_engaged, bool_g2_input, bool_instruction_unmount_end
+        global notification_key
+
         bool_g2_input = False
 
         bool_instruction_unmount_end = True
 
         bool_alpha_stage_engaged = False
+
+        notification_key = 2
 
         self.terminate()
 
