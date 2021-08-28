@@ -4600,6 +4600,9 @@ class CompileDevicesClass(QThread):
         global corsairled_id_num_ms_complete, corsairled_id_num_kb_complete
         global sdk_color_backlight
         global sdk_color_backlight, bool_switch_backlight, sdk_color_backlight_on
+
+        zone_id = [170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188]
+
         if len(devices_kb) >= 1:
             for _ in corsairled_id_num_kb_complete:
                 itm = [{_: (255, 255, 255)}]
@@ -4625,11 +4628,18 @@ class CompileDevicesClass(QThread):
         time.sleep(1)
         if len(devices_kb) >= 1:
             for _ in corsairled_id_num_kb_complete:
-                itm = [{_: sdk_color_backlight}]
-                try:
-                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], itm[0])
-                except Exception as e:
-                    print(e)
+                if _ not in zone_id:
+                    itm = [{_: sdk_color_backlight}]
+                    try:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], itm[0])
+                    except Exception as e:
+                        print(e)
+                else:
+                    itm = [{_: (0, 0, 0)}]
+                    try:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], itm[0])
+                    except Exception as e:
+                        print(e)
             try:
                 sdk.set_led_colors_flush_buffer()
             except Exception as e:
@@ -6708,9 +6718,9 @@ class MediaDisplayClass(QThread):
                     thread_pause_loop[0].start()
                     try:
                         if len(devices_kb) >= 1:
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({100: (255, 100, 0)}))
+                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({100: (255, 255, 0)}))
                         if len(devices_kb) >= 1:
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({102: (255, 100, 0)}))
+                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({102: (255, 255, 0)}))
                         if len(devices_kb) >= 1:
                             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: sdk_color_backlight}))
                     except Exception as e:
