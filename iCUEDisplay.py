@@ -137,6 +137,8 @@ bool_backend_icue_connected_previous = None
 bool_backend_config_read_complete = False
 bool_backend_valid_network_adapter_name = False
 bool_switch_startup_media_display = False
+notification_key = 0
+thread_notification = []
 thread_eject = []
 thread_mount = []
 thread_unmount = []
@@ -4029,6 +4031,7 @@ class App(QMainWindow):
         global bool_switch_g2_disks
         global thread_disk_guid
         global thread_eject, thread_mount, thread_unmount
+        global thread_notification
 
         hdd_mon_thread = HddMonClass()
         thread_disk_rw.append(hdd_mon_thread)
@@ -4100,6 +4103,10 @@ class App(QMainWindow):
 
         unmount_thread = SdkEventG2_Unmount()
         thread_unmount.append(unmount_thread)
+
+        notification_thread = NotificationClass()
+        thread_notification.append(notification_thread)
+        thread_notification[0].start()
         
         self.lbl_title.show()
         self.btn_con_stat_name.show()
@@ -5100,6 +5107,80 @@ class CompileDevicesClass(QThread):
         self.terminate()
 
 
+class NotificationClass(QThread):
+    print('-- [NotificationClass]: plugged in')
+
+    def __init__(self):
+        QThread.__init__(self)
+
+    def notification_off(self):
+        global sdk, devices_kb, devices_kb_selected
+        global notification_key
+
+        notification_key = 0
+        zone_id_centre = [177, 178, 179, 180]
+
+        if len(devices_kb) > 0:
+            for _ in zone_id_centre:
+                itm = [{_: (0, 0, 0)}]
+                try:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], itm[0])
+                except Exception as e:
+                    print(e)
+            try:
+                sdk.set_led_colors_flush_buffer()
+            except Exception as e:
+                print(e)
+
+    def run(self):
+        print('-- [NotificationClass.run]: plugged in')
+        global sdk, devices_kb, devices_kb_selected
+        global notification_key
+
+        zone_id_full = [170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188]
+        zone_id_centre = [177, 178, 179, 180]
+
+        while True:
+
+            if notification_key == 1:
+                if len(devices_kb) > 0:
+                    for _ in zone_id_centre:
+                        itm = [{_: (0, 255, 0)}]
+                        try:
+                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], itm[0])
+                        except Exception as e:
+                            print(e)
+                    try:
+                        sdk.set_led_colors_flush_buffer()
+                    except Exception as e:
+                        print(e)
+
+                    time.sleep(1)
+                    self.notification_off()
+
+            elif notification_key == 2:
+                if len(devices_kb) > 0:
+                    for _ in zone_id_centre:
+                        itm = [{_: (255, 0, 0)}]
+                        try:
+                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], itm[0])
+                        except Exception as e:
+                            print(e)
+                    try:
+                        sdk.set_led_colors_flush_buffer()
+                    except Exception as e:
+                        print(e)
+
+                    time.sleep(1)
+                    self.notification_off()
+
+            time.sleep(0.5)
+
+    def stop(self):
+        print('-- [NotificationClass.stop]: plugged in')
+        self.terminate()
+
+
 class SdkEventG2_Eject(QThread):
     print('-- [SdkEventG2_Eject]: plugged in')
 
@@ -5112,6 +5193,7 @@ class SdkEventG2_Eject(QThread):
         global disk_guid
         global bool_alpha_stage_engaged
         global bool_g2_input, kb_event
+        global notification_key
 
         bool_alpha_stage_engaged = True
 
@@ -5160,11 +5242,26 @@ class SdkEventG2_Eject(QThread):
                         cmd_1 = "'"+eject_alpha+"'"
                         cmd_2 = cmd_0 + cmd_1+").InvokeVerb('Eject')"
                         os.system(cmd_2)
+
+                        if not os.path.exists(eject_alpha):
+                            print('-- [SdkEventG2_Eject.run] sending notification: success')
+                            notification_key = 1
+                        else:
+                            print('-- [SdkEventG2_Eject.run] sending notification: failure')
+                            notification_key = 2
                     else:
                         print('-- [SdkEventG2_Eject.run] kb_event: path does not exist')
+                        print('-- [SdkEventG2_Eject.run] sending notification: failure')
+                        notification_key = 2
 
                 except Exception as e:
                     print('-- [SdkEventG2_Eject.run] Error:', e)
+                    print('-- [SdkEventG2_Eject.run] sending notification: failure')
+                    notification_key = 2
+
+            else:
+                print('-- [SdkEventG2_Eject.run] sending notification: failure')
+                notification_key = 2
 
         print('-- [SdkEventG2_Eject.run]: disarmed')
 
@@ -5227,6 +5324,7 @@ class SdkEventG2_Mount(QThread):
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, corsairled_id_num_hddreadwrite
         global disk_guid
         global bool_alpha_stage_engaged, bool_g2_input, kb_event
+        global notification_key
 
         bool_alpha_stage_engaged = True
 
@@ -5262,6 +5360,7 @@ class SdkEventG2_Mount(QThread):
         print('-- [SdkEventG2_Mount.run] kb_event:', )
 
         kb_event = str(kb_event).strip()
+        bool_guid_success = False
 
         if len(kb_event) == 1:
             print('-- [SdkEventG2_Mount.run] kb_event: length correct')
@@ -5279,6 +5378,7 @@ class SdkEventG2_Mount(QThread):
                         # print('dict key:', dict_str)
                         # print('mount_alpha:', mount_alpha)
                         if canonical_caseless(dict_str) == canonical_caseless(mount_alpha):
+                            bool_guid_success = True
                             print('target:', _)
                             guid = disk_guid[i][dict_str]
                             print('guid:', guid)
@@ -5287,12 +5387,31 @@ class SdkEventG2_Mount(QThread):
                             print('cmd:', cmd)
                             print('-- [SdkEventG2_Mount.run] running command:', cmd)
                             os.system(cmd)
+
+                            if os.path.exists(dict_str):
+                                print('-- [SdkEventG2_Mount.run] sending notification: success')
+                                notification_key = 1
+
+                            else:
+                                print('-- [SdkEventG2_Mount.run] sending notification: failure')
+                                notification_key = 2
+
                     except Exception as e:
                         print('-- [SdkEventG2_Mount.run] Error:', e)
-                        pass
+                        print('-- [SdkEventG2_Mount.run] sending notification: failure')
+                        notification_key = 2
+
                     i += 1
 
+            else:
+                print('-- [SdkEventG2_Mount.run] sending notification: failure')
+                notification_key = 2
+
         print('-- [SdkEventG2_Mount.run]: disarmed')
+
+        if bool_guid_success is False:
+            print('-- [SdkEventG2_Eject.run] sending notification: failure')
+            notification_key = 2
 
         """ disarm """
         g2_function_long_i = 0
@@ -5354,6 +5473,7 @@ class SdkEventG2_Unmount(QThread):
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, corsairled_id_num_hddreadwrite
         global disk_guid
         global bool_alpha_stage_engaged, bool_g2_input, kb_event
+        global notification_key
 
         bool_alpha_stage_engaged = True
 
@@ -5400,8 +5520,27 @@ class SdkEventG2_Unmount(QThread):
                     if os.path.exists(umount_path):
                         cmd = 'mountvol ' + umount_path + ' /D'
                         os.system(cmd)
+
+                        if not os.path.exists(umount_path):
+                            print('-- [SdkEventG2_Unmount.run] sending notification: success')
+                            notification_key = 1
+
+                        else:
+                            print('-- [SdkEventG2_Unmount.run] sending notification: failure')
+                            notification_key = 2
+
+                    else:
+                        print('-- [SdkEventG2_Unmount.run] sending notification: failure')
+                        notification_key = 2
+
                 except Exception as e:
                     print('-- [SdkEventG2_Unmount.run] Error:', e)
+                    print('-- [SdkEventG2_Unmount.run] sending notification: failure')
+                    notification_key = 2
+
+            else:
+                print('-- [SdkEventG2_Unmount.run] sending notification: failure')
+                notification_key = 2
 
         print('-- [SdkEventG2_Unmount.run]: disarmed')
 
