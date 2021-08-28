@@ -2104,7 +2104,7 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.lbl_g2_disk)
         ui_object_complete.append(self.lbl_g2_disk)
         ui_object_font_list_s8b.append(self.lbl_g2_disk)
-        self.lbl_g2_disk.setToolTip('G2 Disks\n\nEnables/Disables G2 Disks\n\nShort Press Or Any Non-Alpha Key To Disarm. (ESC or Short press recommended)\n1 Second Hold [Yellow G2]: Eject\n2 Seconds [Amber G2]: Mount (Only un-mounted drives can be mounted, you may not mount an ejected drive).\n3 Seconds [Red G2]: Unmount (Un-mounted drives will not be automatically mounted by Windows until next reboot.\n4 Seconds [White G2]: Cancel\n\nNote: Only drives that have been unmounted while iCUE Display has been running can be mounted.\nAny drive assigned a Disk Letter can be ejected/mounted/unmounted when the alpha keys reflect your expressed intent.\n\nWARNING: This Feature Is Experimental')
+        self.lbl_g2_disk.setToolTip('G2 Disks\n\nEnables/Disables G2 Disks\n\nShort Press G2 Or Any Non-Alpha Key To Disarm. (ESC or Short press G2 recommended)\n1 Second Hold [Yellow G2]: Eject\n2 Seconds [Amber G2]: Mount (Only un-mounted drives can be mounted, you may not mount an ejected drive).\n3 Seconds [Red G2]: Unmount (Un-mounted drives will not be automatically mounted by Windows until next reboot.\n4 Seconds [White G2]: Cancel\n\nNote: Only drives that have been unmounted while iCUE Display has been running can be mounted.\nAny drive assigned a Disk Letter can be ejected/mounted/unmounted when the alpha keys reflect your expressed intent.\n\nWARNING: This Feature Is Experimental')
 
         self.btn_g2_disk = QPushButton(self)
         self.btn_g2_disk.move(self.menu_obj_pos_w + 2 + 4 + 126, self.height - (4 * 5) - (self.monitor_btn_h * 5))
@@ -2501,7 +2501,7 @@ class App(QMainWindow):
 
     def btn_g2_disk_function(self):
         print('-- [btn_g2_disk_function]: plugged in')
-        global bool_switch_g2_disks
+        global bool_switch_g2_disks, thread_eject, thread_mount, thread_unmount
         self.setFocus()
 
         if bool_switch_g2_disks is True:
@@ -2511,18 +2511,6 @@ class App(QMainWindow):
                 self.write_changes()
             self.btn_g2_disk.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
             bool_switch_g2_disks = False
-            try:
-                thread_eject[0].stop()
-            except Exception as e:
-                print('error stopping thread_eject:', e)
-            try:
-                thread_mount[0].stop()
-            except Exception as e:
-                print('error stopping thread_mount:', e)
-            try:
-                thread_unmount[0].stop()
-            except Exception as e:
-                print('error stopping thread_unmount:', e)
 
         elif bool_switch_g2_disks is False:
             if self.write_engaged is False:
@@ -3075,13 +3063,16 @@ class App(QMainWindow):
         global thread_media_display, bool_switch_startup_media_display
         global thread_power, bool_power_plan_interact
 
+        zone_id = [170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188]
+
         if len(devices_kb) > 0:
             for _ in corsairled_id_num_kb_complete:
-                itm = [{_: sdk_color_backlight}]
-                try:
-                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], itm[0])
-                except Exception as e:
-                    print(e)
+                if _ not in zone_id:
+                    itm = [{_: sdk_color_backlight}]
+                    try:
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], itm[0])
+                    except Exception as e:
+                        print(e)
             try:
                 sdk.set_led_colors_flush_buffer()
             except Exception as e:
@@ -3253,7 +3244,7 @@ class App(QMainWindow):
                     self.btn_exclusive_con.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
                     self.lbl_exclusive_con.setStyleSheet(self.btn_menu_style)
                 self.write_changes()
-                self.recompile()
+                # self.recompile()
 
     def btn_run_startup_function(self):
         print('-- [App.btn_run_startup_function]: plugged in')
@@ -4080,6 +4071,7 @@ class App(QMainWindow):
                                                      self.btn_refresh_recompile, self.btn_title_bar_style_0, self.btn_title_bar_style_1)
         thread_compile_devices.append(compile_devices_thread)
         thread_compile_devices[0].start()
+        print('thread_compile_devices.isRunning:', thread_compile_devices[0].isRunning())
         temp_thread = TemperatureClass()
         thread_temperatures.append(temp_thread)
         system_mute = MediaDisplayClass()
@@ -4432,64 +4424,89 @@ class CompileDevicesClass(QThread):
         global thread_pause_loop
         global thread_power
         global thread_keyevents
+        global thread_eject, thread_mount, thread_unmount
 
         print('-- [CompileDevicesClass.stop_all_threads] stopping all threads:', )
         if len(devices_kb) >= 1 or len(devices_ms) >= 1:
+
             try:
                 thread_eject[0].stop()
             except Exception as e:
                 print('error stopping thread_eject:', e)
+
             try:
                 thread_mount[0].stop()
             except Exception as e:
                 print('error stopping thread_mount:', e)
+
             try:
                 thread_unmount[0].stop()
             except Exception as e:
                 print('error stopping thread_unmount:', e)
+
             try:
                 thread_disk_rw[0].stop()
             except Exception as e:
                 print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
+
             try:
                 thread_cpu_util[0].stop()
             except Exception as e:
                 print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
+
+            try:
                 thread_dram_util[0].stop()
+            except Exception as e:
+                print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
+
             try:
                 thread_vram_util[0].stop()
             except Exception as e:
                 print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
+            try:
                 thread_net_traffic[0].stop()
+            except Exception as e:
+                print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
+
             try:
                 thread_net_connection[0].stop()
             except Exception as e:
                 print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
+            try:
                 thread_net_share[0].stop()
+            except Exception as e:
+                print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
+
             try:
                 thread_sdk_event_handler[0].stop()
             except Exception as e:
                 print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
+
             try:
                 thread_backlight_auto[0].stop()
             except Exception as e:
                 print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
+
             try:
                 thread_temperatures[0].stop()
             except Exception as e:
                 print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
+
             try:
                 thread_media_display[0].stop()
             except Exception as e:
                 print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
+
             try:
                 thread_pause_loop[0].stop()
             except Exception as e:
                 print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
+
             try:
                 thread_power[0].stop()
             except Exception as e:
                 print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
+
             try:
                 thread_keyevents[0].stop()
             except Exception as e:
@@ -4506,7 +4523,11 @@ class CompileDevicesClass(QThread):
         global thread_temperatures, bool_cpu_temperature, bool_vram_temperature
         global thread_media_display
         global thread_power
-        global thread_keyevents
+        global thread_keyevents, thread_sdk_event_handler
+        global thread_disk_rw
+        global thread_cpu_util, thread_dram_util, thread_vram_util
+        global thread_net_traffic
+        global thread_net_share
 
         if len(devices_kb) > 0:
             thread_sdk_event_handler[0].start()
@@ -5914,18 +5935,28 @@ class SdkEventHandlerClass(QThread):
         self.allow_sdk_event = True
 
     def gkey_sub_thread_stop(self):
-        try:
+        global thread_eject, thread_mount, thread_unmount
+
+        if thread_eject[0].isRunning() is True:
             thread_eject[0].stop()
-        except Exception as e:
-            print('error stopping thread_eject:', e)
-        try:
+
+        if thread_mount[0].isRunning() is True:
             thread_mount[0].stop()
-        except Exception as e:
-            print('error stopping thread_mount:', e)
-        try:
+
+        if thread_unmount[0].isRunning() is True:
             thread_unmount[0].stop()
-        except Exception as e:
-            print('error stopping thread_unmount:', e)
+        # try:
+        #     thread_eject[0].stop()
+        # except Exception as e:
+        #     print('error stopping thread_eject:', e)
+        # try:
+        #     thread_mount[0].stop()
+        # except Exception as e:
+        #     print('error stopping thread_mount:', e)
+        # try:
+        #     thread_unmount[0].stop()
+        # except Exception as e:
+        #     print('error stopping thread_unmount:', e)
 
     def on_press(self, event_id, data):
         # print('-- [SdkEventHandlerClass.on_press]: plugged in')
@@ -6096,7 +6127,6 @@ class SdkEventHandlerClass(QThread):
             print('-- [SdkEventHandlerClass.on_press] Error:', e)
 
     def sdk_event_handler(self, event_id, data):
-        print('1')
         try:
             if event_id == CorsairEventId.KeyEvent:
                 try:
@@ -6116,7 +6146,6 @@ class SdkEventHandlerClass(QThread):
 
         except Exception as e:
             print('-- [SdkEventHandlerClass.on_press] Error:', e)
-        print('2')
 
     def run(self):
         global sdk, devices_kb, devices_kb_name
@@ -7881,13 +7910,14 @@ class CpuMonClass(QThread):
                 except Exception as e:
                     print(e)
                 cpu_i += 1
-            try:
-                sdk.set_led_colors_flush_buffer()
-            except Exception as e:
-                print(e)
         except Exception as e:
             print('-- [CpuMonClass.stop] Error:', e)
             pass
+        try:
+            sdk.set_led_colors_flush_buffer()
+        except Exception as e:
+            print(e)
+
         print('-- [CpuMonClass.stop] terminating')
         self.terminate()
 
@@ -7964,13 +7994,13 @@ class DramMonClass(QThread):
                 except Exception as e:
                     print(e)
                 dram_i += 1
-            try:
-                sdk.set_led_colors_flush_buffer()
-            except Exception as e:
-                print(e)
         except Exception as e:
             print('-- [DramMonClass.stop] Error:', e)
             pass
+        try:
+            sdk.set_led_colors_flush_buffer()
+        except Exception as e:
+            print(e)
         print('-- [DramMonClass.stop] terminating')
         self.terminate()
 
@@ -8052,13 +8082,13 @@ class VramMonClass(QThread):
                 except Exception as e:
                     print(e)
                 vram_i += 1
-            try:
-                sdk.set_led_colors_flush_buffer()
-            except Exception as e:
-                print(e)
         except Exception as e:
             print('-- [VramMonClass.stop] Error:', e)
             pass
+        try:
+            sdk.set_led_colors_flush_buffer()
+        except Exception as e:
+            print(e)
         print('-- [VramMonClass.stop] terminating')
         self.terminate()
 
