@@ -5124,6 +5124,8 @@ class CompileDevicesClass(QThread):
 class SdkSendInstructionClass(QThread):
     print('-- [SdkSendInstructionClass]: plugged in')
 
+    # SdkSendInstructionClass sets LEDs procedurally for special cases where instructions use same LEDs
+
     def __init__(self):
         QThread.__init__(self)
 
