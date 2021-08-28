@@ -6086,26 +6086,18 @@ class SdkEventHandlerClass(QThread):
     def gkey_sub_thread_stop(self):
         global thread_eject, thread_mount, thread_unmount
 
-        if thread_eject[0].isRunning() is True:
+        try:
             thread_eject[0].stop()
-
-        if thread_mount[0].isRunning() is True:
+        except Exception as e:
+            print('error stopping thread_eject:', e)
+        try:
             thread_mount[0].stop()
-
-        if thread_unmount[0].isRunning() is True:
+        except Exception as e:
+            print('error stopping thread_mount:', e)
+        try:
             thread_unmount[0].stop()
-        # try:
-        #     thread_eject[0].stop()
-        # except Exception as e:
-        #     print('error stopping thread_eject:', e)
-        # try:
-        #     thread_mount[0].stop()
-        # except Exception as e:
-        #     print('error stopping thread_mount:', e)
-        # try:
-        #     thread_unmount[0].stop()
-        # except Exception as e:
-        #     print('error stopping thread_unmount:', e)
+        except Exception as e:
+            print('error stopping thread_unmount:', e)
 
     def on_press(self, event_id, data):
         # print('-- [SdkEventHandlerClass.on_press]: plugged in')
