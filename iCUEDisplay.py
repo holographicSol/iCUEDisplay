@@ -5238,6 +5238,7 @@ class SdkEventG2_Eject(QThread):
         print('-- [SdkEventG2_Eject.run] kb_event:', kb_event)
 
         kb_event = str(kb_event).strip()
+        bool_eject_success = False
 
         if len(kb_event) == 1:
             print('-- [SdkEventG2_Eject.run] kb_event: length correct')
@@ -5256,24 +5257,16 @@ class SdkEventG2_Eject(QThread):
                         if not os.path.exists(eject_alpha):
                             print('-- [SdkEventG2_Eject.run] sending notification: success')
                             notification_key = 1
-                        else:
-                            print('-- [SdkEventG2_Eject.run] sending notification: failure')
-                            notification_key = 2
-                    else:
-                        print('-- [SdkEventG2_Eject.run] kb_event: path does not exist')
-                        print('-- [SdkEventG2_Eject.run] sending notification: failure')
-                        notification_key = 2
+                            bool_eject_success = True
 
                 except Exception as e:
                     print('-- [SdkEventG2_Eject.run] Error:', e)
-                    print('-- [SdkEventG2_Eject.run] sending notification: failure')
-                    notification_key = 2
-
-            else:
-                print('-- [SdkEventG2_Eject.run] sending notification: failure')
-                notification_key = 2
 
         print('-- [SdkEventG2_Eject.run]: disarmed')
+
+        if bool_eject_success is False:
+            print('-- [SdkEventG2_Eject.run] sending notification: failure')
+            notification_key = 2
 
         """ disarm """
         g2_function_long_i = 0
@@ -5388,7 +5381,6 @@ class SdkEventG2_Mount(QThread):
                         # print('dict key:', dict_str)
                         # print('mount_alpha:', mount_alpha)
                         if canonical_caseless(dict_str) == canonical_caseless(mount_alpha):
-                            bool_guid_success = True
                             print('target:', _)
                             guid = disk_guid[i][dict_str]
                             print('guid:', guid)
@@ -5401,15 +5393,10 @@ class SdkEventG2_Mount(QThread):
                             if os.path.exists(dict_str):
                                 print('-- [SdkEventG2_Mount.run] sending notification: success')
                                 notification_key = 1
-
-                            else:
-                                print('-- [SdkEventG2_Mount.run] sending notification: failure')
-                                notification_key = 2
+                                bool_guid_success = True
 
                     except Exception as e:
                         print('-- [SdkEventG2_Mount.run] Error:', e)
-                        print('-- [SdkEventG2_Mount.run] sending notification: failure')
-                        notification_key = 2
 
                     i += 1
 
@@ -5518,6 +5505,7 @@ class SdkEventG2_Unmount(QThread):
         print('-- [SdkEventG2_Unmount.run] kb_event:', kb_event)
 
         kb_event = str(kb_event).strip()
+        bool_unmount_success = False
 
         if len(kb_event) == 1:
             print('-- [SdkEventG2_Unmount.run] kb_event: length correct')
@@ -5534,25 +5522,16 @@ class SdkEventG2_Unmount(QThread):
                         if not os.path.exists(umount_path):
                             print('-- [SdkEventG2_Unmount.run] sending notification: success')
                             notification_key = 1
-
-                        else:
-                            print('-- [SdkEventG2_Unmount.run] sending notification: failure')
-                            notification_key = 2
-
-                    else:
-                        print('-- [SdkEventG2_Unmount.run] sending notification: failure')
-                        notification_key = 2
+                            bool_unmount_success = True
 
                 except Exception as e:
                     print('-- [SdkEventG2_Unmount.run] Error:', e)
-                    print('-- [SdkEventG2_Unmount.run] sending notification: failure')
-                    notification_key = 2
-
-            else:
-                print('-- [SdkEventG2_Unmount.run] sending notification: failure')
-                notification_key = 2
 
         print('-- [SdkEventG2_Unmount.run]: disarmed')
+
+        if bool_unmount_success is False:
+            print('-- [SdkEventG2_Unmount.run] sending notification: failure')
+            notification_key = 2
 
         """ disarm """
         g2_function_long_i = 0
