@@ -7461,7 +7461,8 @@ class InternetConnectionClass(QThread):
                     print(e)
         if len(devices_kb) >= 1 and bool_switch_startup_net_con_kb is True:
             try:
-                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({1: (self.rgb_key)}))
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({170: (self.rgb_key)}))
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({188: (self.rgb_key)}))
             except Exception as e:
                 print(e)
 
@@ -7476,7 +7477,8 @@ class InternetConnectionClass(QThread):
                     print(e)
         if len(devices_kb) >= 1 and bool_switch_startup_net_con_kb is True:
             try:
-                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({1: sdk_color_backlight}))
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({170: sdk_color_backlight}))
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({188: sdk_color_backlight}))
             except Exception as e:
                 print(e)
 
@@ -7561,7 +7563,8 @@ class InternetConnectionClass(QThread):
         except Exception as e:
             print('-- [InternetConnectionClass.stop] Error:', e)
         try:
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({1: sdk_color_backlight}))
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({170: sdk_color_backlight}))
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({188: sdk_color_backlight}))
             try:
                 sdk.set_led_colors_flush_buffer()
             except Exception as e:
