@@ -5248,7 +5248,7 @@ class SdkSendInstructionClass(QThread):
                 except Exception as e:
                     print(e)
 
-            if bool_instruction_eject_end is True:
+            elif bool_instruction_eject_end is True:
                 bool_instruction_eject_end = False
                 g2_function_long_i = 0
                 for _ in corsairled_id_num_hddreadwrite:
@@ -5268,7 +5268,7 @@ class SdkSendInstructionClass(QThread):
                 except Exception as e:
                     print(e)
 
-            if bool_instruction_mount is True:
+            elif bool_instruction_mount is True:
                 bool_instruction_mount = False
                 try:
                     """ arm """
@@ -5289,7 +5289,7 @@ class SdkSendInstructionClass(QThread):
                 except Exception as e:
                     print(e)
 
-            if bool_instruction_mount_end is True:
+            elif bool_instruction_mount_end is True:
                 bool_instruction_mount_end = False
                 g2_function_long_i = 0
                 for _ in corsairled_id_num_hddreadwrite:
@@ -5309,7 +5309,7 @@ class SdkSendInstructionClass(QThread):
                 except Exception as e:
                     print(e)
 
-            if bool_instruction_unmount is True:
+            elif bool_instruction_unmount is True:
                 bool_instruction_unmount = False
                 try:
                     """ arm """
@@ -5330,7 +5330,7 @@ class SdkSendInstructionClass(QThread):
                 except Exception as e:
                     print(e)
 
-            if bool_instruction_unmount_end is True:
+            elif bool_instruction_unmount_end is True:
                 bool_instruction_unmount_end = False
                 g2_function_long_i = 0
                 for _ in corsairled_id_num_hddreadwrite:
