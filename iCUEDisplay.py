@@ -6308,6 +6308,27 @@ class KeyEventClass(QThread):
     def __init__(self):
         QThread.__init__(self)
 
+    def insert_state(self):
+        import ctypes
+        from win32con import VK_INSERT
+        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
+
+        # print(win32api.GetKeyState(VK_NUMLOCK))
+
+        # if (win32api.GetKeyState(VK_NUMLOCK)) == 0:
+        if (win32api.GetKeyState(VK_INSERT)) == 1:
+            # print('-- [KeyEventClass.run] VK_NUMLOCK state: enabled')
+            try:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({77: (255, 255, 0)}))
+            except Exception as e:
+                print(e)
+        if (win32api.GetKeyState(VK_INSERT)) == 0:
+            # print('-- [KeyEventClass.run] VK_NUMLOCK state: enabled')
+            try:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({77: sdk_color_backlight}))
+            except Exception as e:
+                print(e)
+
     def numlock_state(self):
         import ctypes
         from win32con import VK_NUMLOCK
@@ -6361,6 +6382,8 @@ class KeyEventClass(QThread):
                 bool_g2_input = False
             self.capslock_function()
             self.numlock_state()
+
+            self.insert_state()
             """ Example use of keyboard module
             keyboard.wait('-')
             """
