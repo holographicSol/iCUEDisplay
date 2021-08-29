@@ -3892,6 +3892,7 @@ class App(QMainWindow):
 
     def g1_function_short(self):
         global devices_kb, bool_power_plan_interact, power_plan, power_plan_index
+        global notification_key
         self.setFocus()
 
         print('-- [App.g1_function_short]: plugged in')
@@ -3915,6 +3916,7 @@ class App(QMainWindow):
                     cmd = 'powercfg /SETACTIVE '+power_plan_guid
                     print('running command:', cmd)
                     xcmd = subprocess.Popen(cmd, shell=True, startupinfo=info)
+
 
                 except Exception as e:
                     print('-- [App.g1_function_short] Error:', e)
@@ -5190,6 +5192,90 @@ class SdkNotificationClass(QThread):
                     print('-- [SdkNotificationClass.run] Error:', e)
 
                 self.notification_off()
+
+            elif notification_key == 3:
+                notification_key = 0
+                try:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({177: (255, 0, 0)}))
+                except Exception as e:
+                    print('-- [SdkNotificationClass.run] Error:', e)
+                try:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({178: (255, 0, 0)}))
+                except Exception as e:
+                    print('-- [SdkNotificationClass.run] Error:', e)
+                try:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({179: (255, 0, 0)}))
+                except Exception as e:
+                    print('-- [SdkNotificationClass.run] Error:', e)
+                try:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({180: (255, 0, 0)}))
+                except Exception as e:
+                    print('-- [SdkNotificationClass.run] Error:', e)
+
+                self.notification_off()
+
+            elif notification_key == 4:
+                notification_key = 0
+                try:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({177: (100, 255, 0)}))
+                except Exception as e:
+                    print('-- [SdkNotificationClass.run] Error:', e)
+                try:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({178: (100, 255, 0)}))
+                except Exception as e:
+                    print('-- [SdkNotificationClass.run] Error:', e)
+                try:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({179: (100, 255, 0)}))
+                except Exception as e:
+                    print('-- [SdkNotificationClass.run] Error:', e)
+                try:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({180: (100, 255, 0)}))
+                except Exception as e:
+                    print('-- [SdkNotificationClass.run] Error:', e)
+
+                self.notification_off()
+
+            elif notification_key == 5:
+                notification_key = 0
+                try:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({177: (0, 255, 255)}))
+                except Exception as e:
+                    print('-- [SdkNotificationClass.run] Error:', e)
+                try:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({178: (0, 255, 255)}))
+                except Exception as e:
+                    print('-- [SdkNotificationClass.run] Error:', e)
+                try:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({179: (0, 255, 255)}))
+                except Exception as e:
+                    print('-- [SdkNotificationClass.run] Error:', e)
+                try:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({180: (0, 255, 255)}))
+                except Exception as e:
+                    print('-- [SdkNotificationClass.run] Error:', e)
+
+                self.notification_off()
+
+            elif notification_key == 6:
+                notification_key = 0
+                try:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({177: (255, 15, 100)}))
+                except Exception as e:
+                    print('-- [SdkNotificationClass.run] Error:', e)
+                try:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({178: (255, 15, 100)}))
+                except Exception as e:
+                    print('-- [SdkNotificationClass.run] Error:', e)
+                try:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({179: (255, 15, 100)}))
+                except Exception as e:
+                    print('-- [SdkNotificationClass.run] Error:', e)
+                try:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({180: (255, 15, 100)}))
+                except Exception as e:
+                    print('-- [SdkNotificationClass.run] Error:', e)
+
+                self.notification_off()
             
             time.sleep(0.5)
 
@@ -5314,7 +5400,7 @@ class SdkSendInstructionClass(QThread):
             except Exception as e:
                 print(e)
 
-            time.sleep(0.01)
+            # time.sleep(0.01)
 
     def stop(self):
         print('-- [SdkSendInstructionClass.stop]: plugged in')
@@ -6313,7 +6399,7 @@ class PowerClass(QThread):
 
     def run(self):
         print('-- [PowerClass.run]: plugged in')
-        global power_plan, power_plan_index, devices_kb, devices_kb_selected, sdk, bool_onpress_clause_g1
+        global power_plan, power_plan_index, devices_kb, devices_kb_selected, sdk, bool_onpress_clause_g1, notification_key
         while True:
             try:
                 """ subprocess """
@@ -6334,6 +6420,8 @@ class PowerClass(QThread):
                         # print('-- [PowerClass.run] active power plan:', _)
                         if 'Power saver' in _:
                             self.active_pp = 1
+                            if self.active_pp != self.active_pp_prev:
+                                notification_key = 3
                             power_plan_index = 0
                             # if self.active_pp != self.active_pp_prev:
                             if bool_onpress_clause_g1 is not True:
@@ -6352,6 +6440,8 @@ class PowerClass(QThread):
 
                         elif 'Balanced' in _:
                             self.active_pp = 2
+                            if self.active_pp != self.active_pp_prev:
+                                notification_key = 4
                             power_plan_index = 1
                             # if self.active_pp != self.active_pp_prev:
                             if bool_onpress_clause_g1 is not True:
@@ -6370,6 +6460,8 @@ class PowerClass(QThread):
 
                         elif 'High performance' in _:
                             self.active_pp = 3
+                            if self.active_pp != self.active_pp_prev:
+                                notification_key = 5
                             power_plan_index = 2
                             # if self.active_pp != self.active_pp_prev:
                             if bool_onpress_clause_g1 is not True:
@@ -6388,6 +6480,8 @@ class PowerClass(QThread):
 
                         elif 'Ultimate Performance' in _:
                             self.active_pp = 4
+                            if self.active_pp != self.active_pp_prev:
+                                notification_key = 6
                             power_plan_index = 3
                             # if self.active_pp != self.active_pp_prev:
                             if bool_onpress_clause_g1 is not True:
@@ -7575,31 +7669,26 @@ class HddMonClass(QThread):
     def get_stat(self):
         # print('-- [HddMonClass.get_stat]: plugged in')
         global alpha_str, hdd_bytes_type_w, hdd_bytes_type_r, hdd_bytes_str, bool_alpha_stage_engaged
-        # print('-'*100)
         get_stat_allow = False
         try:
             self.disk_letter_complete = []
             try:
-                # print('-- [HddMonClass.get_stat] testing wmi call: 1')
                 try:
                     pythoncom.CoInitialize()
                     hdd_wmis = win32com.client.Dispatch("WbemScripting.SWbemLocator")
                 except Exception as e:
                     print(e)
                     self.get_stat()
-                # print('-- [HddMonClass.get_stat] testing wmi call:2')
                 try:
                     hdd_wbems = hdd_wmis.ConnectServer(".", "root\\cimv2")
                 except Exception as e:
                     print(e)
                     self.get_stat()
-                # print('-- [HddMonClass.get_stat] testing wmi call: 3')
                 try:
                     hdd_col_items = hdd_wbems.ExecQuery("SELECT * FROM Win32_PerfFormattedData_PerfDisk_PhysicalDisk")
                 except Exception as e:
                     print(e)
                     self.get_stat()
-                # print('-- [HddMonClass.get_stat] testing wmi call: 4')
                 get_stat_allow = True
             except Exception as e:
                 print(e)
@@ -7611,24 +7700,12 @@ class HddMonClass(QThread):
                         if len(disk_letter_0) >= 2:
                             disk_letter_0 = disk_letter_0[1].replace(':', '')
                             self.disk_letter_complete.append(disk_letter_0)
-                            # print(disk_letter_0)
                     if objItem.DiskWriteBytesPersec is not None:
                         if objItem.DiskReadBytesPersec is not None:
                             if '_Total' not in objItem.Name:
                                 if os.path.exists(str(disk_letter_0)+':/'):
                                     self.dwps = int(objItem.DiskWriteBytesPersec)
                                     self.drps = int(objItem.DiskReadBytesPersec)
-                                    # print(disk_letter_0, self.dwps, self.drps)
-                                    """ # Uncomment to use convert_bytes function if more data required
-                                    if int(objItem.DiskWriteBytesPersec) > 0:
-                                        self.b_type_key = 0
-                                        hdd_bytes_type_w = self.convert_bytes(self.dwps)
-                                        print('writes:', disk_letter_0, self.dwps, hdd_bytes_type_w, hdd_bytes_str)
-                                    if int(objItem.DiskReadBytesPersec) > 0:
-                                        self.b_type_key = 1
-                                        hdd_bytes_type_r = self.convert_bytes(self.drps)
-                                        print('reads:', disk_letter_0, self.drps, hdd_bytes_type_r, hdd_bytes_str)
-                                    """
                                     if self.dwps == 0 or self.drps == 0:
                                         self.i_w = 0
                                         for _ in alpha_str:
@@ -7656,30 +7733,11 @@ class HddMonClass(QThread):
                 self.i_umount = 0
                 for _ in alpha_str:
                     if _.upper() not in self.disk_letter_complete:
-                        # print(_, self.disk_letter_complete)
                         if bool_alpha_stage_engaged is False:
                             self.send_instruction_umounted()
                     self.i_umount += 1
-
         except Exception as e:
             print('-- [HddMonClass.get_stat] Error:', e)
-
-    def convert_bytes(self, num):
-        # print('-- [HddMonClass.convert_bytes]: plugged in')
-        global hdd_bytes_type_w, hdd_bytes_type_r, hdd_bytes_str
-        # print('-- [NetworkMonClass.convert_bytes]: plugged in')
-        x = ['bytes', 'KB', 'MB', 'GB', 'TB']
-        i = 0
-        for _ in x:
-            if num < 1024.0:
-                hdd_bytes_str = x[i]
-                if self.b_type_key == 0:
-                    hdd_bytes_type_w = x[i]
-                elif self.b_type_key == 1:
-                    hdd_bytes_type_r = x[i]
-                return num
-            num /= 1024.0
-            i += 1
 
     def stop(self):
         print('-- [HddMonClass.stop]: plugged in')
@@ -7961,7 +8019,7 @@ class WindowsUpdateMonitorClass(QThread):
                         except Exception as e:
                             print('-- [WindowsUpdateMonitorClass.run] Error:', e)
 
-                if win_update_dir_sz < self.win_update_dir_sz_prev:
+                elif win_update_dir_sz < self.win_update_dir_sz_prev:
                     # print('-- [WindowsUpdateMonitorClass.run]: download update may be in progress')
                     self.win_update_dir_sz_prev = win_update_dir_sz
 
