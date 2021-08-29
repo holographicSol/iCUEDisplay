@@ -185,9 +185,11 @@ devices_ms_name = []
 devices_previous = []
 devices_gpu_selected = int()
 devices_network_adapter_name = ""
-corsairled_id_num_cpu = [116,113, 109, 103]
+# corsairled_id_num_cpu = [116,113, 109, 103]
+corsairled_id_num_cpu = [119,116, 113, 109]
 corsairled_id_num_dram = [117,114, 110, 104]
-corsairled_id_num_vram = [118,115, 111, 105]
+# corsairled_id_num_vram = [118,115, 111, 105]
+corsairled_id_num_vram = [120,118, 115, 111]
 corsairled_id_num_hddreadwrite = [38, 55, 53, 40, 28, 41, 42, 43, 33, 44, 45, 46, 57, 56, 34, 35, 26, 29, 39, 30, 32, 54, 27, 52, 31, 51]
 corsairled_id_num_netrcv = [14, 15, 16, 17, 18, 19, 20, 21, 22]
 corsairled_id_num_netsnt = [2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -202,9 +204,9 @@ alpha_str = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n
              'u', 'v', 'w', 'x', 'y', 'z']
 sdk_color_backlight_on = [15, 15, 20]
 sdk_color_backlight = (0, 0, 0)
-sdk_color_cpu_on = [255, 255, 255]
-sdk_color_dram_on = [255, 255, 255]
-sdk_color_vram_on = [255, 255, 255]
+sdk_color_cpu_on = [0, 255, 255]
+sdk_color_dram_on = [255, 255, 0]
+sdk_color_vram_on = [100, 0, 255]
 sdk_color_hddwrite_on = [255, 255, 255]
 sdk_color_hddread_on = [255, 255, 255]
 sdk_color_net_traffic_bytes = [255, 7, 0]
@@ -262,13 +264,13 @@ if os.path.exists('./py/bin/OpenHardwareMonitorLib.dll'):
     except Exception as e:
         print('-- error unblocking OpenHardwareMonitorLib.dll:', e)
 
-config_data = ['sdk_color_cpu_on: 255,255,0',
+config_data = ['sdk_color_cpu_on: 0,255,255',
                'timing_cpu_util: 0.1',
                'cpu_startup: true',
                'sdk_color_dram_on: 255,255,0',
                'timing_dram_util: 2.0',
                'dram_startup: true',
-               'sdk_color_vram_on: 255,255,0',
+               'sdk_color_vram_on: 100,0,255',
                'timing_vram_util: 2.0',
                'vram_startup: true',
                'devices_gpu_selected: 0',
@@ -6306,6 +6308,27 @@ class KeyEventClass(QThread):
     def __init__(self):
         QThread.__init__(self)
 
+    def numlock_state(self):
+        import ctypes
+        from win32con import VK_NUMLOCK
+        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
+
+        # print(win32api.GetKeyState(VK_NUMLOCK))
+
+        # if (win32api.GetKeyState(VK_NUMLOCK)) == 0:
+        if (win32api.GetKeyState(VK_NUMLOCK)) == 1:
+            # print('-- [KeyEventClass.run] VK_NUMLOCK state: enabled')
+            try:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({103: (255, 255, 0)}))
+            except Exception as e:
+                print(e)
+        if (win32api.GetKeyState(VK_NUMLOCK)) == 0:
+            # print('-- [KeyEventClass.run] VK_NUMLOCK state: enabled')
+            try:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({103: sdk_color_backlight}))
+            except Exception as e:
+                print(e)
+
     def capslock_state(self):
         import ctypes
         user32_dll = ctypes.WinDLL("User32.dll")
@@ -6337,6 +6360,7 @@ class KeyEventClass(QThread):
                 kb_event = keyboard.read_key()
                 bool_g2_input = False
             self.capslock_function()
+            self.numlock_state()
             """ Example use of keyboard module
             keyboard.wait('-')
             """
