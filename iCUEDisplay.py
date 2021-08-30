@@ -7673,7 +7673,7 @@ class HddMonClass(QThread):
         global sdk, devices_kb, devices_kb_selected
         global corsairled_id_num_hddreadwrite, sdk_color_hddread_on
         try:
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[self.i_r]: sdk_color_hddread_on}))
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[self.i_w]: sdk_color_hddread_on}))
         except Exception as e:
             print('-- [HddMonClass.send_read_instruction] Error:', e)
 
@@ -7697,9 +7697,9 @@ class HddMonClass(QThread):
         global corsairled_id_num_hddreadwrite, sdk_color_hddread_on, sdk_color_backlight
         try:
             if bool_switch_display_disk_mount is True:
-                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[self.i_r]: (0, 0, 255)}))
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[self.i_w]: (0, 0, 255)}))
             else:
-                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[self.i_r]: sdk_color_backlight}))
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_hddreadwrite[self.i_w]: sdk_color_backlight}))
         except Exception as e:
             print('-- [HddMonClass.send_read_instruction_1] Error:', e)
 
@@ -7753,30 +7753,25 @@ class HddMonClass(QThread):
                                 if os.path.exists(str(disk_letter_0)+':/'):
                                     self.dwps = int(objItem.DiskWriteBytesPersec)
                                     self.drps = int(objItem.DiskReadBytesPersec)
-                                    if self.dwps == 0 or self.drps == 0:
-                                        self.i_w = 0
-                                        for _ in alpha_str:
+
+                                    self.i_w = 0
+                                    for _ in alpha_str:
+                                        if self.dwps == 0 or self.drps == 0:
                                             if canonical_caseless(disk_letter_0) == canonical_caseless(alpha_str[self.i_w]):
                                                 if bool_alpha_stage_engaged is False:
                                                     self.send_write_instruction_1()
-                                            self.i_w += 1
-                                    elif self.dwps > 0 or self.drps > 0:
-                                        if self.dwps >= self.drps:
-                                            self.bool_dwps_greater = True
-                                            self.i_w = 0
-                                            for _ in alpha_str:
+                                        elif self.dwps > 0 or self.drps > 0:
+                                            if self.dwps >= self.drps:
+                                                self.bool_dwps_greater = True
                                                 if canonical_caseless(disk_letter_0) == canonical_caseless(alpha_str[self.i_w]):
                                                     if bool_alpha_stage_engaged is False:
                                                         self.send_write_instruction()
-                                                self.i_w += 1
-                                        elif self.dwps < self.drps:
-                                            self.bool_dwps_greater = False
-                                            self.i_r = 0
-                                            for _ in alpha_str:
-                                                if canonical_caseless(disk_letter_0) == canonical_caseless(alpha_str[self.i_r]):
+                                            elif self.dwps < self.drps:
+                                                self.bool_dwps_greater = False
+                                                if canonical_caseless(disk_letter_0) == canonical_caseless(alpha_str[self.i_w]):
                                                     if bool_alpha_stage_engaged is False:
                                                         self.send_read_instruction()
-                                                self.i_r += 1
+                                        self.i_w += 1
                 self.i_umount = 0
                 for _ in alpha_str:
                     if _.upper() not in self.disk_letter_complete:
