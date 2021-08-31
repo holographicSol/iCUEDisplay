@@ -3076,7 +3076,7 @@ class App(QMainWindow):
         global devices_kb, devices_ms
         global devices_kb_selected, devices_ms_selected
         global corsairled_id_num_ms_complete, corsairled_id_num_kb_complete
-        global sdk_color_backlight, bool_switch_backlight, sdk_color_backlight_on
+        global sdk_color_backlight, bool_switch_backlight, sdk_color_backlight_on, bool_allow_g_key_access
 
         global devices_kb, devices_ms
         global thread_net_connection
@@ -3112,6 +3112,14 @@ class App(QMainWindow):
             if bool_power_plan_interact is True:
                 thread_power[0].stop()
                 thread_power[0].start()
+
+        if bool_allow_g_key_access is False:
+            for _ in corsairled_id_num_gkeys:
+                itm = [{_: (255, 0, 0)}]
+                try:
+                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], itm[0])
+                except Exception as e:
+                    print(e)
 
     def btn_bck_light_function(self):
         print('-- [App.btn_bck_light_function]: plugged in')
