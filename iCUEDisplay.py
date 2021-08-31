@@ -3076,16 +3076,15 @@ class App(QMainWindow):
             print('-- [App.write_changes] Error:', e)
         self.write_engaged = False
 
-    def color_all_id(self):
-        global bool_allow_g_key_access
-
     def btn_bck_light_function(self):
         print('-- [App.btn_bck_light_function]: plugged in')
         global bool_btn_backlight_engaged
         bool_btn_backlight_engaged = True
         global sdk_color_backlight
+        global set_device_color_select
         global sdk_color_backlight, bool_switch_backlight, sdk_color_backlight_on, sdk_color_backlight_on_ms
         global set_device_color_select, bool_switch_backlight_ms
+        global bool_instruction_color_ms_on, bool_instruction_color_kb, bool_instruction_color_ms_off
         
         self.setFocus()
         if set_device_color_select == 0:
@@ -3095,6 +3094,7 @@ class App(QMainWindow):
                     self.write_changes()
                     sdk_color_backlight = sdk_color_backlight_on
                     bool_switch_backlight = True
+                    bool_switch_backlight_ms = True
                     print('-- [App.btn_bck_light_function] setting bool_switch_backlight:', bool_switch_backlight)
                     self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_0)
                     self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
@@ -3105,17 +3105,24 @@ class App(QMainWindow):
 
                     sdk_color_backlight = (0, 0, 0)
                     bool_switch_backlight = False
+                    bool_switch_backlight_ms = False
                     print('-- [App.btn_bck_light_function] setting bool_switch_backlight:', bool_switch_backlight)
                     self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_1)
                     self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
                     self.lbl_backlight_sub.setStyleSheet(self.btn_menu_style)
 
+                bool_instruction_color_kb = True
+
         elif set_device_color_select == 1:
             if bool_switch_backlight_ms is True:
                 bool_switch_backlight_ms = False
+                bool_instruction_color_ms_off = True
+
             elif bool_switch_backlight_ms is False:
                 bool_switch_backlight_ms = True
+                bool_instruction_color_ms_on = True
 
+        set_device_color_select = 0
         bool_btn_backlight_engaged = False
 
     def backlight_auto_function(self):
@@ -3176,8 +3183,8 @@ class App(QMainWindow):
         global devices_kb, devices_ms
         global devices_kb_selected, devices_ms_selected
         global corsairled_id_num_ms_complete, corsairled_id_num_kb_complete
-        global sdk_color_backlight
-        global sdk_color_backlight_on, sdk_color_backlight, bool_switch_backlight, bool_switch_backlight
+        global sdk_color_backlight_on, sdk_color_backlight, bool_switch_backlight
+        global bool_instruction_color_kb, bool_instruction_color_ms_on, bool_switch_backlight_ms, sdk_color_backlight_on_ms
         self.setFocus()
         print('sdk_color_backlight_on_str:', self.qle_backlight_rgb_on.text())
         if self.write_engaged is False:
@@ -3197,6 +3204,7 @@ class App(QMainWindow):
                 var_0, var_1, var_2 = var[0], var[1], var[2]
                 var_0_int, var_1_int, var_2_int = int(var_0), int(var_1), int(var_2)
                 sdk_color_backlight = [var_0_int, var_1_int, var_2_int]
+                sdk_color_backlight_on_ms = sdk_color_backlight
             else:
                 print('-- [App.btn_backlight_rgb_on_function] self.write_var failed sanitization checks:', self.qle_backlight_rgb_on.text())
                 self.sdk_color_backlight_on_str = str(sdk_color_backlight_on).replace('[', '')
@@ -3207,7 +3215,11 @@ class App(QMainWindow):
                 print('sdk_color_backlight_on_str False:', self.sdk_color_backlight_on_str)
             self.qle_backlight_rgb_on.setAlignment(Qt.AlignCenter)
 
-            self.color_all_id()
+        if bool_switch_backlight is True:
+            bool_instruction_color_kb = True
+
+        if bool_switch_backlight_ms is True:
+            bool_instruction_color_ms_on = True
 
     def btn_exclusive_con_function(self):
         print('-- [App.btn_exclusive_con_function]: plugged in')
@@ -3988,8 +4000,6 @@ class App(QMainWindow):
                         self.btn_bck_light_function()
                     except Exception as e:
                         print(e)
-                    bool_instruction_color_kb = True
-                    bool_instruction_color_ms_on = True
 
     def g6_function_long_2sec(self):
         print('-- [App.g6_function_long_2sec]: plugged in')
@@ -4003,10 +4013,6 @@ class App(QMainWindow):
                         self.btn_bck_light_function()
                     except Exception as e:
                         print(e)
-                    if bool_switch_backlight_ms is True:
-                        bool_instruction_color_ms_off = True
-                    elif bool_switch_backlight_ms is False:
-                        bool_instruction_color_ms_on = True
 
     def g6_function_long_3sec(self):
         print('-- [App.g6_function_long_3sec]: plugged in')
@@ -4083,8 +4089,7 @@ class App(QMainWindow):
                                                  self.g5_function_long_2sec, self.g6_function_long_2sec
                                                  )
         thread_sdk_event_handler.append(sdk_event_handler)
-        backlight_auto = BackLightClass(self.color_all_id,
-                                        self.btn_bck_light,
+        backlight_auto = BackLightClass(self.btn_bck_light,
                                         self.btn_backlight_sub,
                                         self.btn_title_bar_style_0,
                                         self.btn_title_bar_style_1,
@@ -4273,7 +4278,6 @@ class App(QMainWindow):
             self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_0)
             self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
             self.lbl_backlight_sub.setStyleSheet(self.btn_menu_style_1)
-            self.color_all_id()
         elif bool_switch_backlight is False:
             self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_1)
             self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
@@ -4771,6 +4775,7 @@ class CompileDevicesClass(QThread):
         global bool_backlight_interact
         global bool_switch_fahrenheit
         global bool_switch_g2_disks
+        global bool_switch_backlight_ms, sdk_color_backlight_on_ms
 
         startup_loc = '/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/iCUEDisplay.lnk'
         bool_backend_valid_network_adapter_name = False
@@ -4993,11 +4998,14 @@ class CompileDevicesClass(QThread):
                         sdk_color_backlight_on[0] = int(var[0])
                         sdk_color_backlight_on[1] = int(var[1])
                         sdk_color_backlight_on[2] = int(var[2])
+                        sdk_color_backlight_on_ms = sdk_color_backlight_on
                 if line == 'bool_switch_backlight: true':
                     bool_switch_backlight = True
+                    bool_switch_backlight_ms = True
                     sdk_color_backlight = sdk_color_backlight_on
                 elif line == 'bool_switch_backlight: false':
                     bool_switch_backlight = False
+                    bool_switch_backlight_ms = False
                 if line == 'bool_switch_backlight_auto: true':
                     bool_switch_backlight_auto = True
                 if line == 'bool_switch_backlight_auto: false':
@@ -5458,16 +5466,13 @@ class SdkSendInstructionClass(QThread):
 
                     for _ in corsairled_id_num_gkeys:
                         if temporary_bool is False:
-                            print('temporary_bool', temporary_bool, _)
                             itm = [{_: (255, 0, 0)}]
                             try:
                                 sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], itm[0])
                             except Exception as e:
                                 print(e)
-                            # sdk.set_led_colors_flush_buffer()
 
                         elif temporary_bool is True:
-                            print('temporary_bool', temporary_bool, _)
                             itm = [{_: sdk_color_backlight}]
                             try:
                                 sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], itm[0])
@@ -5476,10 +5481,9 @@ class SdkSendInstructionClass(QThread):
                         sdk.set_led_colors_flush_buffer()
                     self.stop_threads()
 
-            elif bool_instruction_color_ms_on is True:
+            if bool_instruction_color_ms_on is True:
                 bool_instruction_color_ms_on = False
                 if len(devices_ms) > 0:
-                    print('1', _)
                     for _ in corsairled_id_num_ms_complete:
                         itm = [{_: sdk_color_backlight_on_ms}]
                         try:
@@ -5494,7 +5498,6 @@ class SdkSendInstructionClass(QThread):
             elif bool_instruction_color_ms_off is True:
                 bool_instruction_color_ms_off = False
                 if len(devices_ms) > 0:
-                    print('1', _)
                     for _ in corsairled_id_num_ms_complete:
                         itm = [{_: (0, 0, 0)}]
                         try:
@@ -7153,9 +7156,8 @@ class TemperatureClass(QThread):
 class BackLightClass(QThread):
     print('-- [BackLightClass]: plugged in')
 
-    def __init__(self, color_all_id, btn_bck_light, btn_backlight_sub, btn_title_bar_style_1, btn_title_bar_style_0, btn_menu_style, btn_menu_style_1, lbl_backlight_sub):
+    def __init__(self, btn_bck_light, btn_backlight_sub, btn_title_bar_style_1, btn_title_bar_style_0, btn_menu_style, btn_menu_style_1, lbl_backlight_sub):
         QThread.__init__(self)
-        self.color_all_id = color_all_id
         self.btn_bck_light = btn_bck_light
         self.btn_backlight_sub = btn_backlight_sub
         self.btn_title_bar_style_0 = btn_title_bar_style_0
@@ -7167,6 +7169,8 @@ class BackLightClass(QThread):
     def run(self):
         print('-- [BackLightClass.run]: plugged in')
         global backlight_time_0, backlight_time_1, bool_switch_backlight, sdk_color_backlight, sdk_color_backlight_on
+        global bool_instruction_color_ms_on, bool_instruction_color_ms_off
+        global bool_instruction_color_kb
 
         while True:
             date_time_now = str(datetime.datetime.now())
@@ -7187,7 +7191,8 @@ class BackLightClass(QThread):
                         self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
                         self.lbl_backlight_sub.setStyleSheet(self.btn_menu_style_1)
                         sdk_color_backlight = sdk_color_backlight_on
-                        self.color_all_id()
+                        bool_instruction_color_ms_on = True
+                        bool_instruction_color_kb = True
                 if time_now_int < backlight_time_0_int or time_now_int >= backlight_time_1_int:
                     if bool_switch_backlight is True:
                         print('-- [BackLightClass.run] auto backlight: turning off')
@@ -7196,7 +7201,8 @@ class BackLightClass(QThread):
                         self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
                         self.lbl_backlight_sub.setStyleSheet(self.btn_menu_style)
                         sdk_color_backlight = (0, 0, 0)
-                        self.color_all_id()
+                        bool_instruction_color_ms_off = True
+                        bool_instruction_color_kb = True
             elif backlight_time_0_int > backlight_time_1_int:
                 # print('-- [BackLightClass.run] auto backlight: backlight_time_0_int > backlight_time_1_int')
                 if time_now_str.startswith('0'):
@@ -7208,7 +7214,8 @@ class BackLightClass(QThread):
                             self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
                             self.lbl_backlight_sub.setStyleSheet(self.btn_menu_style_1)
                             sdk_color_backlight = sdk_color_backlight_on
-                            self.color_all_id()
+                            bool_instruction_color_ms_on = True
+                            bool_instruction_color_kb = True
                     else:
                         if bool_switch_backlight is True:
                             print('-- [BackLightClass.run] auto backlight: turning off')
@@ -7217,7 +7224,8 @@ class BackLightClass(QThread):
                             self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
                             self.lbl_backlight_sub.setStyleSheet(self.btn_menu_style)
                             sdk_color_backlight = (0, 0, 0)
-                            self.color_all_id()
+                            bool_instruction_color_ms_off = True
+                            bool_instruction_color_kb = True
                 else:
                     if time_now_int <= backlight_time_1_int or time_now_int >= backlight_time_0_int:
                         if bool_switch_backlight is False:
@@ -7227,7 +7235,8 @@ class BackLightClass(QThread):
                             self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
                             self.lbl_backlight_sub.setStyleSheet(self.btn_menu_style_1)
                             sdk_color_backlight = sdk_color_backlight_on
-                            self.color_all_id()
+                            bool_instruction_color_ms_on = True
+                            bool_instruction_color_kb = True
                     else:
                         if bool_switch_backlight is True:
                             print('-- [BackLightClass.run] auto backlight: turning off')
@@ -7236,7 +7245,8 @@ class BackLightClass(QThread):
                             self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
                             self.lbl_backlight_sub.setStyleSheet(self.btn_menu_style)
                             sdk_color_backlight = (0, 0, 0)
-                            self.color_all_id()
+                            bool_instruction_color_ms_off = True
+                            bool_instruction_color_kb = True
             time.sleep(1)
 
     def stop(self):
