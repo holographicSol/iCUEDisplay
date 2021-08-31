@@ -3094,7 +3094,6 @@ class App(QMainWindow):
                     self.write_changes()
                     sdk_color_backlight = sdk_color_backlight_on
                     bool_switch_backlight = True
-                    bool_switch_backlight_ms = True
                     print('-- [App.btn_bck_light_function] setting bool_switch_backlight:', bool_switch_backlight)
                     self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_0)
                     self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
@@ -3105,7 +3104,6 @@ class App(QMainWindow):
 
                     sdk_color_backlight = (0, 0, 0)
                     bool_switch_backlight = False
-                    bool_switch_backlight_ms = False
                     print('-- [App.btn_bck_light_function] setting bool_switch_backlight:', bool_switch_backlight)
                     self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_1)
                     self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
