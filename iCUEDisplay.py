@@ -122,7 +122,7 @@ bool_onpress_clause_g4 = False
 bool_onpress_clause_g5 = False
 bool_onpress_clause_g6 = False
 bool_switch_fahrenheit = False
-bool_backlight_interact = False
+bool_lock_gkeys = False
 bool_powershell_interact = False
 bool_show_overlay = False
 bool_power_plan_interact = False
@@ -211,8 +211,7 @@ corsairled_id_num_kb_complete = []
 corsairled_id_num_ms_complete = []
 alpha_str = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
              'u', 'v', 'w', 'x', 'y', 'z']
-sdk_color_backlight_on_ms = [15, 15, 20]
-sdk_color_backlight_on = [15, 15, 20]
+
 sdk_color_backlight = (0, 0, 0)
 sdk_color_cpu_on = [0, 255, 255]
 sdk_color_dram_on = [255, 255, 0]
@@ -312,9 +311,9 @@ config_data = ['sdk_color_cpu_on: 0,255,255',
                'bool_switch_startup_media_display: false',
                'bool_power_plan_interact: false',
                'bool_powershell_interact: false',
-               'bool_backlight_interact: false',
                'bool_switch_fahrenheit: false',
-               'bool_switch_g2_disks: false']
+               'bool_switch_g2_disks: false',
+               'bool_lock_gkeys: false']
 
 
 def create_new():
@@ -801,17 +800,17 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_refresh_recompile)
         ui_object_complete.append(self.btn_refresh_recompile)
 
-        self.btn_bck_light = QPushButton(self)
-        self.btn_bck_light.move(126 + 4, 6)
-        self.btn_bck_light.resize(64, 28)
-        self.btn_bck_light.setFont(self.font_s7b)
-        self.btn_bck_light.setText('BACKLIGHT')
-        self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_1)
-        self.btn_bck_light.clicked.connect(self.btn_bck_light_function)
-        print('-- [App.__init__] created:', self.btn_bck_light)
-        self.object_interaction_enabled.append(self.btn_bck_light)
-        ui_object_complete.append(self.btn_bck_light)
-        ui_object_font_list_s7b.append(self.btn_bck_light)
+        # self.btn_bck_light = QPushButton(self)
+        # self.btn_bck_light.move(126 + 4, 6)
+        # self.btn_bck_light.resize(64, 28)
+        # self.btn_bck_light.setFont(self.font_s7b)
+        # self.btn_bck_light.setText('BACKLIGHT')
+        # self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_1)
+        # self.btn_bck_light.clicked.connect(self.btn_bck_light_function)
+        # print('-- [App.__init__] created:', self.btn_bck_light)
+        # self.object_interaction_enabled.append(self.btn_bck_light)
+        # ui_object_complete.append(self.btn_bck_light)
+        # ui_object_font_list_s7b.append(self.btn_bck_light)
 
         self.btn_feature_page_home = QPushButton(self)
         self.btn_feature_page_home.move(0, self.height - 4 - 28 - 4 - 28 - 4 - 28 - 4 - 28 - 4 - 28 - 4 - 28 - 4 - 28)
@@ -1970,86 +1969,6 @@ class App(QMainWindow):
         self.object_interaction_enabled.append(self.btn_start_minimized)
         ui_object_complete.append(self.btn_start_minimized)
 
-        self.lbl_backlight_sub = QPushButton(self)
-        self.lbl_backlight_sub.move(self.menu_obj_pos_w + 2, self.height - 4 - self.monitor_btn_h)
-        self.lbl_backlight_sub.resize(86, 28)
-        self.lbl_backlight_sub.setFont(self.font_s8b)
-        self.lbl_backlight_sub.setText('Backlight')
-        self.lbl_backlight_sub.setStyleSheet(self.btn_menu_style)
-        self.lbl_backlight_sub.clicked.connect(self.btn_bck_light_function)
-        print('-- [App.__init__] created:', self.lbl_backlight_sub)
-        ui_object_complete.append(self.lbl_backlight_sub)
-        ui_object_font_list_s8b.append(self.lbl_backlight_sub)
-
-        self.btn_backlight_sub = QPushButton(self)
-        self.btn_backlight_sub.move(self.menu_obj_pos_w + 2 + 86 + 4, self.height - 4 - self.monitor_btn_h)
-        self.btn_backlight_sub.resize(28, 28)
-        self.btn_backlight_sub.setStyleSheet(self.btn_menu_style)
-        self.btn_backlight_sub.setIconSize(self.tog_switch_ico_sz)
-        self.btn_backlight_sub.clicked.connect(self.btn_bck_light_function)
-        print('-- [App.__init__] created:', self.btn_backlight_sub)
-        self.object_interaction_enabled.append(self.btn_backlight_sub)
-        ui_object_complete.append(self.btn_backlight_sub)
-
-        self.qle_backlight_rgb_on = QLineEdit(self)
-        self.qle_backlight_rgb_on.resize(self.monitor_btn_w, self.monitor_btn_h)
-        self.qle_backlight_rgb_on.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4, self.height - 4 - self.monitor_btn_h)
-        self.qle_backlight_rgb_on.setFont(self.font_s8b)
-        self.qle_backlight_rgb_on.returnPressed.connect(self.btn_backlight_rgb_on_function)
-        self.qle_backlight_rgb_on.setStyleSheet(self.qle_menu_style)
-        self.qle_backlight_rgb_on.setAlignment(Qt.AlignCenter)
-        print('-- [App.__init__] created:', self.qle_backlight_rgb_on)
-        self.object_interaction_readonly.append(self.qle_backlight_rgb_on)
-        ui_object_complete.append(self.qle_backlight_rgb_on)
-        ui_object_font_list_s8b.append(self.qle_backlight_rgb_on)
-
-        self.lbl_backlight_auto = QPushButton(self)
-        self.lbl_backlight_auto.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4, self.height - 4 - self.monitor_btn_h)
-        self.lbl_backlight_auto.resize(92, self.monitor_btn_h)
-        self.lbl_backlight_auto.setFont(self.font_s8b)
-        self.lbl_backlight_auto.setText('Automatic')
-        self.lbl_backlight_auto.setStyleSheet(self.btn_menu_style)
-        self.lbl_backlight_auto.clicked.connect(self.backlight_auto_function)
-        print('-- [App.__init__] created:', self.lbl_backlight_auto)
-        ui_object_complete.append(self.lbl_backlight_auto)
-        ui_object_font_list_s8b.append(self.lbl_backlight_auto)
-
-        self.btn_backlight_auto = QPushButton(self)
-        self.btn_backlight_auto.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 92 + 4, self.height - 4 - self.monitor_btn_h)
-        self.btn_backlight_auto.resize(28, 28)
-        self.btn_backlight_auto.setStyleSheet(self.btn_menu_style)
-        self.btn_backlight_auto.setIconSize(self.tog_switch_ico_sz)
-        self.btn_backlight_auto.clicked.connect(self.backlight_auto_function)
-        print('-- [App.__init__] created:', self.btn_backlight_auto)
-        self.object_interaction_enabled.append(self.btn_backlight_auto)
-        ui_object_complete.append(self.btn_backlight_auto)
-
-        self.btn_backlight_auto_time_0 = QLineEdit(self)
-        self.btn_backlight_auto_time_0.resize(42, self.monitor_btn_h)
-        self.btn_backlight_auto_time_0.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 92 + 4 + 28 + 4, self.height - 4 - self.monitor_btn_h)
-        self.btn_backlight_auto_time_0.setFont(self.font_s8b)
-        self.btn_backlight_auto_time_0.returnPressed.connect(self.btn_backlight_auto_time_0_function)
-        self.btn_backlight_auto_time_0.setStyleSheet(self.qle_menu_style)
-        self.btn_backlight_auto_time_0.setAlignment(Qt.AlignCenter)
-        print('-- [App.__init__] created:', self.btn_backlight_auto_time_0)
-        self.btn_backlight_auto_time_0.setToolTip('Automatic Backlight Time On\n\nAccepts only 24h Format.\n\nExample 1: 0000\nExample 2: 0030\nExample 3: 0900')
-        self.object_interaction_readonly.append(self.btn_backlight_auto_time_0)
-        ui_object_complete.append(self.btn_backlight_auto_time_0)
-        ui_object_font_list_s8b.append(self.btn_backlight_auto_time_0)
-
-        self.btn_backlight_auto_time_1 = QLineEdit(self)
-        self.btn_backlight_auto_time_1.resize(42, self.monitor_btn_h)
-        self.btn_backlight_auto_time_1.move(self.menu_obj_pos_w + 2 + 86 + 4 + 28 + 4 + self.monitor_btn_w + 4 + 92 + 4 + 28 + 4 + 42 + 4, self.height - 4 - self.monitor_btn_h)
-        self.btn_backlight_auto_time_1.setFont(self.font_s8b)
-        self.btn_backlight_auto_time_1.returnPressed.connect(self.btn_backlight_auto_time_1_function)
-        self.btn_backlight_auto_time_1.setStyleSheet(self.qle_menu_style)
-        self.btn_backlight_auto_time_1.setAlignment(Qt.AlignCenter)
-        print('-- [App.__init__] created:', self.btn_backlight_auto_time_1)
-        self.btn_backlight_auto_time_1.setToolTip('Automatic Backlight Time Off\n\nAccepts only 24h Format.\n\nExample 1: 0000\nExample 2: 0030\nExample 3: 0900')
-        self.object_interaction_readonly.append(self.btn_backlight_auto_time_1)
-        ui_object_complete.append(self.btn_backlight_auto_time_1)
-        ui_object_font_list_s8b.append(self.btn_backlight_auto_time_1)
-
         self.lbl_media_display = QPushButton(self)
         self.lbl_media_display.move(self.menu_obj_pos_w + 2, self.height - (4 * 4) - (self.monitor_btn_h * 4))
         self.lbl_media_display.resize(126, self.monitor_btn_h)
@@ -2277,28 +2196,28 @@ class App(QMainWindow):
         ui_object_complete.append(self.btn_powershell)
         self.btn_powershell.setToolTip('G5 Powershell\n\nEnables/Disables G5 Powershell.')
 
-        self.lbl_g5_backlight = QPushButton(self)
-        self.lbl_g5_backlight.move(self.menu_obj_pos_w + 2, self.height - (4 * 1) - (self.monitor_btn_h * 1))
-        self.lbl_g5_backlight.resize(126, self.monitor_btn_h)
-        self.lbl_g5_backlight.setFont(self.font_s8b)
-        self.lbl_g5_backlight.setText('G6 Backlight')
-        self.lbl_g5_backlight.setStyleSheet(self.btn_menu_style)
-        self.lbl_g5_backlight.clicked.connect(self.btn_g5_backlight_function)
-        print('-- [App.__init__] created:', self.lbl_g5_backlight)
-        ui_object_complete.append(self.lbl_g5_backlight)
-        ui_object_font_list_s8b.append(self.lbl_g5_backlight)
-        self.lbl_g5_backlight.setToolTip('G6 Backlight\n\nEnables/Disables G6 Backlight.\n\nG6 will turn on/off iCUE Displays backlight feature for use in low light conditions.\n\nG6 Short Press: Lock/Unlock GKey Functions.\nG6 Hold 1 Second: Enable/Disable Keyboard Backlight.\nG6 Hold 2 Seconds: Enable/Disable Mouse Backlight.')
+        self.lbl_lock_gkeys = QPushButton(self)
+        self.lbl_lock_gkeys.move(self.menu_obj_pos_w + 2, self.height - (4 * 1) - (self.monitor_btn_h * 1))
+        self.lbl_lock_gkeys.resize(126, self.monitor_btn_h)
+        self.lbl_lock_gkeys.setFont(self.font_s8b)
+        self.lbl_lock_gkeys.setText('G6 Lock Gkeys')
+        self.lbl_lock_gkeys.setStyleSheet(self.btn_menu_style)
+        self.lbl_lock_gkeys.clicked.connect(self.btn_lock_gkeys_function)
+        print('-- [App.__init__] created:', self.lbl_lock_gkeys)
+        ui_object_complete.append(self.lbl_lock_gkeys)
+        ui_object_font_list_s8b.append(self.lbl_lock_gkeys)
+        self.lbl_lock_gkeys.setToolTip('G6 Lock Gkeys\n\nEnables/Disables GKeys.')
 
-        self.btn_g5_backlight = QPushButton(self)
-        self.btn_g5_backlight.move(self.menu_obj_pos_w + 2 + 4 + 126, self.height - (4 * 1) - (self.monitor_btn_h * 1))
-        self.btn_g5_backlight.resize(28, 28)
-        self.btn_g5_backlight.setStyleSheet(self.btn_menu_style)
-        self.btn_g5_backlight.setIconSize(self.tog_switch_ico_sz)
-        self.btn_g5_backlight.clicked.connect(self.btn_g5_backlight_function)
-        print('-- [App.__init__] created:', self.btn_g5_backlight)
-        self.object_interaction_enabled.append(self.btn_g5_backlight)
-        ui_object_complete.append(self.btn_g5_backlight)
-        self.btn_g5_backlight.setToolTip('G6 Backlight\n\nEnables/Disables G6 Backlight.')
+        self.btn_lock_gkeys = QPushButton(self)
+        self.btn_lock_gkeys.move(self.menu_obj_pos_w + 2 + 4 + 126, self.height - (4 * 1) - (self.monitor_btn_h * 1))
+        self.btn_lock_gkeys.resize(28, 28)
+        self.btn_lock_gkeys.setStyleSheet(self.btn_menu_style)
+        self.btn_lock_gkeys.setIconSize(self.tog_switch_ico_sz)
+        self.btn_lock_gkeys.clicked.connect(self.btn_lock_gkeys_function)
+        print('-- [App.__init__] created:', self.btn_lock_gkeys)
+        self.object_interaction_enabled.append(self.btn_lock_gkeys)
+        ui_object_complete.append(self.btn_lock_gkeys)
+        self.btn_lock_gkeys.setToolTip('G6 Lock Gkeys\n\nEnables/Disables GKeys.')
 
         self.btn_cpu_mon.setToolTip('CPU Utilization Monitor\n\nEnables/Disables CPU utilization monitor.')
         self.lbl_cpu_mon.setToolTip('CPU Utilization Monitor\n\nKeypad 1:       0-25%\nKeypad 4:       25-50%\nKeypad 7:       50-75%\nNumlock:       75-100%.')
@@ -2339,7 +2258,7 @@ class App(QMainWindow):
         self.lbl_netshare_mon.setToolTip("Network Share Monitor\n\nPrntScr:           IPC$ Default Share\nScrLck:            ADMIN$ Default Share\nPause/Break:  Disks Default Share\nHome:            Non-Default Shares")
         self.btn_netshare_mon.setToolTip('Network Share Monitor\n\nEnables/Disables iCUE-Display Network Share Monitor.')
         self.qle_netshare_mon_rgb_on.setToolTip('Network Share Monitor\n\nSet RGB color values for when an indication\nlight is ON.')
-        self.btn_bck_light.setToolTip('Backlight\n\nEnable/Disable')
+        # self.btn_bck_light.setToolTip('Backlight\n\nEnable/Disable')
         self.btn_refresh_recompile.setToolTip('Refresh\n')
         self.cpu_led_color_str = ""
         self.dram_led_color_str = ""
@@ -2455,27 +2374,27 @@ class App(QMainWindow):
             self.lbl_util_key_2.setText('<86°F')
             bool_switch_fahrenheit = True
 
-    def btn_g5_backlight_function(self):
-        print('-- [btn_g5_backlight_function]: plugged in')
-        global bool_backlight_interact
+    def btn_lock_gkeys_function(self):
+        print('-- [btn_lock_gkeys_function]: plugged in')
+        global bool_lock_gkeys
 
         self.setFocus()
 
-        if bool_backlight_interact is True:
+        if bool_lock_gkeys is True:
             if self.write_engaged is False:
-                print('-- [App.btn_powershell_function] changing bool_backlight_interact:', bool_backlight_interact)
-                self.write_var = 'bool_backlight_interact: false'
+                print('-- [App.btn_powershell_function] changing bool_lock_gkeys:', bool_lock_gkeys)
+                self.write_var = 'bool_lock_gkeys: false'
                 self.write_changes()
-            self.btn_g5_backlight.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
-            bool_backlight_interact = False
+            self.btn_lock_gkeys.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            bool_lock_gkeys = False
 
-        elif bool_backlight_interact is False:
+        elif bool_lock_gkeys is False:
             if self.write_engaged is False:
-                print('-- [App.btn_powershell_function] changing bool_backlight_interact:', bool_backlight_interact)
-                self.write_var = 'bool_backlight_interact: true'
+                print('-- [App.btn_powershell_function] changing bool_lock_gkeys:', bool_lock_gkeys)
+                self.write_var = 'bool_lock_gkeys: true'
                 self.write_changes()
-            self.btn_g5_backlight.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-            bool_backlight_interact = True
+            self.btn_lock_gkeys.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            bool_lock_gkeys = True
 
     def btn_powershell_function(self):
         print('-- [btn_powershell_function]: plugged in')
@@ -2728,7 +2647,7 @@ class App(QMainWindow):
             self.lbl_title.show()
             self.btn_minimize.show()
             self.btn_quit.show()
-            self.btn_bck_light.show()
+            # self.btn_bck_light.show()
             self.btn_refresh_recompile.show()
             """ connection status """
             self.btn_con_stat_name.show()
@@ -2778,8 +2697,8 @@ class App(QMainWindow):
 
         self.lbl_powershell.show()
         self.btn_powershell.show()
-        self.lbl_g5_backlight.show()
-        self.btn_g5_backlight.show()
+        self.lbl_lock_gkeys.show()
+        self.btn_lock_gkeys.show()
 
         self.lbl_g2_disk.show()
         self.btn_g2_disk.show()
@@ -2788,7 +2707,7 @@ class App(QMainWindow):
         print('-- [App.feature_pg_execution_policy]: plugged in')
         self.hide_all_features()
 
-        self.btn_bck_light.hide()
+        # self.btn_bck_light.hide()
         self.btn_refresh_recompile.hide()
         """ connection status """
         self.btn_con_stat_name.hide()
@@ -2927,13 +2846,7 @@ class App(QMainWindow):
         self.btn_run_startup.show()
         self.lbl_start_minimized.show()
         self.btn_start_minimized.show()
-        self.lbl_backlight_sub.show()
-        self.btn_backlight_sub.show()
-        self.qle_backlight_rgb_on.show()
-        self.lbl_backlight_auto.show()
-        self.btn_backlight_auto.show()
-        self.btn_backlight_auto_time_0.show()
-        self.btn_backlight_auto_time_1.show()
+
         self.lbl_media_display.show()
         self.btn_media_display.show()
         self.lbl_fahrenheit.show()
@@ -3022,7 +2935,7 @@ class App(QMainWindow):
 
     def isenabled_true(self):
         print('-- [App.isenabled_true]: plugged in')
-        global bool_power_plan_interact, bool_backlight_interact, bool_powershell_interact
+        global bool_power_plan_interact, bool_powershell_interact
         for _ in self.object_interaction_enabled:
             _.setEnabled(True)
 
@@ -3075,149 +2988,6 @@ class App(QMainWindow):
         except Exception as e:
             print('-- [App.write_changes] Error:', e)
         self.write_engaged = False
-
-    def btn_bck_light_function(self):
-        print('-- [App.btn_bck_light_function]: plugged in')
-        global bool_btn_backlight_engaged
-        bool_btn_backlight_engaged = True
-        global sdk_color_backlight
-        global set_device_color_select
-        global sdk_color_backlight, bool_switch_backlight, sdk_color_backlight_on, sdk_color_backlight_on_ms
-        global set_device_color_select, bool_switch_backlight_ms
-        global bool_instruction_color_ms_on, bool_instruction_color_kb, bool_instruction_color_ms_off
-        
-        self.setFocus()
-        if set_device_color_select == 0:
-            if self.write_engaged is False:
-                if bool_switch_backlight is False:
-                    self.write_var = 'bool_switch_backlight: true'
-                    self.write_changes()
-                    sdk_color_backlight = sdk_color_backlight_on
-                    bool_switch_backlight = True
-                    print('-- [App.btn_bck_light_function] setting bool_switch_backlight:', bool_switch_backlight)
-                    self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_0)
-                    self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-                    self.lbl_backlight_sub.setStyleSheet(self.btn_menu_style_1)
-                elif bool_switch_backlight is True:
-                    self.write_var = 'bool_switch_backlight: false'
-                    self.write_changes()
-
-                    sdk_color_backlight = (0, 0, 0)
-                    bool_switch_backlight = False
-                    print('-- [App.btn_bck_light_function] setting bool_switch_backlight:', bool_switch_backlight)
-                    self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_1)
-                    self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
-                    self.lbl_backlight_sub.setStyleSheet(self.btn_menu_style)
-
-                bool_instruction_color_kb = True
-
-        elif set_device_color_select == 1:
-            if bool_switch_backlight_ms is True:
-                bool_switch_backlight_ms = False
-                bool_instruction_color_ms_off = True
-
-            elif bool_switch_backlight_ms is False:
-                bool_switch_backlight_ms = True
-                bool_instruction_color_ms_on = True
-
-        set_device_color_select = 0
-        bool_btn_backlight_engaged = False
-
-    def backlight_auto_function(self):
-        print('-- [App.backlight_auto_function]: plugged in')
-        global bool_switch_backlight_auto, thread_backlight_auto, backlight_time_0, backlight_time_1
-        global devices_kb, devices_ms
-        self.setFocus()
-        if len(devices_kb) > 0 or len(devices_ms) > 0:
-            if self.write_engaged is False:
-                if backlight_time_0.isdigit() and backlight_time_1.isdigit():
-                    if bool_switch_backlight_auto is True:
-                        thread_backlight_auto[0].stop()
-                        bool_switch_backlight_auto = False
-                        self.write_var = 'bool_switch_backlight_auto: false'
-                        self.btn_backlight_auto.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
-                        self.lbl_backlight_auto.setStyleSheet(self.btn_menu_style)
-                        self.write_changes()
-                    elif bool_switch_backlight_auto is False:
-                        thread_backlight_auto[0].start()
-                        bool_switch_backlight_auto = True
-                        self.write_var = 'bool_switch_backlight_auto: true'
-                        self.btn_backlight_auto.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-                        self.lbl_backlight_auto.setStyleSheet(self.btn_menu_style_1)
-                        self.write_changes()
-
-    def btn_backlight_auto_time_0_function(self):
-        print('-- [App.btn_backlight_auto_time_0_function]: plugged in')
-        global backlight_time_0
-        self.setFocus()
-        if self.write_engaged is False:
-            self.btn_backlight_auto_time_0_str = str(self.btn_backlight_auto_time_0.text()).strip()
-            if self.btn_backlight_auto_time_0_str.isdigit() and len(self.btn_backlight_auto_time_0_str) == 4:
-                print('-- [App.btn_backlight_auto_time_0_function] btn_backlight_auto_time_0.text(): passed digit check')
-                self.write_var = 'backlight_time_0: ' + self.btn_backlight_auto_time_0_str
-                backlight_time_0 = self.btn_backlight_auto_time_0_str
-                self.write_changes()
-            else:
-                self.btn_backlight_auto_time_0.setText(backlight_time_0)
-
-    def btn_backlight_auto_time_1_function(self):
-        print('-- [App.btn_backlight_auto_time_1_function]: plugged in')
-        global backlight_time_1
-        self.setFocus()
-        if self.write_engaged is False:
-            self.btn_backlight_auto_time_1_str = str(self.btn_backlight_auto_time_1.text()).strip()
-            if self.btn_backlight_auto_time_1_str.isdigit() and len(self.btn_backlight_auto_time_1_str) == 4:
-                print('-- [App.btn_backlight_auto_time_0_function] btn_backlight_auto_time_1.text(): passed digit check')
-
-                self.write_var = 'backlight_time_1: ' + self.btn_backlight_auto_time_1_str
-                backlight_time_1 = self.btn_backlight_auto_time_1_str
-                self.write_changes()
-            else:
-                self.btn_backlight_auto_time_1.setText(backlight_time_1)
-
-    def btn_backlight_rgb_on_function(self):
-        print('-- [App.btn_backlight_rgb_on_function]: plugged in')
-        global sdk
-        global devices_kb, devices_ms
-        global devices_kb_selected, devices_ms_selected
-        global corsairled_id_num_ms_complete, corsairled_id_num_kb_complete
-        global sdk_color_backlight_on, sdk_color_backlight, bool_switch_backlight
-        global bool_instruction_color_kb, bool_instruction_color_ms_on, bool_switch_backlight_ms, sdk_color_backlight_on_ms
-        self.setFocus()
-        print('sdk_color_backlight_on_str:', self.qle_backlight_rgb_on.text())
-        if self.write_engaged is False:
-            self.write_var_key = 8
-            self.write_var = self.qle_backlight_rgb_on.text()
-            self.sanitize_rgb_values()
-            if self.write_var_bool is True:
-                print('-- [App.btn_backlight_rgb_on_function] self.write_var passed sanitization checks:', self.qle_backlight_rgb_on.text())
-                self.write_changes()
-                self.sdk_color_backlight_on_str = self.qle_backlight_rgb_on.text().replace(' ', '')
-                self.sdk_color_backlight_on_str = self.sdk_color_backlight_on_str.replace(',', ', ')
-                self.qle_backlight_rgb_on.setText(self.sdk_color_backlight_on_str)
-                print('sdk_color_backlight_on_str True:', self.sdk_color_backlight_on_str)
-                print('sdk_color_backlight_on_str:', self.sdk_color_backlight_on_str)
-                var = self.sdk_color_backlight_on_str.replace(',', '')
-                var = var.split()
-                var_0, var_1, var_2 = var[0], var[1], var[2]
-                var_0_int, var_1_int, var_2_int = int(var_0), int(var_1), int(var_2)
-                sdk_color_backlight = [var_0_int, var_1_int, var_2_int]
-                sdk_color_backlight_on_ms = sdk_color_backlight
-            else:
-                print('-- [App.btn_backlight_rgb_on_function] self.write_var failed sanitization checks:', self.qle_backlight_rgb_on.text())
-                self.sdk_color_backlight_on_str = str(sdk_color_backlight_on).replace('[', '')
-                self.sdk_color_backlight_on_str = self.sdk_color_backlight_on_str.replace(']', '')
-                self.sdk_color_backlight_on_str = self.sdk_color_backlight_on_str.replace(' ', '')
-                self.sdk_color_backlight_on_str = self.sdk_color_backlight_on_str.replace(',', ', ')
-                self.qle_backlight_rgb_on.setText(self.sdk_color_backlight_on_str)
-                print('sdk_color_backlight_on_str False:', self.sdk_color_backlight_on_str)
-            self.qle_backlight_rgb_on.setAlignment(Qt.AlignCenter)
-
-        if bool_switch_backlight is True:
-            bool_instruction_color_kb = True
-
-        if bool_switch_backlight_ms is True:
-            bool_instruction_color_ms_on = True
 
     def btn_exclusive_con_function(self):
         print('-- [App.btn_exclusive_con_function]: plugged in')
@@ -3915,6 +3685,7 @@ class App(QMainWindow):
         print('-- [App.g1_function_long]: plugged in')
         os.system('shutdown /h')
 
+
     def g1_function_long_2sec(self):
         print('-- [App.g1_function_long_2sec]: plugged in')
         os.system('shutdown /r /t 0')
@@ -3925,42 +3696,56 @@ class App(QMainWindow):
 
     def g2_function_short(self):
         print('-- [App.g2_function_short]: plugged in')
+        global thread_sdk_event_handler
 
     def g2_function_long(self):
         print('-- [App.g2_function_long]: plugged in')
+        global thread_sdk_event_handler
 
     def g2_function_long_2sec(self):
         print('-- [App.g2_function_long_2sec]: plugged in')
+        global thread_sdk_event_handler
 
     def g2_function_long_3sec(self):
         print('-- [App.g2_function_long_3sec]: plugged in')
+        global thread_sdk_event_handler
+
 
     def g3_function_short(self):
         print('-- [App.g3_function_short]: plugged in')
+        global thread_sdk_event_handler
 
     def g3_function_long(self):
         print('-- [App.g3_function_long]: plugged in')
+        global thread_sdk_event_handler
 
     def g3_function_long_2sec(self):
         print('-- [App.g3_function_long_2sec]: plugged in')
+        global thread_sdk_event_handler
 
     def g3_function_long_3sec(self):
         print('-- [App.g3_function_long_3sec]: plugged in')
+        global thread_sdk_event_handler
 
     def g4_function_short(self):
         print('-- [App.g4_function_short]: plugged in')
+        global thread_sdk_event_handler
 
     def g4_function_long(self):
         print('-- [App.g4_function_long]: plugged in')
+        global thread_sdk_event_handler
 
     def g4_function_long_2sec(self):
         print('-- [App.g4_function_long_2sec]: plugged in')
+        global thread_sdk_event_handler
 
     def g4_function_long_3sec(self):
         print('-- [App.g4_function_long_3sec]: plugged in')
+        global thread_sdk_event_handler
 
     def g5_function_short(self):
-        global bool_powershell_interact
+        global bool_powershell_interact, thread_sdk_event_handler
+        global thread_sdk_event_handler
         print('-- [App.g5_function_short]: plugged in')
         if bool_powershell_interact is True:
             print('-- [App.g5_function_short]: attempting to run start powershell')
@@ -3968,49 +3753,33 @@ class App(QMainWindow):
 
     def g5_function_long(self):
         print('-- [App.g5_function_long]: plugged in')
+        global thread_sdk_event_handler
 
     def g5_function_long_2sec(self):
         print('-- [App.g5_function_long_2sec]: plugged in')
+        global thread_sdk_event_handler
 
     def g5_function_long_3sec(self):
         print('-- [App.g5_function_long_3sec]: plugged in')
+        global thread_sdk_event_handler
 
     def g6_function_short(self):
         print('-- [App.g6_function_short]: plugged in')
-        global bool_allow_g_key_access, notification_key
-        if bool_allow_g_key_access is True:
-            bool_allow_g_key_access = False
-            notification_key = 7
-        elif bool_allow_g_key_access is False:
-            bool_allow_g_key_access = True
-            notification_key = 8
+        global bool_allow_g_key_access, notification_key, thread_sdk_event_handler, bool_lock_gkeys
+
+        if bool_lock_gkeys is True:
+            if bool_allow_g_key_access is True:
+                bool_allow_g_key_access = False
+                notification_key = 7
+            elif bool_allow_g_key_access is False:
+                bool_allow_g_key_access = True
+                notification_key = 8
 
     def g6_function_long(self):
-        print('-- [App.g5_function_long]: plugged in')
-        global bool_backlight_interact, bool_instruction_color_kb, bool_instruction_color_ms_on, bool_btn_backlight_engaged
-        global bool_switch_mouse_backlight, bool_instruction_color_ms_off, set_device_color_select
-
-        if bool_btn_backlight_engaged is False:
-            if len(devices_kb) >= 1:
-                if bool_backlight_interact is True:
-                    try:
-                        set_device_color_select = 0
-                        self.btn_bck_light_function()
-                    except Exception as e:
-                        print(e)
+        print('-- [App.g6_function_long]: plugged in')
 
     def g6_function_long_2sec(self):
         print('-- [App.g6_function_long_2sec]: plugged in')
-        global bool_backlight_interact, bool_instruction_color_kb, bool_instruction_color_ms_on, bool_btn_backlight_engaged
-        global sdk_color_backlight_on_ms, set_device_color_select, bool_instruction_color_ms_off, bool_switch_backlight_ms
-        if bool_btn_backlight_engaged is False:
-            if len(devices_kb) >= 1:
-                if bool_backlight_interact is True:
-                    try:
-                        set_device_color_select = 1
-                        self.btn_bck_light_function()
-                    except Exception as e:
-                        print(e)
 
     def g6_function_long_3sec(self):
         print('-- [App.g6_function_long_3sec]: plugged in')
@@ -4018,11 +3787,10 @@ class App(QMainWindow):
     def initUI(self):
         print('-- [App.initUI]: plugged in')
         global sdk
-        global bool_backend_allow_display, bool_switch_startup_exclusive_control, bool_switch_startup_minimized, bool_switch_backlight
+        global bool_backend_allow_display, bool_switch_startup_exclusive_control, bool_switch_startup_minimized
         global bool_switch_startup_cpu_util, bool_switch_startup_dram_util, bool_switch_startup_vram_util, bool_cpu_temperature, bool_vram_temperature
         global bool_switch_startup_hdd_read_write, bool_switch_startup_net_share_mon, bool_switch_startup_net_traffic
-        global bool_switch_backlight_auto, backlight_time_0, backlight_time_1
-        global sdk_color_cpu_on, sdk_color_dram_on, sdk_color_vram_on, sdk_color_hddwrite_on, sdk_color_hddread_on, sdk_color_netshare_on, sdk_color_backlight, sdk_color_backlight_on
+        global sdk_color_cpu_on, sdk_color_dram_on, sdk_color_vram_on, sdk_color_hddwrite_on, sdk_color_hddread_on, sdk_color_netshare_on, sdk_color_backlight
         global thread_compile_devices
         global thread_disk_rw
         global thread_cpu_util
@@ -4033,7 +3801,6 @@ class App(QMainWindow):
         global thread_net_share
         global thread_sdk_event_handler
         global thread_temperatures
-        global thread_backlight_auto
         global thread_media_display
         global thread_pause_loop
         global thread_power
@@ -4044,7 +3811,6 @@ class App(QMainWindow):
         global str_path_kb_img, str_path_ms_img
         global bool_power_plan_interact
         global bool_powershell_interact
-        global bool_backlight_interact
         global bool_switch_fahrenheit
         global thread_gkey_pressed
         global bool_switch_g2_disks
@@ -4054,6 +3820,7 @@ class App(QMainWindow):
         global thread_windows_update_monitor
         global thread_dir_sz_monitor
         global thread_steam_update_monitor
+        global bool_lock_gkeys
 
         notification_thread = SdkNotificationClass()
         thread_notification.append(notification_thread)
@@ -4087,14 +3854,7 @@ class App(QMainWindow):
                                                  self.g5_function_long_2sec, self.g6_function_long_2sec
                                                  )
         thread_sdk_event_handler.append(sdk_event_handler)
-        backlight_auto = BackLightClass(self.btn_bck_light,
-                                        self.btn_backlight_sub,
-                                        self.btn_title_bar_style_0,
-                                        self.btn_title_bar_style_1,
-                                        self.btn_menu_style,
-                                        self.btn_menu_style_1,
-                                        self.lbl_backlight_sub)
-        thread_backlight_auto.append(backlight_auto)
+
         compile_devices_thread = CompileDevicesClass(self.btn_con_stat_name, self.lbl_con_stat_kb, self.lbl_con_stat_mouse, self.btn_con_stat_ms_img, self.btn_con_stat_kb_img,
                                                      self.btn_refresh_recompile, self.btn_title_bar_style_0, self.btn_title_bar_style_1)
         thread_compile_devices.append(compile_devices_thread)
@@ -4140,10 +3900,6 @@ class App(QMainWindow):
         steam_update_monitor_thread = SteamUpdateMonitorClass()
         thread_steam_update_monitor.append(steam_update_monitor_thread)
         thread_steam_update_monitor[0].start()
-
-        # dir_sz_monitor_thread = DirSZMonitorThread()
-        # thread_dir_sz_monitor.append(dir_sz_monitor_thread)
-        # thread_dir_sz_monitor[0].start()gg
         
         self.lbl_title.show()
         self.btn_con_stat_name.show()
@@ -4152,6 +3908,11 @@ class App(QMainWindow):
         while bool_backend_allow_display is False:
             time.sleep(0.1)
         print('-- [App.initUI]: displaying application')
+
+        if bool_lock_gkeys is True:
+            self.btn_lock_gkeys.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+        elif bool_lock_gkeys is False:
+            self.btn_lock_gkeys.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
         if bool_switch_g2_disks is True:
             self.btn_g2_disk.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
@@ -4166,11 +3927,6 @@ class App(QMainWindow):
             self.lbl_util_key_2.setText('<86°F')
         elif bool_switch_fahrenheit is False:
             self.btn_fahrenheit.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
-
-        if bool_backlight_interact is True:
-            self.btn_g5_backlight.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-        elif bool_backlight_interact is False:
-            self.btn_g5_backlight.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
         if bool_powershell_interact is True:
             self.btn_powershell.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
@@ -4191,14 +3947,6 @@ class App(QMainWindow):
             self.btn_con_stat_ms_img.setStyleSheet(self.btn_status_style)
             self.btn_con_stat_ms_img.setText('')
 
-        if bool_switch_backlight_auto is False:
-            self.btn_backlight_auto.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
-            self.lbl_backlight_auto.setStyleSheet(self.btn_menu_style)
-        elif bool_switch_backlight_auto is True:
-            self.btn_backlight_auto.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-            self.lbl_backlight_auto.setStyleSheet(self.btn_menu_style_1)
-            if len(devices_kb) > 0 or len(devices_ms) > 0:
-                thread_backlight_auto[0].start()
         if bool_switch_startup_autorun is True:
             self.btn_run_startup.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
             self.lbl_run_startup.setStyleSheet(self.btn_menu_style_1)
@@ -4272,14 +4020,6 @@ class App(QMainWindow):
             self.btn_netshare_mon.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
             self.lbl_netshare_mon.setStyleSheet(self.btn_menu_style_1)
         self.lbl_net_con_mouse_led_selected.setText(str(corsairled_id_num_netcon_ms))
-        if bool_switch_backlight is True:
-            self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_0)
-            self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-            self.lbl_backlight_sub.setStyleSheet(self.btn_menu_style_1)
-        elif bool_switch_backlight is False:
-            self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_1)
-            self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
-            self.lbl_backlight_sub.setStyleSheet(self.btn_menu_style)
 
         if bool_cpu_temperature is True:
             self.btn_cpu_mon_temp.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
@@ -4301,16 +4041,6 @@ class App(QMainWindow):
             self.btn_media_display.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
             self.lbl_media_display.setStyleSheet(self.btn_menu_style)
 
-        self.btn_backlight_auto_time_0_str = str(backlight_time_0).strip()
-        self.btn_backlight_auto_time_0.setText(backlight_time_0)
-        self.btn_backlight_auto_time_1_str = str(backlight_time_1).strip()
-        self.btn_backlight_auto_time_1.setText(backlight_time_1)
-        self.sdk_color_backlight_str = str(sdk_color_backlight_on).strip()
-        self.sdk_color_backlight_str = self.sdk_color_backlight_str.replace('[', '')
-        self.sdk_color_backlight_str = self.sdk_color_backlight_str.replace(']', '')
-        self.sdk_color_backlight_str = self.sdk_color_backlight_str.replace('(', '')
-        self.sdk_color_backlight_str = self.sdk_color_backlight_str.replace(')', '')
-        self.qle_backlight_rgb_on.setText(self.sdk_color_backlight_str)
         self.cpu_led_color_str = str(sdk_color_cpu_on).strip()
         self.cpu_led_color_str = self.cpu_led_color_str.replace('[', '')
         self.cpu_led_color_str = self.cpu_led_color_str.replace(']', '')
@@ -4389,7 +4119,7 @@ class CompileDevicesClass(QThread):
 
     def __init__(self, btn_con_stat_name, lbl_con_stat_kb, lbl_con_stat_mouse, btn_con_stat_ms_img, btn_con_stat_kb_img, btn_refresh_recompile, btn_title_bar_style_0, btn_title_bar_style_1):
         QThread.__init__(self)
-        global sdk_color_hddread_on, sdk_color_backlight, sdk_color_backlight_on
+        global sdk_color_hddread_on, sdk_color_backlight
         self.btn_con_stat_name = btn_con_stat_name
         self.lbl_con_stat_kb = lbl_con_stat_kb
         self.lbl_con_stat_mouse = lbl_con_stat_mouse
@@ -4460,7 +4190,6 @@ class CompileDevicesClass(QThread):
         global thread_net_connection
         global thread_net_share
         global thread_sdk_event_handler
-        global thread_backlight_auto
         global devices_kb, devices_ms
         global thread_temperatures
         global thread_media_display
@@ -4526,11 +4255,6 @@ class CompileDevicesClass(QThread):
                 print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
 
             try:
-                thread_backlight_auto[0].stop()
-            except Exception as e:
-                print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
-
-            try:
                 thread_temperatures[0].stop()
             except Exception as e:
                 print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
@@ -4562,7 +4286,6 @@ class CompileDevicesClass(QThread):
         global thread_net_connection, bool_switch_startup_net_con, bool_switch_startup_net_con_ms, bool_switch_startup_net_con_kb
         global bool_switch_startup_net_share_mon, bool_switch_startup_hdd_read_write
         global bool_backend_config_read_complete, bool_switch_startup_exclusive_control
-        global thread_backlight_auto, bool_switch_backlight_auto
         global thread_temperatures, bool_cpu_temperature, bool_vram_temperature
         global thread_media_display
         global thread_power
@@ -4600,8 +4323,6 @@ class CompileDevicesClass(QThread):
                 sdk.request_control()
             if bool_switch_startup_exclusive_control is False:
                 sdk.release_control()
-            if bool_switch_backlight_auto is True and len(devices_kb) > 0:
-                thread_backlight_auto[0].start()
 
     def attempt_connect(self):
         # print('-- [CompileDevicesClass.attempt_connect]: plugged in')
@@ -4635,7 +4356,6 @@ class CompileDevicesClass(QThread):
         global devices_kb_selected, devices_ms_selected
         global corsairled_id_num_ms_complete, corsairled_id_num_kb_complete
         global sdk_color_backlight
-        global sdk_color_backlight, bool_switch_backlight, sdk_color_backlight_on
 
         zone_id = [170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188]
 
@@ -4761,8 +4481,7 @@ class CompileDevicesClass(QThread):
         global corsairled_id_num_netsnt, corsairled_id_num_netrcv
         global bool_switch_startup_net_con_ms, corsairled_id_num_netcon_ms, bool_switch_startup_net_con_kb, bool_switch_startup_net_con
         global bool_switch_startup_net_share_mon
-        global sdk_color_backlight, sdk_color_backlight_on, bool_switch_backlight
-        global backlight_time_0, backlight_time_1, bool_switch_backlight_auto
+        global sdk_color_backlight
         global bool_switch_startup_minimized, bool_switch_startup_autorun, bool_switch_startup_exclusive_control
         global bool_backend_allow_display, bool_backend_icue_connected, bool_backend_config_read_complete
         global bool_cpu_temperature, bool_vram_temperature
@@ -4770,10 +4489,9 @@ class CompileDevicesClass(QThread):
         global bool_switch_startup_media_display
         global bool_power_plan_interact
         global bool_powershell_interact
-        global bool_backlight_interact
         global bool_switch_fahrenheit
         global bool_switch_g2_disks
-        global bool_switch_backlight_ms, sdk_color_backlight_on_ms
+        global bool_lock_gkeys
 
         startup_loc = '/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/iCUEDisplay.lnk'
         bool_backend_valid_network_adapter_name = False
@@ -4987,45 +4705,7 @@ class CompileDevicesClass(QThread):
                         sdk_color_netshare_on[0] = int(var[0])
                         sdk_color_netshare_on[1] = int(var[1])
                         sdk_color_netshare_on[2] = int(var[2])
-                elif line.startswith('sdk_color_backlight_on:'):
-                    var = line.replace('sdk_color_backlight_on: ', '')
-                    var = var.split(',')
-                    self.sanitize_str = var
-                    self.sanitize_rgb_values()
-                    if self.sanitize_passed is True:
-                        sdk_color_backlight_on[0] = int(var[0])
-                        sdk_color_backlight_on[1] = int(var[1])
-                        sdk_color_backlight_on[2] = int(var[2])
-                        sdk_color_backlight_on_ms = sdk_color_backlight_on
-                if line == 'bool_switch_backlight: true':
-                    bool_switch_backlight = True
-                    bool_switch_backlight_ms = True
-                    sdk_color_backlight = sdk_color_backlight_on
-                elif line == 'bool_switch_backlight: false':
-                    bool_switch_backlight = False
-                    bool_switch_backlight_ms = False
-                if line == 'bool_switch_backlight_auto: true':
-                    bool_switch_backlight_auto = True
-                if line == 'bool_switch_backlight_auto: false':
-                    bool_switch_backlight_auto = False
-                if line.startswith('backlight_time_0:'):
-                    var = line.replace('backlight_time_0:', '')
-                    var = str(var).strip()
-                    if var.isdigit() and len(var) == 4:
-                        print('-- [ReadConfigurationClass.backlight] backlight_time_0 passed digit check:', var)
-                        backlight_time_0 = str(var.strip())
-                    else:
-                        print('-- [ReadConfigurationClass.backlight] backlight_time_0 failed digit check:', var)
-                        backlight_time_0 = ''
-                if line.startswith('backlight_time_1:'):
-                    var = line.replace('backlight_time_1:', '')
-                    var = str(var).strip()
-                    if var.isdigit() and len(var) == 4:
-                        print('-- [ReadConfigurationClass.backlight] backlight_time_1 passed digit check:', var)
-                        backlight_time_1 = str(var.strip())
-                    else:
-                        print('-- [ReadConfigurationClass.backlight] backlight_time_1 failed digit check:', var)
-                        backlight_time_1 = ''
+
                 if line == 'bool_cpu_temperature: false':
                     bool_cpu_temperature = False
                 elif line == 'bool_cpu_temperature: true':
@@ -5055,11 +4735,6 @@ class CompileDevicesClass(QThread):
                 if line == 'bool_powershell_interact: false':
                     bool_powershell_interact = False
 
-                if line == 'bool_backlight_interact: true':
-                    bool_backlight_interact = True
-                if line == 'bool_backlight_interact: false':
-                    bool_backlight_interact = False
-
                 if line == 'bool_switch_fahrenheit: true':
                     bool_switch_fahrenheit = True
                 if line == 'bool_switch_fahrenheit: false':
@@ -5069,6 +4744,11 @@ class CompileDevicesClass(QThread):
                     bool_switch_g2_disks = True
                 if line == 'bool_switch_g2_disks: false':
                     bool_switch_g2_disks = False
+
+                if line == 'bool_lock_gkeys: true':
+                    bool_lock_gkeys = True
+                if line == 'bool_lock_gkeys: false':
+                    bool_lock_gkeys = False
 
 
         print('-- [ConfigCompile.read_config] sdk_color_cpu_on:', sdk_color_cpu_on)
@@ -5432,9 +5112,9 @@ class SdkSendInstructionClass(QThread):
         global bool_allow_g_key_access
         global sdk
         global devices_kb, devices_ms
-        global devices_kb_selected, devices_ms_selected, sdk_color_backlight_on_ms
+        global devices_kb_selected, devices_ms_selected
         global corsairled_id_num_ms_complete, corsairled_id_num_kb_complete
-        global sdk_color_backlight, bool_switch_backlight, sdk_color_backlight_on, bool_allow_g_key_access
+        global bool_allow_g_key_access
 
         global devices_kb, devices_ms
         global thread_net_connection
@@ -5443,69 +5123,7 @@ class SdkSendInstructionClass(QThread):
         global bool_instruction_color_kb, bool_instruction_color_ms_on, bool_allow_g_key_access, bool_instruction_color_ms_off
         global corsairled_id_num_gkeys
 
-        zone_id = [170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188]
-
         while True:
-
-            if bool_instruction_color_kb is True:
-                bool_instruction_color_kb = False
-                if len(devices_kb) > 0:
-
-                    temporary_bool = bool_allow_g_key_access
-
-                    for _ in corsairled_id_num_kb_complete:
-                        if _ not in zone_id:
-                            itm = [{_: sdk_color_backlight}]
-                            try:
-                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], itm[0])
-                            except Exception as e:
-                                print(e)
-                    sdk.set_led_colors_flush_buffer()
-
-                    for _ in corsairled_id_num_gkeys:
-                        if temporary_bool is False:
-                            itm = [{_: (255, 0, 0)}]
-                            try:
-                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], itm[0])
-                            except Exception as e:
-                                print(e)
-
-                        elif temporary_bool is True:
-                            itm = [{_: sdk_color_backlight}]
-                            try:
-                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], itm[0])
-                            except Exception as e:
-                                print(e)
-                        sdk.set_led_colors_flush_buffer()
-                    self.stop_threads()
-
-            if bool_instruction_color_ms_on is True:
-                bool_instruction_color_ms_on = False
-                if len(devices_ms) > 0:
-                    for _ in corsairled_id_num_ms_complete:
-                        itm = [{_: sdk_color_backlight_on_ms}]
-                        try:
-                            sdk.set_led_colors_buffer_by_device_index(devices_ms[devices_ms_selected], itm[0])
-                            sdk.set_led_colors_flush_buffer()
-                        except Exception as e:
-                            sdk.set_led_colors_buffer_by_device_index(devices_ms[devices_ms_selected], itm[0])
-                            sdk.set_led_colors_flush_buffer()
-                    sdk.set_led_colors_flush_buffer()
-                    self.stop_threads()
-
-            elif bool_instruction_color_ms_off is True:
-                bool_instruction_color_ms_off = False
-                if len(devices_ms) > 0:
-                    for _ in corsairled_id_num_ms_complete:
-                        itm = [{_: (0, 0, 0)}]
-                        try:
-                            sdk.set_led_colors_buffer_by_device_index(devices_ms[devices_ms_selected], itm[0])
-                            sdk.set_led_colors_flush_buffer()
-                        except Exception as e:
-                            sdk.set_led_colors_buffer_by_device_index(devices_ms[devices_ms_selected], itm[0])
-                            sdk.set_led_colors_flush_buffer()
-                    sdk.set_led_colors_flush_buffer()
-                    self.stop_threads()
 
             if bool_instruction_eject is True:
                 bool_instruction_eject = False
@@ -6403,13 +6021,12 @@ class SdkEventHandlerClass(QThread):
             elif self.time_now_release_keyId == 'CorsairKeyId.Kb_G6':
                 if time_now_release < (self.time_now_press + 1.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                     print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
-                    # if bool_allow_g_key_access is True:
                     self.g6_function_short()
 
                 elif time_now_release >= (self.time_now_press + 1.0) and time_now_release < (self.time_now_press + 2.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                     print('-- [App.on_press] captured event: time_now_1: {0} long released 1 seconds {1}'.format(self.time_now_press, data.keyId))
-                    # if bool_allow_g_key_access is True:
-                    self.g6_function_long()
+                    if bool_allow_g_key_access is True:
+                        self.g6_function_long()
 
                 elif time_now_release >= (self.time_now_press + 2.0) and time_now_release < (self.time_now_press + 3.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                     print('-- [App.on_press] captured event: time_now_1: {0} long released 2 seconds {1}'.format(self.time_now_press, data.keyId))
@@ -6453,19 +6070,22 @@ class SdkEventHandlerClass(QThread):
 
     def run(self):
         global sdk, devices_kb, devices_kb_name
-        connected = sdk.connect()
-        if not connected:
-            err = sdk.get_last_error()
-            print("-- [SdkEventHandlerClass.run]: handshake failed: %s" % err)
-            return
-        subscribed = sdk.subscribe_for_events(self.sdk_event_handler)
-        if not subscribed:
-            err = sdk.get_last_error()
-            print("-- [SdkEventHandlerClass.run]: subscribe for events error: %s" % err)
-            return
-        while True:
-            input_str = input()
-        sdk.unsubscribe_from_events()
+        try:
+            connected = sdk.connect()
+            if not connected:
+                err = sdk.get_last_error()
+                print("-- [SdkEventHandlerClass.run]: handshake failed: %s" % err)
+                return
+            subscribed = sdk.subscribe_for_events(self.sdk_event_handler)
+            if not subscribed:
+                err = sdk.get_last_error()
+                print("-- [SdkEventHandlerClass.run]: subscribe for events error: %s" % err)
+                return
+        # while True:
+        #     input_str = input()
+        except Exception as e:
+            print(e)
+            sdk.unsubscribe_from_events()
 
     def stop(self):
         print('-- [SdkEventHandlerClass.stop]: plugged in')
@@ -7148,108 +6768,6 @@ class TemperatureClass(QThread):
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, sdk_color_cpu_on, sdk_color_vram_on
         sdk_color_cpu_on = self.stored_cpu_color
         sdk_color_vram_on = self.stored_vram_color
-        self.terminate()
-
-
-class BackLightClass(QThread):
-    print('-- [BackLightClass]: plugged in')
-
-    def __init__(self, btn_bck_light, btn_backlight_sub, btn_title_bar_style_1, btn_title_bar_style_0, btn_menu_style, btn_menu_style_1, lbl_backlight_sub):
-        QThread.__init__(self)
-        self.btn_bck_light = btn_bck_light
-        self.btn_backlight_sub = btn_backlight_sub
-        self.btn_title_bar_style_0 = btn_title_bar_style_0
-        self.btn_title_bar_style_1 = btn_title_bar_style_1
-        self.btn_menu_style = btn_menu_style
-        self.btn_menu_style_1 = btn_menu_style_1
-        self.lbl_backlight_sub = lbl_backlight_sub
-
-    def run(self):
-        print('-- [BackLightClass.run]: plugged in')
-        global backlight_time_0, backlight_time_1, bool_switch_backlight, sdk_color_backlight, sdk_color_backlight_on
-        global bool_instruction_color_ms_on, bool_instruction_color_ms_off
-        global bool_instruction_color_kb
-
-        while True:
-            date_time_now = str(datetime.datetime.now())
-            time_now = date_time_now.split(' ')
-            time_now_str = time_now[1].replace(':', '')
-            time_now_str = time_now_str[:4]
-            time_now_int = int(time_now_str)
-            backlight_time_0_int = int(backlight_time_0)
-            backlight_time_1_int = int(backlight_time_1)
-            # print('-- [BackLightClass.run] target_time_0:', backlight_time_0, '   target_time_1:', backlight_time_1,'   time_now:', time_now[1], '   time_now_str:', time_now_str)
-            if backlight_time_0_int < backlight_time_1_int:
-                # print('-- [BackLightClass.run] auto backlight: backlight_time_0_int < backlight_time_1_int')
-                if time_now_int >= backlight_time_0_int and time_now_int < backlight_time_1_int:
-                    if bool_switch_backlight is False:
-                        print('-- [BackLightClass.run] auto backlight: turning on')
-                        bool_switch_backlight = True
-                        self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_0)
-                        self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-                        self.lbl_backlight_sub.setStyleSheet(self.btn_menu_style_1)
-                        sdk_color_backlight = sdk_color_backlight_on
-                        bool_instruction_color_ms_on = True
-                        bool_instruction_color_kb = True
-                if time_now_int < backlight_time_0_int or time_now_int >= backlight_time_1_int:
-                    if bool_switch_backlight is True:
-                        print('-- [BackLightClass.run] auto backlight: turning off')
-                        bool_switch_backlight = False
-                        self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_1)
-                        self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
-                        self.lbl_backlight_sub.setStyleSheet(self.btn_menu_style)
-                        sdk_color_backlight = (0, 0, 0)
-                        bool_instruction_color_ms_off = True
-                        bool_instruction_color_kb = True
-            elif backlight_time_0_int > backlight_time_1_int:
-                # print('-- [BackLightClass.run] auto backlight: backlight_time_0_int > backlight_time_1_int')
-                if time_now_str.startswith('0'):
-                    if time_now_int <= backlight_time_0_int and time_now_int < backlight_time_1_int:
-                        if bool_switch_backlight is False:
-                            print('-- [BackLightClass.run] auto backlight: turning on')
-                            bool_switch_backlight = True
-                            self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_0)
-                            self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-                            self.lbl_backlight_sub.setStyleSheet(self.btn_menu_style_1)
-                            sdk_color_backlight = sdk_color_backlight_on
-                            bool_instruction_color_ms_on = True
-                            bool_instruction_color_kb = True
-                    else:
-                        if bool_switch_backlight is True:
-                            print('-- [BackLightClass.run] auto backlight: turning off')
-                            bool_switch_backlight = False
-                            self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_1)
-                            self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
-                            self.lbl_backlight_sub.setStyleSheet(self.btn_menu_style)
-                            sdk_color_backlight = (0, 0, 0)
-                            bool_instruction_color_ms_off = True
-                            bool_instruction_color_kb = True
-                else:
-                    if time_now_int <= backlight_time_1_int or time_now_int >= backlight_time_0_int:
-                        if bool_switch_backlight is False:
-                            print('-- [BackLightClass.run] auto backlight: turning on')
-                            bool_switch_backlight = True
-                            self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_0)
-                            self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-                            self.lbl_backlight_sub.setStyleSheet(self.btn_menu_style_1)
-                            sdk_color_backlight = sdk_color_backlight_on
-                            bool_instruction_color_ms_on = True
-                            bool_instruction_color_kb = True
-                    else:
-                        if bool_switch_backlight is True:
-                            print('-- [BackLightClass.run] auto backlight: turning off')
-                            bool_switch_backlight = False
-                            self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_1)
-                            self.btn_backlight_sub.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
-                            self.lbl_backlight_sub.setStyleSheet(self.btn_menu_style)
-                            sdk_color_backlight = (0, 0, 0)
-                            bool_instruction_color_ms_off = True
-                            bool_instruction_color_kb = True
-            time.sleep(1)
-
-    def stop(self):
-        print('-- [BackLightClass.stop]: plugged in')
-        print('-- [BackLightClass.stop] terminating')
         self.terminate()
 
 
@@ -8276,64 +7794,6 @@ class VramMonClass(QThread):
             print('-- [VramMonClass.stop] Error:', e)
             pass
         print('-- [VramMonClass.stop] terminating')
-        self.terminate()
-
-
-class SteamUpdateMonitorClass(QThread):
-    print('-- [SteamUpdateMonitorClass]: plugged in')
-
-    def __init__(self):
-        QThread.__init__(self)
-        self.steam_update_dir_sz_prev = 0
-
-    def run(self):
-        print('-- [SteamUpdateMonitorClass.run]: plugged in')
-
-        global sdk, devices_kb, devices_kb_selected
-
-        steam_update_dir_default = 'G:\\Games\\Steam\\'
-
-        while True:
-            # dl_prog = False
-            # if os.path.exists(steam_update_dir_default):
-            #     steam_update_dir_sz = sum(file.stat().st_size for file in Path(steam_update_dir_default).rglob('*'))
-            #
-            #     if steam_update_dir_sz > self.steam_update_dir_sz_prev:
-            #         print('-- [SteamUpdateMonitorClass.run]: download update may be in progress')
-            #         self.steam_update_dir_sz_prev = steam_update_dir_sz
-            #
-            #         if len(devices_kb) > 0:
-            #             dl_prog = True
-            #             try:
-            #                 sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({186: (0, 0, 255)}))
-            #                 time.sleep(0.5)
-            #                 sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({186: (0, 0, 0)}))
-            #                 time.sleep(0.5)
-            #             except Exception as e:
-            #                 print('-- [SteamUpdateMonitorClass.run] Error:', e)
-            #
-            #     elif steam_update_dir_sz < self.steam_update_dir_sz_prev:
-            #         print('-- [SteamUpdateMonitorClass.run]: download update may be in progress')
-            #         self.steam_update_dir_sz_prev = steam_update_dir_sz
-            #
-            #         if len(devices_kb) > 0:
-            #             dl_prog = True
-            #             try:
-            #                 sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({186: (255, 0, 0)}))
-            #                 time.sleep(0.5)
-            #                 sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({186: (0, 0, 0)}))
-            #                 time.sleep(0.5)
-            #             except Exception as e:
-            #                 print('-- [SteamUpdateMonitorClass.run] Error:', e)
-            #
-            # if dl_prog is False:
-            #     time.sleep(1)
-
-            # dev
-            time.sleep(5)
-
-    def stop(self):
-        print('-- [SteamUpdateMonitorClass.stop]: plugged in')
         self.terminate()
 
 
