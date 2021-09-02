@@ -80,6 +80,23 @@ def initialize_priority():
     print('-- [initialize_priority]: settings win32process priority class:', priority_classes[4])
 
 
+avail_w = ()
+avail_h = ()
+ui_object_complete = []
+disk_guid = []
+power_plan = ['', '', '', '']
+power_plan_index = 0
+hdd_bytes_type_w = ''
+hdd_bytes_type_r = ''
+hdd_bytes_str = ''
+str_path_kb_img = ''
+str_path_ms_img = ''
+
+kb_event = ''
+g_key_pressed = ''
+time_now_press = float()
+
+notification_key = 0
 bool_instruction_eject = False
 bool_instruction_eject_end = False
 bool_instruction_mount = False
@@ -87,50 +104,31 @@ bool_instruction_mount_end = False
 bool_instruction_unmount = False
 bool_instruction_unmount_end = False
 
-bool_allow_g_key_access = True
-notification_key = 0
-set_device_color_select = 0
-bool_btn_backlight_engaged = False
+bool_backend_g2_input = False
+bool_backend_allow_g_key_access = True
+bool_backend_alpha_stage_engaged = False
+bool_backend_onpress_clause_g1 = False
+bool_backend_onpress_clause_g2 = False
+bool_backend_onpress_clause_g3 = False
+bool_backend_onpress_clause_g4 = False
+bool_backend_onpress_clause_g5 = False
+bool_backend_onpress_clause_g6 = False
+bool_backend_execution_policy = True
+bool_backend_execution_policy_show = False
+bool_backend_install = False
+bool_backend_allow_display = False
+bool_backend_icue_connected = False
+bool_backend_icue_connected_previous = None
+bool_backend_config_read_complete = False
+bool_backend_valid_network_adapter_name = False
 
-bool_instruction_color_kb = False
-bool_instruction_color_ms_on = False
-bool_instruction_color_ms_off = False
-bool_g2_input = False
-kb_event = False
-avail_w = ()
-avail_h = ()
-ui_object_complete = []
-disk_guid = []
-power_plan = ['', '', '', '']
-power_plan_index = 0
-backlight_time_0 = ''
-backlight_time_1 = ''
-hdd_bytes_type_w = ''
-hdd_bytes_type_r = ''
-hdd_bytes_str = ''
-str_path_kb_img = ''
-str_path_ms_img = ''
-g_key_pressed = ''
-umount_alpha = ''
-time_now_press = float()
-bool_alpha_stage_engaged = False
-bool_exclsuive_g2key_allow = True
-bool_switch_g2_disks = False
-bool_onpress_clause_g1 = False
-bool_onpress_clause_g2 = False
-bool_onpress_clause_g3 = False
-bool_onpress_clause_g4 = False
-bool_onpress_clause_g5 = False
-bool_onpress_clause_g6 = False
+bool_switch_cpu_temperature = False
+bool_switch_vram_temperature = False
+bool_switch_power_plan = False
+bool_switch_powershell = False
+bool_switch_lock_gkeys = False
 bool_switch_fahrenheit = False
-bool_lock_gkeys = False
-bool_powershell_interact = False
-bool_show_overlay = False
-bool_power_plan_interact = False
-bool_execution_policy = True
-bool_execution_policy_show = False
-bool_cpu_temperature = False
-bool_vram_temperature = False
+bool_switch_g2_disks = False
 bool_switch_backlight_ms = False
 bool_switch_display_disk_mount = True
 bool_switch_backlight = False
@@ -147,13 +145,8 @@ bool_switch_startup_dram_util = False
 bool_switch_startup_vram_util = False
 bool_switch_startup_net_traffic = False
 bool_switch_startup_net_share_mon = False
-bool_backend_install = False
-bool_backend_allow_display = False
-bool_backend_icue_connected = False
-bool_backend_icue_connected_previous = None
-bool_backend_config_read_complete = False
-bool_backend_valid_network_adapter_name = False
 bool_switch_startup_media_display = False
+
 thread_steam_update_monitor = []
 thread_windows_update_monitor = []
 thread_dir_sz_monitor = []
@@ -194,10 +187,8 @@ devices_ms_name = []
 devices_previous = []
 devices_gpu_selected = int()
 devices_network_adapter_name = ""
-# corsairled_id_num_cpu = [116,113, 109, 103]
 corsairled_id_num_cpu = [119,116, 113, 109]
 corsairled_id_num_dram = [117,114, 110, 104]
-# corsairled_id_num_vram = [118,115, 111, 105]
 corsairled_id_num_vram = [120,118, 115, 111]
 corsairled_id_num_hddreadwrite = [38, 55, 53, 40, 28, 41, 42, 43, 33, 44, 45, 46, 57, 56, 34, 35, 26, 29, 39, 30, 32, 54, 27, 52, 31, 51]
 corsairled_id_num_netrcv = [14, 15, 16, 17, 18, 19, 20, 21, 22]
@@ -300,21 +291,16 @@ config_data = ['sdk_color_cpu_on: 0,255,255',
                'bool_switch_startup_net_con: true',
                'netshare_startup: true',
                'sdk_color_netshare_on: 255,15,100',
-               'bool_switch_backlight: false',
-               'sdk_color_backlight_on: 13,13,13',
-               'backlight_time_0: 2200',
-               'backlight_time_1: 0500',
-               'bool_switch_backlight_auto: false',
-               'bool_cpu_temperature: False',
-               'bool_vram_temperature: False',
+               'bool_switch_cpu_temperature: False',
+               'bool_switch_vram_temperature: False',
                'str_path_kb_img: ',
                'str_path_ms_img: ',
                'bool_switch_startup_media_display: false',
-               'bool_power_plan_interact: false',
-               'bool_powershell_interact: false',
+               'bool_switch_power_plan: false',
+               'bool_switch_powershell: false',
                'bool_switch_fahrenheit: false',
                'bool_switch_g2_disks: false',
-               'bool_lock_gkeys: false']
+               'bool_switch_lock_gkeys: false']
 
 
 def create_new():
@@ -565,7 +551,7 @@ class App(QMainWindow):
         super(App, self).__init__()
         global bool_backend_install, event_filter_self, avail_w, avail_h, ui_object_complete
         global ui_object_font_list_s6b, ui_object_font_list_s7b, ui_object_font_list_s8b, ui_object_font_list_s9b
-        global bool_execution_policy_show, bool_execution_policy
+        global bool_backend_execution_policy_show, bool_backend_execution_policy
 
         avail_w = QDesktopWidget().availableGeometry().width()
         avail_h = QDesktopWidget().availableGeometry().height()
@@ -2316,12 +2302,12 @@ class App(QMainWindow):
         """ check execution policy """
         self.get_execution_policy()
 
-        if bool_execution_policy is False:
-            bool_execution_policy_show = True
+        if bool_backend_execution_policy is False:
+            bool_backend_execution_policy_show = True
             self.feature_pg_execution_policy()
 
-        elif bool_execution_policy is True:
-            bool_execution_policy_show = False
+        elif bool_backend_execution_policy is True:
+            bool_backend_execution_policy_show = False
             self.feature_pg_home()
 
         # time.sleep(2)
@@ -2377,72 +2363,72 @@ class App(QMainWindow):
 
     def btn_lock_gkeys_function(self):
         print('-- [btn_lock_gkeys_function]: plugged in')
-        global bool_lock_gkeys
+        global bool_switch_lock_gkeys
 
         self.setFocus()
 
-        if bool_lock_gkeys is True:
+        if bool_switch_lock_gkeys is True:
             if self.write_engaged is False:
-                print('-- [App.btn_powershell_function] changing bool_lock_gkeys:', bool_lock_gkeys)
-                self.write_var = 'bool_lock_gkeys: false'
+                print('-- [App.btn_powershell_function] changing bool_switch_lock_gkeys:', bool_switch_lock_gkeys)
+                self.write_var = 'bool_switch_lock_gkeys: false'
                 self.write_changes()
             self.btn_lock_gkeys.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
-            bool_lock_gkeys = False
+            bool_switch_lock_gkeys = False
 
-        elif bool_lock_gkeys is False:
+        elif bool_switch_lock_gkeys is False:
             if self.write_engaged is False:
-                print('-- [App.btn_powershell_function] changing bool_lock_gkeys:', bool_lock_gkeys)
-                self.write_var = 'bool_lock_gkeys: true'
+                print('-- [App.btn_powershell_function] changing bool_switch_lock_gkeys:', bool_switch_lock_gkeys)
+                self.write_var = 'bool_switch_lock_gkeys: true'
                 self.write_changes()
             self.btn_lock_gkeys.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-            bool_lock_gkeys = True
+            bool_switch_lock_gkeys = True
 
     def btn_powershell_function(self):
         print('-- [btn_powershell_function]: plugged in')
-        global bool_powershell_interact
+        global bool_switch_powershell
 
         self.setFocus()
 
-        if bool_powershell_interact is True:
+        if bool_switch_powershell is True:
             if self.write_engaged is False:
-                print('-- [App.btn_powershell_function] changing bool_powershell_interact:', bool_powershell_interact)
-                self.write_var = 'bool_powershell_interact: false'
+                print('-- [App.btn_powershell_function] changing bool_switch_powershell:', bool_switch_powershell)
+                self.write_var = 'bool_switch_powershell: false'
                 self.write_changes()
             self.btn_powershell.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
-            bool_powershell_interact = False
+            bool_switch_powershell = False
 
-        elif bool_powershell_interact is False:
+        elif bool_switch_powershell is False:
             if self.write_engaged is False:
-                print('-- [App.btn_powershell_function] changing bool_powershell_interact:', bool_powershell_interact)
-                self.write_var = 'bool_powershell_interact: true'
+                print('-- [App.btn_powershell_function] changing bool_switch_powershell:', bool_switch_powershell)
+                self.write_var = 'bool_switch_powershell: true'
                 self.write_changes()
             self.btn_powershell.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-            bool_powershell_interact = True
+            bool_switch_powershell = True
 
     def btn_power_plan_function(self):
         print('-- [btn_power_plan_function]: plugged in')
-        global bool_power_plan_interact, thread_power
+        global bool_switch_power_plan, thread_power
         self.setFocus()
 
-        if bool_power_plan_interact is True:
+        if bool_switch_power_plan is True:
             if self.write_engaged is False:
-                print('-- [App.btn_power_plan_function] changing bool_power_plan_interact:', bool_power_plan_interact)
-                self.write_var = 'bool_power_plan_interact: false'
+                print('-- [App.btn_power_plan_function] changing bool_switch_power_plan:', bool_switch_power_plan)
+                self.write_var = 'bool_switch_power_plan: false'
                 self.write_changes()
             self.btn_power_plan.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
-            bool_power_plan_interact = False
+            bool_switch_power_plan = False
             thread_power[0].stop()
 
-        elif bool_power_plan_interact is False:
+        elif bool_switch_power_plan is False:
             if self.write_engaged is False:
-                print('-- [App.btn_power_plan_function] changing bool_power_plan_interact:', bool_power_plan_interact)
-                self.write_var = 'bool_power_plan_interact: true'
+                print('-- [App.btn_power_plan_function] changing bool_switch_power_plan:', bool_switch_power_plan)
+                self.write_var = 'bool_switch_power_plan: true'
                 self.write_changes()
             self.btn_power_plan.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-            bool_power_plan_interact = True
+            bool_switch_power_plan = True
             thread_power[0].start()
 
-        print('-- [btn_power_plan_function] setting bool_power_plan_interact:', bool_power_plan_interact)
+        print('-- [btn_power_plan_function] setting bool_switch_power_plan:', bool_switch_power_plan)
 
     def btn_g2_disk_function(self):
         print('-- [btn_g2_disk_function]: plugged in')
@@ -2468,25 +2454,25 @@ class App(QMainWindow):
         print('-- [btn_power_plan_function] setting bool_switch_g2_disks:', bool_switch_g2_disks)
 
     def btn_execution_policy_0_function(self):
-        global bool_execution_policy_show
+        global bool_backend_execution_policy_show
         print('-- [btn_execution_policy_0_function] unrestricted execution policy accepted: plugged in')
         try:
             cmd = 'powershell Set-ExecutionPolicy Unrestricted'
             xcmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, startupinfo=info)
         except Exception as e:
             print('-- [btn_execution_policy_0_function] Error:', e)
-        bool_execution_policy_show = False
+        bool_backend_execution_policy_show = False
         self.feature_pg_home()
 
     def btn_execution_policy_1_function(self):
-        global bool_execution_policy_show
+        global bool_backend_execution_policy_show
         print('-- [btn_execution_policy_1_function]unrestricted execution policy declined: plugged in')
-        bool_execution_policy_show = False
+        bool_backend_execution_policy_show = False
         self.feature_pg_home()
 
     def get_execution_policy(self):
         print('-- [get_execution_policy]: plugged in')
-        global bool_execution_policy
+        global bool_backend_execution_policy
         cmd_output = []
         cmd = 'powershell Get-ExecutionPolicy'
         xcmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, startupinfo=info)
@@ -2502,13 +2488,13 @@ class App(QMainWindow):
         for _ in cmd_output:
             print('-- [get_execution_policy] ExecutionPolicy:', _)
             if _ != 'Unrestricted':
-                bool_execution_policy = False
+                bool_backend_execution_policy = False
             elif _ == 'Unrestricted':
-                bool_execution_policy = True
+                bool_backend_execution_policy = True
 
     def btn_media_display_function(self):
         print('-- [App.btn_media_display_function]: plugged in')
-        global thread_media_display, bool_switch_startup_media_display, bool_execution_policy
+        global thread_media_display, bool_switch_startup_media_display, bool_backend_execution_policy
         self.setFocus()
         self.get_execution_policy()
 
@@ -2525,7 +2511,7 @@ class App(QMainWindow):
         elif bool_switch_startup_media_display is False:
             self.btn_media_display.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
             self.lbl_media_display.setStyleSheet(self.btn_menu_style)
-            if bool_execution_policy is True:
+            if bool_backend_execution_policy is True:
                 thread_media_display[0].start()
                 if self.write_engaged is False:
                     print('-- [App.btn_media_display_function] changing bool_switch_startup_media_display:', bool_switch_startup_media_display)
@@ -2539,57 +2525,57 @@ class App(QMainWindow):
     def btn_cpu_mon_temp_function(self):
         print('-- [App.btn_cpu_mon_temp_function]: plugged in')
         global thread_temperatures
-        global bool_cpu_temperature, bool_vram_temperature
+        global bool_switch_cpu_temperature, bool_switch_vram_temperature
         self.setFocus()
         thread_temperatures[0].stop()
-        if bool_cpu_temperature is True:
+        if bool_switch_cpu_temperature is True:
             if self.write_engaged is False:
-                print('-- [App.btn_cpu_mon_temp_function] changing bool_cpu_temperature:', bool_cpu_temperature)
-                self.write_var = 'bool_cpu_temperature: false'
+                print('-- [App.btn_cpu_mon_temp_function] changing bool_switch_cpu_temperature:', bool_switch_cpu_temperature)
+                self.write_var = 'bool_switch_cpu_temperature: false'
                 self.write_changes()
             self.btn_cpu_mon_temp.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
             self.lbl_cpu_mon_temp.setStyleSheet(self.btn_menu_style)
-            bool_cpu_temperature = False
-        elif bool_cpu_temperature is False:
+            bool_switch_cpu_temperature = False
+        elif bool_switch_cpu_temperature is False:
             if self.write_engaged is False:
-                print('-- [App.btn_cpu_mon_temp_function] changing bool_cpu_temperature:', bool_cpu_temperature)
-                self.write_var = 'bool_cpu_temperature: true'
+                print('-- [App.btn_cpu_mon_temp_function] changing bool_switch_cpu_temperature:', bool_switch_cpu_temperature)
+                self.write_var = 'bool_switch_cpu_temperature: true'
                 self.write_changes()
             self.btn_cpu_mon_temp.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
             self.lbl_cpu_mon_temp.setStyleSheet(self.btn_menu_style_1)
-            bool_cpu_temperature = True
-        if bool_vram_temperature is True or bool_cpu_temperature is True:
+            bool_switch_cpu_temperature = True
+        if bool_switch_vram_temperature is True or bool_switch_cpu_temperature is True:
             print('-- [App.btn_cpu_mon_temp_function]: starting thread_temperatures')
             thread_temperatures[0].start()
         else:
-            print('-- [App.btn_cpu_mon_temp_function]: bool_cpu_temperature, bool_vram_temperature', bool_cpu_temperature, bool_vram_temperature)
+            print('-- [App.btn_cpu_mon_temp_function]: bool_switch_cpu_temperature, bool_switch_vram_temperature', bool_switch_cpu_temperature, bool_switch_vram_temperature)
 
     def btn_vram_mon_temp_function(self):
         print('-- [App.btn_vram_mon_temp_function]: plugged in')
         global thread_temperatures
-        global bool_vram_temperature, bool_cpu_temperature
+        global bool_switch_vram_temperature, bool_switch_cpu_temperature
         thread_temperatures[0].stop()
-        if bool_vram_temperature is True:
+        if bool_switch_vram_temperature is True:
             if self.write_engaged is False:
-                print('-- [App.btn_vram_mon_temp_function] changing bool_vram_temperature:', bool_vram_temperature)
-                self.write_var = 'bool_vram_temperature: false'
+                print('-- [App.btn_vram_mon_temp_function] changing bool_switch_vram_temperature:', bool_switch_vram_temperature)
+                self.write_var = 'bool_switch_vram_temperature: false'
                 self.write_changes()
             self.btn_vram_mon_temp.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
             self.lbl_vram_mon_temp.setStyleSheet(self.btn_menu_style)
-            bool_vram_temperature = False
-        elif bool_vram_temperature is False:
+            bool_switch_vram_temperature = False
+        elif bool_switch_vram_temperature is False:
             if self.write_engaged is False:
-                print('-- [App.btn_vram_mon_temp_function] changing bool_vram_temperature:', bool_vram_temperature)
-                self.write_var = 'bool_vram_temperature: true'
+                print('-- [App.btn_vram_mon_temp_function] changing bool_switch_vram_temperature:', bool_switch_vram_temperature)
+                self.write_var = 'bool_switch_vram_temperature: true'
                 self.write_changes()
             self.btn_vram_mon_temp.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
             self.lbl_vram_mon_temp.setStyleSheet(self.btn_menu_style_1)
-            bool_vram_temperature = True
-        if bool_vram_temperature is True or bool_cpu_temperature is True:
+            bool_switch_vram_temperature = True
+        if bool_switch_vram_temperature is True or bool_switch_cpu_temperature is True:
             print('-- [App.btn_cpu_mon_temp_function]: starting thread_temperatures')
             thread_temperatures[0].start()
         else:
-            print('-- [App.btn_cpu_mon_temp_function]: bool_cpu_temperature, bool_vram_temperature', bool_cpu_temperature, bool_vram_temperature)
+            print('-- [App.btn_cpu_mon_temp_function]: bool_switch_cpu_temperature, bool_switch_vram_temperature', bool_switch_cpu_temperature, bool_switch_vram_temperature)
 
     def btn_con_stat_kb_img_function(self):
         print('-- [App.btn_con_stat_kb_img_function]: plugged in')
@@ -2936,13 +2922,13 @@ class App(QMainWindow):
 
     def isenabled_true(self):
         print('-- [App.isenabled_true]: plugged in')
-        global bool_power_plan_interact, bool_powershell_interact
+        global bool_switch_power_plan, bool_switch_powershell
         for _ in self.object_interaction_enabled:
             _.setEnabled(True)
 
     def isenabled_false(self):
         print('-- [App.isenabled_false]: plugged in')
-        global bool_power_plan_interact
+        global bool_switch_power_plan
         for _ in self.object_interaction_enabled:
             _.setEnabled(False)
 
@@ -3653,14 +3639,14 @@ class App(QMainWindow):
             self.qle_netshare_mon_rgb_on.setAlignment(Qt.AlignCenter)
 
     def g1_function_short(self):
-        global devices_kb, bool_power_plan_interact, power_plan, power_plan_index
+        global devices_kb, bool_switch_power_plan, power_plan, power_plan_index
         global notification_key
         self.setFocus()
 
         print('-- [App.g1_function_short]: plugged in')
         if len(devices_kb):
 
-            if bool_power_plan_interact is True:
+            if bool_switch_power_plan is True:
                 print('-- [App.g1_function_short] cycling power plan')
                 
                 if power_plan_index < 3:
@@ -3745,10 +3731,10 @@ class App(QMainWindow):
         global thread_sdk_event_handler
 
     def g5_function_short(self):
-        global bool_powershell_interact, thread_sdk_event_handler
+        global bool_switch_powershell, thread_sdk_event_handler
         global thread_sdk_event_handler
         print('-- [App.g5_function_short]: plugged in')
-        if bool_powershell_interact is True:
+        if bool_switch_powershell is True:
             print('-- [App.g5_function_short]: attempting to run start powershell')
             os.startfile('powershell')
 
@@ -3766,14 +3752,14 @@ class App(QMainWindow):
 
     def g6_function_short(self):
         print('-- [App.g6_function_short]: plugged in')
-        global bool_allow_g_key_access, notification_key, thread_sdk_event_handler, bool_lock_gkeys
+        global bool_backend_allow_g_key_access, notification_key, thread_sdk_event_handler, bool_switch_lock_gkeys
 
-        if bool_lock_gkeys is True:
-            if bool_allow_g_key_access is True:
-                bool_allow_g_key_access = False
+        if bool_switch_lock_gkeys is True:
+            if bool_backend_allow_g_key_access is True:
+                bool_backend_allow_g_key_access = False
                 notification_key = 7
-            elif bool_allow_g_key_access is False:
-                bool_allow_g_key_access = True
+            elif bool_backend_allow_g_key_access is False:
+                bool_backend_allow_g_key_access = True
                 notification_key = 8
 
     def g6_function_long(self):
@@ -3789,7 +3775,7 @@ class App(QMainWindow):
         print('-- [App.initUI]: plugged in')
         global sdk
         global bool_backend_allow_display, bool_switch_startup_exclusive_control, bool_switch_startup_minimized
-        global bool_switch_startup_cpu_util, bool_switch_startup_dram_util, bool_switch_startup_vram_util, bool_cpu_temperature, bool_vram_temperature
+        global bool_switch_startup_cpu_util, bool_switch_startup_dram_util, bool_switch_startup_vram_util, bool_switch_cpu_temperature, bool_switch_vram_temperature
         global bool_switch_startup_hdd_read_write, bool_switch_startup_net_share_mon, bool_switch_startup_net_traffic
         global sdk_color_cpu_on, sdk_color_dram_on, sdk_color_vram_on, sdk_color_hddwrite_on, sdk_color_hddread_on, sdk_color_netshare_on, sdk_color_backlight
         global thread_compile_devices
@@ -3810,8 +3796,8 @@ class App(QMainWindow):
         global thread_keyevents
         global bool_switch_startup_media_display
         global str_path_kb_img, str_path_ms_img
-        global bool_power_plan_interact
-        global bool_powershell_interact
+        global bool_switch_power_plan
+        global bool_switch_powershell
         global bool_switch_fahrenheit
         global thread_gkey_pressed
         global bool_switch_g2_disks
@@ -3821,7 +3807,7 @@ class App(QMainWindow):
         global thread_windows_update_monitor
         global thread_dir_sz_monitor
         global thread_steam_update_monitor
-        global bool_lock_gkeys
+        global bool_switch_lock_gkeys
 
         notification_thread = SdkNotificationClass()
         thread_notification.append(notification_thread)
@@ -3906,9 +3892,9 @@ class App(QMainWindow):
             time.sleep(0.1)
         print('-- [App.initUI]: displaying application')
 
-        if bool_lock_gkeys is True:
+        if bool_switch_lock_gkeys is True:
             self.btn_lock_gkeys.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-        elif bool_lock_gkeys is False:
+        elif bool_switch_lock_gkeys is False:
             self.btn_lock_gkeys.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
         if bool_switch_g2_disks is True:
@@ -3925,14 +3911,14 @@ class App(QMainWindow):
         elif bool_switch_fahrenheit is False:
             self.btn_fahrenheit.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
-        if bool_powershell_interact is True:
+        if bool_switch_powershell is True:
             self.btn_powershell.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-        elif bool_powershell_interact is False:
+        elif bool_switch_powershell is False:
             self.btn_powershell.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
-        if bool_power_plan_interact is True:
+        if bool_switch_power_plan is True:
             self.btn_power_plan.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-        if bool_power_plan_interact is False:
+        if bool_switch_power_plan is False:
             self.btn_power_plan.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
         if os.path.exists(str_path_kb_img):
@@ -4018,16 +4004,16 @@ class App(QMainWindow):
             self.lbl_netshare_mon.setStyleSheet(self.btn_menu_style_1)
         self.lbl_net_con_mouse_led_selected.setText(str(corsairled_id_num_netcon_ms))
 
-        if bool_cpu_temperature is True:
+        if bool_switch_cpu_temperature is True:
             self.btn_cpu_mon_temp.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
             self.lbl_cpu_mon_temp.setStyleSheet(self.btn_menu_style_1)
-        elif bool_cpu_temperature is False:
+        elif bool_switch_cpu_temperature is False:
             self.btn_cpu_mon_temp.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
             self.lbl_cpu_mon_temp.setStyleSheet(self.btn_menu_style)
-        if bool_vram_temperature is True:
+        if bool_switch_vram_temperature is True:
             self.btn_vram_mon_temp.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
             self.lbl_vram_mon_temp.setStyleSheet(self.btn_menu_style_1)
-        elif bool_vram_temperature is False:
+        elif bool_switch_vram_temperature is False:
             self.btn_vram_mon_temp.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
             self.lbl_vram_mon_temp.setStyleSheet(self.btn_menu_style_1)
 
@@ -4283,7 +4269,7 @@ class CompileDevicesClass(QThread):
         global thread_net_connection, bool_switch_startup_net_con, bool_switch_startup_net_con_ms, bool_switch_startup_net_con_kb
         global bool_switch_startup_net_share_mon, bool_switch_startup_hdd_read_write
         global bool_backend_config_read_complete, bool_switch_startup_exclusive_control
-        global thread_temperatures, bool_cpu_temperature, bool_vram_temperature
+        global thread_temperatures, bool_switch_cpu_temperature, bool_switch_vram_temperature
         global thread_media_display
         global thread_power
         global thread_keyevents, thread_sdk_event_handler
@@ -4307,11 +4293,11 @@ class CompileDevicesClass(QThread):
                 thread_net_traffic[0].start()
             if bool_switch_startup_net_share_mon:
                 thread_net_share[0].start()
-            if bool_cpu_temperature is True or bool_vram_temperature is True:
+            if bool_switch_cpu_temperature is True or bool_switch_vram_temperature is True:
                 thread_temperatures[0].start()
             if bool_switch_startup_media_display is True:
                 thread_media_display[0].start()
-            if bool_power_plan_interact is True:
+            if bool_switch_power_plan is True:
                 thread_power[0].start()
         if len(devices_kb) > 0 or len(devices_ms) > 0:
             if bool_switch_startup_net_con_ms is True or bool_switch_startup_net_con_kb is True:
@@ -4395,7 +4381,7 @@ class CompileDevicesClass(QThread):
 
     def get_devices(self):
         # print('-- [CompileDevicesClass.get_devices]: plugged in')
-        global sdk, devices_previous, devices_kb, devices_ms, devices_kb_name, bool_execution_policy_show
+        global sdk, devices_previous, devices_kb, devices_ms, devices_kb_name, bool_backend_execution_policy_show
         fresh_start = False
         if self.bool_backend_comprehensive_enumeration is True:
             device = sdk.get_devices()
@@ -4424,7 +4410,7 @@ class CompileDevicesClass(QThread):
                 print('-- [CompileDevicesClass.get_devices] fresh start: True')
                 if len(devices_kb) > 0:
                     self.lbl_con_stat_kb.setText(str(devices_kb_name[0]))
-                    if bool_execution_policy_show is False:
+                    if bool_backend_execution_policy_show is False:
                         self.lbl_con_stat_kb.show()
                         self.btn_con_stat_kb_img.show()
                 elif len(devices_kb) < 1:
@@ -4433,7 +4419,7 @@ class CompileDevicesClass(QThread):
                     self.btn_con_stat_kb_img.hide()
                 if len(devices_ms) > 0:
                     self.lbl_con_stat_mouse.setText(str(devices_ms_name[0]))
-                    if bool_execution_policy_show is False:
+                    if bool_backend_execution_policy_show is False:
                         self.lbl_con_stat_mouse.show()
                         self.btn_con_stat_ms_img.show()
                 elif len(devices_ms) < 1:
@@ -4481,14 +4467,14 @@ class CompileDevicesClass(QThread):
         global sdk_color_backlight
         global bool_switch_startup_minimized, bool_switch_startup_autorun, bool_switch_startup_exclusive_control
         global bool_backend_allow_display, bool_backend_icue_connected, bool_backend_config_read_complete
-        global bool_cpu_temperature, bool_vram_temperature
+        global bool_switch_cpu_temperature, bool_switch_vram_temperature
         global str_path_kb_img, str_path_ms_img
         global bool_switch_startup_media_display
-        global bool_power_plan_interact
-        global bool_powershell_interact
+        global bool_switch_power_plan
+        global bool_switch_powershell
         global bool_switch_fahrenheit
         global bool_switch_g2_disks
-        global bool_lock_gkeys
+        global bool_switch_lock_gkeys
 
         startup_loc = '/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/iCUEDisplay.lnk'
         bool_backend_valid_network_adapter_name = False
@@ -4703,14 +4689,14 @@ class CompileDevicesClass(QThread):
                         sdk_color_netshare_on[1] = int(var[1])
                         sdk_color_netshare_on[2] = int(var[2])
 
-                if line == 'bool_cpu_temperature: false':
-                    bool_cpu_temperature = False
-                elif line == 'bool_cpu_temperature: true':
-                    bool_cpu_temperature = True
-                if line == 'bool_vram_temperature: false':
-                    bool_vram_temperature = False
-                elif line == 'bool_vram_temperature: true':
-                    bool_vram_temperature = True
+                if line == 'bool_switch_cpu_temperature: false':
+                    bool_switch_cpu_temperature = False
+                elif line == 'bool_switch_cpu_temperature: true':
+                    bool_switch_cpu_temperature = True
+                if line == 'bool_switch_vram_temperature: false':
+                    bool_switch_vram_temperature = False
+                elif line == 'bool_switch_vram_temperature: true':
+                    bool_switch_vram_temperature = True
                 if line.startswith('str_path_kb_img: '):
                     var = line.replace('str_path_kb_img: ', '')
                     if os.path.exists(var):
@@ -4723,14 +4709,14 @@ class CompileDevicesClass(QThread):
                     bool_switch_startup_media_display = False
                 elif line == 'bool_switch_startup_media_display: true':
                     bool_switch_startup_media_display = True
-                if line == 'bool_power_plan_interact: true':
-                    bool_power_plan_interact = True
-                elif line == 'bool_power_plan_interact: false':
-                    bool_power_plan_interact = False
-                if line == 'bool_powershell_interact: true':
-                    bool_powershell_interact = True
-                if line == 'bool_powershell_interact: false':
-                    bool_powershell_interact = False
+                if line == 'bool_switch_power_plan: true':
+                    bool_switch_power_plan = True
+                elif line == 'bool_switch_power_plan: false':
+                    bool_switch_power_plan = False
+                if line == 'bool_switch_powershell: true':
+                    bool_switch_powershell = True
+                if line == 'bool_switch_powershell: false':
+                    bool_switch_powershell = False
 
                 if line == 'bool_switch_fahrenheit: true':
                     bool_switch_fahrenheit = True
@@ -4742,10 +4728,10 @@ class CompileDevicesClass(QThread):
                 if line == 'bool_switch_g2_disks: false':
                     bool_switch_g2_disks = False
 
-                if line == 'bool_lock_gkeys: true':
-                    bool_lock_gkeys = True
-                if line == 'bool_lock_gkeys: false':
-                    bool_lock_gkeys = False
+                if line == 'bool_switch_lock_gkeys: true':
+                    bool_switch_lock_gkeys = True
+                if line == 'bool_switch_lock_gkeys: false':
+                    bool_switch_lock_gkeys = False
 
 
         print('-- [ConfigCompile.read_config] sdk_color_cpu_on:', sdk_color_cpu_on)
@@ -4774,8 +4760,8 @@ class CompileDevicesClass(QThread):
         print('-- [ConfigCompile.read_config] bool_switch_startup_minimized:', bool_switch_startup_minimized)
         print('-- [ConfigCompile.read_config] bool_switch_startup_autorun:', bool_switch_startup_autorun)
         print('-- [ConfigCompile.read_config] bool_switch_startup_exclusive_control:', bool_switch_startup_exclusive_control)
-        print('-- [ConfigCompile.read_config] bool_cpu_temperature:', bool_cpu_temperature)
-        print('-- [ConfigCompile.read_config] bool_vram_temperature:', bool_vram_temperature)
+        print('-- [ConfigCompile.read_config] bool_switch_cpu_temperature:', bool_switch_cpu_temperature)
+        print('-- [ConfigCompile.read_config] bool_switch_vram_temperature:', bool_switch_vram_temperature)
         bool_backend_config_read_complete = True
 
     def run(self):
@@ -5093,7 +5079,7 @@ class SdkSendInstructionClass(QThread):
             if bool_switch_startup_media_display is True:
                 thread_media_display[0].stop()
                 thread_media_display[0].start()
-            # if bool_power_plan_interact is True:
+            # if bool_switch_power_plan is True:
             #     thread_power[0].stop()
             #     thread_power[0].start()
 
@@ -5106,18 +5092,16 @@ class SdkSendInstructionClass(QThread):
 
         global bool_instruction_eject, bool_instruction_eject_end, bool_instruction_mount, bool_instruction_mount_end, bool_instruction_unmount, bool_instruction_unmount_end
 
-        global bool_allow_g_key_access
+        global bool_backend_allow_g_key_access
         global sdk
         global devices_kb, devices_ms
         global devices_kb_selected, devices_ms_selected
         global corsairled_id_num_ms_complete, corsairled_id_num_kb_complete
-        global bool_allow_g_key_access
 
         global devices_kb, devices_ms
         global thread_net_connection
         global thread_media_display, bool_switch_startup_media_display
-        global thread_power, bool_power_plan_interact
-        global bool_instruction_color_kb, bool_instruction_color_ms_on, bool_allow_g_key_access, bool_instruction_color_ms_off
+        global thread_power, bool_switch_power_plan
         global corsairled_id_num_gkeys
 
         while True:
@@ -5249,20 +5233,20 @@ class SdkEventG2_Eject(QThread):
 
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, corsairled_id_num_hddreadwrite
         global disk_guid
-        global bool_alpha_stage_engaged
-        global bool_g2_input, kb_event
+        global bool_backend_alpha_stage_engaged
+        global bool_backend_g2_input, kb_event
         global bool_instruction_eject, bool_instruction_eject_end
         global notification_key
 
-        bool_alpha_stage_engaged = True
+        bool_backend_alpha_stage_engaged = True
 
         bool_instruction_eject = True
 
         print('-- [SdkEventG2_Eject.run]: armed')
 
         kb_event = ''
-        bool_g2_input = True
-        while bool_g2_input is True:
+        bool_backend_g2_input = True
+        while bool_backend_g2_input is True:
             time.sleep(0)
 
         print('-- [SdkEventG2_Eject.run] kb_event:', kb_event)
@@ -5300,17 +5284,17 @@ class SdkEventG2_Eject(QThread):
 
         bool_instruction_eject_end = True
 
-        bool_alpha_stage_engaged = False
+        bool_backend_alpha_stage_engaged = False
 
     def stop(self):
         print('-- [SdkEventG2_Eject.stop]: plugged in')
-        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, bool_alpha_stage_engaged, bool_g2_input
+        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, bool_backend_alpha_stage_engaged, bool_backend_g2_input
         global bool_instruction_eject_end, notification_key
-        bool_g2_input = False
+        bool_backend_g2_input = False
 
         bool_instruction_eject_end = True
 
-        bool_alpha_stage_engaged = False
+        bool_backend_alpha_stage_engaged = False
 
         notification_key = 2
 
@@ -5328,18 +5312,18 @@ class SdkEventG2_Mount(QThread):
 
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, corsairled_id_num_hddreadwrite
         global disk_guid
-        global bool_alpha_stage_engaged, bool_g2_input, kb_event, bool_instruction_mount, bool_instruction_mount_end
+        global bool_backend_alpha_stage_engaged, bool_backend_g2_input, kb_event, bool_instruction_mount, bool_instruction_mount_end
         global notification_key
 
-        bool_alpha_stage_engaged = True
+        bool_backend_alpha_stage_engaged = True
 
         bool_instruction_mount = True
 
         print('-- [SdkEventG2_Mount.run]: armed')
 
         kb_event = ''
-        bool_g2_input = True
-        while bool_g2_input is True:
+        bool_backend_g2_input = True
+        while bool_backend_g2_input is True:
             time.sleep(0)
 
         print('-- [SdkEventG2_Mount.run] kb_event:', )
@@ -5388,18 +5372,18 @@ class SdkEventG2_Mount(QThread):
 
         bool_instruction_mount_end = True
 
-        bool_alpha_stage_engaged = False
+        bool_backend_alpha_stage_engaged = False
 
     def stop(self):
         print('-- [SdkEventG2_Mount.stop]: plugged in')
-        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, bool_alpha_stage_engaged, bool_g2_input, bool_instruction_mount_end
+        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, bool_backend_alpha_stage_engaged, bool_backend_g2_input, bool_instruction_mount_end
         global notification_key
 
-        bool_g2_input = False
+        bool_backend_g2_input = False
 
         bool_instruction_mount_end = True
 
-        bool_alpha_stage_engaged = False
+        bool_backend_alpha_stage_engaged = False
 
         notification_key = 2
 
@@ -5417,18 +5401,18 @@ class SdkEventG2_Unmount(QThread):
 
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, corsairled_id_num_hddreadwrite
         global disk_guid
-        global bool_alpha_stage_engaged, bool_g2_input, kb_event, bool_instruction_unmount, bool_instruction_unmount_end
+        global bool_backend_alpha_stage_engaged, bool_backend_g2_input, kb_event, bool_instruction_unmount, bool_instruction_unmount_end
         global notification_key
 
-        bool_alpha_stage_engaged = True
+        bool_backend_alpha_stage_engaged = True
 
         bool_instruction_unmount = True
 
         print('-- [SdkEventG2_Unmount.run]: armed')
 
         kb_event = ''
-        bool_g2_input = True
-        while bool_g2_input is True:
+        bool_backend_g2_input = True
+        while bool_backend_g2_input is True:
             time.sleep(0)
 
         print('-- [SdkEventG2_Unmount.run] kb_event:', kb_event)
@@ -5462,18 +5446,18 @@ class SdkEventG2_Unmount(QThread):
 
         bool_instruction_unmount_end = True
 
-        bool_alpha_stage_engaged = False
+        bool_backend_alpha_stage_engaged = False
 
     def stop(self):
         print('-- [SdkEventG2_Unmount.stop]: plugged in')
-        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, bool_alpha_stage_engaged, bool_g2_input, bool_instruction_unmount_end
+        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, bool_backend_alpha_stage_engaged, bool_backend_g2_input, bool_instruction_unmount_end
         global notification_key
 
-        bool_g2_input = False
+        bool_backend_g2_input = False
 
         bool_instruction_unmount_end = True
 
-        bool_alpha_stage_engaged = False
+        bool_backend_alpha_stage_engaged = False
 
         notification_key = 2
 
@@ -5489,20 +5473,20 @@ class OnPressClass(QThread):
     def run(self):
         print('-- [OnPressClass.run]: plugged in')
         global g_key_pressed, time_now_press, sdk, devices_kb, devices_kb_selected, sdk_color_backlight
-        global bool_onpress_clause_g1, bool_onpress_clause_g2, bool_onpress_clause_g3
-        global bool_onpress_clause_g4, bool_onpress_clause_g5, bool_onpress_clause_g6
-        global bool_allow_g_key_access
+        global bool_backend_onpress_clause_g1, bool_backend_onpress_clause_g2, bool_backend_onpress_clause_g3
+        global bool_backend_onpress_clause_g4, bool_backend_onpress_clause_g5, bool_backend_onpress_clause_g6
+        global bool_backend_allow_g_key_access
 
         bool_catch_1 = False
         bool_catch_2 = False
         bool_catch_3 = False
         bool_catch_4 = False
-        bool_onpress_clause_g1 = False
-        bool_onpress_clause_g2 = False
-        bool_onpress_clause_g3 = False
-        bool_onpress_clause_g4 = False
-        bool_onpress_clause_g5 = False
-        bool_onpress_clause_g6 = False
+        bool_backend_onpress_clause_g1 = False
+        bool_backend_onpress_clause_g2 = False
+        bool_backend_onpress_clause_g3 = False
+        bool_backend_onpress_clause_g4 = False
+        bool_backend_onpress_clause_g5 = False
+        bool_backend_onpress_clause_g6 = False
 
         try:
             while True:
@@ -5515,39 +5499,39 @@ class OnPressClass(QThread):
                     if bool_catch_1 is False:
                         bool_catch_1 = True
                         print('-- [OnPressClass.run] hold 1:', g_key_pressed)
-                        if bool_allow_g_key_access is True:
+                        if bool_backend_allow_g_key_access is True:
                             if g_key_pressed == 'CorsairKeyId.Kb_G1':
-                                bool_onpress_clause_g1 = True
+                                bool_backend_onpress_clause_g1 = True
                                 try:
                                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 255, 0)}))
                                 except Exception as e:
                                     print('-- [OnPressClass.run]  Error:', e)
                             elif g_key_pressed == 'CorsairKeyId.Kb_G2':
-                                bool_onpress_clause_g2 = True
+                                bool_backend_onpress_clause_g2 = True
                                 try:
                                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 255, 0)}))
                                 except Exception as e:
                                     print('-- [OnPressClass.run]  Error:', e)
                             elif g_key_pressed == 'CorsairKeyId.Kb_G3':
-                                bool_onpress_clause_g3 = True
+                                bool_backend_onpress_clause_g3 = True
                                 try:
                                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: (255, 255, 0)}))
                                 except Exception as e:
                                     print('-- [OnPressClass.run]  Error:', e)
                             elif g_key_pressed == 'CorsairKeyId.Kb_G4':
-                                bool_onpress_clause_g4 = True
+                                bool_backend_onpress_clause_g4 = True
                                 try:
                                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: (255, 255, 0)}))
                                 except Exception as e:
                                     print('-- [OnPressClass.run]  Error:', e)
                             elif g_key_pressed == 'CorsairKeyId.Kb_G5':
-                                bool_onpress_clause_g5 = True
+                                bool_backend_onpress_clause_g5 = True
                                 try:
                                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: (255, 255, 0)}))
                                 except Exception as e:
                                     print('-- [OnPressClass.run]  Error:', e)
                         if g_key_pressed == 'CorsairKeyId.Kb_G6':
-                            bool_onpress_clause_g6 = True
+                            bool_backend_onpress_clause_g6 = True
                             try:
                                 sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: (255, 255, 0)}))
                             except Exception as e:
@@ -5558,40 +5542,40 @@ class OnPressClass(QThread):
                         bool_catch_2 = True
                         print('-- [OnPressClass.run] hold 2:', g_key_pressed)
 
-                        if bool_allow_g_key_access is True:
+                        if bool_backend_allow_g_key_access is True:
                             if g_key_pressed == 'CorsairKeyId.Kb_G1':
-                                bool_onpress_clause_g1 = True
+                                bool_backend_onpress_clause_g1 = True
                                 try:
                                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 100, 0)}))
                                 except Exception as e:
                                     print('-- [OnPressClass.run]  Error:', e)
                             elif g_key_pressed == 'CorsairKeyId.Kb_G2':
-                                bool_onpress_clause_g2 = True
+                                bool_backend_onpress_clause_g2 = True
                                 try:
                                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 100, 0)}))
                                 except Exception as e:
                                     print('-- [OnPressClass.run]  Error:', e)
                             elif g_key_pressed == 'CorsairKeyId.Kb_G3':
-                                bool_onpress_clause_g3 = True
+                                bool_backend_onpress_clause_g3 = True
                                 try:
                                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: (255, 100, 0)}))
                                 except Exception as e:
                                     print('-- [OnPressClass.run]  Error:', e)
                             elif g_key_pressed == 'CorsairKeyId.Kb_G4':
-                                bool_onpress_clause_g4 = True
+                                bool_backend_onpress_clause_g4 = True
                                 try:
                                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: (255, 100, 0)}))
                                 except Exception as e:
                                     print('-- [OnPressClass.run]  Error:', e)
                             elif g_key_pressed == 'CorsairKeyId.Kb_G5':
-                                bool_onpress_clause_g5 = True
+                                bool_backend_onpress_clause_g5 = True
                                 try:
                                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: (255, 100, 0)}))
                                 except Exception as e:
                                     print('-- [OnPressClass.run]  Error:', e)
 
                         if g_key_pressed == 'CorsairKeyId.Kb_G6':
-                            bool_onpress_clause_g6 = True
+                            bool_backend_onpress_clause_g6 = True
                             try:
                                 sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: (255, 100, 0)}))
                             except Exception as e:
@@ -5602,39 +5586,39 @@ class OnPressClass(QThread):
                         bool_catch_3 = True
                         print('-- [OnPressClass.run] hold 3:', g_key_pressed)
 
-                        if bool_allow_g_key_access is True:
+                        if bool_backend_allow_g_key_access is True:
                             if g_key_pressed == 'CorsairKeyId.Kb_G1':
-                                bool_onpress_clause_g1 = True
+                                bool_backend_onpress_clause_g1 = True
                                 try:
                                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 0, 0)}))
                                 except Exception as e:
                                     print('-- [OnPressClass.run]  Error:', e)
                             elif g_key_pressed == 'CorsairKeyId.Kb_G2':
-                                bool_onpress_clause_g2 = True
+                                bool_backend_onpress_clause_g2 = True
                                 try:
                                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 0, 0)}))
                                 except Exception as e:
                                     print('-- [OnPressClass.run]  Error:', e)
                             elif g_key_pressed == 'CorsairKeyId.Kb_G3':
-                                bool_onpress_clause_g3 = True
+                                bool_backend_onpress_clause_g3 = True
                                 try:
                                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: (255, 0, 0)}))
                                 except Exception as e:
                                     print('-- [OnPressClass.run]  Error:', e)
                             elif g_key_pressed == 'CorsairKeyId.Kb_G4':
-                                bool_onpress_clause_g4 = True
+                                bool_backend_onpress_clause_g4 = True
                                 try:
                                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: (255, 0, 0)}))
                                 except Exception as e:
                                     print('-- [OnPressClass.run]  Error:', e)
                             elif g_key_pressed == 'CorsairKeyId.Kb_G5':
-                                bool_onpress_clause_g5 = True
+                                bool_backend_onpress_clause_g5 = True
                                 try:
                                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: (255, 0, 0)}))
                                 except Exception as e:
                                     print('-- [OnPressClass.run]  Error:', e)
                         if g_key_pressed == 'CorsairKeyId.Kb_G6':
-                            bool_onpress_clause_g6 = True
+                            bool_backend_onpress_clause_g6 = True
                             try:
                                 sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: (255, 0, 0)}))
                             except Exception as e:
@@ -5645,39 +5629,39 @@ class OnPressClass(QThread):
                         bool_catch_4 = True
                         print('-- [OnPressClass.run] hold 4:', g_key_pressed)
 
-                        if bool_allow_g_key_access is True:
+                        if bool_backend_allow_g_key_access is True:
                             if g_key_pressed == 'CorsairKeyId.Kb_G1':
-                                bool_onpress_clause_g1 = True
+                                bool_backend_onpress_clause_g1 = True
                                 try:
                                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 255, 255)}))
                                 except Exception as e:
                                     print('-- [OnPressClass.run]  Error:', e)
                             elif g_key_pressed == 'CorsairKeyId.Kb_G2':
-                                bool_onpress_clause_g2 = True
+                                bool_backend_onpress_clause_g2 = True
                                 try:
                                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 255, 255)}))
                                 except Exception as e:
                                     print('-- [OnPressClass.run]  Error:', e)
                             elif g_key_pressed == 'CorsairKeyId.Kb_G3':
-                                bool_onpress_clause_g3 = True
+                                bool_backend_onpress_clause_g3 = True
                                 try:
                                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: (255, 255, 255)}))
                                 except Exception as e:
                                     print('-- [OnPressClass.run]  Error:', e)
                             elif g_key_pressed == 'CorsairKeyId.Kb_G4':
-                                bool_onpress_clause_g4 = True
+                                bool_backend_onpress_clause_g4 = True
                                 try:
                                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: (255, 255, 255)}))
                                 except Exception as e:
                                     print('-- [OnPressClass.run]  Error:', e)
                             elif g_key_pressed == 'CorsairKeyId.Kb_G5':
-                                bool_onpress_clause_g5 = True
+                                bool_backend_onpress_clause_g5 = True
                                 try:
                                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: (255, 255, 255)}))
                                 except Exception as e:
                                     print('-- [OnPressClass.run]  Error:', e)
                         if g_key_pressed == 'CorsairKeyId.Kb_G6':
-                            bool_onpress_clause_g6 = True
+                            bool_backend_onpress_clause_g6 = True
                             try:
                                 sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: (255, 255, 255)}))
                             except Exception as e:
@@ -5687,79 +5671,79 @@ class OnPressClass(QThread):
             print('-- [OnPressClass.run] Error:', e)
 
         g_key_pressed = ''
-        if bool_allow_g_key_access is True:
-            if bool_onpress_clause_g1 is True:
+        if bool_backend_allow_g_key_access is True:
+            if bool_backend_onpress_clause_g1 is True:
                 try:
                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: sdk_color_backlight}))
                 except Exception as e:
                     print('-- [OnPressClass.run]  Error:', e)
-            elif bool_onpress_clause_g2 is True:
+            elif bool_backend_onpress_clause_g2 is True:
                 try:
                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: sdk_color_backlight}))
                 except Exception as e:
                     print('-- [OnPressClass.run]  Error:', e)
-            elif bool_onpress_clause_g3 is True:
+            elif bool_backend_onpress_clause_g3 is True:
                 try:
                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: sdk_color_backlight}))
                 except Exception as e:
                     print('-- [OnPressClass.run]  Error:', e)
-            elif bool_onpress_clause_g4 is True:
+            elif bool_backend_onpress_clause_g4 is True:
                 try:
                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: sdk_color_backlight}))
                 except Exception as e:
                     print('-- [OnPressClass.run]  Error:', e)
-            elif bool_onpress_clause_g5 is True:
+            elif bool_backend_onpress_clause_g5 is True:
                 try:
                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: sdk_color_backlight}))
                 except Exception as e:
                     print('-- [OnPressClass.run]  Error:', e)
-            elif bool_onpress_clause_g6 is True:
+            elif bool_backend_onpress_clause_g6 is True:
                 try:
                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: sdk_color_backlight}))
                 except Exception as e:
                     print('-- [OnPressClass.run]  Error:', e)
 
-        bool_onpress_clause_g1 = False
-        bool_onpress_clause_g2 = False
-        bool_onpress_clause_g3 = False
-        bool_onpress_clause_g4 = False
-        bool_onpress_clause_g5 = False
-        bool_onpress_clause_g6 = False
+        bool_backend_onpress_clause_g1 = False
+        bool_backend_onpress_clause_g2 = False
+        bool_backend_onpress_clause_g3 = False
+        bool_backend_onpress_clause_g4 = False
+        bool_backend_onpress_clause_g5 = False
+        bool_backend_onpress_clause_g6 = False
 
     def stop(self):
         print('-- [OnPressClass.stop]: plugged in')
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
         global g_key_pressed
-        global bool_onpress_clause_g1, bool_onpress_clause_g2, bool_onpress_clause_g3
-        global bool_onpress_clause_g4, bool_onpress_clause_g5, bool_onpress_clause_g6
+        global bool_backend_onpress_clause_g1, bool_backend_onpress_clause_g2, bool_backend_onpress_clause_g3
+        global bool_backend_onpress_clause_g4, bool_backend_onpress_clause_g5, bool_backend_onpress_clause_g6
         try:
-            if bool_allow_g_key_access is True:
-                if bool_onpress_clause_g1 is True:
+            if bool_backend_allow_g_key_access is True:
+                if bool_backend_onpress_clause_g1 is True:
                     try:
                         sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: sdk_color_backlight}))
                     except Exception as e:
                         print('-- [OnPressClass.stop]  Error:', e)
-                if bool_onpress_clause_g2 is True:
+                if bool_backend_onpress_clause_g2 is True:
                     try:
                         sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: sdk_color_backlight}))
                     except Exception as e:
                         print('-- [OnPressClass.stop]  Error:', e)
-                if bool_onpress_clause_g3 is True:
+                if bool_backend_onpress_clause_g3 is True:
                     try:
                         sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: sdk_color_backlight}))
                     except Exception as e:
                         print('-- [OnPressClass.stop]  Error:', e)
-                if bool_onpress_clause_g4 is True:
+                if bool_backend_onpress_clause_g4 is True:
                     try:
                         sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: sdk_color_backlight}))
                     except Exception as e:
                         print('-- [OnPressClass.stop]  Error:', e)
-                if bool_onpress_clause_g5 is True:
+                if bool_backend_onpress_clause_g5 is True:
                     try:
                         sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: sdk_color_backlight}))
                     except Exception as e:
                         print('-- [OnPressClass.stop]  Error:', e)
-                if bool_onpress_clause_g6 is True:
+                if bool_backend_onpress_clause_g6 is True:
                     try:
                         sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: sdk_color_backlight}))
                     except Exception as e:
@@ -5767,12 +5751,12 @@ class OnPressClass(QThread):
         except Exception as e:
             print(e)
 
-        bool_onpress_clause_g1 = False
-        bool_onpress_clause_g2 = False
-        bool_onpress_clause_g3 = False
-        bool_onpress_clause_g4 = False
-        bool_onpress_clause_g5 = False
-        bool_onpress_clause_g6 = False
+        bool_backend_onpress_clause_g1 = False
+        bool_backend_onpress_clause_g2 = False
+        bool_backend_onpress_clause_g3 = False
+        bool_backend_onpress_clause_g4 = False
+        bool_backend_onpress_clause_g5 = False
+        bool_backend_onpress_clause_g6 = False
         g_key_pressed = ''
 
         self.terminate()
@@ -5852,7 +5836,7 @@ class SdkEventHandlerClass(QThread):
 
     def on_press(self, event_id, data):
         # print('-- [SdkEventHandlerClass.on_press]: plugged in')
-        global sdk, devices_kb, devices_kb_selected, g_key_pressed, thread_gkey_pressed, time_now_press, bool_exclsuive_g2key_allow
+        global sdk, devices_kb, devices_kb_selected, g_key_pressed, thread_gkey_pressed, time_now_press
 
         try:
 
@@ -5866,8 +5850,7 @@ class SdkEventHandlerClass(QThread):
             g_key_pressed = str(data.keyId).strip()
             time_now_press = self.time_now_press
 
-            if bool_exclsuive_g2key_allow is True:
-                self.gkey_sub_thread_stop()
+            self.gkey_sub_thread_stop()
 
             thread_gkey_pressed[0].start()
 
@@ -5876,7 +5859,7 @@ class SdkEventHandlerClass(QThread):
 
     def on_release(self, event_id, data):
         global thread_gkey_pressed, thread_eject, thread_mount, thread_unmount
-        global bool_switch_g2_disks, bool_allow_g_key_access
+        global bool_switch_g2_disks, bool_backend_allow_g_key_access
         # print('-- [SdkEventHandlerClass.on_release]: plugged in')
 
         try:
@@ -5895,23 +5878,23 @@ class SdkEventHandlerClass(QThread):
             if self.time_now_release_keyId == 'CorsairKeyId.Kb_G1':
                 if time_now_release < (self.time_now_press + 1.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                     print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
-                    if bool_allow_g_key_access is True:
+                    if bool_backend_allow_g_key_access is True:
                         self.g1_function_short()
 
                 elif time_now_release >= (self.time_now_press + 1.0) and time_now_release < (self.time_now_press + 2.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                     print('-- [App.on_press] captured event: time_now_1: {0} long released 1 seconds {1}'.format(self.time_now_press, data.keyId))
-                    if bool_allow_g_key_access is True:
-                        bool_allow_g_key_access
+                    if bool_backend_allow_g_key_access is True:
+                        bool_backend_allow_g_key_access
                         self.g1_function_long()
 
                 elif time_now_release >= (self.time_now_press + 2.0) and time_now_release < (self.time_now_press + 3.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                     print('-- [App.on_press] captured event: time_now_1: {0} long released 2 seconds {1}'.format(self.time_now_press, data.keyId))
-                    if bool_allow_g_key_access is True:
+                    if bool_backend_allow_g_key_access is True:
                         self.g1_function_long_2sec()
 
                 elif time_now_release >= (self.time_now_press + 3.0) and time_now_release < (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                     print('-- [App.on_press] captured event: time_now_1: {0} long released 3 seconds {1}'.format(self.time_now_press, data.keyId))
-                    if bool_allow_g_key_access is True:
+                    if bool_backend_allow_g_key_access is True:
                         self.g1_function_long_3sec()
 
                 elif time_now_release >= (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
@@ -5925,18 +5908,18 @@ class SdkEventHandlerClass(QThread):
                 elif time_now_release >= (self.time_now_press + 1.0) and time_now_release < (self.time_now_press + 2.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                     print('-- [App.on_press] captured event: time_now_1: {0} long released 1 seconds {1}'.format(self.time_now_press, data.keyId))
                     if bool_switch_g2_disks is True:
-                        if bool_allow_g_key_access is True:
+                        if bool_backend_allow_g_key_access is True:
                             thread_eject[0].start()
 
                 elif time_now_release >= (self.time_now_press + 2.0) and time_now_release < (self.time_now_press + 3.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                     print('-- [App.on_press] captured event: time_now_1: {0} long released 2 seconds {1}'.format(self.time_now_press, data.keyId))
-                    if bool_allow_g_key_access is True:
+                    if bool_backend_allow_g_key_access is True:
                         if bool_switch_g2_disks is True:
                             thread_mount[0].start()
 
                 elif time_now_release >= (self.time_now_press + 3.0) and time_now_release < (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                     print('-- [App.on_press] captured event: time_now_1: {0} long released 3 seconds {1}'.format(self.time_now_press, data.keyId))
-                    if bool_allow_g_key_access is True:
+                    if bool_backend_allow_g_key_access is True:
                         if bool_switch_g2_disks is True:
                             thread_unmount[0].start()
 
@@ -5946,22 +5929,22 @@ class SdkEventHandlerClass(QThread):
             elif self.time_now_release_keyId == 'CorsairKeyId.Kb_G3':
                 if time_now_release < (self.time_now_press + 1.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                     print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
-                    if bool_allow_g_key_access is True:
+                    if bool_backend_allow_g_key_access is True:
                         self.g3_function_short()
 
                 elif time_now_release >= (self.time_now_press + 1.0) and time_now_release < (self.time_now_press + 2.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                     print('-- [App.on_press] captured event: time_now_1: {0} long released 1 seconds {1}'.format(self.time_now_press, data.keyId))
-                    if bool_allow_g_key_access is True:
+                    if bool_backend_allow_g_key_access is True:
                         self.g3_function_long()
 
                 elif time_now_release >= (self.time_now_press + 2.0) and time_now_release < (self.time_now_press + 3.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                     print('-- [App.on_press] captured event: time_now_1: {0} long released 2 seconds {1}'.format(self.time_now_press, data.keyId))
-                    if bool_allow_g_key_access is True:
+                    if bool_backend_allow_g_key_access is True:
                         self.g3_function_long_2sec()
 
                 elif time_now_release >= (self.time_now_press + 3.0) and time_now_release < (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                     print('-- [App.on_press] captured event: time_now_1: {0} long released 3 seconds {1}'.format(self.time_now_press, data.keyId))
-                    if bool_allow_g_key_access is True:
+                    if bool_backend_allow_g_key_access is True:
                         self.g3_function_long_3sec()
 
                 elif time_now_release >= (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
@@ -5970,22 +5953,22 @@ class SdkEventHandlerClass(QThread):
             elif self.time_now_release_keyId == 'CorsairKeyId.Kb_G4':
                 if time_now_release < (self.time_now_press + 1.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                     print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
-                    if bool_allow_g_key_access is True:
+                    if bool_backend_allow_g_key_access is True:
                         self.g4_function_short()
 
                 elif time_now_release >= (self.time_now_press + 1.0) and time_now_release < (self.time_now_press + 2.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                     print('-- [App.on_press] captured event: time_now_1: {0} long released 1 seconds {1}'.format(self.time_now_press, data.keyId))
-                    if bool_allow_g_key_access is True:
+                    if bool_backend_allow_g_key_access is True:
                         self.g4_function_long()
 
                 elif time_now_release >= (self.time_now_press + 2.0) and time_now_release < (self.time_now_press + 3.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                     print('-- [App.on_press] captured event: time_now_1: {0} long released 2 seconds {1}'.format(self.time_now_press, data.keyId))
-                    if bool_allow_g_key_access is True:
+                    if bool_backend_allow_g_key_access is True:
                         self.g4_function_long_2sec()
 
                 elif time_now_release >= (self.time_now_press + 3.0) and time_now_release < (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                     print('-- [App.on_press] captured event: time_now_1: {0} long released 3 seconds {1}'.format(self.time_now_press, data.keyId))
-                    if bool_allow_g_key_access is True:
+                    if bool_backend_allow_g_key_access is True:
                         self.g4_function_long_3sec()
 
                 elif time_now_release >= (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
@@ -5994,22 +5977,22 @@ class SdkEventHandlerClass(QThread):
             elif self.time_now_release_keyId == 'CorsairKeyId.Kb_G5':
                 if time_now_release < (self.time_now_press + 1.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                     print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
-                    if bool_allow_g_key_access is True:
+                    if bool_backend_allow_g_key_access is True:
                         self.g5_function_short()
 
                 elif time_now_release >= (self.time_now_press + 1.0) and time_now_release < (self.time_now_press + 2.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                     print('-- [App.on_press] captured event: time_now_1: {0} long released 1 seconds {1}'.format(self.time_now_press, data.keyId))
-                    if bool_allow_g_key_access is True:
+                    if bool_backend_allow_g_key_access is True:
                         self.g5_function_long()
 
                 elif time_now_release >= (self.time_now_press + 2.0) and time_now_release < (self.time_now_press + 3.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                     print('-- [App.on_press] captured event: time_now_1: {0} long released 2 seconds {1}'.format(self.time_now_press, data.keyId))
-                    if bool_allow_g_key_access is True:
+                    if bool_backend_allow_g_key_access is True:
                         self.g5_function_long_2sec()
 
                 elif time_now_release >= (self.time_now_press + 3.0) and time_now_release < (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                     print('-- [App.on_press] captured event: time_now_1: {0} long released 3 seconds {1}'.format(self.time_now_press, data.keyId))
-                    if bool_allow_g_key_access is True:
+                    if bool_backend_allow_g_key_access is True:
                         self.g5_function_long_3sec()
 
                 elif time_now_release >= (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
@@ -6022,29 +6005,29 @@ class SdkEventHandlerClass(QThread):
 
                 elif time_now_release >= (self.time_now_press + 1.0) and time_now_release < (self.time_now_press + 2.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                     print('-- [App.on_press] captured event: time_now_1: {0} long released 1 seconds {1}'.format(self.time_now_press, data.keyId))
-                    if bool_allow_g_key_access is True:
+                    if bool_backend_allow_g_key_access is True:
                         self.g6_function_long()
 
                 elif time_now_release >= (self.time_now_press + 2.0) and time_now_release < (self.time_now_press + 3.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                     print('-- [App.on_press] captured event: time_now_1: {0} long released 2 seconds {1}'.format(self.time_now_press, data.keyId))
-                    if bool_allow_g_key_access is True:
+                    if bool_backend_allow_g_key_access is True:
                         self.g6_function_long_2sec()
 
                 elif time_now_release >= (self.time_now_press + 3.0) and time_now_release < (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                     print('-- [App.on_press] captured event: time_now_1: {0} long released 3 seconds {1}'.format(self.time_now_press, data.keyId))
-                    if bool_allow_g_key_access is True:
+                    if bool_backend_allow_g_key_access is True:
                         self.g6_function_long_3sec()
 
                 elif time_now_release >= (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
                     print('-- [App.on_press] captured event: time_now_1: {0} long released 4 seconds (ignore) {1}'.format(self.time_now_press, data.keyId))
 
-                # Todo --> (1. bool_allow_g_key_access in (config) bool_allow_g_key_access out (to config) maybe if subjectively preferabble? ) & (2. add bool_allow_g_key_access to GkeyX.long_pressX)
+                # Todo --> (1. bool_backend_allow_g_key_access in (config) bool_backend_allow_g_key_access out (to config) maybe if subjectively preferabble? ) & (2. add bool_backend_allow_g_key_access to GkeyX.long_pressX)
 
         except Exception as e:
             print('-- [SdkEventHandlerClass.on_press] Error:', e)
 
     def sdk_event_handler(self, event_id, data):
-        global bool_allow_g_key_access
+        global bool_backend_allow_g_key_access
         try:
             if event_id == CorsairEventId.KeyEvent:
                 try:
@@ -6244,11 +6227,11 @@ class KeyEventClass(QThread):
 
     def run(self):
         print('-- [KeyEventClass.run]: plugged in')
-        global bool_g2_input, kb_event
+        global bool_backend_g2_input, kb_event
         while True:
-            if bool_g2_input is True:
+            if bool_backend_g2_input is True:
                 kb_event = keyboard.read_key()
-                bool_g2_input = False
+                bool_backend_g2_input = False
             self.capslock_function()
             self.numlock_state()
 
@@ -6315,10 +6298,10 @@ class PowerClass(QThread):
 
     def run(self):
         print('-- [PowerClass.run]: plugged in')
-        global power_plan, power_plan_index, devices_kb, devices_kb_selected, sdk, bool_onpress_clause_g1, notification_key, bool_allow_g_key_access
+        global power_plan, power_plan_index, devices_kb, devices_kb_selected, sdk, bool_backend_onpress_clause_g1, notification_key, bool_backend_allow_g_key_access
         while True:
             try:
-                if bool_allow_g_key_access is True:
+                if bool_backend_allow_g_key_access is True:
                     cmd_output = []
                     xcmd = subprocess.Popen("powercfg /LIST", stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
                     while True:
@@ -6340,7 +6323,7 @@ class PowerClass(QThread):
                                     notification_key = 3
                                 power_plan_index = 0
                                 # if self.active_pp != self.active_pp_prev:
-                                if bool_onpress_clause_g1 is not True:
+                                if bool_backend_onpress_clause_g1 is not True:
                                     self.active_pp_prev = 1
                                     try:
                                         sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 0, 0)}))
@@ -6357,7 +6340,7 @@ class PowerClass(QThread):
                                     notification_key = 4
                                 power_plan_index = 1
                                 # if self.active_pp != self.active_pp_prev:
-                                if bool_onpress_clause_g1 is not True:
+                                if bool_backend_onpress_clause_g1 is not True:
                                     self.active_pp_prev = 2
                                     try:
                                         sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (0, 255, 0)}))
@@ -6374,7 +6357,7 @@ class PowerClass(QThread):
                                     notification_key = 5
                                 power_plan_index = 2
                                 # if self.active_pp != self.active_pp_prev:
-                                if bool_onpress_clause_g1 is not True:
+                                if bool_backend_onpress_clause_g1 is not True:
                                     self.active_pp_prev = 3
                                     try:
                                         sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (0, 255, 255)}))
@@ -6391,7 +6374,7 @@ class PowerClass(QThread):
                                     notification_key = 6
                                 power_plan_index = 3
                                 # if self.active_pp != self.active_pp_prev:
-                                if bool_onpress_clause_g1 is not True:
+                                if bool_backend_onpress_clause_g1 is not True:
                                     self.active_pp_prev = 4
                                     try:
                                         sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 15, 100)}))
@@ -6703,9 +6686,9 @@ class TemperatureClass(QThread):
 
     def send_instruction(self):
         global sdk, devices_kb, devices_kb_selected
-        global bool_cpu_temperature, bool_vram_temperature, sdk_color_cpu_on, sdk_color_vram_on
+        global bool_switch_cpu_temperature, bool_switch_vram_temperature, sdk_color_cpu_on, sdk_color_vram_on
         # print('-- [TemperatureClass.send_instruction]: plugged in')
-        if bool_cpu_temperature is True:
+        if bool_switch_cpu_temperature is True:
             if self.cpu_pack != '':
                 cpu_pack_0 = self.cpu_pack.split()
                 cpu_pack_1 = cpu_pack_0[-1]
@@ -6722,7 +6705,7 @@ class TemperatureClass(QThread):
                     rgb_cpu_temp = [255, 0, 0]
                 sdk_color_cpu_on = rgb_cpu_temp
 
-        if bool_vram_temperature is True:
+        if bool_switch_vram_temperature is True:
             if self.gpu_core != '':
                 gpu_core_0 = self.gpu_core.split()
                 gpu_core_1 = gpu_core_0[-1]
@@ -7481,7 +7464,7 @@ class HddMonClass(QThread):
 
     def get_stat(self):
         # print('-- [HddMonClass.get_stat]: plugged in')
-        global alpha_str, hdd_bytes_type_w, hdd_bytes_type_r, hdd_bytes_str, bool_alpha_stage_engaged
+        global alpha_str, hdd_bytes_type_w, hdd_bytes_type_r, hdd_bytes_str, bool_backend_alpha_stage_engaged
         get_stat_allow = False
         try:
             self.disk_letter_complete = []
@@ -7524,24 +7507,24 @@ class HddMonClass(QThread):
                                     for _ in alpha_str:
                                         if self.dwps == 0 or self.drps == 0:
                                             if canonical_caseless(disk_letter_0) == canonical_caseless(alpha_str[self.i_w]):
-                                                if bool_alpha_stage_engaged is False:
+                                                if bool_backend_alpha_stage_engaged is False:
                                                     self.send_write_instruction_1()
                                         elif self.dwps > 0 or self.drps > 0:
                                             if self.dwps >= self.drps:
                                                 self.bool_dwps_greater = True
                                                 if canonical_caseless(disk_letter_0) == canonical_caseless(alpha_str[self.i_w]):
-                                                    if bool_alpha_stage_engaged is False:
+                                                    if bool_backend_alpha_stage_engaged is False:
                                                         self.send_write_instruction()
                                             elif self.dwps < self.drps:
                                                 self.bool_dwps_greater = False
                                                 if canonical_caseless(disk_letter_0) == canonical_caseless(alpha_str[self.i_w]):
-                                                    if bool_alpha_stage_engaged is False:
+                                                    if bool_backend_alpha_stage_engaged is False:
                                                         self.send_read_instruction()
                                         self.i_w += 1
                 self.i_umount = 0
                 for _ in alpha_str:
                     if _.upper() not in self.disk_letter_complete:
-                        if bool_alpha_stage_engaged is False:
+                        if bool_backend_alpha_stage_engaged is False:
                             self.send_instruction_umounted()
                     self.i_umount += 1
         except Exception as e:
