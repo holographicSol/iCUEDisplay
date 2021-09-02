@@ -79,6 +79,7 @@ def initialize_priority():
     win32process.SetPriorityClass(handle, priority_classes[4])
     print('-- [initialize_priority]: settings win32process priority class:', priority_classes[4])
 
+
 bool_instruction_eject = False
 bool_instruction_eject_end = False
 bool_instruction_mount = False
@@ -3896,10 +3897,6 @@ class App(QMainWindow):
         windows_update_monitor_thread = WindowsUpdateMonitorClass()
         thread_windows_update_monitor.append(windows_update_monitor_thread)
         thread_windows_update_monitor[0].start()
-
-        steam_update_monitor_thread = SteamUpdateMonitorClass()
-        thread_steam_update_monitor.append(steam_update_monitor_thread)
-        thread_steam_update_monitor[0].start()
         
         self.lbl_title.show()
         self.btn_con_stat_name.show()
