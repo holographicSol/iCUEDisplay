@@ -177,6 +177,7 @@ thread_net_share = []
 thread_sdk_event_handler = []
 thread_backlight_auto = []
 thread_temperatures = []
+
 event_filter_self = []
 devices_kb = []
 devices_ms = []
@@ -187,6 +188,7 @@ devices_ms_name = []
 devices_previous = []
 devices_gpu_selected = int()
 devices_network_adapter_name = ""
+
 corsairled_id_num_cpu = [119,116, 113, 109]
 corsairled_id_num_dram = [117,114, 110, 104]
 corsairled_id_num_vram = [120,118, 115, 111]
@@ -220,6 +222,7 @@ sdk_color_net_traffic_utype_0 = [255, 7, 0]
 sdk_color_net_traffic_utype_1 = [0, 0, 255]
 sdk_color_net_traffic_utype_2 = [0, 255, 255]
 sdk_color_net_traffic_utype_3 = [255, 255, 255]
+
 timing_cpu_util = 1.0
 timing_dram_util = 1.0
 timing_vram_util = 1.0
@@ -404,7 +407,6 @@ def create_new():
         fo.writelines(path_for_in_vbs_1 + '\n')
         fo.writelines('Set WshShell = Nothing\n')
     fo.close()
-    # time.sleep(2)
 
 
 first_load = True
@@ -423,9 +425,8 @@ bool_wmi_engaged = False
 class ObjEveFilter(QObject):
 
     def eventFilter(self, obj, event):
-        global event_filter_self, avail_w, avail_h, ui_object_complete, event_filter_self, first_load, obj_geo_item, prev_multiplier_w, prev_multiplier_h
+        global event_filter_self, avail_w, avail_h, ui_object_complete, first_load, obj_geo_item, prev_multiplier_w, prev_multiplier_h
         global ui_object_font_list_s6b, ui_object_font_list_s7b, ui_object_font_list_s8b, ui_object_font_list_s9b
-        global main_pid
         global obj_icon_geo, obj_icon
         obj_eve = obj, event
         # Uncomment This Line To See All Object Events
@@ -786,18 +787,6 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.btn_refresh_recompile)
         self.object_interaction_enabled.append(self.btn_refresh_recompile)
         ui_object_complete.append(self.btn_refresh_recompile)
-
-        # self.btn_bck_light = QPushButton(self)
-        # self.btn_bck_light.move(126 + 4, 6)
-        # self.btn_bck_light.resize(64, 28)
-        # self.btn_bck_light.setFont(self.font_s7b)
-        # self.btn_bck_light.setText('BACKLIGHT')
-        # self.btn_bck_light.setStyleSheet(self.btn_title_bar_style_1)
-        # self.btn_bck_light.clicked.connect(self.btn_bck_light_function)
-        # print('-- [App.__init__] created:', self.btn_bck_light)
-        # self.object_interaction_enabled.append(self.btn_bck_light)
-        # ui_object_complete.append(self.btn_bck_light)
-        # ui_object_font_list_s7b.append(self.btn_bck_light)
 
         self.btn_feature_page_home = QPushButton(self)
         self.btn_feature_page_home.move(0, self.height - 4 - 28 - 4 - 28 - 4 - 28 - 4 - 28 - 4 - 28 - 4 - 28 - 4 - 28)
@@ -1989,7 +1978,6 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.lbl_fahrenheit)
         ui_object_complete.append(self.lbl_fahrenheit)
         ui_object_font_list_s8b.append(self.lbl_fahrenheit)
-        # self.lbl_fahrenheit.setToolTip('Media Display\n\nEnables/Disables Media Display.\n\nDisplays media states from any application that utilizes the global media player controller.')
 
         self.btn_fahrenheit = QPushButton(self)
         self.btn_fahrenheit.move(self.menu_obj_pos_w + 2 + 4 + 126, self.height - (4 * 3) - (self.monitor_btn_h * 3))
@@ -2000,7 +1988,6 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.btn_fahrenheit)
         self.object_interaction_enabled.append(self.btn_fahrenheit)
         ui_object_complete.append(self.btn_fahrenheit)
-        # self.btn_fahrenheit.setToolTip('Media Display\n\nEnables/Disables Media Display.')
 
         self.lbl_power_plan = QPushButton(self)
         self.lbl_power_plan.move(self.menu_obj_pos_w + 2, self.height - (4 * 6) - (self.monitor_btn_h * 6))
@@ -2245,7 +2232,6 @@ class App(QMainWindow):
         self.lbl_netshare_mon.setToolTip("Network Share Monitor\n\nPrntScr:           IPC$ Default Share\nScrLck:            ADMIN$ Default Share\nPause/Break:  Disks Default Share\nHome:            Non-Default Shares")
         self.btn_netshare_mon.setToolTip('Network Share Monitor\n\nEnables/Disables iCUE-Display Network Share Monitor.')
         self.qle_netshare_mon_rgb_on.setToolTip('Network Share Monitor\n\nSet RGB color values for when an indication\nlight is ON.')
-        # self.btn_bck_light.setToolTip('Backlight\n\nEnable/Disable')
         self.btn_refresh_recompile.setToolTip('Refresh\n')
         self.cpu_led_color_str = ""
         self.dram_led_color_str = ""
@@ -2432,7 +2418,7 @@ class App(QMainWindow):
 
     def btn_g2_disk_function(self):
         print('-- [btn_g2_disk_function]: plugged in')
-        global bool_switch_g2_disks, thread_eject, thread_mount, thread_unmount
+        global bool_switch_g2_disks
         self.setFocus()
 
         if bool_switch_g2_disks is True:
@@ -2634,7 +2620,6 @@ class App(QMainWindow):
             self.lbl_title.show()
             self.btn_minimize.show()
             self.btn_quit.show()
-            # self.btn_bck_light.show()
             self.btn_refresh_recompile.show()
             """ connection status """
             self.btn_con_stat_name.show()
@@ -2693,8 +2678,6 @@ class App(QMainWindow):
     def feature_pg_execution_policy(self):
         print('-- [App.feature_pg_execution_policy]: plugged in')
         self.hide_all_features()
-
-        # self.btn_bck_light.hide()
         self.btn_refresh_recompile.hide()
         """ connection status """
         self.btn_con_stat_name.hide()
@@ -3672,7 +3655,6 @@ class App(QMainWindow):
         print('-- [App.g1_function_long]: plugged in')
         os.system('shutdown /h')
 
-
     def g1_function_long_2sec(self):
         print('-- [App.g1_function_long_2sec]: plugged in')
         os.system('shutdown /r /t 0')
@@ -3683,56 +3665,42 @@ class App(QMainWindow):
 
     def g2_function_short(self):
         print('-- [App.g2_function_short]: plugged in')
-        global thread_sdk_event_handler
 
     def g2_function_long(self):
         print('-- [App.g2_function_long]: plugged in')
-        global thread_sdk_event_handler
 
     def g2_function_long_2sec(self):
         print('-- [App.g2_function_long_2sec]: plugged in')
-        global thread_sdk_event_handler
 
     def g2_function_long_3sec(self):
         print('-- [App.g2_function_long_3sec]: plugged in')
-        global thread_sdk_event_handler
-
 
     def g3_function_short(self):
         print('-- [App.g3_function_short]: plugged in')
-        global thread_sdk_event_handler
 
     def g3_function_long(self):
         print('-- [App.g3_function_long]: plugged in')
-        global thread_sdk_event_handler
 
     def g3_function_long_2sec(self):
         print('-- [App.g3_function_long_2sec]: plugged in')
-        global thread_sdk_event_handler
 
     def g3_function_long_3sec(self):
         print('-- [App.g3_function_long_3sec]: plugged in')
-        global thread_sdk_event_handler
 
     def g4_function_short(self):
         print('-- [App.g4_function_short]: plugged in')
-        global thread_sdk_event_handler
 
     def g4_function_long(self):
         print('-- [App.g4_function_long]: plugged in')
-        global thread_sdk_event_handler
 
     def g4_function_long_2sec(self):
         print('-- [App.g4_function_long_2sec]: plugged in')
-        global thread_sdk_event_handler
 
     def g4_function_long_3sec(self):
         print('-- [App.g4_function_long_3sec]: plugged in')
-        global thread_sdk_event_handler
 
     def g5_function_short(self):
-        global bool_switch_powershell, thread_sdk_event_handler
-        global thread_sdk_event_handler
+        global bool_switch_powershell
         print('-- [App.g5_function_short]: plugged in')
         if bool_switch_powershell is True:
             print('-- [App.g5_function_short]: attempting to run start powershell')
@@ -3740,19 +3708,16 @@ class App(QMainWindow):
 
     def g5_function_long(self):
         print('-- [App.g5_function_long]: plugged in')
-        global thread_sdk_event_handler
 
     def g5_function_long_2sec(self):
         print('-- [App.g5_function_long_2sec]: plugged in')
-        global thread_sdk_event_handler
 
     def g5_function_long_3sec(self):
         print('-- [App.g5_function_long_3sec]: plugged in')
-        global thread_sdk_event_handler
 
     def g6_function_short(self):
         print('-- [App.g6_function_short]: plugged in')
-        global bool_backend_allow_g_key_access, notification_key, thread_sdk_event_handler, bool_switch_lock_gkeys
+        global bool_backend_allow_g_key_access, notification_key, bool_switch_lock_gkeys
 
         if bool_switch_lock_gkeys is True:
             if bool_backend_allow_g_key_access is True:
@@ -3773,7 +3738,6 @@ class App(QMainWindow):
 
     def initUI(self):
         print('-- [App.initUI]: plugged in')
-        global sdk
         global bool_backend_allow_display, bool_switch_startup_exclusive_control, bool_switch_startup_minimized
         global bool_switch_startup_cpu_util, bool_switch_startup_dram_util, bool_switch_startup_vram_util, bool_switch_cpu_temperature, bool_switch_vram_temperature
         global bool_switch_startup_hdd_read_write, bool_switch_startup_net_share_mon, bool_switch_startup_net_traffic
@@ -3811,22 +3775,28 @@ class App(QMainWindow):
 
         notification_thread = SdkNotificationClass()
         thread_notification.append(notification_thread)
-        thread_notification[0].start()
+
+        cpu_mon_thread = CpuMonClass()
+        thread_cpu_util.append(cpu_mon_thread)
+
+        dram_mon_thread = DramMonClass()
+        thread_dram_util.append(dram_mon_thread)
+
+        vram_mon_thread = VramMonClass()
+        thread_vram_util.append(vram_mon_thread)
 
         hdd_mon_thread = HddMonClass()
         thread_disk_rw.append(hdd_mon_thread)
-        cpu_mon_thread = CpuMonClass()
-        thread_cpu_util.append(cpu_mon_thread)
-        dram_mon_thread = DramMonClass()
-        thread_dram_util.append(dram_mon_thread)
-        vram_mon_thread = VramMonClass()
-        thread_vram_util.append(vram_mon_thread)
+
         network_mon_thread = NetworkMonClass()
         thread_net_traffic.append(network_mon_thread)
+
         ping_test_thread = InternetConnectionClass()
         thread_net_connection.append(ping_test_thread)
+
         def_netshare_thread = NetShareClass()
         thread_net_share.append(def_netshare_thread)
+
         sdk_event_handler = SdkEventHandlerClass(self.g1_function_short, self.g1_function_long,
                                                         self.g2_function_short, self.g2_function_long,
                                                         self.g3_function_short, self.g3_function_long,
@@ -3847,8 +3817,10 @@ class App(QMainWindow):
         thread_compile_devices.append(compile_devices_thread)
         thread_compile_devices[0].start()
         print('thread_compile_devices.isRunning:', thread_compile_devices[0].isRunning())
+
         temp_thread = TemperatureClass()
         thread_temperatures.append(temp_thread)
+
         system_mute = MediaDisplayClass()
         thread_media_display.append(system_mute)
         pause_loop = PauseLoopClass()
@@ -3857,7 +3829,7 @@ class App(QMainWindow):
         thread_power.append(power_thread)
         test_locked = IsLockedClass()
         thread_test_locked.append(test_locked)
-        thread_test_locked[0].start()
+
         keyeventsthread = KeyEventClass()
         thread_keyevents.append(keyeventsthread)
         on_gkey_pressed_thread = OnPressClass()
@@ -4180,6 +4152,8 @@ class CompileDevicesClass(QThread):
         global thread_power
         global thread_keyevents
         global thread_eject, thread_mount, thread_unmount
+        global thread_notification
+        global thread_test_locked
 
         print('-- [CompileDevicesClass.stop_all_threads] stopping all threads:', )
         if len(devices_kb) >= 1 or len(devices_ms) >= 1:
@@ -4227,6 +4201,7 @@ class CompileDevicesClass(QThread):
                 thread_net_connection[0].stop()
             except Exception as e:
                 print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
+
             try:
                 thread_net_share[0].stop()
             except Exception as e:
@@ -4262,6 +4237,17 @@ class CompileDevicesClass(QThread):
             except Exception as e:
                 print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
 
+            try:
+                thread_notification[0].stop()
+            except Exception as e:
+                print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
+
+            try:
+                thread_test_locked[0].stop()
+            except Exception as e:
+                print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
+
+
     def start_all_threads(self):
         print('-- [CompileDevicesClass.start_all_threads]: plugged in')
         global bool_switch_startup_cpu_util, bool_switch_startup_dram_util, bool_switch_startup_vram_util, bool_switch_startup_net_traffic
@@ -4277,10 +4263,14 @@ class CompileDevicesClass(QThread):
         global thread_cpu_util, thread_dram_util, thread_vram_util
         global thread_net_traffic
         global thread_net_share
+        global thread_notification
+        global thread_test_locked
 
         if len(devices_kb) > 0:
+            thread_test_locked[0].start()
             thread_sdk_event_handler[0].start()
             thread_keyevents[0].start()
+            thread_notification[0].start()
             if bool_switch_startup_hdd_read_write:
                 thread_disk_rw[0].start()
             if bool_switch_startup_cpu_util:
@@ -6243,6 +6233,7 @@ class KeyEventClass(QThread):
 
     def stop(self):
         print('-- [KeyEventClass.stop]: plugged in')
+
         self.terminate()
 
 
@@ -7346,19 +7337,18 @@ class InternetConnectionClass(QThread):
 
     def stop(self):
         print('-- [InternetConnectionClass.stop]: plugged in')
-        global sdk, devices_kb, devices_kb_selected, corsairled_id_num_ms_complete, corsairled_id_num_netcon_ms, sdk_color_backlight_on_ms
-        global sdk, devices_kb, devices_kb_selected, corsairled_id_num_ms_complete, corsairled_id_num_netcon_ms, sdk_color_backlight_on_ms
+        global sdk, devices_kb, devices_kb_selected, corsairled_id_num_ms_complete, corsairled_id_num_netcon_ms, sdk_color_backlight
         self.ping_key = int()
         self.ping_bool_prev = None
         self.ping_fail_i = 0
         self.rgb_key = ()
         try:
-            sdk.set_led_colors_buffer_by_device_index(devices_ms[devices_ms_selected], ({corsairled_id_num_ms_complete[corsairled_id_num_netcon_ms]: sdk_color_backlight_on_ms}))
+            sdk.set_led_colors_buffer_by_device_index(devices_ms[devices_ms_selected], ({corsairled_id_num_ms_complete[corsairled_id_num_netcon_ms]: sdk_color_backlight}))
         except Exception as e:
             print('-- [InternetConnectionClass.stop] Error:', e)
         try:
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({170: sdk_color_backlight_on_ms}))
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({188: sdk_color_backlight_on_ms}))
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({170: sdk_color_backlight}))
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({188: sdk_color_backlight}))
         except Exception as e:
             print('-- [InternetConnectionClass.stop] Error:', e)
         print('-- [InternetConnectionClass.stop] terminating')
