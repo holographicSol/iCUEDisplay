@@ -26,7 +26,6 @@ import asyncio
 import winrt.windows.media.control as wmc
 import keyboard
 from pathlib import Path
-from win32con import VK_INSERT
 
 info = subprocess.STARTUPINFO()
 info.dwFlags = 1
@@ -6288,17 +6287,6 @@ class KeyEventClass(QThread):
 
     def check_state(self):
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
-
-        if (win32api.GetKeyState(VK_INSERT)) == 1:
-            try:
-                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({77: (255, 255, 0)}))
-            except Exception as e:
-                print('-- [KeyEventClass.insert_state] Error:', e)
-        if (win32api.GetKeyState(VK_INSERT)) == 0:
-            try:
-                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({77: sdk_color_backlight}))
-            except Exception as e:
-                print('-- [KeyEventClass.insert_state] Error:', e)
         
         self.vk_numlock = 0x90
         self.vk_capital = 0x14
