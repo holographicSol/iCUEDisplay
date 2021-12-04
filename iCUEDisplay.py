@@ -192,9 +192,9 @@ devices_previous = []
 devices_gpu_selected = int()
 devices_network_adapter_name = ""
 
-corsairled_id_num_cpu = [119,116, 113, 109]
-corsairled_id_num_dram = [117,114, 110, 104]
-corsairled_id_num_vram = [120,118, 115, 111]
+corsairled_id_num_cpu = [119, 116, 113, 109]
+corsairled_id_num_dram = [117, 114, 110, 104]
+corsairled_id_num_vram = [120, 118, 115, 111]
 corsairled_id_num_hddreadwrite = [38, 55, 53, 40, 28, 41, 42, 43, 33, 44, 45, 46, 57, 56, 34, 35, 26, 29, 39, 30, 32, 54, 27, 52, 31, 51]
 corsairled_id_num_netrcv = [14, 15, 16, 17, 18, 19, 20, 21, 22]
 corsairled_id_num_netsnt = [2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -614,6 +614,7 @@ class App(QMainWindow):
                            border-bottom:0px solid rgb(35, 35, 35);
                            border-right:0px solid rgb(0, 0, 0);
                            border-left:0px solid rgb(0, 0, 0);}"""
+
         """ Title Bar """
         self.btn_title_bar_style_0 = """QPushButton{background-color: rgb(10, 10, 10);
                                                            color: rgb(255, 255, 255);
@@ -5064,7 +5065,7 @@ class SdkSendInstructionClass(QThread):
         global thread_net_connection
         global thread_media_display, bool_switch_startup_media_display
         global thread_power, bool_switch_power_plan
-        global corsairled_id_num_gkeys
+        global corsairled_id_num_gkeysx
         global thread_cpu_util, thread_dram_util, thread_vram_util, thread_temperatures, thread_net_connection, thread_net_share, thread_net_traffic, thread_disk_rw, thread_media_display, thread_pause_loop, thread_keyevents
 
         zone_id = [170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188]
@@ -5577,6 +5578,27 @@ class OnPressClass(QThread):
                                 bool_backend_onpress_clause_g2 = True
                                 try:
                                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 255, 0)}))
+                                    # --> ToDo
+                                    try:
+                                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
+                                                                                  ({177: (255, 255, 0)}))
+                                    except Exception as e:
+                                        print('-- [SdkNotificationClass.run] Error:', e)
+                                    try:
+                                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
+                                                                                  ({178: (255, 255, 0)}))
+                                    except Exception as e:
+                                        print('-- [SdkNotificationClass.run] Error:', e)
+                                    try:
+                                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
+                                                                                  ({179: (255, 255, 0)}))
+                                    except Exception as e:
+                                        print('-- [SdkNotificationClass.run] Error:', e)
+                                    try:
+                                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
+                                                                                  ({180: (255, 255, 0)}))
+                                    except Exception as e:
+                                        print('-- [SdkNotificationClass.run] Error:', e)
                                 except Exception as e:
                                     print('-- [OnPressClass.run]  Error:', e)
                             elif g_key_pressed == 'CorsairKeyId.Kb_G3':
@@ -5621,6 +5643,27 @@ class OnPressClass(QThread):
                                 bool_backend_onpress_clause_g2 = True
                                 try:
                                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 100, 0)}))
+                                    # --> ToDo
+                                    try:
+                                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
+                                                                                  ({177: (255, 100, 0)}))
+                                    except Exception as e:
+                                        print('-- [SdkNotificationClass.run] Error:', e)
+                                    try:
+                                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
+                                                                                  ({178: (255, 100, 0)}))
+                                    except Exception as e:
+                                        print('-- [SdkNotificationClass.run] Error:', e)
+                                    try:
+                                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
+                                                                                  ({179: (255, 100, 0)}))
+                                    except Exception as e:
+                                        print('-- [SdkNotificationClass.run] Error:', e)
+                                    try:
+                                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
+                                                                                  ({180: (255, 100, 0)}))
+                                    except Exception as e:
+                                        print('-- [SdkNotificationClass.run] Error:', e)
                                 except Exception as e:
                                     print('-- [OnPressClass.run]  Error:', e)
                             elif g_key_pressed == 'CorsairKeyId.Kb_G3':
@@ -5665,6 +5708,27 @@ class OnPressClass(QThread):
                                 bool_backend_onpress_clause_g2 = True
                                 try:
                                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 0, 0)}))
+                                    # --> ToDo
+                                    try:
+                                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
+                                                                                  ({177: (255, 0, 0)}))
+                                    except Exception as e:
+                                        print('-- [SdkNotificationClass.run] Error:', e)
+                                    try:
+                                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
+                                                                                  ({178: (255, 0, 0)}))
+                                    except Exception as e:
+                                        print('-- [SdkNotificationClass.run] Error:', e)
+                                    try:
+                                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
+                                                                                  ({179: (255, 0, 0)}))
+                                    except Exception as e:
+                                        print('-- [SdkNotificationClass.run] Error:', e)
+                                    try:
+                                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
+                                                                                  ({180: (255, 0, 0)}))
+                                    except Exception as e:
+                                        print('-- [SdkNotificationClass.run] Error:', e)
                                 except Exception as e:
                                     print('-- [OnPressClass.run]  Error:', e)
                             elif g_key_pressed == 'CorsairKeyId.Kb_G3':
@@ -6792,13 +6856,9 @@ class TemperatureClass(QThread):
                 cpu_pack_1 = cpu_pack_1.split('.')
                 cpu_pack_2 = cpu_pack_1[0]
                 cpu_pack_2 = int(cpu_pack_2)
-                if cpu_pack_2 < 30:
+                if cpu_pack_2 < 50:
                     rgb_cpu_temp = [0, 255, 255]
-                elif cpu_pack_2 >= 30 and cpu_pack_2 < 50:
-                    rgb_cpu_temp = [255, 255, 0]
-                elif cpu_pack_2 >= 50 and cpu_pack_2 < 70:
-                    rgb_cpu_temp = [255, 100, 0]
-                elif cpu_pack_2 >= 70:
+                elif cpu_pack_2 >= 50:
                     rgb_cpu_temp = [255, 0, 0]
                 sdk_color_cpu_on = rgb_cpu_temp
 
@@ -6809,13 +6869,9 @@ class TemperatureClass(QThread):
                 gpu_core_1 = gpu_core_1.split('.')
                 gpu_core_2 = gpu_core_1[0]
                 gpu_core_2 = int(gpu_core_2)
-                if gpu_core_2 < 30:
-                    rgb_gpu_temp = [0, 255, 255]
-                elif gpu_core_2 >= 30 and gpu_core_2 < 50:
-                    rgb_gpu_temp = [255, 255, 0]
-                elif gpu_core_2 >= 50 and gpu_core_2 < 70:
-                    rgb_gpu_temp = [255, 100, 0]
-                elif gpu_core_2 >= 70:
+                if gpu_core_2 < 50:
+                    rgb_gpu_temp = [100, 0, 255]
+                elif gpu_core_2 >= 50:
                     rgb_gpu_temp = [255, 0, 0]
                 sdk_color_vram_on = rgb_gpu_temp
 
