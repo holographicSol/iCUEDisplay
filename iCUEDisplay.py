@@ -983,7 +983,7 @@ class App(QMainWindow):
         self.lbl_util_key_1 = QLabel(self)
         self.lbl_util_key_1.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10)
         self.lbl_util_key_1.resize(10, 10)
-        self.lbl_util_key_1.setStyleSheet("""QLabel {background-color: rgb(0, 0, 255);
+        self.lbl_util_key_1.setStyleSheet("""QLabel {background-color: rgb(0, 255, 255);
                                                    color: rgb(150, 150, 150);
                                                    border-top:2px solid rgb(10, 10, 10);
                                                    border-bottom:2px solid rgb(10, 10, 10);
@@ -992,11 +992,24 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.lbl_util_key_1)
         ui_object_complete.append(self.lbl_util_key_1)
 
+        """ purple"""
+        self.lbl_util_key_5 = QLabel(self)
+        self.lbl_util_key_5.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 4 + 4 + 10, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10)
+        self.lbl_util_key_5.resize(10, 10)
+        self.lbl_util_key_5.setStyleSheet("""QLabel {background-color: rgb(100, 0, 255);
+                                                           color: rgb(150, 150, 150);
+                                                           border-top:2px solid rgb(10, 10, 10);
+                                                           border-bottom:2px solid rgb(10, 10, 10);
+                                                           border-right:2px solid rgb(10, 10, 10);
+                                                           border-left:2px solid rgb(10, 10, 10);}""")
+        print('-- [App.__init__] created:', self.lbl_util_key_5)
+        ui_object_complete.append(self.lbl_util_key_5)
+
         self.lbl_util_key_2 = QLabel(self)
-        self.lbl_util_key_2.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 10 + 4 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10)
+        self.lbl_util_key_2.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 10 + 4 + 4 + 4 + 10 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 10)
         self.lbl_util_key_2.resize(self.monitor_btn_w, 10)
         self.lbl_util_key_2.setFont(self.font_s7b)
-        self.lbl_util_key_2.setText('<30°C')
+        self.lbl_util_key_2.setText('<50°C')
         self.lbl_util_key_2.setStyleSheet("""QLabel {background-color: rgb(0, 0, 0);
                                                    color: rgb(150, 150, 150);
                                                    border-top:0px solid rgb(10, 10, 10);
@@ -1007,11 +1020,11 @@ class App(QMainWindow):
         ui_object_complete.append(self.lbl_util_key_2)
         ui_object_font_list_s7b.append(self.lbl_util_key_2)
 
-        """ yellow """
+        """ Red """
         self.lbl_util_key_3 = QLabel(self)
         self.lbl_util_key_3.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 20 - 4)
         self.lbl_util_key_3.resize(10, 10)
-        self.lbl_util_key_3.setStyleSheet("""QLabel {background-color: rgb(255, 255, 0);
+        self.lbl_util_key_3.setStyleSheet("""QLabel {background-color: rgb(255, 0, 0);
                                                            color: rgb(150, 150, 150);
                                                            border-top:2px solid rgb(10, 10, 10);
                                                            border-bottom:2px solid rgb(10, 10, 10);
@@ -1019,12 +1032,13 @@ class App(QMainWindow):
                                                            border-left:2px solid rgb(10, 10, 10);}""")
         print('-- [App.__init__] created:', self.lbl_util_key_3)
         ui_object_complete.append(self.lbl_util_key_3)
-
+        # 
         self.lbl_util_key_4 = QLabel(self)
         self.lbl_util_key_4.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 10 + 4 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 20 - 4)
         self.lbl_util_key_4.resize(self.monitor_btn_w, 10)
         self.lbl_util_key_4.setFont(self.font_s7b)
-        self.lbl_util_key_4.setText('>=30°C  <50°C')
+        # self.lbl_util_key_4.setText('>=30°C  <50°C')
+        self.lbl_util_key_4.setText('>=50°C')
         self.lbl_util_key_4.setStyleSheet("""QLabel {background-color: rgb(0, 0, 0);
                                                            color: rgb(150, 150, 150);
                                                            border-top:0px solid rgb(10, 10, 10);
@@ -1034,62 +1048,62 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.lbl_util_key_4)
         ui_object_complete.append(self.lbl_util_key_4)
         ui_object_font_list_s7b.append(self.lbl_util_key_4)
+        # 
+        # """ amber """
+        # self.lbl_util_key_5 = QLabel(self)
+        # self.lbl_util_key_5.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 30 - 8)
+        # self.lbl_util_key_5.resize(10, 10)
+        # self.lbl_util_key_5.setStyleSheet("""QLabel {background-color: rgb(255, 100, 0);
+        #                                                            color: rgb(150, 150, 150);
+        #                                                            border-top:2px solid rgb(10, 10, 10);
+        #                                                            border-bottom:2px solid rgb(10, 10, 10);
+        #                                                            border-right:2px solid rgb(10, 10, 10);
+        #                                                            border-left:2px solid rgb(10, 10, 10);}""")
+        # print('-- [App.__init__] created:', self.lbl_util_key_5)
+        # ui_object_complete.append(self.lbl_util_key_5)
+        # 
+        # self.lbl_util_key_6 = QLabel(self)
+        # self.lbl_util_key_6.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 10 + 4 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 30 - 8)
+        # self.lbl_util_key_6.resize(self.monitor_btn_w, 10)
+        # self.lbl_util_key_6.setFont(self.font_s7b)
+        # self.lbl_util_key_6.setText('>=50°C  <70°C')
+        # self.lbl_util_key_6.setStyleSheet("""QLabel {background-color: rgb(0, 0, 0);
+        #                                                            color: rgb(150, 150, 150);
+        #                                                            border-top:0px solid rgb(10, 10, 10);
+        #                                                            border-bottom:0px solid rgb(10, 10, 10);
+        #                                                            border-right:0px solid rgb(10, 10, 10);
+        #                                                            border-left:0px solid rgb(10, 10, 10);}""")
+        # print('-- [App.__init__] created:', self.lbl_util_key_6)
+        # ui_object_complete.append(self.lbl_util_key_6)
+        # ui_object_font_list_s7b.append(self.lbl_util_key_6)
+        # 
+        # """ red """
+        # self.lbl_util_key_7 = QLabel(self)
+        # self.lbl_util_key_7.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 40 - 12)
+        # self.lbl_util_key_7.resize(10, 10)
+        # self.lbl_util_key_7.setStyleSheet("""QLabel {background-color: rgb(255, 0, 0);
+        #                                                                    color: rgb(150, 150, 150);
+        #                                                                    border-top:2px solid rgb(10, 10, 10);
+        #                                                                    border-bottom:2px solid rgb(10, 10, 10);
+        #                                                                    border-right:2px solid rgb(10, 10, 10);
+        #                                                                    border-left:2px solid rgb(10, 10, 10);}""")
+        # print('-- [App.__init__] created:', self.lbl_util_key_7)
+        # ui_object_complete.append(self.lbl_util_key_7)
 
-        """ amber """
-        self.lbl_util_key_5 = QLabel(self)
-        self.lbl_util_key_5.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 30 - 8)
-        self.lbl_util_key_5.resize(10, 10)
-        self.lbl_util_key_5.setStyleSheet("""QLabel {background-color: rgb(255, 100, 0);
-                                                                   color: rgb(150, 150, 150);
-                                                                   border-top:2px solid rgb(10, 10, 10);
-                                                                   border-bottom:2px solid rgb(10, 10, 10);
-                                                                   border-right:2px solid rgb(10, 10, 10);
-                                                                   border-left:2px solid rgb(10, 10, 10);}""")
-        print('-- [App.__init__] created:', self.lbl_util_key_5)
-        ui_object_complete.append(self.lbl_util_key_5)
-
-        self.lbl_util_key_6 = QLabel(self)
-        self.lbl_util_key_6.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 10 + 4 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 30 - 8)
-        self.lbl_util_key_6.resize(self.monitor_btn_w, 10)
-        self.lbl_util_key_6.setFont(self.font_s7b)
-        self.lbl_util_key_6.setText('>=50°C  <70°C')
-        self.lbl_util_key_6.setStyleSheet("""QLabel {background-color: rgb(0, 0, 0);
-                                                                   color: rgb(150, 150, 150);
-                                                                   border-top:0px solid rgb(10, 10, 10);
-                                                                   border-bottom:0px solid rgb(10, 10, 10);
-                                                                   border-right:0px solid rgb(10, 10, 10);
-                                                                   border-left:0px solid rgb(10, 10, 10);}""")
-        print('-- [App.__init__] created:', self.lbl_util_key_6)
-        ui_object_complete.append(self.lbl_util_key_6)
-        ui_object_font_list_s7b.append(self.lbl_util_key_6)
-
-        """ red """
-        self.lbl_util_key_7 = QLabel(self)
-        self.lbl_util_key_7.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 40 - 12)
-        self.lbl_util_key_7.resize(10, 10)
-        self.lbl_util_key_7.setStyleSheet("""QLabel {background-color: rgb(255, 0, 0);
-                                                                           color: rgb(150, 150, 150);
-                                                                           border-top:2px solid rgb(10, 10, 10);
-                                                                           border-bottom:2px solid rgb(10, 10, 10);
-                                                                           border-right:2px solid rgb(10, 10, 10);
-                                                                           border-left:2px solid rgb(10, 10, 10);}""")
-        print('-- [App.__init__] created:', self.lbl_util_key_7)
-        ui_object_complete.append(self.lbl_util_key_7)
-
-        self.lbl_util_key_8 = QLabel(self)
-        self.lbl_util_key_8.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 10 + 4 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 40 - 12)
-        self.lbl_util_key_8.resize(self.monitor_btn_w, 10)
-        self.lbl_util_key_8.setFont(self.font_s7b)
-        self.lbl_util_key_8.setText('>70°C')
-        self.lbl_util_key_8.setStyleSheet("""QLabel {background-color: rgb(0, 0, 0);
-                                                                           color: rgb(150, 150, 150);
-                                                                           border-top:0px solid rgb(10, 10, 10);
-                                                                           border-bottom:0px solid rgb(10, 10, 10);
-                                                                           border-right:0px solid rgb(10, 10, 10);
-                                                                           border-left:0px solid rgb(10, 10, 10);}""")
-        print('-- [App.__init__] created:', self.lbl_util_key_8)
-        ui_object_complete.append(self.lbl_util_key_8)
-        ui_object_font_list_s7b.append(self.lbl_util_key_8)
+        # self.lbl_util_key_8 = QLabel(self)
+        # self.lbl_util_key_8.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 10 + 4 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 40 - 12)
+        # self.lbl_util_key_8.resize(self.monitor_btn_w, 10)
+        # self.lbl_util_key_8.setFont(self.font_s7b)
+        # self.lbl_util_key_8.setText('>70°C')
+        # self.lbl_util_key_8.setStyleSheet("""QLabel {background-color: rgb(0, 0, 0);
+        #                                                                    color: rgb(150, 150, 150);
+        #                                                                    border-top:0px solid rgb(10, 10, 10);
+        #                                                                    border-bottom:0px solid rgb(10, 10, 10);
+        #                                                                    border-right:0px solid rgb(10, 10, 10);
+        #                                                                    border-left:0px solid rgb(10, 10, 10);}""")
+        # print('-- [App.__init__] created:', self.lbl_util_key_8)
+        # ui_object_complete.append(self.lbl_util_key_8)
+        # ui_object_font_list_s7b.append(self.lbl_util_key_8)
 
         self.lbl_cpu_mon_temp = QPushButton(self)
         self.lbl_cpu_mon_temp.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
@@ -2392,17 +2406,19 @@ class App(QMainWindow):
         global bool_switch_fahrenheit
 
         self.setFocus()
-
+        
+        # foo
         if bool_switch_fahrenheit is True:
             if self.write_engaged is False:
                 print('-- [App.btn_fahrenheit_function] changing bool_switch_fahrenheit:', bool_switch_fahrenheit)
                 self.write_var = 'bool_switch_fahrenheit: false'
                 self.write_changes()
             self.btn_fahrenheit.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
-            self.lbl_util_key_8.setText('>70°C')
-            self.lbl_util_key_6.setText('>=50°C  <70°C')
-            self.lbl_util_key_4.setText('>=30°C  <50°C')
-            self.lbl_util_key_2.setText('<30°C')
+            # self.lbl_util_key_8.setText('>70°C')
+            # self.lbl_util_key_6.setText('>=50°C  <70°C')
+            # self.lbl_util_key_4.setText('>=30°C  <50°C')
+            self.lbl_util_key_4.setText('>=50°C')
+            self.lbl_util_key_2.setText('<50°C')
             bool_switch_fahrenheit = False
 
         elif bool_switch_fahrenheit is False:
@@ -2411,10 +2427,11 @@ class App(QMainWindow):
                 self.write_var = 'bool_switch_fahrenheit: true'
                 self.write_changes()
             self.btn_fahrenheit.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-            self.lbl_util_key_8.setText('>158°F')
-            self.lbl_util_key_6.setText('>=122°F  <158°F')
-            self.lbl_util_key_4.setText('>=86°F   <122°F')
-            self.lbl_util_key_2.setText('<86°F')
+            # self.lbl_util_key_8.setText('>158°F')
+            # self.lbl_util_key_6.setText('>=122°F  <158°F')
+            # self.lbl_util_key_4.setText('>=86°F   <122°F')
+            self.lbl_util_key_4.setText('>=122°F')
+            self.lbl_util_key_2.setText('<122°F')
             bool_switch_fahrenheit = True
 
     def btn_lock_gkeys_function(self):
@@ -2800,9 +2817,9 @@ class App(QMainWindow):
         self.lbl_util_key_3.show()
         self.lbl_util_key_4.show()
         self.lbl_util_key_5.show()
-        self.lbl_util_key_6.show()
-        self.lbl_util_key_7.show()
-        self.lbl_util_key_8.show()
+        # self.lbl_util_key_6.show()
+        # self.lbl_util_key_7.show()
+        # self.lbl_util_key_8.show()
 
     def btn_feature_page_disk_util(self):
         print('-- [App.btn_feature_page_disk_util]: plugged in')
@@ -3827,10 +3844,11 @@ class App(QMainWindow):
 
         if bool_switch_fahrenheit is True:
             self.btn_fahrenheit.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-            self.lbl_util_key_8.setText('>158°F')
-            self.lbl_util_key_6.setText('>=122°F  <158°F')
-            self.lbl_util_key_4.setText('>=86°F    <122°F')
-            self.lbl_util_key_2.setText('<86°F')
+            # self.lbl_util_key_8.setText('>158°F')
+            # self.lbl_util_key_6.setText('>=122°F  <158°F')
+            # self.lbl_util_key_4.setText('>=86°F    <122°F')
+            self.lbl_util_key_4.setText('>=122°F')
+            self.lbl_util_key_2.setText('<122°F')
         elif bool_switch_fahrenheit is False:
             self.btn_fahrenheit.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
 
@@ -5756,7 +5774,7 @@ class OnPressClass(QThread):
                                 except Exception as e:
                                     print('-- [OnPressClass.run]  Error:', e)
 
-                elif time_now_press_hold > (time_now_press + 4.0) and time_now_press_hold < (time_now_press + 5.0):
+                elif time_now_press_hold > (time_now_press + 4.0):  # and time_now_press_hold < (time_now_press + 5.0):
                     if bool_catch_4 is False:
                         bool_catch_4 = True
                         print('-- [OnPressClass.run] hold 4:', g_key_pressed)
