@@ -4,47 +4,48 @@
 
 Converts a Corsair K95 Platinum into a HUD.
 
-There may be further feature updates in the future.
+To run:
+1. Run iCUEDisplay.exe
+2. Close and run iCUEDisplay.lnk
+
 
 Google Drive Early Releases: https://drive.google.com/drive/folders/1xHeI_X5vnpKqQ3vkBz6hw97RnqaPwWNl?usp=sharing
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-![DEMO IMAGE](/image/icue_demo_image_0.png)
-
---------------------------------------------------------------------------------------------------------------------------------------------
       FEATURE OVERVIEW
 
-[BASIC UTILIZATION:
+[FEATURE 0:
 CPU Utilization Monitor
 DRAM Utilization Monitor
 VRAM Utilization Monitor]
 
-[DISK UTILIZATION:
+[FEATURE 1:
 Disk Read Monitor (Disks Mounted With Letter A:\ - Z:\)
 Disk Write Monitor (Disks Mounted With Letter A:\ - Z:\)
 Disk Mount Monitor (Disks Mounted With Letter A:\ - Z:\)]
 
-[NETWORK TRAFFIC:
+[FEATURE 2:
 Network Sent Bytes to Terabytes (Overkill)
 Network Received Bytes To Terrabytes (Overkill)]
 
-[NETWORKING:
-Internet Connection Status (Online, Offline, Intermittent)
+[FEATURE 3:
+Internet Connection Status (Online, Offline, Intermittent)]
+
+[FEATURE 4:
 Network Shares (Remote IPC, Remote Admin, Default share(s), User Defined Shares)]
 
-[EVENT NOTIFICATION & EVENT RESPONSE (Advanced Users)]
+[FEATURE 5:
+Event Notifiaction & Event Response (Advanced Users)]
 
-[SETTINGS:
-A Backlight When Needed and automatic backlight
-Automatic Startup
-Start Minimized]
+[FEATURE 6:
+A Backlight When Needed and automatic backlight]
 
 [OTHER FEATURES (Backend):
 Threads running designed for keyboard are stopped if keyboard removed while threads designed for mouse continue and vis versa. Threads will
 be restarted automatically when device plugged back in]
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-      BASIC UTILIZATION
+      FEATURE 0 CPU DRAM & VRAM UTILIZATION
 [CPU UTILIZATION: Utilization is displayed in stages of 25% on Numpad 1, 4, 7, NumLock.]
 
 [DRAM UTILIZATION: Utilization is displayed in stages of 25% on Numpad 2, 5, 8, ForwardSlash.]
@@ -55,10 +56,8 @@ be restarted automatically when device plugged back in]
 
 [VRAM TEMPERATURE]
 
-![DEMO IMAGE](/image/icue_demo_image_1.png)
-
 --------------------------------------------------------------------------------------------------------------------------------------------
-      DISKS UTILIZATION
+      FEATURE 1 DISKS UTILIZATION
 [Displays information accross the alpha keys about disks mounted with a letter. Alpha keys are reserved for this feature]
 
 [DISKS MOUNTED: Displayed in Blue when disk letter is mounted]
@@ -67,58 +66,54 @@ be restarted automatically when device plugged back in]
 
 [Disk Writes: Displayed in Red by default]
 
-![DEMO IMAGE](/image/icue_demo_image_2.png)
-
 --------------------------------------------------------------------------------------------------------------------------------------------
-      NETWORKING TRAFFIC
+      FEATURE 2 NETWORKING SENT/RECEIVED BYTES
 [ADAPTER SELECTION: Choose which network adapter to monitor sent/received bytes]
 
 [BYTES SENT: Displayed on keys F1-F10. F1-F9 Displayes number of bytes/KB/MB/GB/TB sent while F10 displays unit/ten/hundred/thousand+]
 
 [BYTES RECEIVED: Displayed on keys 1-0. 1-9 Displayes number of bytes/KB/MB/GB/TB sent while 0 displays unit/ten/hundred/thousand+]
 
-![DEMO IMAGE](/image/icue_demo_image_3.png)
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-      NETWORKING
-[INTERNET CONNECTION STATUS (KEYBOARD): ESC Key]
+      FEATURE 3 INTERNET CONNECTION STATUS
+[KEYBOARD: ESC Key]
 
-[INTERNET CONNECTION STATUS (MOUSE): Choose which LED (Tested with Scimitar Elite)]
+[MOUSE: Choose which LED (Tested with Scimitar Elite)]
 
-[NETWORK SHARE (Remote IPC): Dipslayed on PRINTSCREEN key when shared]
+[ONLINE: Green]
 
-[NETWORK SHARE (Remote Admin): Displayed on SCROLLLOCK key when shared]
+[INTERMITTENT: Amber]
 
-[NETWORK SHARE (Default Share): Displayed on PAUSEBREAK key when shared]
+[OFFLINE: Red]
 
-[NETWORK SHARE (NON-DEFAULT): Displayed on HOME key when shared]
 
-![DEMO IMAGE](/image/icue_demo_image_4.png)
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-      G Keys
-[G1 key. Intelligent Macro reflects current power plan and switches power plans to save power or increase performance quickly.]
+      FEATURE 4 NETWORK SHARES
+[Remote IPC: Dipslayed on PRINTSCREEN key when shared]
 
-[G5 Backlight for low light conditions.]
+[Remote Admin: Displayed on SCROLLLOCK key when shared]
 
-[G6 Powershell.]
+[Default Share: Displayed on PAUSEBREAK key when shared]
 
-![DEMO IMAGE](/image/icue_demo_image_5.png)
+[NON-DEFAULT: Displayed on HOME key when shared]
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-      SETTINGS
-[Intelligent Media Controls reflect current media state. Requires media applications that utilize Windows 10 global media controller.]
+      FEATURE 5 EVENT NOTIFICATION & EVENT RESPONSE
+[Enables slightly advanced users to create small programs that simply write True to any event_notification_gx.dat file in the /data directory
+to receive an event notification (blinking G key) for any possible reason and if requested execute code for event response]
 
+[EVENT NOTIFICATION: A G key will begin blinking until user short or long presses the G key]
+
+[EVENT NOTIFICATION & EVENT RESPONSE: Short pressing the Blinking G key will remove the notification and execute code/start file while a long
+press (0.75 seconds +) will remove the notification and not run the directed code/file]
+
+[EVENT RESPONSE: Requires event notification to be enabled and is also designed to only run code/file once per notification event]
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+      FEATURE 6 BACKLIGHT AND AUTOMATIC BACKLIGHT
 [AUTOMATIC BACKLIGHT: User may set a time for the backlight to turn on and off and may optionally enable the backlight manually]
-
-![DEMO IMAGE](/image/icue_demo_image_6.png)
-
---------------------------------------------------------------------------------------------------------------------------------------------
-      DISPLAY
-[iCUE capable Keyboard & Mouse will be displayed when connected and provided iCUE service is running. The iCUE logo reflects iCUE Display's
-connection status the the iCUE service.]
-
-![DEMO IMAGE](/image/icue_demo_image_7.png)
 
 --------------------------------------------------------------------------------------------------------------------------------------------
       BUG REPORTS & FEATURE REQUESTS
@@ -130,18 +125,9 @@ connection status the the iCUE service.]
 
 [OS: Windows 10]
 
-[Run as Admin]
+[NOTES 0: Right click OpenHardwareMonitor.dll in /py/bin/ select Properties, General Tab, Click Unblock and apply (skip if running exe/py as Admin)]
 
-[Resolution: 1920x1080 or higher is recommended]
-
---------------------------------------------------------------------------------------------------------------------------------------------
-      DEVELOPERS
-[IF running iCUEDisplay.py then for certain media playback functionality you may need to modify a module as follows:]
-[1. Open __init__.py in site-packages\winrt]
-[2. Replace line 'winrt.init_apartment()' with 'pythoncom.CoInitialize()']
-Note the executable has been compiled with the modified module.
-
+[NOTES 1: Then Run exe/.py as Admin]
 
 --------------------------------------------------------------------------------------------------------------------------------------------
-      Extra Considerations
-Zero data collection & never calls home.
+
