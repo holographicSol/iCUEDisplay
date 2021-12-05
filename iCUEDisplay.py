@@ -315,6 +315,8 @@ def create_new():
     global bool_backend_install
     print('-- [create_new]: started')
     distutils.dir_util.mkpath(os.path.join(os.path.expanduser('~'), 'AppData\\Local\\iCUEDisplay'))
+
+    # Check Configuration File
     config_line_missing = []
     config_line_file = []
     count_missing = 0
@@ -352,45 +354,45 @@ def create_new():
             with open('./config.dat', 'a') as fo:
                 fo.writelines(_+'\n')
         fo.close()
-    if not os.path.exists('./iCUEDisplay.vbs') or not os.path.exists('./iCUEDisplay.bat'):
-        cwd = os.getcwd()
-        print('-- [create_new] current working directory:', cwd)
-        path_for_in_bat = os.path.join('"' + cwd + '\\iCUEDisplay.exe"')
-        path_to_bat = cwd + '\\iCUEDisplay.bat'
-        print('-- [create_new] creating batch file:', path_to_bat)
-        path_for_in_vbs = 'WshShell.Run chr(34) & "' + path_to_bat + '" & Chr(34), 0'
-        print('-- [creating new] creating vbs file: ./iCUEDisplay.vbs')
-        open('./iCUEDisplay.bat', 'w').close()
-        open('./iCUEDisplay.vbs', 'w').close()
-        with open('./iCUEDisplay.bat', 'a') as fo:
-            fo.writelines(path_for_in_bat)
-        fo.close()
-        with open('./iCUEDisplay.vbs', 'a') as fo:
-            fo.writelines('Set WshShell = CreateObject("WScript.Shell")\n')
-            fo.writelines(path_for_in_vbs + '\n')
-            fo.writelines('Set WshShell = Nothing\n')
-        fo.close()
-        try:
-            path = os.path.join(cwd + '\\iCUEDisplay.lnk')
-            target = cwd + '\\iCUEDisplay.vbs'
-            icon = cwd + './icon.ico'
-            shell = win32com.client.Dispatch("WScript.Shell")
-            shortcut = shell.CreateShortCut(path)
-            shortcut.Targetpath = target
-            shortcut.WorkingDirectory = cwd
-            shortcut.IconLocation = icon
-            shortcut.save()
-        except Exception as e:
-            print('-- [create_new] Error:', e)
-        time.sleep(1)
-        print('-- [create_new]: checking existence of created files')
-        if os.path.exists('./iCUEDisplay.exe') and os.path.exists(path_to_bat) and os.path.exists('./iCUEDisplay.vbs'):
-            print('-- [create_new]: files exist')
-            if os.path.exists('./iCUEDisplay.lnk'):
-                print('-- [create_new]: starting program')
-                os.startfile(cwd + './iCUEDisplay.lnk')
-                # time.sleep(1)
-                bool_backend_install = True
+
+    # Create VBS
+    cwd = os.getcwd()
+    print('-- [create_new] current working directory:', cwd)
+    path_to_exe = cwd + '\\iCUEDisplay.exe'
+    path_for_in_vbs = 'WshShell.Run chr(34) & "' + path_to_exe + '" & Chr(34), 0'
+    print('-- [creating new] creating vbs file: ./iCUEDisplay.vbs')
+    open('./iCUEDisplay.vbs', 'w').close()
+    with open('./iCUEDisplay.vbs', 'a') as fo:
+        fo.writelines('Set WshShell = CreateObject("WScript.Shell")\n')
+        fo.writelines(path_for_in_vbs + '\n')
+        fo.writelines('Set WshShell = Nothing\n')
+    fo.close()
+    try:
+        path = os.path.join(cwd + '\\iCUEDisplay.lnk')
+        target = cwd + '\\iCUEDisplay.vbs'
+        icon = cwd + './icon.ico'
+        shell = win32com.client.Dispatch("WScript.Shell")
+        shortcut = shell.CreateShortCut(path)
+        shortcut.Targetpath = target
+        shortcut.WorkingDirectory = cwd
+        shortcut.IconLocation = icon
+        shortcut.save()
+    except Exception as e:
+        print('-- [create_new] Error:', e)
+    time.sleep(1)
+        
+    print('-- [create_new]: checking existence of created files')
+    if os.path.exists(cwd + '\\iCUEDisplay.lnk') and os.path.exists(cwd + '\\iCUEDisplay.vbs'):
+        print('-- [create_new]: starting program')
+
+    # run_debug = False
+    # if run_debug is False:
+    #     # Silent Normal run
+    #     if os.path.exists(cwd + '\\iCUEDisplay.exe'):
+    #         print('-- [create_new]: starting program normally')
+    #         os.startfile(cwd + '\\iCUEDisplay.lnk')
+    #         bool_backend_install = True
+
     app_data_path = os.path.join(os.path.expanduser('~'), 'AppData\\Local\\iCUEDisplay\\icue_display_py_config.dat')
     py_config_line = os.path.join(os.getcwd()+'\\py\\temp_sys.dat')
     open(app_data_path, 'w').close()
@@ -563,8 +565,8 @@ class App(QMainWindow):
         avail_h = QDesktopWidget().availableGeometry().height()
         print("-- [App.__init__] available geometry:", 'width=', avail_w, ' height=', avail_h)
         create_new()
-        if bool_backend_install is True:
-            sys.exit()
+        # if bool_backend_install is True:
+        #     sys.exit()
         initialize_scaling_dpi()
         initialize_priority()
         self.object_interaction_enabled = []
