@@ -117,7 +117,6 @@ bool_backend_onpress_clause_g5 = False
 bool_backend_onpress_clause_g6 = False
 bool_backend_execution_policy = True
 bool_backend_execution_policy_show = False
-bool_backend_install = False
 bool_backend_allow_display = False
 bool_backend_icue_connected = False
 bool_backend_icue_connected_previous = None
@@ -149,6 +148,7 @@ bool_switch_startup_vram_util = False
 bool_switch_startup_net_traffic = False
 bool_switch_startup_net_share_mon = False
 bool_switch_startup_media_display = False
+bool_switch_startup_windows_update = False
 
 thread_steam_update_monitor = []
 thread_windows_update_monitor = []
@@ -308,11 +308,11 @@ config_data = ['sdk_color_cpu_on: 0,255,255',
                'bool_switch_fahrenheit: false',
                'bool_switch_g2_disks: false',
                'bool_switch_lock_gkeys: false',
-               'sdk_color_backlight_on: 5,15,0']
+               'sdk_color_backlight_on: 5,15,0',
+               'bool_switch_startup_windows_update: true']
 
 
 def create_new():
-    global bool_backend_install
     print('-- [create_new]: started')
     distutils.dir_util.mkpath(os.path.join(os.path.expanduser('~'), 'AppData\\Local\\iCUEDisplay'))
 
@@ -383,15 +383,7 @@ def create_new():
         
     print('-- [create_new]: checking existence of created files')
     if os.path.exists(cwd + '\\iCUEDisplay.lnk') and os.path.exists(cwd + '\\iCUEDisplay.vbs'):
-        print('-- [create_new]: starting program')
-
-    # run_debug = False
-    # if run_debug is False:
-    #     # Silent Normal run
-    #     if os.path.exists(cwd + '\\iCUEDisplay.exe'):
-    #         print('-- [create_new]: starting program normally')
-    #         os.startfile(cwd + '\\iCUEDisplay.lnk')
-    #         bool_backend_install = True
+        print('-- [create_new]: files exist')
 
     app_data_path = os.path.join(os.path.expanduser('~'), 'AppData\\Local\\iCUEDisplay\\icue_display_py_config.dat')
     py_config_line = os.path.join(os.getcwd()+'\\py\\temp_sys.dat')
@@ -557,7 +549,7 @@ class App(QMainWindow):
 
     def __init__(self):
         super(App, self).__init__()
-        global bool_backend_install, event_filter_self, avail_w, avail_h, ui_object_complete
+        global event_filter_self, avail_w, avail_h, ui_object_complete
         global ui_object_font_list_s6b, ui_object_font_list_s7b, ui_object_font_list_s8b, ui_object_font_list_s9b
         global bool_backend_execution_policy_show, bool_backend_execution_policy
 
@@ -565,8 +557,6 @@ class App(QMainWindow):
         avail_h = QDesktopWidget().availableGeometry().height()
         print("-- [App.__init__] available geometry:", 'width=', avail_w, ' height=', avail_h)
         create_new()
-        # if bool_backend_install is True:
-        #     sys.exit()
         initialize_scaling_dpi()
         initialize_priority()
         self.object_interaction_enabled = []
@@ -2010,6 +2000,28 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.btn_fahrenheit)
         self.object_interaction_enabled.append(self.btn_fahrenheit)
         ui_object_complete.append(self.btn_fahrenheit)
+        
+        # foo
+        self.lbl_windows_update_mon = QPushButton(self)
+        self.lbl_windows_update_mon.move(self.menu_obj_pos_w + 2, self.height - (4 * 2) - (self.monitor_btn_h * 2))
+        self.lbl_windows_update_mon.resize(126, self.monitor_btn_h)
+        self.lbl_windows_update_mon.setFont(self.font_s8b)
+        self.lbl_windows_update_mon.setText('Windows Update')
+        self.lbl_windows_update_mon.setStyleSheet(self.btn_menu_style)
+        self.lbl_windows_update_mon.clicked.connect(self.btn_windows_update_mon_function)
+        print('-- [App.__init__] created:', self.lbl_windows_update_mon)
+        ui_object_complete.append(self.lbl_windows_update_mon)
+        ui_object_font_list_s8b.append(self.lbl_windows_update_mon)
+
+        self.btn_windows_update_mon = QPushButton(self)
+        self.btn_windows_update_mon.move(self.menu_obj_pos_w + 2 + 4 + 126, self.height - (4 * 2) - (self.monitor_btn_h * 2))
+        self.btn_windows_update_mon.resize(28, 28)
+        self.btn_windows_update_mon.setStyleSheet(self.btn_menu_style)
+        self.btn_windows_update_mon.setIconSize(self.tog_switch_ico_sz)
+        self.btn_windows_update_mon.clicked.connect(self.btn_windows_update_mon_function)
+        print('-- [App.__init__] created:', self.btn_windows_update_mon)
+        self.object_interaction_enabled.append(self.btn_windows_update_mon)
+        ui_object_complete.append(self.btn_windows_update_mon)
 
         self.lbl_power_plan = QPushButton(self)
         self.lbl_power_plan.move(self.menu_obj_pos_w + 2, self.height - (4 * 6) - (self.monitor_btn_h * 6))
@@ -2435,6 +2447,32 @@ class App(QMainWindow):
             self.lbl_util_key_4.setText('>=122°F')
             self.lbl_util_key_2.setText('<122°F')
             bool_switch_fahrenheit = True
+
+    def btn_windows_update_mon_function(self):
+        print('-- [btn_windows_update_mon_function]: plugged in')
+        global bool_switch_startup_windows_update, thread_windows_update_monitor
+        self.setFocus()
+
+        if bool_switch_startup_windows_update is True:
+            if self.write_engaged is False:
+                print('-- [App.btn_windows_update_mon_function] changing bool_switch_startup_windows_update:', bool_switch_startup_windows_update)
+                self.write_var = 'bool_switch_startup_windows_update: false'
+                self.write_changes()
+            self.btn_windows_update_mon.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            bool_switch_startup_windows_update = False
+            thread_windows_update_monitor[0].stop()
+
+        elif bool_switch_startup_windows_update is False:
+            if self.write_engaged is False:
+                print('-- [App.btn_windows_update_mon_function] changing bool_switch_startup_windows_update:', bool_switch_startup_windows_update)
+                self.write_var = 'bool_switch_startup_windows_update: true'
+                self.write_changes()
+            self.btn_windows_update_mon.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            bool_switch_startup_windows_update = True
+            thread_windows_update_monitor[0].start()
+
+        print('-- [btn_windows_update_mon_function] setting bool_switch_startup_windows_update:', bool_switch_startup_windows_update)
+
 
     def btn_lock_gkeys_function(self):
         print('-- [btn_lock_gkeys_function]: plugged in')
@@ -2913,6 +2951,9 @@ class App(QMainWindow):
         
         self.lbl_backlight.show()
         self.qle_backlight_rgb.show()
+
+        self.lbl_windows_update_mon.show()
+        self.btn_windows_update_mon.show()
 
     def sanitize_rgb_values(self):
         print('-- [App.sanitize_rgb_values]: plugged in')
@@ -3967,6 +4008,13 @@ class App(QMainWindow):
             self.btn_media_display.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
             self.lbl_media_display.setStyleSheet(self.btn_menu_style)
 
+        if bool_switch_startup_windows_update is True:
+            self.btn_windows_update_mon.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            self.btn_windows_update_mon.setStyleSheet(self.btn_menu_style_1)
+        elif bool_switch_startup_windows_update is False:
+            self.btn_windows_update_mon.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            self.btn_windows_update_mon.setStyleSheet(self.btn_menu_style)
+
         self.cpu_led_color_str = str(sdk_color_cpu_on).strip()
         self.cpu_led_color_str = self.cpu_led_color_str.replace('[', '')
         self.cpu_led_color_str = self.cpu_led_color_str.replace(']', '')
@@ -4125,6 +4173,7 @@ class CompileDevicesClass(QThread):
         global thread_eject, thread_mount, thread_unmount
         global thread_notification
         global thread_test_locked
+        global thread_windows_update_monitor
 
         print('-- [CompileDevicesClass.stop_all_threads] stopping all threads:', )
         if len(devices_kb) >= 1 or len(devices_ms) > 0:
@@ -4236,6 +4285,18 @@ class CompileDevicesClass(QThread):
             except Exception as e:
                 print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
 
+            try:
+                if thread_power[0].isRunning() is True:
+                    thread_power[0].stop()
+            except Exception as e:
+                print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
+
+            try:
+                if thread_windows_update_monitor[0].isRunning() is True:
+                    thread_windows_update_monitor[0].stop()
+            except Exception as e:
+                print('-- [CompileDevicesClass.stop_all_threads] Error:', e)
+
     def start_all_threads(self):
         print('-- [CompileDevicesClass.start_all_threads]: plugged in')
         global bool_switch_startup_cpu_util, bool_switch_startup_dram_util, bool_switch_startup_vram_util, bool_switch_startup_net_traffic
@@ -4253,6 +4314,7 @@ class CompileDevicesClass(QThread):
         global thread_net_share
         global thread_notification
         global thread_test_locked
+        global thread_windows_update_monitor
 
         if len(devices_kb) > 0 or len(devices_ms) > 0:
             if bool_switch_startup_exclusive_control is True:
@@ -4286,6 +4348,8 @@ class CompileDevicesClass(QThread):
                 thread_media_display[0].start()
             if bool_switch_power_plan is True:
                 thread_power[0].start()
+            if bool_switch_startup_windows_update is True:
+                thread_windows_update_monitor[0].start()
 
     def attempt_connect(self):
         # print('-- [CompileDevicesClass.attempt_connect]: plugged in')
@@ -4463,6 +4527,7 @@ class CompileDevicesClass(QThread):
         global bool_switch_g2_disks
         global bool_switch_lock_gkeys
         global sdk_color_backlight_on
+        global bool_switch_startup_windows_update
 
         startup_loc = '/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/iCUEDisplay.lnk'
         bool_backend_valid_network_adapter_name = False
@@ -4733,6 +4798,11 @@ class CompileDevicesClass(QThread):
                         print('-- [ConfigCompile.sdk_color_backlight_on]:', sdk_color_backlight_on)
                     elif self.sanitize_passed is False:
                         print('-- [ConfigCompile.sdk_color_backlight_on] sdk_color_backlight_on: sanitize_failed')
+
+                if line == 'bool_switch_startup_windows_update: true':
+                    bool_switch_startup_windows_update = True
+                if line == 'bool_switch_startup_windows_update: false':
+                    bool_switch_startup_windows_update = False
 
         print('-- [ConfigCompile.read_config] sdk_color_cpu_on:', sdk_color_cpu_on)
         print('-- [ConfigCompile.read_config] timing_cpu_util:', timing_cpu_util)
@@ -7976,43 +8046,54 @@ class WindowsUpdateMonitorClass(QThread):
         windows_update_dir_default = 'C:\\Windows\\SoftwareDistribution'
 
         while True:
-            dl_prog = False
-            if os.path.exists(windows_update_dir_default):
-                win_update_dir_sz = sum(file.stat().st_size for file in Path(windows_update_dir_default).rglob('*'))
+            try:
+                dl_prog = False
+                if os.path.exists(windows_update_dir_default):
+                    win_update_dir_sz = sum(file.stat().st_size for file in Path(windows_update_dir_default).rglob('*'))
 
-                if win_update_dir_sz > self.win_update_dir_sz_prev:
-                    # print('-- [WindowsUpdateMonitorClass.run]: download update may be in progress')
-                    self.win_update_dir_sz_prev = win_update_dir_sz
+                    if win_update_dir_sz > self.win_update_dir_sz_prev:
+                        # print('-- [WindowsUpdateMonitorClass.run]: download update may be in progress')
+                        self.win_update_dir_sz_prev = win_update_dir_sz
 
-                    if len(devices_kb) > 0:
-                        dl_prog = True
-                        try:
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({171: (100, 255, 0)}))
-                            time.sleep(0.5)
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({171: (0, 0, 0)}))
-                            time.sleep(0.5)
-                        except Exception as e:
-                            print('-- [WindowsUpdateMonitorClass.run] Error:', e)
+                        if len(devices_kb) > 0:
+                            dl_prog = True
+                            try:
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({171: (100, 255, 0)}))
+                                time.sleep(0.5)
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({171: (0, 0, 0)}))
+                                time.sleep(0.5)
+                            except Exception as e:
+                                print('-- [WindowsUpdateMonitorClass.run] Error:', e)
 
-                elif win_update_dir_sz < self.win_update_dir_sz_prev:
-                    # print('-- [WindowsUpdateMonitorClass.run]: download update may be in progress')
-                    self.win_update_dir_sz_prev = win_update_dir_sz
+                    elif win_update_dir_sz < self.win_update_dir_sz_prev:
+                        # print('-- [WindowsUpdateMonitorClass.run]: download update may be in progress')
+                        self.win_update_dir_sz_prev = win_update_dir_sz
 
-                    if len(devices_kb) > 0:
-                        dl_prog = True
-                        try:
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({171: (255, 0, 0)}))
-                            time.sleep(0.5)
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({171: (0, 0, 0)}))
-                            time.sleep(0.5)
-                        except Exception as e:
-                            print('-- [WindowsUpdateMonitorClass.run] Error:', e)
+                        if len(devices_kb) > 0:
+                            dl_prog = True
+                            try:
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({171: (255, 0, 0)}))
+                                time.sleep(0.5)
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({171: (0, 0, 0)}))
+                                time.sleep(0.5)
+                            except Exception as e:
+                                print('-- [WindowsUpdateMonitorClass.run] Error:', e)
 
-            if dl_prog is False:
+                if dl_prog is False:
+                    time.sleep(1)
+
+            except Exception as e:
+                print('-- [WindowsUpdateMonitorClass.run] Error:', e)
                 time.sleep(1)
 
     def stop(self):
         print('-- [WindowsUpdateMonitorClass.stop]: plugged in')
+        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
+        try:
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({171: sdk_color_backlight}))
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({171: sdk_color_backlight}))
+        except Exception as e:
+            print('-- [WindowsUpdateMonitorClass.run] Error:', e)
         self.terminate()
 
 
