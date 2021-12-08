@@ -27,6 +27,7 @@ import winrt.windows.media.control as wmc
 import keyboard
 from pathlib import Path
 from ctypes import *
+import codecs
 
 info = subprocess.STARTUPINFO()
 info.dwFlags = 1
@@ -91,6 +92,8 @@ hdd_bytes_type_r = ''
 hdd_bytes_str = ''
 str_path_kb_img = ''
 str_path_ms_img = ''
+sec_key_path = ''
+sec_key_str = ''
 
 kb_event = ''
 g_key_pressed = ''
@@ -195,6 +198,7 @@ devices_previous = []
 devices_gpu_selected = int()
 devices_network_adapter_name = ""
 
+corsairled_id_keypad_num = [119, 116, 117, 118, 113, 114, 115, 109, 110, 111]
 corsairled_id_num_cpu = [119, 116, 113, 109]
 corsairled_id_num_dram = [117, 114, 110, 104]
 corsairled_id_num_vram = [120, 118, 115, 111]
@@ -312,7 +316,8 @@ config_data = ['sdk_color_cpu_on: 0,255,255',
                'bool_switch_g2_disks: false',
                'bool_switch_lock_gkeys: false',
                'sdk_color_backlight_on: 5,15,0',
-               'bool_switch_startup_windows_update: true']
+               'bool_switch_startup_windows_update: true',
+               'security_key_path: ']
 
 
 def create_new():
@@ -1043,62 +1048,6 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.lbl_util_key_4)
         ui_object_complete.append(self.lbl_util_key_4)
         ui_object_font_list_s7b.append(self.lbl_util_key_4)
-        # 
-        # """ amber """
-        # self.lbl_util_key_5 = QLabel(self)
-        # self.lbl_util_key_5.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 30 - 8)
-        # self.lbl_util_key_5.resize(10, 10)
-        # self.lbl_util_key_5.setStyleSheet("""QLabel {background-color: rgb(255, 100, 0);
-        #                                                            color: rgb(150, 150, 150);
-        #                                                            border-top:2px solid rgb(10, 10, 10);
-        #                                                            border-bottom:2px solid rgb(10, 10, 10);
-        #                                                            border-right:2px solid rgb(10, 10, 10);
-        #                                                            border-left:2px solid rgb(10, 10, 10);}""")
-        # print('-- [App.__init__] created:', self.lbl_util_key_5)
-        # ui_object_complete.append(self.lbl_util_key_5)
-        # 
-        # self.lbl_util_key_6 = QLabel(self)
-        # self.lbl_util_key_6.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 10 + 4 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 30 - 8)
-        # self.lbl_util_key_6.resize(self.monitor_btn_w, 10)
-        # self.lbl_util_key_6.setFont(self.font_s7b)
-        # self.lbl_util_key_6.setText('>=50°C  <70°C')
-        # self.lbl_util_key_6.setStyleSheet("""QLabel {background-color: rgb(0, 0, 0);
-        #                                                            color: rgb(150, 150, 150);
-        #                                                            border-top:0px solid rgb(10, 10, 10);
-        #                                                            border-bottom:0px solid rgb(10, 10, 10);
-        #                                                            border-right:0px solid rgb(10, 10, 10);
-        #                                                            border-left:0px solid rgb(10, 10, 10);}""")
-        # print('-- [App.__init__] created:', self.lbl_util_key_6)
-        # ui_object_complete.append(self.lbl_util_key_6)
-        # ui_object_font_list_s7b.append(self.lbl_util_key_6)
-        # 
-        # """ red """
-        # self.lbl_util_key_7 = QLabel(self)
-        # self.lbl_util_key_7.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 40 - 12)
-        # self.lbl_util_key_7.resize(10, 10)
-        # self.lbl_util_key_7.setStyleSheet("""QLabel {background-color: rgb(255, 0, 0);
-        #                                                                    color: rgb(150, 150, 150);
-        #                                                                    border-top:2px solid rgb(10, 10, 10);
-        #                                                                    border-bottom:2px solid rgb(10, 10, 10);
-        #                                                                    border-right:2px solid rgb(10, 10, 10);
-        #                                                                    border-left:2px solid rgb(10, 10, 10);}""")
-        # print('-- [App.__init__] created:', self.lbl_util_key_7)
-        # ui_object_complete.append(self.lbl_util_key_7)
-
-        # self.lbl_util_key_8 = QLabel(self)
-        # self.lbl_util_key_8.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 10 + 4 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 40 - 12)
-        # self.lbl_util_key_8.resize(self.monitor_btn_w, 10)
-        # self.lbl_util_key_8.setFont(self.font_s7b)
-        # self.lbl_util_key_8.setText('>70°C')
-        # self.lbl_util_key_8.setStyleSheet("""QLabel {background-color: rgb(0, 0, 0);
-        #                                                                    color: rgb(150, 150, 150);
-        #                                                                    border-top:0px solid rgb(10, 10, 10);
-        #                                                                    border-bottom:0px solid rgb(10, 10, 10);
-        #                                                                    border-right:0px solid rgb(10, 10, 10);
-        #                                                                    border-left:0px solid rgb(10, 10, 10);}""")
-        # print('-- [App.__init__] created:', self.lbl_util_key_8)
-        # ui_object_complete.append(self.lbl_util_key_8)
-        # ui_object_font_list_s7b.append(self.lbl_util_key_8)
 
         self.lbl_cpu_mon_temp = QPushButton(self)
         self.lbl_cpu_mon_temp.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h)
@@ -2227,7 +2176,7 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.lbl_lock_gkeys)
         ui_object_complete.append(self.lbl_lock_gkeys)
         ui_object_font_list_s8b.append(self.lbl_lock_gkeys)
-        self.lbl_lock_gkeys.setToolTip('[G6] Lock Gkeys\n\nEnables/Disables GKeys.\n\n[G6] Short Press: Disable/Enable iCUE Display GKeys.\n[G6] 1 Second Hold (Yellow): Enable/Disable Input Hard Block (WARNING: If iCUE Display and or iCUE crashes while input is blocked then you may have to reboot)')
+        self.lbl_lock_gkeys.setToolTip('[G6] Lock Gkeys\n\nEnables/Disables GKeys.\n\n[G6] Short Press: Disable/Enable iCUE Display GKeys.\n[G6] 1 Second Hold (Yellow): Enable/Disable Input Hard Block\n\n1. A key must be paired every time iCUE Display is ran in order to enable Input Hard Block.\n2. The paired key must be inserted to disable Input Hard Block\n\n(WARNING: If iCUE Display and or iCUE crashes while input is hard blocked then you may have to reboot.\nAlso CTRL+ALT+DELETE will disable the ability to disable Input Hard Block completely because communication to the iCUE server will be severed)')
 
         self.btn_lock_gkeys = QPushButton(self)
         self.btn_lock_gkeys.move(self.menu_obj_pos_w + 2 + 4 + 126, self.height - (4 * 1) - (self.monitor_btn_h * 1))
@@ -2238,7 +2187,19 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.btn_lock_gkeys)
         self.object_interaction_enabled.append(self.btn_lock_gkeys)
         ui_object_complete.append(self.btn_lock_gkeys)
-        self.btn_lock_gkeys.setToolTip('[G6] Lock Gkeys\n\nEnables/Disables GKeys.\n\n[G6] Short Press: Disable/Enable iCUE Display GKeys.\n[G6] 1 Second Hold (Yellow): Enable/Disable Input Hard Block (WARNING: If iCUE Display and or iCUE crashes while input is blocked then you may have to reboot)')
+        self.btn_lock_gkeys.setToolTip('[G6] Lock Gkeys\n\nEnables/Disables GKeys.\n\n[G6] Short Press: Disable/Enable iCUE Display GKeys.\n[G6] 1 Second Hold (Yellow): Enable/Disable Input Hard Block\n\n1. A key must be paired every time iCUE Display is ran in order to enable Input Hard Block.\n2. The paired key must be inserted to disable Input Hard Block\n\n(WARNING: If iCUE Display and or iCUE crashes while input is hard blocked then you may have to reboot.\nAlso CTRL+ALT+DELETE will disable the ability to disable Input Hard Block completely because communication to the iCUE server will be severed)')
+
+        self.btn_lock_gkeys_key_create = QPushButton(self)
+        self.btn_lock_gkeys_key_create.move(self.menu_obj_pos_w + 2 + 4 + 126 + 4 + 28, self.height - (4 * 1) - (self.monitor_btn_h * 1))
+        self.btn_lock_gkeys_key_create.resize(126, self.monitor_btn_h)
+        self.btn_lock_gkeys_key_create.setFont(self.font_s8b)
+        self.btn_lock_gkeys_key_create.setText('Create Key')
+        self.btn_lock_gkeys_key_create.setStyleSheet(self.btn_menu_style)
+        self.btn_lock_gkeys_key_create.clicked.connect(self.btn_lock_gkeys_key_create_function)
+        print('-- [App.__init__] created:', self.btn_lock_gkeys_key_create)
+        ui_object_complete.append(self.btn_lock_gkeys_key_create)
+        ui_object_font_list_s8b.append(self.btn_lock_gkeys_key_create)
+        self.btn_lock_gkeys_key_create.setToolTip('')
 
         self.lbl_backlight = QPushButton(self)
         self.lbl_backlight.move(self.menu_obj_pos_w + 2, self.height - (4 * 1) - (self.monitor_btn_h * 1))
@@ -2372,6 +2333,41 @@ class App(QMainWindow):
         self.installEventFilter(self.filter)
 
         self.initUI()
+
+    def btn_lock_gkeys_key_create_function(self):
+        print('-- [btn_lock_gkeys_key_create_function]: plugged in')
+        global sec_key_path, sec_key_str
+        self.setFocus()
+
+        my_dir = QFileDialog.getExistingDirectory(self, "Select A Directory Or Drive Letter")
+        if my_dir:
+            print('-- [App.btn_lock_gkeys_key_create_function] directory selected:', my_dir)
+            sec_key_path = my_dir + 'iCUEDISPLAY_KEY.TXT'
+            print('-- [btn_lock_gkeys_key_create_function]: generated key path:', sec_key_path)
+
+            var_0 = psutil.cpu_stats().interrupts
+            var_1 = psutil.cpu_stats().ctx_switches
+            var_2 = str(datetime.datetime.now()).replace(' ', '').replace('-', '').replace(':', '').replace('.', '')
+            var_3 = psutil.cpu_freq().current
+            var_4 = str(var_3)[0]
+            var_4 = int(var_4)
+            i = 0
+            while i < var_4:
+                var_3 = int(var_3 * var_3)
+                i += 1
+            var_5 = var_0 * var_1 * int(var_2) * var_3
+            i = 0
+            while i < 12:
+                var_5 = int(var_5 * var_5)
+                i += 1
+            sec_key_str = str(var_5)
+            print(var_5)
+            with open(sec_key_path, 'w') as fo:
+                fo.write(sec_key_str)
+            fo.close()
+
+            self.write_var = 'security_key_path: ' + sec_key_path
+            self.write_changes()
 
     def btn_backlight_rgb_function(self):
         print('-- [btn_backlight_function]: plugged in')
@@ -2803,6 +2799,7 @@ class App(QMainWindow):
 
         self.lbl_g2_disk.show()
         self.btn_g2_disk.show()
+        self.btn_lock_gkeys_key_create.show()
 
     def feature_pg_execution_policy(self):
         print('-- [App.feature_pg_execution_policy]: plugged in')
@@ -4533,6 +4530,7 @@ class CompileDevicesClass(QThread):
         global bool_switch_lock_gkeys
         global sdk_color_backlight_on
         global bool_switch_startup_windows_update
+        global sec_key_path, sec_key_str
 
         startup_loc = '/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/iCUEDisplay.lnk'
         bool_backend_valid_network_adapter_name = False
@@ -4808,6 +4806,23 @@ class CompileDevicesClass(QThread):
                     bool_switch_startup_windows_update = True
                 if line == 'bool_switch_startup_windows_update: false':
                     bool_switch_startup_windows_update = False
+
+                if line.startswith('security_key_path: '):
+                    var = line.replace('security_key_path: ', '')
+                    print(line)
+                    if os.path.exists(var):
+                        sec_key_path = var
+                        print('-- reading key')
+                        with codecs.open(sec_key_path, 'r', encoding='utf-8') as fo_sec:
+                            i = 0
+                            for line in fo_sec:
+                                line = line.strip()
+                                print(line)
+                                i += 1
+                                sec_key_str = line
+                            print('-- lines in key:', i)
+                        fo_sec.close()
+                        # print(sec_key_str)
 
         print('-- [ConfigCompile.read_config] sdk_color_cpu_on:', sdk_color_cpu_on)
         print('-- [ConfigCompile.read_config] timing_cpu_util:', timing_cpu_util)
@@ -5088,6 +5103,7 @@ class SdkNotificationClass(QThread):
                             self.notification_off()
 
                     elif notification_key == 8:
+                        print('-- notification_key:', notification_key)
                         notification_key = 0
                         try:
                             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({177: (0, 255, 0)}))
@@ -6180,18 +6196,42 @@ class SdkEventHandlerClass(QThread):
 
     def g6_function_long(self):
         print('-- [App.g6_function_long]: plugged in')
-        global bool_backend_allow_g_key_access, notification_key, bool_block_input, thread_hard_block
+        global bool_backend_allow_g_key_access, notification_key, bool_block_input, thread_hard_block, sec_key_str, sec_key_path
+
         if bool_block_input is False:
-            bool_block_input = True
-            bool_backend_allow_g_key_access = False
-            notification_key = 7
-            thread_hard_block[0].start()
-            print('-- [App.g6_function_long]: changing bool_block_input to:', bool_block_input)
+
+            bool_impromptu_pair = False
+
+            if sec_key_str != '':
+                bool_block_input = True
+                bool_backend_allow_g_key_access = False
+                notification_key = 7
+                thread_hard_block[0].start()
+                print('-- [App.g6_function_long]: changing bool_block_input to:', bool_block_input)
+
+            else:
+                print('-- key unpaired: attempting impromptu pair')
+                with open('./config.dat', 'r') as fo:
+                    for line in fo:
+                        line = line.strip()
+                        if line.startswith('security_key_path: '):
+                            var = line.replace('security_key_path: ', '')
+                            if os.path.exists(var):
+                                sec_key_path = var
+                                print('-- pairing previously unpaired security key:', sec_key_path)
+                                with open(sec_key_path, 'r') as fo:
+                                    for line in fo:
+                                        line = line.strip()
+                                        if len(line) > 1:
+                                            sec_key_str = line
+                                            bool_impromptu_pair = True
+                                            break
+                            elif not os.path.exists(var):
+                                print('-- path does not exists:', var)
+                if bool_impromptu_pair is True:
+                    self.g6_function_long()
 
         elif bool_block_input is True:
-            bool_block_input = False
-            bool_backend_allow_g_key_access = True
-            notification_key = 8
             # --> ToDO: perform checks (usb key/keycode input) if checks are true then thread_hard_block[0].stop() (allow input)
             thread_hard_block[0].stop()
             print('-- [App.g6_function_long]: changing bool_block_input to:', bool_block_input)
@@ -6508,16 +6548,41 @@ class HardBlockInputClass(QThread):
 
     def run(self):
         print('-- [HardBlockInputClass.run]: plugged in')
-        global bool_block_input, notification_key
-        while bool_block_input is True:
-            ok = windll.user32.BlockInput(True)
-            time.sleep(0.1)
-            notification_key = 7
+        global bool_block_input, bool_backend_allow_g_key_access, notification_key, sec_key_str, sec_key_path
+        if sec_key_str != '':
+            while bool_block_input is True:
+                ok = windll.user32.BlockInput(True)
+                time.sleep(0.1)
+                notification_key = 7
+            else:
+                notification_key = 8
 
     def stop(self):
         print('-- [HardBlockInputClass.stop]: plugged in')
-        ok = windll.user32.BlockInput(False)
-        self.terminate()
+        global bool_block_input, bool_backend_allow_g_key_access, sec_key_path, sec_key_str, notification_key, bool_block_input
+
+        check_pass = False
+
+        if os.path.exists(sec_key_path):
+            with open(sec_key_path, 'r') as fo:
+                for line in fo:
+                    line = line.strip()
+                    if line == sec_key_str:
+                        check_pass = True
+            fo.close()
+
+        print('- check_pass:', check_pass)
+        if check_pass is True:
+            print('-- unblocking input')
+            bool_block_input = False
+            bool_backend_allow_g_key_access = True
+            ok = windll.user32.BlockInput(False)
+            notification_key = 8
+            self.terminate()
+        elif check_pass is False:
+            bool_block_input = True
+            bool_backend_allow_g_key_access = False
+            print('-- keeping input blocked')
 
 
 class CompileDiskGUIDDictionaryListClass(QThread):
