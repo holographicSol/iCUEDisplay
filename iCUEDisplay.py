@@ -5041,22 +5041,6 @@ class SdkNotificationClass(QThread):
 
                     elif notification_key == 7:
                         notification_key = 0
-                        try:
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({177: (255, 0, 0)}))
-                        except Exception as e:
-                            print('-- [SdkNotificationClass.run] Error:', e)
-                        try:
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({178: (255, 0, 0)}))
-                        except Exception as e:
-                            print('-- [SdkNotificationClass.run] Error:', e)
-                        try:
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({179: (255, 0, 0)}))
-                        except Exception as e:
-                            print('-- [SdkNotificationClass.run] Error:', e)
-                        try:
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({180: (255, 0, 0)}))
-                        except Exception as e:
-                            print('-- [SdkNotificationClass.run] Error:', e)
 
                         try:
                             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_gkeys[0]: (255, 0, 0)}))
@@ -5078,13 +5062,30 @@ class SdkNotificationClass(QThread):
                             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_gkeys[4]: (255, 0, 0)}))
                         except Exception as e:
                             print('-- [SdkNotificationClass.run] Error:', e)
+
                         if bool_backend_onpress_clause_g6 is False:
+                            try:
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({177: (255, 0, 0)}))
+                            except Exception as e:
+                                print('-- [SdkNotificationClass.run] Error:', e)
+                            try:
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({178: (255, 0, 0)}))
+                            except Exception as e:
+                                print('-- [SdkNotificationClass.run] Error:', e)
+                            try:
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({179: (255, 0, 0)}))
+                            except Exception as e:
+                                print('-- [SdkNotificationClass.run] Error:', e)
+                            try:
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({180: (255, 0, 0)}))
+                            except Exception as e:
+                                print('-- [SdkNotificationClass.run] Error:', e)
                             try:
                                 sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_gkeys[5]: (255, 0, 0)}))
                             except Exception as e:
                                 print('-- [SdkNotificationClass.run] Error:', e)
 
-                        self.notification_off()
+                            self.notification_off()
 
                     elif notification_key == 8:
                         notification_key = 0
