@@ -8,9 +8,12 @@ import GPUtil
 import psutil
 import pythoncom
 import unicodedata
+import win32gui
 import win32con
 import win32api
 import win32process
+import ctypes
+from ctypes import wintypes
 import win32com.client
 import datetime
 import subprocess
@@ -28,6 +31,10 @@ import keyboard
 from pathlib import Path
 from ctypes import *
 import codecs
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
+
 
 info = subprocess.STARTUPINFO()
 info.dwFlags = 1
@@ -51,19 +58,19 @@ def canonical_caseless(text):
 
 
 def initialize_scaling_dpi():
-    # print('-- [initialize_scaling_dpi]: initializing:')
+    print('-- [initialize_scaling_dpi]: initializing:')
     os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
-    # print('-- [initialize_scaling_dpi]: QT_AUTO_SCREEN_SCALE_FACTOR = 1')
+    print('-- [initialize_scaling_dpi]: QT_AUTO_SCREEN_SCALE_FACTOR = 1')
     if hasattr(Qt, 'AA_EnableHighDpiScaling'):
         QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
-        # print('-- [initialize_scaling_dpi]: AA_EnableHighDpiScaling: True')
-    # elif not hasattr(Qt, 'AA_EnableHighDpiScaling'):
-        # print('-- [initialize_scaling_dpi]: AA_EnableHighDpiScaling: False')
+        print('-- [initialize_scaling_dpi]: AA_EnableHighDpiScaling: True')
+    elif not hasattr(Qt, 'AA_EnableHighDpiScaling'):
+        print('-- [initialize_scaling_dpi]: AA_EnableHighDpiScaling: False')
     if hasattr(Qt, 'AA_UseHighDpiPixmaps'):
         QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
-        # print('-- [initialize_scaling_dpi]: AA_UseHighDpiPixmaps: True')
-    # elif not hasattr(Qt, 'AA_UseHighDpiPixmaps'):
-        # print('-- [initialize_scaling_dpi]: AA_UseHighDpiPixmaps: False')
+        print('-- [initialize_scaling_dpi]: AA_UseHighDpiPixmaps: True')
+    elif not hasattr(Qt, 'AA_UseHighDpiPixmaps'):
+        print('-- [initialize_scaling_dpi]: AA_UseHighDpiPixmaps: False')
 
 
 def initialize_priority():
@@ -127,6 +134,7 @@ bool_backend_icue_connected = False
 bool_backend_icue_connected_previous = None
 bool_backend_config_read_complete = False
 bool_backend_valid_network_adapter_name = False
+bool_backend_display_hud = True
 
 bool_switch_backlight = False
 bool_switch_cpu_temperature = False
@@ -154,22 +162,19 @@ bool_switch_startup_net_traffic = False
 bool_switch_startup_net_share_mon = False
 bool_switch_startup_media_display = False
 bool_switch_startup_windows_update = False
+bool_switch_g5_backlight = False
 
-thread_steam_update_monitor = []
 thread_windows_update_monitor = []
-thread_dir_sz_monitor = []
 thread_notification = []
 thread_sdk_instruction = []
 thread_eject = []
 thread_mount = []
 thread_unmount = []
-thread_exclusive_gkey_event_eject = []
 thread_exclusive_gkey_event_mount = []
 thread_disk_guid = []
 thread_exclusive_gkey_event_unmount = []
 thread_gkey_pressed = []
 thread_keyevents = []
-thread_overlay = []
 thread_test_locked = []
 thread_power = []
 thread_pause_loop = []
@@ -183,9 +188,10 @@ thread_net_traffic = []
 thread_net_connection = []
 thread_net_share = []
 thread_sdk_event_handler = []
-thread_backlight_auto = []
 thread_temperatures = []
 thread_hard_block = []
+
+feature_pg = 0
 
 event_filter_self = []
 devices_kb = []
@@ -314,8 +320,9 @@ config_data = ['sdk_color_cpu_on: 0,255,255',
                'bool_switch_powershell: false',
                'bool_switch_fahrenheit: false',
                'bool_switch_g2_disks: false',
+               'bool_switch_g5_backlight: false',
                'bool_switch_lock_gkeys: false',
-               'sdk_color_backlight_on: 5,15,0',
+               'sdk_color_backlight_on: 0,50,50',
                'bool_switch_startup_windows_update: true',
                'security_key_path: ']
 
@@ -324,7 +331,6 @@ def create_new():
     print('-- [create_new]: started')
     distutils.dir_util.mkpath(os.path.join(os.path.expanduser('~'), 'AppData\\Local\\iCUEDisplay'))
 
-    # Check Configuration File
     config_line_missing = []
     config_line_file = []
     count_missing = 0
@@ -750,7 +756,6 @@ class App(QMainWindow):
         self.btn_quit.setIcon(QIcon("./image/img_close.png"))
         self.btn_quit.setIconSize(QSize(8, 8))
         self.btn_quit.clicked.connect(self.icuedisplay_quit_function)
-        # self.btn_quit.clicked.connect(QCoreApplication.instance().quit)
         self.btn_quit.setStyleSheet(
             """QPushButton{background-color: rgb(0, 0, 0);
                border:0px solid rgb(0, 0, 0);}"""
@@ -1032,12 +1037,11 @@ class App(QMainWindow):
                                                            border-left:2px solid rgb(10, 10, 10);}""")
         print('-- [App.__init__] created:', self.lbl_util_key_3)
         ui_object_complete.append(self.lbl_util_key_3)
-        # 
+
         self.lbl_util_key_4 = QLabel(self)
         self.lbl_util_key_4.move(self.menu_obj_pos_w + 2 + 100 + 4 + 28 + 4 + 72 + 4 + 24 + 4 + 10 + 4 + 4, self.height - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - self.monitor_btn_h - 4 - 20 - 4)
         self.lbl_util_key_4.resize(self.monitor_btn_w, 10)
         self.lbl_util_key_4.setFont(self.font_s7b)
-        # self.lbl_util_key_4.setText('>=30°C  <50°C')
         self.lbl_util_key_4.setText('>=50°C')
         self.lbl_util_key_4.setStyleSheet("""QLabel {background-color: rgb(0, 0, 0);
                                                            color: rgb(150, 150, 150);
@@ -1952,8 +1956,7 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.btn_fahrenheit)
         self.object_interaction_enabled.append(self.btn_fahrenheit)
         ui_object_complete.append(self.btn_fahrenheit)
-        
-        # foo
+
         self.lbl_windows_update_mon = QPushButton(self)
         self.lbl_windows_update_mon.move(self.menu_obj_pos_w + 2, self.height - (4 * 2) - (self.monitor_btn_h * 2))
         self.lbl_windows_update_mon.resize(126, self.monitor_btn_h)
@@ -2144,19 +2147,19 @@ class App(QMainWindow):
         ui_object_font_list_s7b.append(self.lbl_power_plan_key_7)
 
         self.lbl_powershell = QPushButton(self)
-        self.lbl_powershell.move(self.menu_obj_pos_w + 2, self.height - (4 * 2) - (self.monitor_btn_h * 2))
+        self.lbl_powershell.move(self.menu_obj_pos_w + 2, self.height - (4 * 3) - (self.monitor_btn_h * 3))
         self.lbl_powershell.resize(126, self.monitor_btn_h)
         self.lbl_powershell.setFont(self.font_s8b)
-        self.lbl_powershell.setText('G5 Powershell')
+        self.lbl_powershell.setText('G4 Powershell')
         self.lbl_powershell.setStyleSheet(self.btn_menu_style)
         self.lbl_powershell.clicked.connect(self.btn_powershell_function)
         print('-- [App.__init__] created:', self.lbl_powershell)
         ui_object_complete.append(self.lbl_powershell)
         ui_object_font_list_s8b.append(self.lbl_powershell)
-        self.lbl_powershell.setToolTip('[G5] Powershell\n\nEnables/Disables [G5] Powershell.\n\nShort press [G5] spawns administrator Powershell window if iCUE Display is running as admin.\n[G5] 1 Second Hold (Yellow): Enable/Disable Backlight')
+        self.lbl_powershell.setToolTip('[G4] Powershell\n\nEnables/Disables [G4] Powershell.\n\nShort press [G4] spawns administrator Powershell window if iCUE Display is running as admin')
 
         self.btn_powershell = QPushButton(self)
-        self.btn_powershell.move(self.menu_obj_pos_w + 2 + 4 + 126, self.height - (4 * 2) - (self.monitor_btn_h * 2))
+        self.btn_powershell.move(self.menu_obj_pos_w + 2 + 4 + 126, self.height - (4 * 3) - (self.monitor_btn_h * 3))
         self.btn_powershell.resize(28, 28)
         self.btn_powershell.setStyleSheet(self.btn_menu_style)
         self.btn_powershell.setIconSize(self.tog_switch_ico_sz)
@@ -2164,7 +2167,30 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.btn_powershell)
         self.object_interaction_enabled.append(self.btn_powershell)
         ui_object_complete.append(self.btn_powershell)
-        self.btn_powershell.setToolTip('[G5] Powershell\n\nEnables/Disables [G5] Powershell.\n\nShort press [G5] spawns administrator Powershell window if iCUE Display is running as admin.\n[G5] 1 Second Hold (Yellow): Enable/Disable Backlight')
+        self.btn_powershell.setToolTip('[G4] Powershell\n\nEnables/Disables [G4] Powershell.\n\nShort press [G4] spawns administrator Powershell window if iCUE Display is running as admin')
+
+        self.lbl_g5_backlight = QPushButton(self)
+        self.lbl_g5_backlight.move(self.menu_obj_pos_w + 2, self.height - (4 * 2) - (self.monitor_btn_h * 2))
+        self.lbl_g5_backlight.resize(126, self.monitor_btn_h)
+        self.lbl_g5_backlight.setFont(self.font_s8b)
+        self.lbl_g5_backlight.setText('G5 Backlight')
+        self.lbl_g5_backlight.setStyleSheet(self.btn_menu_style)
+        self.lbl_g5_backlight.clicked.connect(self.btn_g5_backlight_function)
+        print('-- [App.__init__] created:', self.lbl_g5_backlight)
+        ui_object_complete.append(self.lbl_g5_backlight)
+        ui_object_font_list_s8b.append(self.lbl_g5_backlight)
+        self.lbl_g5_backlight.setToolTip('[G5] Backlight\n\nEnables/Disables [G5] Backlight.\n\n[G5] 1 Second Press Turns On/Off Backlight.\n\n[G5] 2 Second Press Turns On/Off HUD Monitor(s)')
+
+        self.btn_g5_backlight = QPushButton(self)
+        self.btn_g5_backlight.move(self.menu_obj_pos_w + 2 + 4 + 126, self.height - (4 * 2) - (self.monitor_btn_h * 2))
+        self.btn_g5_backlight.resize(28, 28)
+        self.btn_g5_backlight.setStyleSheet(self.btn_menu_style)
+        self.btn_g5_backlight.setIconSize(self.tog_switch_ico_sz)
+        self.btn_g5_backlight.clicked.connect(self.btn_g5_backlight_function)
+        print('-- [App.__init__] created:', self.btn_g5_backlight)
+        self.object_interaction_enabled.append(self.btn_g5_backlight)
+        ui_object_complete.append(self.btn_g5_backlight)
+        self.btn_g5_backlight.setToolTip('[G5] Backlight\n\nEnables/Disables [G5] Backlight.\n\n[G5] 1 Second Press Turns On/Off Backlight.\n\n[G5] 2 Second Press Turns On/Off HUD Monitor(s)')
 
         self.lbl_lock_gkeys = QPushButton(self)
         self.lbl_lock_gkeys.move(self.menu_obj_pos_w + 2, self.height - (4 * 1) - (self.monitor_btn_h * 1))
@@ -2327,7 +2353,6 @@ class App(QMainWindow):
             bool_backend_execution_policy_show = False
             self.feature_pg_home()
 
-        # time.sleep(2)
         event_filter_self.append(self)
         self.filter = ObjEveFilter()
         self.installEventFilter(self.filter)
@@ -2418,17 +2443,13 @@ class App(QMainWindow):
         global bool_switch_fahrenheit
 
         self.setFocus()
-        
-        # foo
+
         if bool_switch_fahrenheit is True:
             if self.write_engaged is False:
                 print('-- [App.btn_fahrenheit_function] changing bool_switch_fahrenheit:', bool_switch_fahrenheit)
                 self.write_var = 'bool_switch_fahrenheit: false'
                 self.write_changes()
             self.btn_fahrenheit.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
-            # self.lbl_util_key_8.setText('>70°C')
-            # self.lbl_util_key_6.setText('>=50°C  <70°C')
-            # self.lbl_util_key_4.setText('>=30°C  <50°C')
             self.lbl_util_key_4.setText('>=50°C')
             self.lbl_util_key_2.setText('<50°C')
             bool_switch_fahrenheit = False
@@ -2439,9 +2460,6 @@ class App(QMainWindow):
                 self.write_var = 'bool_switch_fahrenheit: true'
                 self.write_changes()
             self.btn_fahrenheit.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-            # self.lbl_util_key_8.setText('>158°F')
-            # self.lbl_util_key_6.setText('>=122°F  <158°F')
-            # self.lbl_util_key_4.setText('>=86°F   <122°F')
             self.lbl_util_key_4.setText('>=122°F')
             self.lbl_util_key_2.setText('<122°F')
             bool_switch_fahrenheit = True
@@ -2471,7 +2489,6 @@ class App(QMainWindow):
 
         print('-- [btn_windows_update_mon_function] setting bool_switch_startup_windows_update:', bool_switch_startup_windows_update)
 
-
     def btn_lock_gkeys_function(self):
         print('-- [btn_lock_gkeys_function]: plugged in')
         global bool_switch_lock_gkeys
@@ -2480,7 +2497,7 @@ class App(QMainWindow):
 
         if bool_switch_lock_gkeys is True:
             if self.write_engaged is False:
-                print('-- [App.btn_powershell_function] changing bool_switch_lock_gkeys:', bool_switch_lock_gkeys)
+                print('-- [App.btn_lock_gkeys_function] changing bool_switch_lock_gkeys:', bool_switch_lock_gkeys)
                 self.write_var = 'bool_switch_lock_gkeys: false'
                 self.write_changes()
             self.btn_lock_gkeys.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
@@ -2488,7 +2505,7 @@ class App(QMainWindow):
 
         elif bool_switch_lock_gkeys is False:
             if self.write_engaged is False:
-                print('-- [App.btn_powershell_function] changing bool_switch_lock_gkeys:', bool_switch_lock_gkeys)
+                print('-- [App.btn_lock_gkeys_function] changing bool_switch_lock_gkeys:', bool_switch_lock_gkeys)
                 self.write_var = 'bool_switch_lock_gkeys: true'
                 self.write_changes()
             self.btn_lock_gkeys.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
@@ -2515,6 +2532,28 @@ class App(QMainWindow):
                 self.write_changes()
             self.btn_powershell.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
             bool_switch_powershell = True
+
+    def btn_g5_backlight_function(self):
+        print('-- [btn_g5_backlight_function]: plugged in')
+        global bool_switch_g5_backlight
+
+        self.setFocus()
+
+        if bool_switch_g5_backlight is True:
+            if self.write_engaged is False:
+                print('-- [App.btn_g5_backlight_function] changing bool_switch_g5_backlight:', bool_switch_g5_backlight)
+                self.write_var = 'bool_switch_g5_backlight: false'
+                self.write_changes()
+            self.btn_g5_backlight.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+            bool_switch_g5_backlight = False
+
+        elif bool_switch_g5_backlight is False:
+            if self.write_engaged is False:
+                print('-- [App.btn_g5_backlight_function] changing bool_switch_g5_backlight:', bool_switch_g5_backlight)
+                self.write_var = 'bool_switch_g5_backlight: true'
+                self.write_changes()
+            self.btn_g5_backlight.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+            bool_switch_g5_backlight = True
 
     def btn_power_plan_function(self):
         print('-- [btn_power_plan_function]: plugged in')
@@ -2774,64 +2813,21 @@ class App(QMainWindow):
         except Exception as e:
             print('-- [App.hide_all_features] Error:', e)
 
-    def feature_page_gkeys_function(self):
-        print('-- [App.feature_page_gkeys_function]: plugged in')
-        self.hide_all_features()
-        self.lbl_settings_bg.show()
-
-        self.btn_feature_page_gkeys.setStyleSheet(self.btn_side_menu_style)
-        self.lbl_power_plan.show()
-        self.btn_power_plan.show()
-
-        self.lbl_power_plan_key_0.show()
-        self.lbl_power_plan_key_1.show()
-        self.lbl_power_plan_key_2.show()
-        self.lbl_power_plan_key_3.show()
-        self.lbl_power_plan_key_4.show()
-        self.lbl_power_plan_key_5.show()
-        self.lbl_power_plan_key_6.show()
-        self.lbl_power_plan_key_7.show()
-
-        self.lbl_powershell.show()
-        self.btn_powershell.show()
-        self.lbl_lock_gkeys.show()
-        self.btn_lock_gkeys.show()
-
-        self.lbl_g2_disk.show()
-        self.btn_g2_disk.show()
-        self.btn_lock_gkeys_key_create.show()
-
-    def feature_pg_execution_policy(self):
-        print('-- [App.feature_pg_execution_policy]: plugged in')
-        self.hide_all_features()
-        self.btn_refresh_recompile.hide()
-        """ connection status """
-        self.btn_con_stat_name.hide()
-        """ connected devices """
-        self.btn_con_stat_kb_img.hide()
-        self.lbl_con_stat_kb.hide()
-        self.btn_con_stat_ms_img.hide()
-        self.lbl_con_stat_mouse.hide()
-        """ side menu """
-        self.btn_feature_page_home.hide()
-        self.btn_feature_page_util.hide()
-        self.btn_feature_page_disks.hide()
-        self.btn_feature_page_network_traffic.hide()
-        self.btn_feature_page_networking.hide()
-        self.btn_feature_page_gkeys.hide()
-        self.btn_feature_page_settings.hide()
-
-        self.lbl_execution_policy.show()
-        self.btn_execution_policy_0.show()
-        self.btn_execution_policy_1.show()
-
     def feature_pg_home(self):
         print('-- [App.feature_pg_home]: plugged in')
+        global feature_pg
+
+        feature_pg = 0
+
         self.hide_all_features()
         self.btn_feature_page_home.setStyleSheet(self.btn_side_menu_style)
 
     def feature_pg_util(self):
         print('-- [App.feature_pg_util]: plugged in')
+        global feature_pg
+
+        feature_pg = 1
+
         self.hide_all_features()
         self.lbl_settings_bg.show()
         self.btn_feature_page_util.setStyleSheet(self.btn_side_menu_style)
@@ -2856,12 +2852,13 @@ class App(QMainWindow):
         self.lbl_util_key_3.show()
         self.lbl_util_key_4.show()
         self.lbl_util_key_5.show()
-        # self.lbl_util_key_6.show()
-        # self.lbl_util_key_7.show()
-        # self.lbl_util_key_8.show()
 
     def btn_feature_page_disk_util(self):
         print('-- [App.btn_feature_page_disk_util]: plugged in')
+        global feature_pg
+
+        feature_pg = 2
+
         self.hide_all_features()
         self.lbl_settings_bg.show()
         self.btn_feature_page_disks.setStyleSheet(self.btn_side_menu_style)
@@ -2877,6 +2874,10 @@ class App(QMainWindow):
 
     def btn_feature_page_network_traffic_function(self):
         print('-- [App.btn_feature_page_network_traffic_function]: plugged in')
+        global feature_pg
+
+        feature_pg = 3
+
         self.hide_all_features()
         self.lbl_settings_bg.show()
         self.btn_feature_page_network_traffic.setStyleSheet(self.btn_side_menu_style)
@@ -2885,7 +2886,6 @@ class App(QMainWindow):
         self.btn_network_adapter_refresh.show()
         self.btn_network_adapter.show()
         self.qle_network_adapter_led_time_on.show()
-
         self.lbl_nettraffic_key_0.show()
         self.lbl_nettraffic_key_1.show()
         self.lbl_nettraffic_key_2.show()
@@ -2911,6 +2911,10 @@ class App(QMainWindow):
 
     def btn_feature_page_networking_function(self):
         print('-- [App.btn_feature_page_networking_function]: plugged in')
+        global feature_pg
+
+        feature_pg = 4
+
         self.hide_all_features()
         self.lbl_settings_bg.show()
         self.btn_feature_page_networking.setStyleSheet(self.btn_side_menu_style)
@@ -2931,8 +2935,41 @@ class App(QMainWindow):
         self.lbl_net_con_mouse_key_5.show()
         self.lbl_net_con_mouse_key_6.show()
 
+    def feature_page_gkeys_function(self):
+        print('-- [App.feature_page_gkeys_function]: plugged in')
+        global feature_pg
+
+        feature_pg = 5
+
+        self.hide_all_features()
+        self.lbl_settings_bg.show()
+        self.btn_feature_page_gkeys.setStyleSheet(self.btn_side_menu_style)
+        self.lbl_power_plan.show()
+        self.btn_power_plan.show()
+        self.lbl_power_plan_key_0.show()
+        self.lbl_power_plan_key_1.show()
+        self.lbl_power_plan_key_2.show()
+        self.lbl_power_plan_key_3.show()
+        self.lbl_power_plan_key_4.show()
+        self.lbl_power_plan_key_5.show()
+        self.lbl_power_plan_key_6.show()
+        self.lbl_power_plan_key_7.show()
+        self.lbl_powershell.show()
+        self.btn_powershell.show()
+        self.lbl_lock_gkeys.show()
+        self.btn_lock_gkeys.show()
+        self.lbl_g5_backlight.show()
+        self.btn_g5_backlight.show()
+        self.lbl_g2_disk.show()
+        self.btn_g2_disk.show()
+        self.btn_lock_gkeys_key_create.show()
+
     def btn_feature_page_settings_function(self):
         print('-- [App.btn_feature_page_settings_function]: plugged in')
+        global feature_pg
+
+        feature_pg = 6
+        
         self.hide_all_features()
         self.lbl_settings_bg.show()
         self.btn_feature_page_settings.setStyleSheet(self.btn_side_menu_style)
@@ -2947,12 +2984,38 @@ class App(QMainWindow):
         self.btn_media_display.show()
         self.lbl_fahrenheit.show()
         self.btn_fahrenheit.show()
-        
+
         self.lbl_backlight.show()
         self.qle_backlight_rgb.show()
 
         self.lbl_windows_update_mon.show()
         self.btn_windows_update_mon.show()
+
+    def feature_pg_execution_policy(self):
+        print('-- [App.feature_pg_execution_policy]: plugged in')
+        global feature_pg
+
+        self.hide_all_features()
+        self.btn_refresh_recompile.hide()
+        """ connection status """
+        self.btn_con_stat_name.hide()
+        """ connected devices """
+        self.btn_con_stat_kb_img.hide()
+        self.lbl_con_stat_kb.hide()
+        self.btn_con_stat_ms_img.hide()
+        self.lbl_con_stat_mouse.hide()
+        """ side menu """
+        self.btn_feature_page_home.hide()
+        self.btn_feature_page_util.hide()
+        self.btn_feature_page_disks.hide()
+        self.btn_feature_page_network_traffic.hide()
+        self.btn_feature_page_networking.hide()
+        self.btn_feature_page_gkeys.hide()
+        self.btn_feature_page_settings.hide()
+
+        self.lbl_execution_policy.show()
+        self.btn_execution_policy_0.show()
+        self.btn_execution_policy_1.show()
 
     def sanitize_rgb_values(self):
         print('-- [App.sanitize_rgb_values]: plugged in')
@@ -3111,7 +3174,6 @@ class App(QMainWindow):
                     self.btn_exclusive_con.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
                     self.lbl_exclusive_con.setStyleSheet(self.btn_menu_style)
                 self.write_changes()
-                # self.recompile()
 
     def btn_run_startup_function(self):
         print('-- [App.btn_run_startup_function]: plugged in')
@@ -3772,7 +3834,6 @@ class App(QMainWindow):
         global thread_pause_loop
         global thread_power
         global thread_test_locked
-        global thread_overlay
         global thread_keyevents
         global bool_switch_startup_media_display
         global str_path_kb_img, str_path_ms_img
@@ -3785,10 +3846,9 @@ class App(QMainWindow):
         global thread_eject, thread_mount, thread_unmount
         global thread_notification
         global thread_windows_update_monitor
-        global thread_dir_sz_monitor
-        global thread_steam_update_monitor
         global bool_switch_lock_gkeys
         global sdk_color_backlight_on
+        global bool_switch_g5_backlight
 
         notification_thread = SdkNotificationClass()
         thread_notification.append(notification_thread)
@@ -3835,7 +3895,8 @@ class App(QMainWindow):
         test_locked = IsLockedClass()
         thread_test_locked.append(test_locked)
 
-        keyeventsthread = KeyEventClass()
+        keyeventsthread = KeyEventClass(self.feature_pg_home, self.feature_pg_util, self.btn_feature_page_disk_util, self.btn_feature_page_network_traffic_function, self.btn_feature_page_networking_function,
+                                        self.feature_page_gkeys_function, self.btn_feature_page_settings_function, self.title)
         thread_keyevents.append(keyeventsthread)
         on_gkey_pressed_thread = OnPressClass()
         thread_gkey_pressed.append(on_gkey_pressed_thread)
@@ -3877,6 +3938,11 @@ class App(QMainWindow):
         self.sdk_color_backlight_on_str = self.sdk_color_backlight_on_str.replace(']', '')
         self.qle_backlight_rgb.setText(self.sdk_color_backlight_on_str)
 
+        if bool_switch_g5_backlight is True:
+            self.btn_g5_backlight.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
+        elif bool_switch_g5_backlight is False:
+            self.btn_g5_backlight.setIcon(QIcon("./image/img_toggle_switch_disabled.png"))
+
         if bool_switch_lock_gkeys is True:
             self.btn_lock_gkeys.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
         elif bool_switch_lock_gkeys is False:
@@ -3889,9 +3955,6 @@ class App(QMainWindow):
 
         if bool_switch_fahrenheit is True:
             self.btn_fahrenheit.setIcon(QIcon("./image/img_toggle_switch_enabled.png"))
-            # self.lbl_util_key_8.setText('>158°F')
-            # self.lbl_util_key_6.setText('>=122°F  <158°F')
-            # self.lbl_util_key_4.setText('>=86°F    <122°F')
             self.lbl_util_key_4.setText('>=122°F')
             self.lbl_util_key_2.setText('<122°F')
         elif bool_switch_fahrenheit is False:
@@ -4483,7 +4546,6 @@ class CompileDevicesClass(QThread):
                     self.entry_sequence()
                     devices_previous = device
                     self.stop_all_threads()
-                    # time.sleep(2)
                     self.start_all_threads()
 
     def sanitize_rgb_values(self):
@@ -4531,6 +4593,7 @@ class CompileDevicesClass(QThread):
         global sdk_color_backlight_on
         global bool_switch_startup_windows_update
         global sec_key_path, sec_key_str
+        global bool_switch_g5_backlight
 
         startup_loc = '/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/iCUEDisplay.lnk'
         bool_backend_valid_network_adapter_name = False
@@ -4773,6 +4836,11 @@ class CompileDevicesClass(QThread):
                     bool_switch_powershell = True
                 if line == 'bool_switch_powershell: false':
                     bool_switch_powershell = False
+
+                if line == 'bool_switch_g5_backlight: true':
+                    bool_switch_g5_backlight = True
+                if line == 'bool_switch_g5_backlight: false':
+                    bool_switch_g5_backlight = False
 
                 if line == 'bool_switch_fahrenheit: true':
                     bool_switch_fahrenheit = True
@@ -5179,6 +5247,7 @@ class SdkSendInstructionClass(QThread):
         global thread_media_display, bool_switch_startup_media_display
         global thread_power, bool_switch_power_plan
         global corsairled_id_num_gkeysx
+        global bool_switch_g5_backlight
         global thread_cpu_util, thread_dram_util, thread_vram_util, thread_temperatures, thread_net_connection, thread_net_share, thread_net_traffic, thread_disk_rw, thread_media_display, thread_pause_loop, thread_keyevents
 
         zone_id = [170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188]
@@ -5292,49 +5361,50 @@ class SdkSendInstructionClass(QThread):
                 elif bool_instruction_backlight is True:
                     bool_instruction_backlight = False
 
-                    thread_cpu_util[0].stop()
-                    thread_dram_util[0].stop()
-                    thread_vram_util[0].stop()
-                    thread_temperatures[0].stop()
-                    thread_net_connection[0].stop()
-                    thread_net_share[0].stop()
-                    thread_net_traffic[0].stop()
-                    thread_disk_rw[0].stop()
-                    thread_media_display[0].stop()
-                    thread_pause_loop[0].stop()
+                    if bool_backend_display_hud is True:
+                        thread_cpu_util[0].stop()
+                        thread_dram_util[0].stop()
+                        thread_vram_util[0].stop()
+                        thread_temperatures[0].stop()
+                        thread_net_connection[0].stop()
+                        thread_net_share[0].stop()
+                        thread_net_traffic[0].stop()
+                        thread_disk_rw[0].stop()
+                        thread_media_display[0].stop()
+                        thread_pause_loop[0].stop()
 
-                    bool_stop_complete = [True, True, True, True, True, True, True, True, True, True]
-                    while True in bool_stop_complete:
+                        bool_stop_complete = [True, True, True, True, True, True, True, True, True, True]
+                        while True in bool_stop_complete:
 
-                        if thread_cpu_util[0].isRunning() is False:
-                            bool_stop_complete[0] = False
+                            if thread_cpu_util[0].isRunning() is False:
+                                bool_stop_complete[0] = False
 
-                        if thread_dram_util[0].isRunning() is False:
-                            bool_stop_complete[1] = False
+                            if thread_dram_util[0].isRunning() is False:
+                                bool_stop_complete[1] = False
 
-                        if thread_vram_util[0].isRunning() is False:
-                            bool_stop_complete[2] = False
+                            if thread_vram_util[0].isRunning() is False:
+                                bool_stop_complete[2] = False
 
-                        if thread_temperatures[0].isRunning() is False:
-                            bool_stop_complete[3] = False
+                            if thread_temperatures[0].isRunning() is False:
+                                bool_stop_complete[3] = False
 
-                        if thread_net_connection[0].isRunning() is False:
-                            bool_stop_complete[4] = False
+                            if thread_net_connection[0].isRunning() is False:
+                                bool_stop_complete[4] = False
 
-                        if thread_net_share[0].isRunning() is False:
-                            bool_stop_complete[5] = False
+                            if thread_net_share[0].isRunning() is False:
+                                bool_stop_complete[5] = False
 
-                        if thread_net_traffic[0].isRunning() is False:
-                            bool_stop_complete[6] = False
+                            if thread_net_traffic[0].isRunning() is False:
+                                bool_stop_complete[6] = False
 
-                        if thread_disk_rw[0].isRunning() is False:
-                            bool_stop_complete[7] = False
+                            if thread_disk_rw[0].isRunning() is False:
+                                bool_stop_complete[7] = False
 
-                        if thread_media_display[0].isRunning() is False:
-                            bool_stop_complete[8] = False
+                            if thread_media_display[0].isRunning() is False:
+                                bool_stop_complete[8] = False
 
-                        if thread_pause_loop[0].isRunning() is False:
-                            bool_stop_complete[9] = False
+                            if thread_pause_loop[0].isRunning() is False:
+                                bool_stop_complete[9] = False
 
                     if bool_switch_backlight is False:
                         print('-- [SdkSendInstructionClass.run] disable backlight')
@@ -5365,24 +5435,25 @@ class SdkSendInstructionClass(QThread):
                             print('-- [SdkSendInstructionClass.run] Error:', e)
                         bck_light_i += 1
 
-                    if bool_switch_startup_cpu_util is True:
-                        thread_cpu_util[0].start()
-                    if bool_switch_startup_dram_util is True:
-                        thread_dram_util[0].start()
-                    if bool_switch_startup_vram_util is True:
-                        thread_vram_util[0].start()
-                    if bool_switch_cpu_temperature is True or bool_switch_vram_temperature is True:
-                        thread_temperatures[0].start()
-                    if bool_switch_startup_net_con is True:
-                        thread_net_connection[0].start()
-                    if bool_switch_startup_net_share_mon is True:
-                        thread_net_share[0].start()
-                    if bool_switch_startup_net_traffic is True:
-                        thread_net_traffic[0].start()
-                    if bool_switch_startup_hdd_read_write is True:
-                        thread_disk_rw[0].start()
-                    if bool_switch_startup_media_display is True:
-                        thread_media_display[0].start()
+                    if bool_backend_display_hud is True:
+                        if bool_switch_startup_cpu_util is True:
+                            thread_cpu_util[0].start()
+                        if bool_switch_startup_dram_util is True:
+                            thread_dram_util[0].start()
+                        if bool_switch_startup_vram_util is True:
+                            thread_vram_util[0].start()
+                        if bool_switch_cpu_temperature is True or bool_switch_vram_temperature is True:
+                            thread_temperatures[0].start()
+                        if bool_switch_startup_net_con is True:
+                            thread_net_connection[0].start()
+                        if bool_switch_startup_net_share_mon is True:
+                            thread_net_share[0].start()
+                        if bool_switch_startup_net_traffic is True:
+                            thread_net_traffic[0].start()
+                        if bool_switch_startup_hdd_read_write is True:
+                            thread_disk_rw[0].start()
+                        if bool_switch_startup_media_display is True:
+                            thread_media_display[0].start()
 
                 try:
                     sdk.set_led_colors_flush_buffer()
@@ -5912,7 +5983,7 @@ class OnPressClass(QThread):
                                 except Exception as e:
                                     print('-- [OnPressClass.run]  Error:', e)
 
-                elif time_now_press_hold > (time_now_press + 4.0):  # and time_now_press_hold < (time_now_press + 5.0):
+                elif time_now_press_hold > (time_now_press + 4.0):
                     if bool_catch_4 is False:
                         bool_catch_4 = True
                         print('-- [OnPressClass.run] hold 4:', g_key_pressed)
@@ -6148,6 +6219,25 @@ class SdkEventHandlerClass(QThread):
 
     def g4_function_short(self):
         print('-- [App.g4_function_short]: plugged in')
+        global bool_switch_powershell
+        if bool_switch_powershell is True:
+            print('-- [App.g4_function_short]: attempting to run start powershell')
+            try:
+                cwd_0 = os.getcwd()
+                print('-- [App.g4_function_short] current working directory:', cwd_0)
+
+                os.chdir(os.path.join(os.path.expanduser('~'), '/'))
+                cwd_1 = os.getcwd()
+                print('-- [App.g4_function_short] current working directory changed:', cwd_1)
+
+                os.startfile('powershell')
+
+                os.chdir(os.path.join(cwd_0))
+                cwd_2 = os.getcwd()
+                print('-- [App.g4_function_short] returning to previous directory:', cwd_2)
+
+            except Exception as e:
+                print(e)
 
     def g4_function_long(self):
         print('-- [App.g4_function_long]: plugged in')
@@ -6160,23 +6250,101 @@ class SdkEventHandlerClass(QThread):
 
     def g5_function_short(self):
         print('-- [App.g5_function_short]: plugged in')
-        global bool_switch_powershell
-        if bool_switch_powershell is True:
-            print('-- [App.g5_function_short]: attempting to run start powershell')
-            os.startfile('powershell')
 
     def g5_function_long(self):
         print('-- [App.g5_function_long]: plugged in')
-        global bool_switch_backlight, bool_instruction_backlight, bool_block_input
-        if bool_switch_backlight is False:
-            bool_switch_backlight = True
-            bool_instruction_backlight = True
-        elif bool_switch_backlight is True:
-            bool_switch_backlight = False
-            bool_instruction_backlight = True
+        global bool_switch_backlight, bool_instruction_backlight, bool_block_input, bool_switch_g5_backlight
+        if bool_switch_g5_backlight is True:
+            if bool_switch_backlight is False:
+                bool_switch_backlight = True
+                bool_instruction_backlight = True
+            elif bool_switch_backlight is True:
+                bool_switch_backlight = False
+                bool_instruction_backlight = True
 
     def g5_function_long_2sec(self):
         print('-- [App.g5_function_long_2sec]: plugged in')
+        global bool_backend_display_hud
+        if bool_backend_display_hud is True:
+            bool_backend_display_hud = False
+            try:
+                thread_windows_update_monitor[0].stop()
+            except Exception as e:
+                print('-- [App.g5_function_long_2sec]: Handled Exception:', e)
+            try:
+                thread_eject[0].stop()
+            except Exception as e:
+                print('-- [App.g5_function_long_2sec]: Handled Exception:', e)
+            try:
+                thread_mount[0].stop()
+            except Exception as e:
+                print('-- [App.g5_function_long_2sec]: Handled Exception:', e)
+            try:
+                thread_unmount[0].stop()
+            except Exception as e:
+                print('-- [App.g5_function_long_2sec]: Handled Exception:', e)
+            try:
+                thread_pause_loop[0].stop()
+            except Exception as e:
+                print('-- [App.g5_function_long_2sec]: Handled Exception:', e)
+            try:
+                thread_media_display[0].stop()
+            except Exception as e:
+                print('-- [App.g5_function_long_2sec]: Handled Exception:', e)
+            try:
+                thread_disk_rw[0].stop()
+            except Exception as e:
+                print('-- [App.g5_function_long_2sec]: Handled Exception:', e)
+            try:
+                thread_cpu_util[0].stop()
+            except Exception as e:
+                print('-- [App.g5_function_long_2sec]: Handled Exception:', e)
+            try:
+                thread_dram_util[0].stop()
+            except Exception as e:
+                print('-- [App.g5_function_long_2sec]: Handled Exception:', e)
+            try:
+                thread_vram_util[0].stop()
+            except Exception as e:
+                print('-- [App.g5_function_long_2sec]: Handled Exception:', e)
+            try:
+                thread_net_traffic[0].stop()
+            except Exception as e:
+                print('-- [App.g5_function_long_2sec]: Handled Exception:', e)
+            try:
+                thread_net_connection[0].stop()
+            except Exception as e:
+                print('-- [App.g5_function_long_2sec]: Handled Exception:', e)
+            try:
+                thread_net_share[0].stop()
+            except Exception as e:
+                print('-- [App.g5_function_long_2sec]: Handled Exception:', e)
+            try:
+                thread_temperatures[0].stop()
+            except Exception as e:
+                print('-- [App.g5_function_long_2sec]: Handled Exception:', e)
+        elif bool_backend_display_hud is False:
+            bool_backend_display_hud = True
+            print('-- [App.g5_function_long_2sec]: plugged in')
+            global thread_compile_devices, devices_previous
+            print('-- [App.g5_function_long_2sec] stopping thread: thread_compile_devices:')
+            thread_compile_devices[0].stop()
+            devices_previous = []
+            print('-- [App.g5_function_long_2sec] starting thread: thread_compile_devices:')
+            thread_compile_devices[0].start()
+
+        # thread_notification = []
+        # thread_sdk_instruction = []
+        # thread_exclusive_gkey_event_mount = []
+        # thread_disk_guid = []
+        # thread_exclusive_gkey_event_unmount = []
+        # thread_gkey_pressed = []
+        # thread_keyevents = []
+        # thread_test_locked = []
+        # thread_power = []
+        # thread_compile_devices = []
+        # thread_sdk_event_handler = []
+        # thread_hard_block = []
 
     def g5_function_long_3sec(self):
         print('-- [App.g5_function_long_3sec]: plugged in')
@@ -6232,7 +6400,6 @@ class SdkEventHandlerClass(QThread):
                     self.g6_function_long()
 
         elif bool_block_input is True:
-            # --> ToDO: perform checks (usb key/keycode input) if checks are true then thread_hard_block[0].stop() (allow input)
             thread_hard_block[0].stop()
             print('-- [App.g6_function_long]: changing bool_block_input to:', bool_block_input)
 
@@ -6528,7 +6695,6 @@ class SdkEventHandlerClass(QThread):
         except Exception as e:
             print('-- [SdkEventHandlerClass.run] Error:', e)
             time.sleep(1)
-            # sdk.unsubscribe_from_events()
 
     def stop(self):
         print('-- [SdkEventHandlerClass.stop]: plugged in')
@@ -6654,14 +6820,41 @@ class CompileDiskGUIDDictionaryListClass(QThread):
 class KeyEventClass(QThread):
     print('-- [KeyEventClass]: plugged in')
 
-    def __init__(self):
+    def __init__(self, feature_pg_home, feature_pg_util, btn_feature_page_disk_util, btn_feature_page_network_traffic_function, btn_feature_page_networking_function, feature_page_gkeys_function, btn_feature_page_settings_function, title):
         QThread.__init__(self)
 
+        self.feature_pg_home = feature_pg_home
+        self.feature_pg_util = feature_pg_util
+        self.btn_feature_page_disk_util = btn_feature_page_disk_util
+        self.btn_feature_page_network_traffic_function = btn_feature_page_network_traffic_function
+        self.btn_feature_page_networking_function = btn_feature_page_networking_function
+        self.feature_page_gkeys_function = feature_page_gkeys_function
+        self.btn_feature_page_settings_function = btn_feature_page_settings_function
+        self.title = title
+
+        self.bool_down_arrow = False
+        self.bool_down_arrow_prev = True
+
+        self.bool_up_arrow = False
+        self.bool_up_arrow_prev = True
+        
+        self.check_pid_int = ()
+
+    def check_pid(self):
+        user32 = ctypes.windll.user32
+        h_wnd = user32.GetForegroundWindow()
+        pid = wintypes.DWORD()
+        user32.GetWindowThreadProcessId(h_wnd, ctypes.byref(pid))
+        print(pid.value)
+        self.check_pid_int = pid.value
+
     def check_state(self):
-        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
+        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, feature_pg, main_pid
         
         self.vk_numlock = 0x90
         self.vk_capital = 0x14
+        self.vk_down = 0x28
+        self.vk_up = 0x26
 
         numlock = win32api.GetKeyState(self.vk_numlock)
         if numlock != 0:
@@ -6687,6 +6880,113 @@ class KeyEventClass(QThread):
             except Exception as e:
                 print('-- [KeyEventClass.capslock_state] Error:', e)
 
+        arrow_down = win32api.GetKeyState(self.vk_down)
+        if arrow_down != 0:
+            self.bool_down_arrow = True
+            if self.bool_down_arrow != self.bool_down_arrow_prev:
+                self.bool_down_arrow_prev = self.bool_down_arrow
+
+                self.check_pid()
+                print('self.check_pid_int:', self.check_pid_int, '   main_pid:', main_pid)
+                if self.check_pid_int == main_pid:
+                    try:
+                        print('-- [KeyEventClass.arrow_down] arrow_down pressed. feature page:', feature_pg)
+                        if feature_pg == 0:
+                            self.feature_pg_util()
+                        elif feature_pg == 1:
+                            self.btn_feature_page_disk_util()
+                        elif feature_pg == 2:
+                            self.btn_feature_page_network_traffic_function()
+                        elif feature_pg == 3:
+                            self.btn_feature_page_networking_function()
+                        elif feature_pg == 4:
+                            self.feature_page_gkeys_function()
+                        elif feature_pg == 5:
+                            self.btn_feature_page_settings_function()
+                        elif feature_pg == 6:
+                            self.feature_pg_home()
+                    except Exception as e:
+                        print('-- [KeyEventClass.check_state] Error:', e)
+        elif arrow_down == 0:
+            self.bool_down_arrow = False
+            if self.bool_down_arrow != self.bool_down_arrow_prev:
+                self.bool_down_arrow_prev = self.bool_down_arrow
+
+                self.check_pid()
+                if self.check_pid_int == main_pid:
+                    try:
+                        print('-- [KeyEventClass.check_state] arrow_down pressed. feature page:', feature_pg)
+                        if feature_pg == 0:
+                            self.feature_pg_util()
+                        elif feature_pg == 1:
+                            self.btn_feature_page_disk_util()
+                        elif feature_pg == 2:
+                            self.btn_feature_page_network_traffic_function()
+                        elif feature_pg == 3:
+                            self.btn_feature_page_networking_function()
+                        elif feature_pg == 4:
+                            self.feature_page_gkeys_function()
+                        elif feature_pg == 5:
+                            self.btn_feature_page_settings_function()
+                        elif feature_pg == 6:
+                            self.feature_pg_home()
+                    except Exception as e:
+                        print('-- [KeyEventClass.check_state] Error:', e)
+
+        arrow_up = win32api.GetKeyState(self.vk_up)
+        if arrow_up != 0:
+            self.bool_up_arrow = True
+            if self.bool_up_arrow != self.bool_up_arrow_prev:
+                self.bool_up_arrow_prev = self.bool_up_arrow
+
+                self.check_pid()
+                if self.check_pid_int == main_pid:
+                    try:
+                        # sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({37: (255, 255, 0)}))
+                        print('-- [KeyEventClass.check_state] arrow_up pressed. feature page:', feature_pg)
+                        if feature_pg == 0:
+                            self.btn_feature_page_settings_function()
+                        elif feature_pg == 1:
+                            self.feature_pg_home()
+                        elif feature_pg == 2:
+                            self.feature_pg_util()
+                        elif feature_pg == 3:
+                            self.btn_feature_page_disk_util()
+                        elif feature_pg == 4:
+                            self.btn_feature_page_network_traffic_function()
+                        elif feature_pg == 5:
+                            self.btn_feature_page_networking_function()
+                        elif feature_pg == 6:
+                            self.feature_page_gkeys_function()
+                    except Exception as e:
+                        print('-- [KeyEventClass.check_state] Error:', e)
+        elif arrow_up == 0:
+            self.bool_up_arrow = False
+            if self.bool_up_arrow != self.bool_up_arrow_prev:
+                self.bool_up_arrow_prev = self.bool_up_arrow
+
+                self.check_pid()
+                if self.check_pid_int == main_pid:
+                    try:
+                        # sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({37: sdk_color_backlight}))
+                        print('-- [KeyEventClass.check_state] arrow_up pressed. feature page:', feature_pg)
+                        if feature_pg == 0:
+                            self.btn_feature_page_settings_function()
+                        elif feature_pg == 1:
+                            self.feature_pg_home()
+                        elif feature_pg == 2:
+                            self.feature_pg_util()
+                        elif feature_pg == 3:
+                            self.btn_feature_page_disk_util()
+                        elif feature_pg == 4:
+                            self.btn_feature_page_network_traffic_function()
+                        elif feature_pg == 5:
+                            self.btn_feature_page_networking_function()
+                        elif feature_pg == 6:
+                            self.feature_page_gkeys_function()
+                    except Exception as e:
+                        print('-- [KeyEventClass.check_state] Error:', e)
+
     def run(self):
         print('-- [KeyEventClass.run]: plugged in')
         global bool_backend_g2_input, kb_event, devices_kb
@@ -6706,7 +7006,7 @@ class KeyEventClass(QThread):
                         print('-- [KeyEventClass.run] check_state: Error:', e)
             except Exception as e:
                 print('-- [KeyEventClass.run] check_state: Error:', e)
-            time.sleep(0.1)
+            # time.sleep(0.1)
 
     def stop(self):
         print('-- [KeyEventClass.stop]: plugged in')
@@ -7849,7 +8149,6 @@ class HddMonClass(QThread):
 
     def run(self):
         print('-- [HddMonClass.run]: plugged in')
-        # pythoncom.CoInitialize()
         global sdk, devices_kb
 
         self.i_w = int()
