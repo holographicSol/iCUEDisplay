@@ -6499,179 +6499,48 @@ class SdkEventHandlerClass(QThread):
         try:
             key_down_time = key_down_timer_int
             self.released_keyId = str(data.keyId).strip()
+            print()
 
-            if self.released_keyId == 'CorsairKeyId.Kb_G1':
-                if key_down_time == 0 and self.pressed_keyId == self.released_keyId:
-                    print('-- [App.on_press] captured event short released:', str(data.keyId))
-                    if bool_backend_allow_g_key_access is True:
-                        self.black_function()
-                        self.g1_function_short()
+            gkey_event_dict_0 = {
+                            'CorsairKeyId.Kb_G1': self.g1_function_short,
+                            'CorsairKeyId.Kb_G2': self.g2_function_short,
+                            'CorsairKeyId.Kb_G3': self.g3_function_short,
+                            'CorsairKeyId.Kb_G4': self.g4_function_short,
+                            'CorsairKeyId.Kb_G5': self.g5_function_short,
+                            'CorsairKeyId.Kb_G6': self.g6_function_short,
+            }
+            gkey_event_dict_1 = {
+                            'CorsairKeyId.Kb_G1': self.g1_function_long,
+                            'CorsairKeyId.Kb_G2': thread_eject[0].start,
+                            'CorsairKeyId.Kb_G3': self.g3_function_long,
+                            'CorsairKeyId.Kb_G4': self.g4_function_long,
+                            'CorsairKeyId.Kb_G5': self.g5_function_long,
+                            'CorsairKeyId.Kb_G6': self.g6_function_long,
+            }
+            gkey_event_dict_2 = {
+                            'CorsairKeyId.Kb_G1': self.g1_function_long_2sec,
+                            'CorsairKeyId.Kb_G2': thread_mount[0].start,
+                            'CorsairKeyId.Kb_G3': self.g3_function_long_2sec,
+                            'CorsairKeyId.Kb_G4': self.g4_function_long_2sec,
+                            'CorsairKeyId.Kb_G5': self.g5_function_long_2sec,
+                            'CorsairKeyId.Kb_G6': self.g6_function_long_2sec,
+            }
+            gkey_event_dict_3 = {
+                            'CorsairKeyId.Kb_G1': self.g1_function_long_3sec,
+                            'CorsairKeyId.Kb_G2': thread_unmount[0].start,
+                            'CorsairKeyId.Kb_G3': self.g3_function_long_3sec,
+                            'CorsairKeyId.Kb_G4': self.g4_function_long_3sec,
+                            'CorsairKeyId.Kb_G5': self.g5_function_long_3sec,
+                            'CorsairKeyId.Kb_G6': self.g6_function_long_3sec,
+            }
 
-                elif key_down_time == 1 and self.pressed_keyId == self.released_keyId:
-                    print('-- [App.on_press] captured event short released:', str(data.keyId))
-                    if bool_backend_allow_g_key_access is True:
-                        self.black_function()
-                        self.g1_function_long()
+            gkey_dict_list = [gkey_event_dict_0, gkey_event_dict_1, gkey_event_dict_2, gkey_event_dict_3]
 
-                elif key_down_time == 2 and self.pressed_keyId == self.released_keyId:
-                    print('-- [App.on_press] captured event short released:', str(data.keyId))
-                    if bool_backend_allow_g_key_access is True:
-                        self.black_function()
-                        self.g1_function_long_2sec()
-
-                elif key_down_time == 3 and self.pressed_keyId == self.released_keyId:
-                    print('-- [App.on_press] captured event short released:', str(data.keyId))
-                    if bool_backend_allow_g_key_access is True:
-                        self.black_function()
-                        self.g1_function_long_3sec()
-
-                elif key_down_time == 4 and self.pressed_keyId == self.released_keyId:
-                    print('-- [App.on_press] captured event short released:', str(data.keyId))
-                    self.black_function()
-
-            elif self.released_keyId == 'CorsairKeyId.Kb_G2':
-                if key_down_time == 0 and self.pressed_keyId == self.released_keyId:
-                    print('-- [App.on_press] captured event short released:', str(data.keyId))
-                    if bool_backend_allow_g_key_access is True:
-                        self.black_function()
-                        self.g2_function_short()
-
-                elif key_down_time == 1 and self.pressed_keyId == self.released_keyId:
-                    print('-- [App.on_press] captured event short released:', str(data.keyId))
-                    if bool_backend_allow_g_key_access is True:
-                        self.black_function()
-                        if bool_switch_g2_disks is True:
-                            thread_eject[0].start()
-
-                elif key_down_time == 2 and self.pressed_keyId == self.released_keyId:
-                    print('-- [App.on_press] captured event short released:', str(data.keyId))
-                    if bool_backend_allow_g_key_access is True:
-                        self.black_function()
-                        if bool_switch_g2_disks is True:
-                            thread_mount[0].start()
-
-                elif key_down_time == 3 and self.pressed_keyId == self.released_keyId:
-                    print('-- [App.on_press] captured event short released:', str(data.keyId))
-                    if bool_backend_allow_g_key_access is True:
-                        self.black_function()
-                        if bool_switch_g2_disks is True:
-                            thread_unmount[0].start()
-
-                elif key_down_time == 4 and self.pressed_keyId == self.released_keyId:
-                    print('-- [App.on_press] captured event short released:', str(data.keyId))
-                    self.black_function()
-
-            elif self.released_keyId == 'CorsairKeyId.Kb_G3':
-                if key_down_time == 0 and self.pressed_keyId == self.released_keyId:
-                    print('-- [App.on_press] captured event short released:', str(data.keyId))
-                    if bool_backend_allow_g_key_access is True:
-                        self.black_function()
-                        self.g3_function_short()
-
-                elif key_down_time == 1 and self.pressed_keyId == self.released_keyId:
-                    print('-- [App.on_press] captured event short released:', str(data.keyId))
-                    if bool_backend_allow_g_key_access is True:
-                        self.black_function()
-                        self.g3_function_long()
-
-                elif key_down_time == 2 and self.pressed_keyId == self.released_keyId:
-                    print('-- [App.on_press] captured event short released:', str(data.keyId))
-                    if bool_backend_allow_g_key_access is True:
-                        self.black_function()
-                        self.g3_function_long_2sec()
-
-                elif key_down_time == 3 and self.pressed_keyId == self.released_keyId:
-                    print('-- [App.on_press] captured event short released:', str(data.keyId))
-                    if bool_backend_allow_g_key_access is True:
-                        self.black_function()
-                        self.g3_function_long_3sec()
-
-                elif key_down_time == 4 and self.pressed_keyId == self.released_keyId:
-                    print('-- [App.on_press] captured event short released:', str(data.keyId))
-                    self.black_function()
-
-            elif self.released_keyId == 'CorsairKeyId.Kb_G4':
-                if key_down_time == 0 and self.pressed_keyId == self.released_keyId:
-                    print('-- [App.on_press] captured event short released:', str(data.keyId))
-                    if bool_backend_allow_g_key_access is True:
-                        self.black_function()
-                        self.g4_function_short()
-
-                elif key_down_time == 1 and self.pressed_keyId == self.released_keyId:
-                    print('-- [App.on_press] captured event short released:', str(data.keyId))
-                    if bool_backend_allow_g_key_access is True:
-                        self.black_function()
-                        self.g4_function_long()
-
-                elif key_down_time == 2 and self.pressed_keyId == self.released_keyId:
-                    print('-- [App.on_press] captured event short released:', str(data.keyId))
-                    if bool_backend_allow_g_key_access is True:
-                        self.black_function()
-                        self.g4_function_long_2sec()
-
-                elif key_down_time == 3 and self.pressed_keyId == self.released_keyId:
-                    print('-- [App.on_press] captured event short released:', str(data.keyId))
-                    if bool_backend_allow_g_key_access is True:
-                        self.black_function()
-                        self.g4_function_long_3sec()
-
-                elif key_down_time == 4 and self.pressed_keyId == self.released_keyId:
-                    print('-- [App.on_press] captured event short released:', str(data.keyId))
-                    self.black_function()
-
-            elif self.released_keyId == 'CorsairKeyId.Kb_G5':
-                if key_down_time == 0 and self.pressed_keyId == self.released_keyId:
-                    print('-- [App.on_press] captured event short released:', str(data.keyId))
-                    if bool_backend_allow_g_key_access is True:
-                        self.black_function()
-                        self.g5_function_short()
-
-                elif key_down_time == 1 and self.pressed_keyId == self.released_keyId:
-                    print('-- [App.on_press] captured event short released:', str(data.keyId))
-                    if bool_backend_allow_g_key_access is True:
-                        self.black_function()
-                        self.g5_function_long()
-
-                elif key_down_time == 2 and self.pressed_keyId == self.released_keyId:
-                    print('-- [App.on_press] captured event short released:', str(data.keyId))
-                    if bool_backend_allow_g_key_access is True:
-                        self.black_function()
-                        self.g5_function_long_2sec()
-
-                elif key_down_time == 3 and self.pressed_keyId == self.released_keyId:
-                    print('-- [App.on_press] captured event short released:', str(data.keyId))
-                    if bool_backend_allow_g_key_access is True:
-                        self.black_function()
-                        self.g5_function_long_3sec()
-
-                elif key_down_time == 4 and self.pressed_keyId == self.released_keyId:
-                    print('-- [App.on_press] captured event short released:', str(data.keyId))
-                    self.black_function()
-
-            elif self.released_keyId == 'CorsairKeyId.Kb_G6':
-                if key_down_time == 0 and self.pressed_keyId == self.released_keyId:
-                    print('-- [App.on_press] captured event short released:', str(data.keyId))
-                    self.black_function()
-                    self.g6_function_short()
-
-                elif key_down_time == 1 and self.pressed_keyId == self.released_keyId:
-                    print('-- [App.on_press] captured event short released:', str(data.keyId))
-                    self.black_function()
-                    self.g6_function_long()
-
-                elif key_down_time == 2 and self.pressed_keyId == self.released_keyId:
-                    print('-- [App.on_press] captured event short released:', str(data.keyId))
-                    self.black_function()
-                    self.g6_function_long_2sec()
-
-                elif key_down_time == 3 and self.pressed_keyId == self.released_keyId:
-                    print('-- [App.on_press] captured event short released:', str(data.keyId))
-                    self.black_function()
-                    self.g6_function_long_3sec()
-
-                elif key_down_time == 4 and self.pressed_keyId == self.released_keyId:
-                    print('-- [App.on_press] captured event short released:', str(data.keyId))
-                    self.black_function()
+            for _ in gkey_dict_list[key_down_time]:
+                if _ == self.pressed_keyId:
+                    print('-- accessing dictionary entry:', _)
+                    ex_func = gkey_dict_list[key_down_time][_]
+                    ex_func()
 
         except Exception as e:
             print('-- [SdkEventHandlerClass.on_press] Error:', e)
