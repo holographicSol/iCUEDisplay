@@ -6499,48 +6499,54 @@ class SdkEventHandlerClass(QThread):
         try:
             key_down_time = key_down_timer_int
             self.released_keyId = str(data.keyId).strip()
-            print()
 
-            gkey_event_dict_0 = {
-                            'CorsairKeyId.Kb_G1': self.g1_function_short,
-                            'CorsairKeyId.Kb_G2': self.g2_function_short,
-                            'CorsairKeyId.Kb_G3': self.g3_function_short,
-                            'CorsairKeyId.Kb_G4': self.g4_function_short,
-                            'CorsairKeyId.Kb_G5': self.g5_function_short,
-                            'CorsairKeyId.Kb_G6': self.g6_function_short,
-            }
-            gkey_event_dict_1 = {
-                            'CorsairKeyId.Kb_G1': self.g1_function_long,
-                            'CorsairKeyId.Kb_G2': thread_eject[0].start,
-                            'CorsairKeyId.Kb_G3': self.g3_function_long,
-                            'CorsairKeyId.Kb_G4': self.g4_function_long,
-                            'CorsairKeyId.Kb_G5': self.g5_function_long,
-                            'CorsairKeyId.Kb_G6': self.g6_function_long,
-            }
-            gkey_event_dict_2 = {
-                            'CorsairKeyId.Kb_G1': self.g1_function_long_2sec,
-                            'CorsairKeyId.Kb_G2': thread_mount[0].start,
-                            'CorsairKeyId.Kb_G3': self.g3_function_long_2sec,
-                            'CorsairKeyId.Kb_G4': self.g4_function_long_2sec,
-                            'CorsairKeyId.Kb_G5': self.g5_function_long_2sec,
-                            'CorsairKeyId.Kb_G6': self.g6_function_long_2sec,
-            }
-            gkey_event_dict_3 = {
-                            'CorsairKeyId.Kb_G1': self.g1_function_long_3sec,
-                            'CorsairKeyId.Kb_G2': thread_unmount[0].start,
-                            'CorsairKeyId.Kb_G3': self.g3_function_long_3sec,
-                            'CorsairKeyId.Kb_G4': self.g4_function_long_3sec,
-                            'CorsairKeyId.Kb_G5': self.g5_function_long_3sec,
-                            'CorsairKeyId.Kb_G6': self.g6_function_long_3sec,
-            }
+            if self.released_keyId == self.pressed_keyId:
 
-            gkey_dict_list = [gkey_event_dict_0, gkey_event_dict_1, gkey_event_dict_2, gkey_event_dict_3]
+                gkey_event_dict_0 = {
+                                'CorsairKeyId.Kb_G1': self.g1_function_short,
+                                'CorsairKeyId.Kb_G2': self.g2_function_short,
+                                'CorsairKeyId.Kb_G3': self.g3_function_short,
+                                'CorsairKeyId.Kb_G4': self.g4_function_short,
+                                'CorsairKeyId.Kb_G5': self.g5_function_short,
+                                'CorsairKeyId.Kb_G6': self.g6_function_short,
+                }
+                gkey_event_dict_1 = {
+                                'CorsairKeyId.Kb_G1': self.g1_function_long,
+                                'CorsairKeyId.Kb_G2': thread_eject[0].start,
+                                'CorsairKeyId.Kb_G3': self.g3_function_long,
+                                'CorsairKeyId.Kb_G4': self.g4_function_long,
+                                'CorsairKeyId.Kb_G5': self.g5_function_long,
+                                'CorsairKeyId.Kb_G6': self.g6_function_long,
+                }
+                gkey_event_dict_2 = {
+                                'CorsairKeyId.Kb_G1': self.g1_function_long_2sec,
+                                'CorsairKeyId.Kb_G2': thread_mount[0].start,
+                                'CorsairKeyId.Kb_G3': self.g3_function_long_2sec,
+                                'CorsairKeyId.Kb_G4': self.g4_function_long_2sec,
+                                'CorsairKeyId.Kb_G5': self.g5_function_long_2sec,
+                                'CorsairKeyId.Kb_G6': self.g6_function_long_2sec,
+                }
+                gkey_event_dict_3 = {
+                                'CorsairKeyId.Kb_G1': self.g1_function_long_3sec,
+                                'CorsairKeyId.Kb_G2': thread_unmount[0].start,
+                                'CorsairKeyId.Kb_G3': self.g3_function_long_3sec,
+                                'CorsairKeyId.Kb_G4': self.g4_function_long_3sec,
+                                'CorsairKeyId.Kb_G5': self.g5_function_long_3sec,
+                                'CorsairKeyId.Kb_G6': self.g6_function_long_3sec,
+                }
 
-            for _ in gkey_dict_list[key_down_time]:
-                if _ == self.pressed_keyId:
-                    print('-- accessing dictionary entry:', _)
-                    ex_func = gkey_dict_list[key_down_time][_]
-                    ex_func()
+                gkey_dict_list = [gkey_event_dict_0, gkey_event_dict_1, gkey_event_dict_2, gkey_event_dict_3]
+
+                for _ in gkey_dict_list[key_down_time]:
+                    if _ == self.released_keyId:
+                        print('-- accessing dictionary entry:', _)
+                        ex_func = gkey_dict_list[key_down_time][_]
+                        if bool_backend_allow_g_key_access is True and self.released_keyId != 'CorsairKeyId.Kb_G6':
+                            self.black_function()
+                            ex_func()
+                        elif self.released_keyId == 'CorsairKeyId.Kb_G6':
+                            self.black_function()
+                            ex_func()
 
         except Exception as e:
             print('-- [SdkEventHandlerClass.on_press] Error:', e)
