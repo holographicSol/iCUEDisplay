@@ -104,7 +104,7 @@ sec_key_str = ''
 
 kb_event = ''
 g_key_pressed = ''
-time_now_press = float()
+key_down_timer_int = ()
 
 bool_request_control = False
 
@@ -190,6 +190,7 @@ thread_net_share = []
 thread_sdk_event_handler = []
 thread_temperatures = []
 thread_hard_block = []
+thread_key_timer = []
 
 feature_pg = 0
 
@@ -3849,6 +3850,7 @@ class App(QMainWindow):
         global bool_switch_lock_gkeys
         global sdk_color_backlight_on
         global bool_switch_g5_backlight
+        global thread_key_timer
 
         notification_thread = SdkNotificationClass()
         thread_notification.append(notification_thread)
@@ -3876,6 +3878,9 @@ class App(QMainWindow):
 
         sdk_event_handler = SdkEventHandlerClass()
         thread_sdk_event_handler.append(sdk_event_handler)
+
+        key_timer_thread = KeyDownTimer()
+        thread_key_timer.append(key_timer_thread)
 
         compile_devices_thread = CompileDevicesClass(self.btn_con_stat_name, self.lbl_con_stat_kb, self.lbl_con_stat_mouse, self.btn_con_stat_ms_img, self.btn_con_stat_kb_img,
                                                      self.btn_refresh_recompile, self.btn_title_bar_style_0, self.btn_title_bar_style_1)
@@ -5518,7 +5523,7 @@ class SdkEventG2_Eject(QThread):
                         os.system(cmd_2)
 
                         if not os.path.exists(eject_alpha):
-                            notification_key = 1
+                            # notification_key = 1
                             bool_success = True
                     else:
                         print('-- [SdkEventG2_Eject.run] kb_event: path does not exist')
@@ -5528,8 +5533,8 @@ class SdkEventG2_Eject(QThread):
 
         print('-- [SdkEventG2_Eject.run]: disarmed')
 
-        if bool_success is False:
-            notification_key = 2
+        # if bool_success is False:
+        #     notification_key = 2
 
         bool_instruction_eject_end = True
 
@@ -5546,7 +5551,7 @@ class SdkEventG2_Eject(QThread):
 
         bool_backend_alpha_stage_engaged = False
 
-        notification_key = 2
+        # notification_key = 2
 
         self.terminate()
 
@@ -5607,7 +5612,7 @@ class SdkEventG2_Mount(QThread):
                             os.system(cmd)
 
                             if os.path.exists(dict_str):
-                                notification_key = 1
+                                # notification_key = 1
                                 bool_success = True
 
                     except Exception as e:
@@ -5617,8 +5622,8 @@ class SdkEventG2_Mount(QThread):
 
         print('-- [SdkEventG2_Mount.run]: disarmed')
 
-        if bool_success is False:
-            notification_key = 2
+        # if bool_success is False:
+        #     notification_key = 2
 
         bool_instruction_mount_end = True
 
@@ -5636,7 +5641,7 @@ class SdkEventG2_Mount(QThread):
 
         bool_backend_alpha_stage_engaged = False
 
-        notification_key = 2
+        # notification_key = 2
 
         self.terminate()
 
@@ -5684,7 +5689,7 @@ class SdkEventG2_Unmount(QThread):
                         os.system(cmd)
 
                         if not os.path.exists(umount_path):
-                            notification_key = 1
+                            # notification_key = 1
                             bool_success = True
 
                 except Exception as e:
@@ -5692,8 +5697,8 @@ class SdkEventG2_Unmount(QThread):
 
         print('-- [SdkEventG2_Unmount.run]: disarmed')
 
-        if bool_success is False:
-            notification_key = 2
+        # if bool_success is False:
+        #     notification_key = 2
 
         bool_instruction_unmount_end = True
 
@@ -5711,8 +5716,27 @@ class SdkEventG2_Unmount(QThread):
 
         bool_backend_alpha_stage_engaged = False
 
-        notification_key = 2
+        # notification_key = 2
 
+        self.terminate()
+
+
+class KeyDownTimer(QThread):
+    print('-- [KeyDownTimer]: plugged in')
+
+    def __init__(self):
+        QThread.__init__(self)
+
+    def run(self):
+        print('-- [KeyDownTimer.run]: plugged in')
+        global key_down_timer_int
+        key_down_timer_int = 0
+        while True:
+            time.sleep(1)
+            key_down_timer_int += 1
+
+    def stop(self):
+        print('-- [KeyDownTimer.stop]: plugged in')
         self.terminate()
 
 
@@ -5812,10 +5836,11 @@ class OnPressClass(QThread):
 
     def run(self):
         print('-- [OnPressClass.run]: plugged in')
-        global g_key_pressed, time_now_press, sdk, devices_kb, devices_kb_selected, sdk_color_backlight
+        global g_key_pressed, sdk, devices_kb, devices_kb_selected, sdk_color_backlight
         global bool_backend_onpress_clause_g1, bool_backend_onpress_clause_g2, bool_backend_onpress_clause_g3
         global bool_backend_onpress_clause_g4, bool_backend_onpress_clause_g5, bool_backend_onpress_clause_g6
         global bool_backend_allow_g_key_access
+        global thread_key_timer, key_down_timer_int
 
         bool_catch_1 = False
         bool_catch_2 = False
@@ -5827,15 +5852,14 @@ class OnPressClass(QThread):
         bool_backend_onpress_clause_g4 = False
         bool_backend_onpress_clause_g5 = False
         bool_backend_onpress_clause_g6 = False
+        
+        thread_key_timer[0].stop()
+        key_down_timer_int = 0
+        thread_key_timer[0].start()
 
         while True:
             try:
-                date_time_now = str(datetime.datetime.now())
-                var = date_time_now.split(' ')
-                var = var[1].split(':')[2]
-                time_now_press_hold = float(var)
-
-                if time_now_press_hold > (time_now_press + 1.0) and time_now_press_hold < (time_now_press + 2.0):
+                if key_down_timer_int == 1:
                     if bool_catch_1 is False:
                         bool_catch_1 = True
                         print('-- [OnPressClass.run] hold 1:', g_key_pressed)
@@ -5884,7 +5908,7 @@ class OnPressClass(QThread):
                             except Exception as e:
                                 print('-- [OnPressClass.run]  Error:', e)
 
-                elif time_now_press_hold > (time_now_press + 2.0) and time_now_press_hold < (time_now_press + 3.0):
+                if key_down_timer_int == 2:
                     if bool_catch_2 is False:
                         bool_catch_2 = True
                         print('-- [OnPressClass.run] hold 2:', g_key_pressed)
@@ -5934,7 +5958,7 @@ class OnPressClass(QThread):
                             except Exception as e:
                                 print('-- [OnPressClass.on_press]  Error:', e)
 
-                elif time_now_press_hold > (time_now_press + 3.0) and time_now_press_hold < (time_now_press + 4.0):
+                if key_down_timer_int == 3:
                     if bool_catch_3 is False:
                         bool_catch_3 = True
                         print('-- [OnPressClass.run] hold 3:', g_key_pressed)
@@ -5983,7 +6007,7 @@ class OnPressClass(QThread):
                                 except Exception as e:
                                     print('-- [OnPressClass.run]  Error:', e)
 
-                elif time_now_press_hold > (time_now_press + 4.0):
+                if key_down_timer_int == 4:
                     if bool_catch_4 is False:
                         bool_catch_4 = True
                         print('-- [OnPressClass.run] hold 4:', g_key_pressed)
@@ -6149,11 +6173,8 @@ class SdkEventHandlerClass(QThread):
     def __init__(self):
         QThread.__init__(self)
 
-        self.time_now_press = float()
-        self.time_now_press_keyId = ''
-        self.time_now_release = float()
-        self.time_now_release_keyId = ''
-        self.time_now_press_hold = float()
+        self.pressed_keyId = ''
+        self.released_keyId = ''
         self.allow_sdk_event = True
 
     def g1_function_short(self):
@@ -6333,6 +6354,7 @@ class SdkEventHandlerClass(QThread):
             print('-- [App.g5_function_long_2sec] starting thread: thread_compile_devices:')
             thread_compile_devices[0].start()
 
+        """ other threads to keep in mind """
         # thread_notification = []
         # thread_sdk_instruction = []
         # thread_exclusive_gkey_event_mount = []
@@ -6410,6 +6432,7 @@ class SdkEventHandlerClass(QThread):
         print('-- [App.g6_function_long_3sec]: plugged in')
 
     def black_function(self):
+        global notification_key
         try:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
                                                       ({177: (0, 0, 0)}))
@@ -6443,19 +6466,18 @@ class SdkEventHandlerClass(QThread):
 
     def on_press(self, event_id, data):
         # print('-- [SdkEventHandlerClass.on_press]: plugged in')
-        global sdk, devices_kb, devices_kb_selected, g_key_pressed, thread_gkey_pressed, time_now_press
+        global sdk, devices_kb, devices_kb_selected, g_key_pressed, thread_gkey_pressed
 
         try:
+            self.black_function()
+        except Exception as e:
+            print('-- [SdkEventHandlerClass.on_press] Error:', e)
 
-            date_time_now = str(datetime.datetime.now())
-            var = date_time_now.split(' ')
-            var = var[1].split(':')[2]
-            self.time_now_press = float(var)
-            self.time_now_press_keyId = str(data.keyId).strip()
-            print('-- [SdkEventHandlerClass.on_press] captured event: time_now_0: {0} pressed {1}'.format(self.time_now_press, data.keyId))
+        try:
+            self.pressed_keyId = str(data.keyId).strip()
+            print('-- [SdkEventHandlerClass.on_press] captured event:', str(data.keyId))
 
             g_key_pressed = str(data.keyId).strip()
-            time_now_press = self.time_now_press
 
             self.gkey_sub_thread_stop()
 
@@ -6466,7 +6488,7 @@ class SdkEventHandlerClass(QThread):
 
     def on_release(self, event_id, data):
         global thread_gkey_pressed, thread_eject, thread_mount, thread_unmount
-        global bool_switch_g2_disks, bool_backend_allow_g_key_access
+        global bool_switch_g2_disks, bool_backend_allow_g_key_access, key_down_timer_int
         # print('-- [SdkEventHandlerClass.on_release]: plugged in')
 
         try:
@@ -6475,184 +6497,180 @@ class SdkEventHandlerClass(QThread):
             print('-- [SdkEventHandlerClass.on_release] Error:', e)
 
         try:
+            key_down_time = key_down_timer_int
+            self.released_keyId = str(data.keyId).strip()
 
-            date_time_now = str(datetime.datetime.now())
-            var = date_time_now.split(' ')
-            var = var[1].split(':')[2]
-            time_now_release = float(var)
-            self.time_now_release_keyId = str(data.keyId).strip()
-
-            if self.time_now_release_keyId == 'CorsairKeyId.Kb_G1':
-                if time_now_release < (self.time_now_press + 1.0) and self.time_now_press_keyId == self.time_now_release_keyId:
-                    print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
+            if self.released_keyId == 'CorsairKeyId.Kb_G1':
+                if key_down_time == 0 and self.pressed_keyId == self.released_keyId:
+                    print('-- [App.on_press] captured event short released:', str(data.keyId))
                     if bool_backend_allow_g_key_access is True:
                         self.black_function()
                         self.g1_function_short()
 
-                elif time_now_release >= (self.time_now_press + 1.0) and time_now_release < (self.time_now_press + 2.0) and self.time_now_press_keyId == self.time_now_release_keyId:
-                    print('-- [App.on_press] captured event: time_now_1: {0} long released 1 seconds {1}'.format(self.time_now_press, data.keyId))
+                elif key_down_time == 1 and self.pressed_keyId == self.released_keyId:
+                    print('-- [App.on_press] captured event short released:', str(data.keyId))
                     if bool_backend_allow_g_key_access is True:
                         self.black_function()
                         self.g1_function_long()
 
-                elif time_now_release >= (self.time_now_press + 2.0) and time_now_release < (self.time_now_press + 3.0) and self.time_now_press_keyId == self.time_now_release_keyId:
-                    print('-- [App.on_press] captured event: time_now_1: {0} long released 2 seconds {1}'.format(self.time_now_press, data.keyId))
+                elif key_down_time == 2 and self.pressed_keyId == self.released_keyId:
+                    print('-- [App.on_press] captured event short released:', str(data.keyId))
                     if bool_backend_allow_g_key_access is True:
                         self.black_function()
                         self.g1_function_long_2sec()
 
-                elif time_now_release >= (self.time_now_press + 3.0) and time_now_release < (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
-                    print('-- [App.on_press] captured event: time_now_1: {0} long released 3 seconds {1}'.format(self.time_now_press, data.keyId))
+                elif key_down_time == 3 and self.pressed_keyId == self.released_keyId:
+                    print('-- [App.on_press] captured event short released:', str(data.keyId))
                     if bool_backend_allow_g_key_access is True:
                         self.black_function()
                         self.g1_function_long_3sec()
 
-                elif time_now_release >= (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
-                    print('-- [App.on_press] captured event: time_now_1: {0} long released 4 seconds (ignore) {1}'.format(self.time_now_press, data.keyId))
+                elif key_down_time == 4 and self.pressed_keyId == self.released_keyId:
+                    print('-- [App.on_press] captured event short released:', str(data.keyId))
                     self.black_function()
 
-            elif self.time_now_release_keyId == 'CorsairKeyId.Kb_G2':
-                if time_now_release < (self.time_now_press + 1.0) and self.time_now_press_keyId == self.time_now_release_keyId:
-                    print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
+            elif self.released_keyId == 'CorsairKeyId.Kb_G2':
+                if key_down_time == 0 and self.pressed_keyId == self.released_keyId:
+                    print('-- [App.on_press] captured event short released:', str(data.keyId))
                     if bool_backend_allow_g_key_access is True:
                         self.black_function()
                         self.g2_function_short()
 
-                elif time_now_release >= (self.time_now_press + 1.0) and time_now_release < (self.time_now_press + 2.0) and self.time_now_press_keyId == self.time_now_release_keyId:
-                    print('-- [App.on_press] captured event: time_now_1: {0} long released 1 seconds {1}'.format(self.time_now_press, data.keyId))
+                elif key_down_time == 1 and self.pressed_keyId == self.released_keyId:
+                    print('-- [App.on_press] captured event short released:', str(data.keyId))
                     if bool_backend_allow_g_key_access is True:
                         self.black_function()
                         if bool_switch_g2_disks is True:
                             thread_eject[0].start()
 
-                elif time_now_release >= (self.time_now_press + 2.0) and time_now_release < (self.time_now_press + 3.0) and self.time_now_press_keyId == self.time_now_release_keyId:
-                    print('-- [App.on_press] captured event: time_now_1: {0} long released 2 seconds {1}'.format(self.time_now_press, data.keyId))
+                elif key_down_time == 2 and self.pressed_keyId == self.released_keyId:
+                    print('-- [App.on_press] captured event short released:', str(data.keyId))
                     if bool_backend_allow_g_key_access is True:
                         self.black_function()
                         if bool_switch_g2_disks is True:
                             thread_mount[0].start()
 
-                elif time_now_release >= (self.time_now_press + 3.0) and time_now_release < (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
-                    print('-- [App.on_press] captured event: time_now_1: {0} long released 3 seconds {1}'.format(self.time_now_press, data.keyId))
+                elif key_down_time == 3 and self.pressed_keyId == self.released_keyId:
+                    print('-- [App.on_press] captured event short released:', str(data.keyId))
                     if bool_backend_allow_g_key_access is True:
                         self.black_function()
                         if bool_switch_g2_disks is True:
                             thread_unmount[0].start()
 
-                elif time_now_release >= (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
-                    print('-- [App.on_press] captured event: time_now_1: {0} long released 4 seconds (ignore) {1}'.format(self.time_now_press, data.keyId))
+                elif key_down_time == 4 and self.pressed_keyId == self.released_keyId:
+                    print('-- [App.on_press] captured event short released:', str(data.keyId))
                     self.black_function()
 
-            elif self.time_now_release_keyId == 'CorsairKeyId.Kb_G3':
-                if time_now_release < (self.time_now_press + 1.0) and self.time_now_press_keyId == self.time_now_release_keyId:
-                    print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
+            elif self.released_keyId == 'CorsairKeyId.Kb_G3':
+                if key_down_time == 0 and self.pressed_keyId == self.released_keyId:
+                    print('-- [App.on_press] captured event short released:', str(data.keyId))
                     if bool_backend_allow_g_key_access is True:
                         self.black_function()
                         self.g3_function_short()
 
-                elif time_now_release >= (self.time_now_press + 1.0) and time_now_release < (self.time_now_press + 2.0) and self.time_now_press_keyId == self.time_now_release_keyId:
-                    print('-- [App.on_press] captured event: time_now_1: {0} long released 1 seconds {1}'.format(self.time_now_press, data.keyId))
+                elif key_down_time == 1 and self.pressed_keyId == self.released_keyId:
+                    print('-- [App.on_press] captured event short released:', str(data.keyId))
                     if bool_backend_allow_g_key_access is True:
                         self.black_function()
                         self.g3_function_long()
 
-                elif time_now_release >= (self.time_now_press + 2.0) and time_now_release < (self.time_now_press + 3.0) and self.time_now_press_keyId == self.time_now_release_keyId:
-                    print('-- [App.on_press] captured event: time_now_1: {0} long released 2 seconds {1}'.format(self.time_now_press, data.keyId))
+                elif key_down_time == 2 and self.pressed_keyId == self.released_keyId:
+                    print('-- [App.on_press] captured event short released:', str(data.keyId))
                     if bool_backend_allow_g_key_access is True:
                         self.black_function()
                         self.g3_function_long_2sec()
 
-                elif time_now_release >= (self.time_now_press + 3.0) and time_now_release < (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
-                    print('-- [App.on_press] captured event: time_now_1: {0} long released 3 seconds {1}'.format(self.time_now_press, data.keyId))
+                elif key_down_time == 3 and self.pressed_keyId == self.released_keyId:
+                    print('-- [App.on_press] captured event short released:', str(data.keyId))
                     if bool_backend_allow_g_key_access is True:
                         self.black_function()
                         self.g3_function_long_3sec()
 
-                elif time_now_release >= (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
-                    print('-- [App.on_press] captured event: time_now_1: {0} long released 4 seconds (ignore) {1}'.format(self.time_now_press, data.keyId))
+                elif key_down_time == 4 and self.pressed_keyId == self.released_keyId:
+                    print('-- [App.on_press] captured event short released:', str(data.keyId))
                     self.black_function()
 
-            elif self.time_now_release_keyId == 'CorsairKeyId.Kb_G4':
-                if time_now_release < (self.time_now_press + 1.0) and self.time_now_press_keyId == self.time_now_release_keyId:
-                    print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
+            elif self.released_keyId == 'CorsairKeyId.Kb_G4':
+                if key_down_time == 0 and self.pressed_keyId == self.released_keyId:
+                    print('-- [App.on_press] captured event short released:', str(data.keyId))
                     if bool_backend_allow_g_key_access is True:
                         self.black_function()
                         self.g4_function_short()
 
-                elif time_now_release >= (self.time_now_press + 1.0) and time_now_release < (self.time_now_press + 2.0) and self.time_now_press_keyId == self.time_now_release_keyId:
-                    print('-- [App.on_press] captured event: time_now_1: {0} long released 1 seconds {1}'.format(self.time_now_press, data.keyId))
+                elif key_down_time == 1 and self.pressed_keyId == self.released_keyId:
+                    print('-- [App.on_press] captured event short released:', str(data.keyId))
                     if bool_backend_allow_g_key_access is True:
                         self.black_function()
                         self.g4_function_long()
 
-                elif time_now_release >= (self.time_now_press + 2.0) and time_now_release < (self.time_now_press + 3.0) and self.time_now_press_keyId == self.time_now_release_keyId:
-                    print('-- [App.on_press] captured event: time_now_1: {0} long released 2 seconds {1}'.format(self.time_now_press, data.keyId))
+                elif key_down_time == 2 and self.pressed_keyId == self.released_keyId:
+                    print('-- [App.on_press] captured event short released:', str(data.keyId))
                     if bool_backend_allow_g_key_access is True:
                         self.black_function()
                         self.g4_function_long_2sec()
 
-                elif time_now_release >= (self.time_now_press + 3.0) and time_now_release < (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
-                    print('-- [App.on_press] captured event: time_now_1: {0} long released 3 seconds {1}'.format(self.time_now_press, data.keyId))
+                elif key_down_time == 3 and self.pressed_keyId == self.released_keyId:
+                    print('-- [App.on_press] captured event short released:', str(data.keyId))
                     if bool_backend_allow_g_key_access is True:
                         self.black_function()
                         self.g4_function_long_3sec()
 
-                elif time_now_release >= (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
-                    print('-- [App.on_press] captured event: time_now_1: {0} long released 4 seconds (ignore) {1}'.format(self.time_now_press, data.keyId))
+                elif key_down_time == 4 and self.pressed_keyId == self.released_keyId:
+                    print('-- [App.on_press] captured event short released:', str(data.keyId))
                     self.black_function()
 
-            elif self.time_now_release_keyId == 'CorsairKeyId.Kb_G5':
-                if time_now_release < (self.time_now_press + 1.0) and self.time_now_press_keyId == self.time_now_release_keyId:
-                    print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
+            elif self.released_keyId == 'CorsairKeyId.Kb_G5':
+                if key_down_time == 0 and self.pressed_keyId == self.released_keyId:
+                    print('-- [App.on_press] captured event short released:', str(data.keyId))
                     if bool_backend_allow_g_key_access is True:
                         self.black_function()
                         self.g5_function_short()
 
-                elif time_now_release >= (self.time_now_press + 1.0) and time_now_release < (self.time_now_press + 2.0) and self.time_now_press_keyId == self.time_now_release_keyId:
-                    print('-- [App.on_press] captured event: time_now_1: {0} long released 1 seconds {1}'.format(self.time_now_press, data.keyId))
+                elif key_down_time == 1 and self.pressed_keyId == self.released_keyId:
+                    print('-- [App.on_press] captured event short released:', str(data.keyId))
                     if bool_backend_allow_g_key_access is True:
                         self.black_function()
                         self.g5_function_long()
 
-                elif time_now_release >= (self.time_now_press + 2.0) and time_now_release < (self.time_now_press + 3.0) and self.time_now_press_keyId == self.time_now_release_keyId:
-                    print('-- [App.on_press] captured event: time_now_1: {0} long released 2 seconds {1}'.format(self.time_now_press, data.keyId))
+                elif key_down_time == 2 and self.pressed_keyId == self.released_keyId:
+                    print('-- [App.on_press] captured event short released:', str(data.keyId))
                     if bool_backend_allow_g_key_access is True:
                         self.black_function()
                         self.g5_function_long_2sec()
 
-                elif time_now_release >= (self.time_now_press + 3.0) and time_now_release < (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
-                    print('-- [App.on_press] captured event: time_now_1: {0} long released 3 seconds {1}'.format(self.time_now_press, data.keyId))
+                elif key_down_time == 3 and self.pressed_keyId == self.released_keyId:
+                    print('-- [App.on_press] captured event short released:', str(data.keyId))
                     if bool_backend_allow_g_key_access is True:
                         self.black_function()
                         self.g5_function_long_3sec()
 
-                elif time_now_release >= (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
-                    print('-- [App.on_press] captured event: time_now_1: {0} long released 4 seconds (ignore) {1}'.format(self.time_now_press, data.keyId))
+                elif key_down_time == 4 and self.pressed_keyId == self.released_keyId:
+                    print('-- [App.on_press] captured event short released:', str(data.keyId))
                     self.black_function()
 
-            elif self.time_now_release_keyId == 'CorsairKeyId.Kb_G6':
-                if time_now_release < (self.time_now_press + 1.0) and self.time_now_press_keyId == self.time_now_release_keyId:
-                    print('-- [App.on_press] captured event: time_now_1: {0} short released {1}'.format(self.time_now_press, data.keyId))
+            elif self.released_keyId == 'CorsairKeyId.Kb_G6':
+                if key_down_time == 0 and self.pressed_keyId == self.released_keyId:
+                    print('-- [App.on_press] captured event short released:', str(data.keyId))
                     self.black_function()
                     self.g6_function_short()
 
-                elif time_now_release >= (self.time_now_press + 1.0) and time_now_release < (self.time_now_press + 2.0) and self.time_now_press_keyId == self.time_now_release_keyId:
-                    print('-- [App.on_press] captured event: time_now_1: {0} long released 1 seconds {1}'.format(self.time_now_press, data.keyId))
+                elif key_down_time == 1 and self.pressed_keyId == self.released_keyId:
+                    print('-- [App.on_press] captured event short released:', str(data.keyId))
                     self.black_function()
                     self.g6_function_long()
 
-                elif time_now_release >= (self.time_now_press + 2.0) and time_now_release < (self.time_now_press + 3.0) and self.time_now_press_keyId == self.time_now_release_keyId:
-                    print('-- [App.on_press] captured event: time_now_1: {0} long released 2 seconds {1}'.format(self.time_now_press, data.keyId))
+                elif key_down_time == 2 and self.pressed_keyId == self.released_keyId:
+                    print('-- [App.on_press] captured event short released:', str(data.keyId))
                     self.black_function()
                     self.g6_function_long_2sec()
 
-                elif time_now_release >= (self.time_now_press + 3.0) and time_now_release < (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
-                    print('-- [App.on_press] captured event: time_now_1: {0} long released 3 seconds {1}'.format(self.time_now_press, data.keyId))
+                elif key_down_time == 3 and self.pressed_keyId == self.released_keyId:
+                    print('-- [App.on_press] captured event short released:', str(data.keyId))
                     self.black_function()
                     self.g6_function_long_3sec()
 
-                elif time_now_release >= (self.time_now_press + 4.0) and self.time_now_press_keyId == self.time_now_release_keyId:
-                    print('-- [App.on_press] captured event: time_now_1: {0} long released 4 seconds (ignore) {1}'.format(self.time_now_press, data.keyId))
+                elif key_down_time == 4 and self.pressed_keyId == self.released_keyId:
+                    print('-- [App.on_press] captured event short released:', str(data.keyId))
                     self.black_function()
 
         except Exception as e:
@@ -6845,7 +6863,6 @@ class KeyEventClass(QThread):
         h_wnd = user32.GetForegroundWindow()
         pid = wintypes.DWORD()
         user32.GetWindowThreadProcessId(h_wnd, ctypes.byref(pid))
-        print(pid.value)
         self.check_pid_int = pid.value
 
     def check_state(self):
@@ -6887,7 +6904,6 @@ class KeyEventClass(QThread):
                 self.bool_down_arrow_prev = self.bool_down_arrow
 
                 self.check_pid()
-                print('self.check_pid_int:', self.check_pid_int, '   main_pid:', main_pid)
                 if self.check_pid_int == main_pid:
                     try:
                         print('-- [KeyEventClass.arrow_down] arrow_down pressed. feature page:', feature_pg)
@@ -6942,7 +6958,6 @@ class KeyEventClass(QThread):
                 self.check_pid()
                 if self.check_pid_int == main_pid:
                     try:
-                        # sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({37: (255, 255, 0)}))
                         print('-- [KeyEventClass.check_state] arrow_up pressed. feature page:', feature_pg)
                         if feature_pg == 0:
                             self.btn_feature_page_settings_function()
@@ -6968,7 +6983,6 @@ class KeyEventClass(QThread):
                 self.check_pid()
                 if self.check_pid_int == main_pid:
                     try:
-                        # sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({37: sdk_color_backlight}))
                         print('-- [KeyEventClass.check_state] arrow_up pressed. feature page:', feature_pg)
                         if feature_pg == 0:
                             self.btn_feature_page_settings_function()
