@@ -2352,6 +2352,7 @@ class App(QMainWindow):
 
         elif bool_backend_execution_policy is True:
             bool_backend_execution_policy_show = False
+            time.sleep(2)
             self.feature_pg_home()
 
         event_filter_self.append(self)
@@ -3935,7 +3936,7 @@ class App(QMainWindow):
 
         print('-- [App.initUI]: waiting to display application')
         while bool_backend_allow_display is False:
-            time.sleep(0.1)
+            time.sleep(0.5)
         print('-- [App.initUI]: displaying application')
 
         self.sdk_color_backlight_on_str = str(sdk_color_backlight_on).strip()
@@ -5523,7 +5524,6 @@ class SdkEventG2_Eject(QThread):
                         os.system(cmd_2)
 
                         if not os.path.exists(eject_alpha):
-                            # notification_key = 1
                             bool_success = True
                     else:
                         print('-- [SdkEventG2_Eject.run] kb_event: path does not exist')
@@ -5533,11 +5533,12 @@ class SdkEventG2_Eject(QThread):
 
         print('-- [SdkEventG2_Eject.run]: disarmed')
 
-        # if bool_success is False:
-        #     notification_key = 2
+        if bool_success is True:
+            notification_key = 1
+        elif bool_success is False:
+            notification_key = 2
 
         bool_instruction_eject_end = True
-
         bool_backend_alpha_stage_engaged = False
 
     def stop(self):
@@ -5545,14 +5546,10 @@ class SdkEventG2_Eject(QThread):
         print('-- [SdkEventG2_Eject.stop disarmed')
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, bool_backend_alpha_stage_engaged, bool_backend_g2_input
         global bool_instruction_eject_end, notification_key
+
         bool_backend_g2_input = False
-
         bool_instruction_eject_end = True
-
         bool_backend_alpha_stage_engaged = False
-
-        # notification_key = 2
-
         self.terminate()
 
 
@@ -5612,7 +5609,6 @@ class SdkEventG2_Mount(QThread):
                             os.system(cmd)
 
                             if os.path.exists(dict_str):
-                                # notification_key = 1
                                 bool_success = True
 
                     except Exception as e:
@@ -5622,11 +5618,12 @@ class SdkEventG2_Mount(QThread):
 
         print('-- [SdkEventG2_Mount.run]: disarmed')
 
-        # if bool_success is False:
-        #     notification_key = 2
+        if bool_success is True:
+            notification_key = 1
+        elif bool_success is False:
+            notification_key = 2
 
         bool_instruction_mount_end = True
-
         bool_backend_alpha_stage_engaged = False
 
     def stop(self):
@@ -5636,13 +5633,8 @@ class SdkEventG2_Mount(QThread):
         global notification_key
 
         bool_backend_g2_input = False
-
         bool_instruction_mount_end = True
-
         bool_backend_alpha_stage_engaged = False
-
-        # notification_key = 2
-
         self.terminate()
 
 
@@ -5689,7 +5681,6 @@ class SdkEventG2_Unmount(QThread):
                         os.system(cmd)
 
                         if not os.path.exists(umount_path):
-                            # notification_key = 1
                             bool_success = True
 
                 except Exception as e:
@@ -5697,11 +5688,12 @@ class SdkEventG2_Unmount(QThread):
 
         print('-- [SdkEventG2_Unmount.run]: disarmed')
 
-        # if bool_success is False:
-        #     notification_key = 2
+        if bool_success is True:
+            notification_key = 1
+        elif bool_success is False:
+            notification_key = 2
 
         bool_instruction_unmount_end = True
-
         bool_backend_alpha_stage_engaged = False
 
     def stop(self):
@@ -5711,13 +5703,8 @@ class SdkEventG2_Unmount(QThread):
         global notification_key
 
         bool_backend_g2_input = False
-
         bool_instruction_unmount_end = True
-
         bool_backend_alpha_stage_engaged = False
-
-        # notification_key = 2
-
         self.terminate()
 
 
@@ -5747,6 +5734,7 @@ class OnPressClass(QThread):
         QThread.__init__(self)
 
     def yellow_function(self):
+        global sdk, devices_kb, devices_kb_selected
         try:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
                                                       ({177: (255, 255, 0)}))
@@ -5769,6 +5757,7 @@ class OnPressClass(QThread):
             print('-- [SdkNotificationClass.run] Error:', e)
 
     def orange_function(self):
+        global sdk, devices_kb, devices_kb_selected
         try:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
                                                       ({177: (255, 100, 0)}))
@@ -5791,6 +5780,7 @@ class OnPressClass(QThread):
             print('-- [SdkNotificationClass.run] Error:', e)
 
     def red_function(self):
+        global sdk, devices_kb, devices_kb_selected
         try:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
                                                       ({177: (255, 0, 0)}))
@@ -5813,6 +5803,7 @@ class OnPressClass(QThread):
             print('-- [SdkNotificationClass.run] Error:', e)
 
     def white_function(self):
+        global sdk, devices_kb, devices_kb_selected
         try:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
                                                       ({177: (255, 255, 255)}))
@@ -5836,271 +5827,93 @@ class OnPressClass(QThread):
 
     def run(self):
         print('-- [OnPressClass.run]: plugged in')
-        global g_key_pressed, sdk, devices_kb, devices_kb_selected, sdk_color_backlight
+        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, g_key_pressed
         global bool_backend_onpress_clause_g1, bool_backend_onpress_clause_g2, bool_backend_onpress_clause_g3
         global bool_backend_onpress_clause_g4, bool_backend_onpress_clause_g5, bool_backend_onpress_clause_g6
         global bool_backend_allow_g_key_access
         global thread_key_timer, key_down_timer_int
 
+        # Run & Send functions once using bool_catch
+        bool_catch_0 = False
         bool_catch_1 = False
         bool_catch_2 = False
         bool_catch_3 = False
         bool_catch_4 = False
+        bool_catch_list = [bool_catch_0, bool_catch_1, bool_catch_2, bool_catch_3, bool_catch_4]
+
+        # Allows other threads to know if gkeys are engaged and if so do not manipulate the gkeys while this thread manipulates the gkeys
         bool_backend_onpress_clause_g1 = False
         bool_backend_onpress_clause_g2 = False
         bool_backend_onpress_clause_g3 = False
         bool_backend_onpress_clause_g4 = False
         bool_backend_onpress_clause_g5 = False
         bool_backend_onpress_clause_g6 = False
-        
+        bool_backend_onpress_clause_list = [bool_backend_onpress_clause_g1, bool_backend_onpress_clause_g2, bool_backend_onpress_clause_g3,
+                                            bool_backend_onpress_clause_g4, bool_backend_onpress_clause_g5, bool_backend_onpress_clause_g6]
+
+        # Stop & start thread_key_timer
         thread_key_timer[0].stop()
         key_down_timer_int = 0
         thread_key_timer[0].start()
 
+        # Initiate dictionaries
+        gkey_event_press_dict_zero = {}
+        gkey_event_press_dict_0 = {
+            'CorsairKeyId.Kb_G1': self.yellow_function,
+            'CorsairKeyId.Kb_G2': self.yellow_function,
+            'CorsairKeyId.Kb_G3': self.yellow_function,
+            'CorsairKeyId.Kb_G4': self.yellow_function,
+            'CorsairKeyId.Kb_G5': self.yellow_function,
+            'CorsairKeyId.Kb_G6': self.yellow_function,
+        }
+        gkey_event_press_dict_1 = {
+            'CorsairKeyId.Kb_G1': self.orange_function,
+            'CorsairKeyId.Kb_G2': self.orange_function,
+            'CorsairKeyId.Kb_G3': self.orange_function,
+            'CorsairKeyId.Kb_G4': self.orange_function,
+            'CorsairKeyId.Kb_G5': self.orange_function,
+            'CorsairKeyId.Kb_G6': self.orange_function,
+        }
+        gkey_event_press_dict_2 = {
+            'CorsairKeyId.Kb_G1': self.red_function,
+            'CorsairKeyId.Kb_G2': self.red_function,
+            'CorsairKeyId.Kb_G3': self.red_function,
+            'CorsairKeyId.Kb_G4': self.red_function,
+            'CorsairKeyId.Kb_G5': self.red_function,
+            'CorsairKeyId.Kb_G6': self.red_function,
+        }
+        gkey_event_press_dict_3 = {
+            'CorsairKeyId.Kb_G1': self.white_function,
+            'CorsairKeyId.Kb_G2': self.white_function,
+            'CorsairKeyId.Kb_G3': self.white_function,
+            'CorsairKeyId.Kb_G4': self.white_function,
+            'CorsairKeyId.Kb_G5': self.white_function,
+            'CorsairKeyId.Kb_G6': self.white_function,
+        }
+        gkey_dict_pressed_list = [gkey_event_press_dict_zero, gkey_event_press_dict_0, gkey_event_press_dict_1, gkey_event_press_dict_2, gkey_event_press_dict_3]
+
+        gkey_pressed_id = [121, 122, 123, 124, 125, 126]
+        gkey_pressed_col = [(0, 0, 0), (255, 255, 0), (255, 100, 0), (255, 0, 0), (255, 255, 255)]
+
         while True:
-            try:
-                if key_down_timer_int == 1:
-                    if bool_catch_1 is False:
-                        bool_catch_1 = True
-                        print('-- [OnPressClass.run] hold 1:', g_key_pressed)
-                        if bool_backend_allow_g_key_access is True:
-                            if g_key_pressed == 'CorsairKeyId.Kb_G1':
-                                bool_backend_onpress_clause_g1 = True
-                                try:
-                                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 255, 0)}))
-                                    self.yellow_function()
-                                except Exception as e:
-                                    print('-- [OnPressClass.run]  Error:', e)
-                            elif g_key_pressed == 'CorsairKeyId.Kb_G2':
-                                bool_backend_onpress_clause_g2 = True
-                                try:
-                                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 255, 0)}))
-                                    self.yellow_function()
-                                except Exception as e:
-                                    print('-- [OnPressClass.run]  Error:', e)
-                            elif g_key_pressed == 'CorsairKeyId.Kb_G3':
-                                bool_backend_onpress_clause_g3 = True
-                                try:
-                                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: (255, 255, 0)}))
-                                    self.yellow_function()
-                                except Exception as e:
-                                    print('-- [OnPressClass.run]  Error:', e)
-                            elif g_key_pressed == 'CorsairKeyId.Kb_G4':
-                                bool_backend_onpress_clause_g4 = True
-                                try:
-                                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: (255, 255, 0)}))
-                                    self.yellow_function()
-                                except Exception as e:
-                                    print('-- [OnPressClass.run]  Error:', e)
-                            elif g_key_pressed == 'CorsairKeyId.Kb_G5':
-                                bool_backend_onpress_clause_g5 = True
-                                try:
-                                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: (255, 255, 0)}))
-                                    self.yellow_function()
-                                except Exception as e:
-                                    print('-- [OnPressClass.run]  Error:', e)
-                                    
-                        if g_key_pressed == 'CorsairKeyId.Kb_G6':
-                            bool_backend_onpress_clause_g6 = True
-                            try:
-                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: (255, 255, 0)}))
-                                self.yellow_function()
-                            except Exception as e:
-                                print('-- [OnPressClass.run]  Error:', e)
-
-                if key_down_timer_int == 2:
-                    if bool_catch_2 is False:
-                        bool_catch_2 = True
-                        print('-- [OnPressClass.run] hold 2:', g_key_pressed)
-
-                        if bool_backend_allow_g_key_access is True:
-                            if g_key_pressed == 'CorsairKeyId.Kb_G1':
-                                bool_backend_onpress_clause_g1 = True
-                                try:
-                                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 100, 0)}))
-                                    self.orange_function()
-                                except Exception as e:
-                                    print('-- [OnPressClass.run]  Error:', e)
-                            elif g_key_pressed == 'CorsairKeyId.Kb_G2':
-                                bool_backend_onpress_clause_g2 = True
-                                try:
-                                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 100, 0)}))
-                                    self.orange_function()
-                                except Exception as e:
-                                    print('-- [OnPressClass.run]  Error:', e)
-                            elif g_key_pressed == 'CorsairKeyId.Kb_G3':
-                                bool_backend_onpress_clause_g3 = True
-                                try:
-                                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: (255, 100, 0)}))
-                                    self.orange_function()
-                                except Exception as e:
-                                    print('-- [OnPressClass.run]  Error:', e)
-                            elif g_key_pressed == 'CorsairKeyId.Kb_G4':
-                                bool_backend_onpress_clause_g4 = True
-                                try:
-                                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: (255, 100, 0)}))
-                                    self.orange_function()
-                                except Exception as e:
-                                    print('-- [OnPressClass.run]  Error:', e)
-                            elif g_key_pressed == 'CorsairKeyId.Kb_G5':
-                                bool_backend_onpress_clause_g5 = True
-                                try:
-                                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: (255, 100, 0)}))
-                                    self.orange_function()
-                                except Exception as e:
-                                    print('-- [OnPressClass.run]  Error:', e)
-
-                        if g_key_pressed == 'CorsairKeyId.Kb_G6':
-                            bool_backend_onpress_clause_g6 = True
-                            try:
-                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: (255, 100, 0)}))
-                                self.orange_function()
-                            except Exception as e:
-                                print('-- [OnPressClass.on_press]  Error:', e)
-
-                if key_down_timer_int == 3:
-                    if bool_catch_3 is False:
-                        bool_catch_3 = True
-                        print('-- [OnPressClass.run] hold 3:', g_key_pressed)
-
-                        if bool_backend_allow_g_key_access is True:
-                            if g_key_pressed == 'CorsairKeyId.Kb_G1':
-                                bool_backend_onpress_clause_g1 = True
-                                try:
-                                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 0, 0)}))
-                                    self.red_function()
-                                except Exception as e:
-                                    print('-- [OnPressClass.run]  Error:', e)
-                            elif g_key_pressed == 'CorsairKeyId.Kb_G2':
-                                bool_backend_onpress_clause_g2 = True
-                                try:
-                                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 0, 0)}))
-                                    self.red_function()
-                                except Exception as e:
-                                    print('-- [OnPressClass.run]  Error:', e)
-                            elif g_key_pressed == 'CorsairKeyId.Kb_G3':
-                                bool_backend_onpress_clause_g3 = True
-                                try:
-                                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: (255, 0, 0)}))
-                                    self.red_function()
-                                except Exception as e:
-                                    print('-- [OnPressClass.run]  Error:', e)
-                            elif g_key_pressed == 'CorsairKeyId.Kb_G4':
-                                bool_backend_onpress_clause_g4 = True
-                                try:
-                                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: (255, 0, 0)}))
-                                    self.red_function()
-                                except Exception as e:
-                                    print('-- [OnPressClass.run]  Error:', e)
-                            elif g_key_pressed == 'CorsairKeyId.Kb_G5':
-                                bool_backend_onpress_clause_g5 = True
-                                try:
-                                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: (255, 0, 0)}))
-                                    self.red_function()
-                                except Exception as e:
-                                    print('-- [OnPressClass.run]  Error:', e)
+            key_down_timer_int_tmp = key_down_timer_int
+            if key_down_timer_int_tmp >= 1 and key_down_timer_int_tmp <= 4:
+                i = 0
+                for _ in gkey_dict_pressed_list[key_down_timer_int_tmp]:
+                    if _ == g_key_pressed:
+                        if bool_catch_list[key_down_timer_int_tmp] is False:
+                            bool_catch_list[key_down_timer_int_tmp] = True
+                            bool_backend_onpress_clause_list[i] = True
+                            ex_func = gkey_dict_pressed_list[key_down_timer_int_tmp][_]
+                            if bool_backend_allow_g_key_access is True and g_key_pressed != 'CorsairKeyId.Kb_G6':
+                                print('-- accessing dictionary pressed entry:', _)
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({gkey_pressed_id[i]: gkey_pressed_col[key_down_timer_int_tmp]}))
+                                ex_func()
                             elif g_key_pressed == 'CorsairKeyId.Kb_G6':
-                                bool_backend_onpress_clause_g6 = True
-                                try:
-                                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: (255, 0, 0)}))
-                                    self.red_function()
-                                except Exception as e:
-                                    print('-- [OnPressClass.run]  Error:', e)
-
-                if key_down_timer_int == 4:
-                    if bool_catch_4 is False:
-                        bool_catch_4 = True
-                        print('-- [OnPressClass.run] hold 4:', g_key_pressed)
-
-                        if bool_backend_allow_g_key_access is True:
-                            if g_key_pressed == 'CorsairKeyId.Kb_G1':
-                                bool_backend_onpress_clause_g1 = True
-                                try:
-                                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 255, 255)}))
-                                    self.white_function()
-                                except Exception as e:
-                                    print('-- [OnPressClass.run]  Error:', e)
-                            elif g_key_pressed == 'CorsairKeyId.Kb_G2':
-                                bool_backend_onpress_clause_g2 = True
-                                try:
-                                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 255, 255)}))
-                                    self.white_function()
-                                except Exception as e:
-                                    print('-- [OnPressClass.run]  Error:', e)
-                            elif g_key_pressed == 'CorsairKeyId.Kb_G3':
-                                bool_backend_onpress_clause_g3 = True
-                                try:
-                                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: (255, 255, 255)}))
-                                    self.white_function()
-                                except Exception as e:
-                                    print('-- [OnPressClass.run]  Error:', e)
-                            elif g_key_pressed == 'CorsairKeyId.Kb_G4':
-                                bool_backend_onpress_clause_g4 = True
-                                try:
-                                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: (255, 255, 255)}))
-                                    self.white_function()
-                                except Exception as e:
-                                    print('-- [OnPressClass.run]  Error:', e)
-                            elif g_key_pressed == 'CorsairKeyId.Kb_G5':
-                                bool_backend_onpress_clause_g5 = True
-                                try:
-                                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: (255, 255, 255)}))
-                                    self.white_function()
-                                except Exception as e:
-                                    print('-- [OnPressClass.run]  Error:', e)
-                        if g_key_pressed == 'CorsairKeyId.Kb_G6':
-                                bool_backend_onpress_clause_g6 = True
-                                try:
-                                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: (255, 255, 255)}))
-                                    self.white_function()
-                                except Exception as e:
-                                    print('-- [OnPressClass.run]  Error:', e)
-
-            except Exception as e:
-                print('-- [OnPressClass.run] Error:', e)
-
-        try:
-            g_key_pressed = ''
-            if bool_backend_allow_g_key_access is True:
-                if bool_backend_onpress_clause_g1 is True:
-                    try:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (0, 0, 0)}))
-                    except Exception as e:
-                        print('-- [OnPressClass.run]  Error:', e)
-                elif bool_backend_onpress_clause_g2 is True:
-                    try:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (0, 0, 0)}))
-                    except Exception as e:
-                        print('-- [OnPressClass.run]  Error:', e)
-                elif bool_backend_onpress_clause_g3 is True:
-                    try:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: (0, 0, 0)}))
-                    except Exception as e:
-                        print('-- [OnPressClass.run]  Error:', e)
-                elif bool_backend_onpress_clause_g4 is True:
-                    try:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: (0, 0, 0)}))
-                    except Exception as e:
-                        print('-- [OnPressClass.run]  Error:', e)
-                elif bool_backend_onpress_clause_g5 is True:
-                    try:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: (0, 0, 0)}))
-                    except Exception as e:
-                        print('-- [OnPressClass.run]  Error:', e)
-                elif bool_backend_onpress_clause_g6 is True:
-                    try:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: (0, 0, 0)}))
-                    except Exception as e:
-                        print('-- [OnPressClass.run]  Error:', e)
-            else:
-                if bool_backend_onpress_clause_g6 is True:
-                    try:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: (255, 0, 0)}))
-                    except Exception as e:
-                        print('-- [OnPressClass.run]  Error:', e)
-
-        except Exception as e:
-            print('-- [OnPressClass.run]  Error:', e)
+                                print('-- accessing dictionary pressed entry:', _)
+                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({gkey_pressed_id[i]: gkey_pressed_col[key_down_timer_int_tmp]}))
+                                ex_func()
+                    i += 1
 
         bool_backend_onpress_clause_g1 = False
         bool_backend_onpress_clause_g2 = False
@@ -6112,49 +5925,8 @@ class OnPressClass(QThread):
     def stop(self):
         print('-- [OnPressClass.stop]: plugged in')
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
-        global g_key_pressed
         global bool_backend_onpress_clause_g1, bool_backend_onpress_clause_g2, bool_backend_onpress_clause_g3
         global bool_backend_onpress_clause_g4, bool_backend_onpress_clause_g5, bool_backend_onpress_clause_g6
-        try:
-            if bool_backend_allow_g_key_access is True:
-                if bool_backend_onpress_clause_g1 is True:
-                    try:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (0, 0, 0)}))
-                    except Exception as e:
-                        print('-- [OnPressClass.stop]  Error:', e)
-                if bool_backend_onpress_clause_g2 is True:
-                    try:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (0, 0, 0)}))
-                    except Exception as e:
-                        print('-- [OnPressClass.stop]  Error:', e)
-                if bool_backend_onpress_clause_g3 is True:
-                    try:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({123: (0, 0, 0)}))
-                    except Exception as e:
-                        print('-- [OnPressClass.stop]  Error:', e)
-                if bool_backend_onpress_clause_g4 is True:
-                    try:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({124: (0, 0, 0)}))
-                    except Exception as e:
-                        print('-- [OnPressClass.stop]  Error:', e)
-                if bool_backend_onpress_clause_g5 is True:
-                    try:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({125: (0, 0, 0)}))
-                    except Exception as e:
-                        print('-- [OnPressClass.stop]  Error:', e)
-                if bool_backend_onpress_clause_g6 is True:
-                    try:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: (0, 0, 0)}))
-                    except Exception as e:
-                        print('-- [OnPressClass.stop]  Error:', e)
-            else:
-                if bool_backend_onpress_clause_g6 is True:
-                    try:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({126: (255, 0, 0)}))
-                    except Exception as e:
-                        print('-- [OnPressClass.stop]  Error:', e)
-        except Exception as e:
-            print('-- [OnPressClass.stop]  Error:', e)
 
         bool_backend_onpress_clause_g1 = False
         bool_backend_onpress_clause_g2 = False
@@ -6162,7 +5934,6 @@ class OnPressClass(QThread):
         bool_backend_onpress_clause_g4 = False
         bool_backend_onpress_clause_g5 = False
         bool_backend_onpress_clause_g6 = False
-        g_key_pressed = ''
 
         self.terminate()
 
@@ -6491,15 +6262,34 @@ class SdkEventHandlerClass(QThread):
         global bool_switch_g2_disks, bool_backend_allow_g_key_access, key_down_timer_int
         # print('-- [SdkEventHandlerClass.on_release]: plugged in')
 
+        gkey_pressed_id = [121, 122, 123, 124, 125, 126]
+
         try:
             thread_gkey_pressed[0].stop()
         except Exception as e:
             print('-- [SdkEventHandlerClass.on_release] Error:', e)
 
         try:
+            self.black_function()
+        except Exception as e:
+            print('-- [SdkEventHandlerClass.on_release] Error:', e)
+
+        try:
             key_down_time = key_down_timer_int
             self.released_keyId = str(data.keyId).strip()
+        except Exception as e:
+            print('-- [SdkEventHandlerClass.on_release] Error:', e)
 
+        try:
+            released_key_int = int(self.released_keyId[-1]) - 1
+            if bool_backend_allow_g_key_access is True:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({gkey_pressed_id[released_key_int]: (0, 0, 0)}))
+            if self.released_keyId == 'CorsairKeyId.Kb_G6' and bool_backend_allow_g_key_access is False:
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({gkey_pressed_id[released_key_int]: (255, 0, 0)}))
+        except Exception as e:
+            print('-- [SdkEventHandlerClass.on_release] Error:', e)
+
+        try:
             if self.released_keyId == self.pressed_keyId:
 
                 gkey_event_dict_0 = {
@@ -6539,17 +6329,18 @@ class SdkEventHandlerClass(QThread):
 
                 for _ in gkey_dict_list[key_down_time]:
                     if _ == self.released_keyId:
-                        print('-- accessing dictionary entry:', _)
                         ex_func = gkey_dict_list[key_down_time][_]
                         if bool_backend_allow_g_key_access is True and self.released_keyId != 'CorsairKeyId.Kb_G6':
+                            print('-- accessing dictionary entry:', _)
                             self.black_function()
                             ex_func()
                         elif self.released_keyId == 'CorsairKeyId.Kb_G6':
+                            print('-- accessing dictionary entry:', _)
                             self.black_function()
                             ex_func()
 
         except Exception as e:
-            print('-- [SdkEventHandlerClass.on_press] Error:', e)
+            print('-- [SdkEventHandlerClass.on_release] Error:', e)
 
     def sdk_event_handler(self, event_id, data):
         try:
@@ -6609,10 +6400,9 @@ class HardBlockInputClass(QThread):
         print('-- [HardBlockInputClass.run]: plugged in')
         global bool_block_input, bool_backend_allow_g_key_access, notification_key, sec_key_str, sec_key_path
         if sec_key_str != '':
+            notification_key = 7
             while bool_block_input is True:
                 ok = windll.user32.BlockInput(True)
-                time.sleep(0.1)
-                notification_key = 7
             else:
                 notification_key = 8
 
