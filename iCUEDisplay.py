@@ -6348,7 +6348,7 @@ class HardBlockInputClass(QThread):
         if sec_key_str != '':
             notification_key = 7
             while bool_block_input is True:
-                ok = windll.user32.BlockInput(True)
+                ok = ctypes.windll.user32.BlockInput(True)
             else:
                 notification_key = 8
 
