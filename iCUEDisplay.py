@@ -4,37 +4,28 @@ Written by Benjamin Jack Cullen aka Holographic_Sol
 import os
 import sys
 import time
-import GPUtil
-import psutil
-import pythoncom
-import unicodedata
-import win32gui
-import win32con
-import win32api
-import win32process
-import ctypes
-from ctypes import wintypes
-import win32com.client
 import datetime
-import subprocess
-import shutil
-import distutils.dir_util
-from cuesdk import CueSdk, CorsairEventId
-from PyQt5 import QtCore
-from PyQt5.QtGui import QIcon, QCursor, QFont, QPixmap
-from PyQt5.QtCore import Qt, QThread, QSize, QPoint, QCoreApplication, QTimer, QEvent, QObject
-from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QDesktopWidget, QLineEdit, QComboBox, QFileDialog
-from winrt.windows.media.control import GlobalSystemMediaTransportControlsSessionManager as MediaManager
-import asyncio
-import winrt.windows.media.control as wmc
-import keyboard
-from pathlib import Path
-from ctypes import *
-import codecs
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
-
+from cuesdk import CueSdk, CorsairEventId
+import GPUtil
+import psutil
+import shutil
+import codecs
+import unicodedata
+import win32con
+import win32api
+import win32process
+import win32com.client
+import winrt.windows.media.control as wmc
+import ctypes
+import keyboard
+import asyncio
+import pythoncom
+import subprocess
+from pathlib import Path
+import distutils.dir_util
 
 info = subprocess.STARTUPINFO()
 info.dwFlags = 1
@@ -94,9 +85,6 @@ ui_object_complete = []
 disk_guid = []
 power_plan = ['', '', '', '']
 power_plan_index = 0
-hdd_bytes_type_w = ''
-hdd_bytes_type_r = ''
-hdd_bytes_str = ''
 str_path_kb_img = ''
 str_path_ms_img = ''
 sec_key_path = ''
@@ -105,8 +93,6 @@ sec_key_str = ''
 kb_event = ''
 g_key_pressed = ''
 key_down_timer_int = ()
-
-bool_request_control = False
 
 notification_key = 0
 bool_instruction_eject = False
@@ -121,12 +107,6 @@ bool_block_input = False
 bool_backend_g2_input = False
 bool_backend_allow_g_key_access = True
 bool_backend_alpha_stage_engaged = False
-bool_backend_onpress_clause_g1 = False
-bool_backend_onpress_clause_g2 = False
-bool_backend_onpress_clause_g3 = False
-bool_backend_onpress_clause_g4 = False
-bool_backend_onpress_clause_g5 = False
-bool_backend_onpress_clause_g6 = False
 bool_backend_execution_policy = True
 bool_backend_execution_policy_show = False
 bool_backend_allow_display = False
@@ -144,12 +124,10 @@ bool_switch_powershell = False
 bool_switch_lock_gkeys = False
 bool_switch_fahrenheit = False
 bool_switch_g2_disks = False
-bool_switch_backlight_ms = False
+bool_switch_g3 = False
 bool_switch_display_disk_mount = True
-bool_switch_backlight = False
 bool_switch_startup_exclusive_control = False
 bool_switch_startup_autorun = False
-bool_switch_backlight_auto = False
 bool_switch_startup_minimized = False
 bool_switch_startup_net_con = False
 bool_switch_startup_net_con_ms = False
@@ -170,9 +148,7 @@ thread_sdk_instruction = []
 thread_eject = []
 thread_mount = []
 thread_unmount = []
-thread_exclusive_gkey_event_mount = []
 thread_disk_guid = []
-thread_exclusive_gkey_event_unmount = []
 thread_gkey_pressed = []
 thread_keyevents = []
 thread_test_locked = []
@@ -215,7 +191,6 @@ corsairled_id_num_netsnt = [2, 3, 4, 5, 6, 7, 8, 9, 10]
 corsairled_id_num_netrcv_utype = 23
 corsairled_id_num_netsnt_utype = 11
 corsairled_id_num_netcon_ms = int()
-corsairled_id_num_netcon_kb = int()
 corsairled_id_num_netshare = [74, 75, 76, 78]
 corsairled_id_num_gkeys = [121, 122, 123, 124, 125, 126]
 corsairled_id_num_kb_complete = []
@@ -439,128 +414,122 @@ bool_wmi_engaged = False
 class ObjEveFilter(QObject):
 
     def eventFilter(self, obj, event):
-        global event_filter_self, avail_w, avail_h, ui_object_complete, first_load, obj_geo_item, prev_multiplier_w, prev_multiplier_h
-        global ui_object_font_list_s6b, ui_object_font_list_s7b, ui_object_font_list_s8b, ui_object_font_list_s9b
-        global obj_icon_geo, obj_icon
+
         obj_eve = obj, event
         # Uncomment This Line To See All Object Events
         # print('-- ObjEveFilter(QObject).eventFilter(self, obj, event):', obj_eve)
-        if str(obj_eve[1]).startswith('<PyQt5.QtGui.QResizeEvent') or str(obj_eve[1]).startswith('<PyQt5.QtGui.QMoveEvent'):
-            if first_load is True:
-                first_load = False
-                for _ in ui_object_complete:
-                    obj_geo_width = _.geometry().width()
-                    obj_geo_height = _.geometry().height()
-                    obj_geo_pos_w = _.geometry().x()
-                    obj_geo_pos_h = _.geometry().y()
-                    # print('[object geometry]', _, obj_geo_width, obj_geo_height, obj_geo_pos_w, obj_geo_pos_h)
-                    var = obj_geo_width, obj_geo_height, obj_geo_pos_w, obj_geo_pos_h
-                    obj_geo_item.append(var)
-                    try:
-                        obj_icon_geo.append(_.iconSize())
-                        obj_icon.append(_)
-                    except:
-                        pass
-            # print("previous width:", avail_w)
-            # print("previous height:", avail_h)
-            new_avail_w = QDesktopWidget().availableGeometry().width()
-            new_avail_h = QDesktopWidget().availableGeometry().height()
-            # print("new width:", new_avail_w)
-            # print("new height:", new_avail_h)
-            multiplier_w = int()
-            multiplier_h = int()
-            if new_avail_w >= 1000 and new_avail_h >= 1000:
-                multiplier_w = str(new_avail_w)[0]
-                multiplier_h = str(new_avail_h)[0]
-                multiplier_w = int(multiplier_w)
-                multiplier_h = int(multiplier_h)
-            elif new_avail_w < 1000 and new_avail_h < 1000:
-                multiplier_w = 1
-                multiplier_h = 1
-            else:
-                multiplier_w = 1
-                multiplier_h = 1
-            multiplier_w = multiplier_h
-            # print('multiplier_w:', multiplier_w)
-            # print('multiplier_h:', multiplier_h)
 
-            if prev_multiplier_w != multiplier_w or prev_multiplier_h != multiplier_h or new_avail_w != avail_w or new_avail_h != avail_h:
-                avail_h = new_avail_h
-                avail_w = new_avail_w
-                app_width = 584 * multiplier_w
-                app_height = 330 * multiplier_h
-                pos_w = ((QDesktopWidget().availableGeometry().width() / 2) - (app_width / 2))
-                pos_h = ((QDesktopWidget().availableGeometry().height() / 2) - (app_height / 2))
-                event_filter_self[0].setGeometry(int(pos_w), int(pos_h), app_width, app_height)
-                i = 0
-                for _ in ui_object_complete:
-                    # Default Width
-                    obj_w = obj_geo_item[i]
-                    obj_w = obj_w[0]
-                    # Default Height
-                    obj_h = obj_geo_item[i]
-                    obj_h = obj_h[1]
-                    # Default Position Width
-                    obj_pos_w = obj_geo_item[i]
-                    obj_pos_w = obj_pos_w[2]
-                    # Default Position Height
-                    obj_pos_h = obj_geo_item[i]
-                    obj_pos_h = obj_pos_h[3]
-                    print('-- [ObjEveFilter.eventFilter] default geometry:', obj_w, obj_h, obj_pos_w, obj_pos_h)
-                    new_obj_w = obj_w * multiplier_w
-                    new_obj_h = obj_h * multiplier_h
-                    new_obj_pos_w = obj_pos_w * multiplier_w
-                    new_obj_pos_h = obj_pos_h * multiplier_h
-                    print('-- [ObjEveFilter.eventFilter] new geometry:', new_obj_w, new_obj_h, new_obj_pos_w, new_obj_pos_h)
-                    _.move(new_obj_pos_w, new_obj_pos_h)
-                    _.resize(new_obj_w, new_obj_h)
-                    i += 1
+        # Scaling Geometry
+        if str(obj_eve[1]).startswith('<PyQt5.QtGui.QResizeEvent') or str(obj_eve[1]).startswith(
+                '<PyQt5.QtGui.QMoveEvent'):
+            self.scaling_geometry_function()
 
-                i = 0
-                for _ in obj_icon_geo:
-                    try:
-                        geo_var = str(_)
-                        geo_var = geo_var.replace('PyQt5.QtCore.QSize(', '')
-                        geo_var = geo_var.replace(')', '')
-                        geo_var = geo_var.replace(',', '')
-                        geo_var_split = geo_var.split()
-                        icon_sz_w = int(geo_var_split[0])
-                        icon_sz_h = int(geo_var_split[1])
-                        print('-- [ObjEveFilter.eventFilter] original icon_sz_w:', icon_sz_w, '  original icon_sz_h:', icon_sz_h)
-                        icon_size_w = icon_sz_w * multiplier_w
-                        icon_size_h = icon_sz_h * multiplier_h
-                        print('-- [ObjEveFilter.eventFilter] [multiply result] new icon_sz_w:', icon_size_w, '  new icon_sz_h:', icon_size_h)
-                        obj_icon[i].setIconSize(QSize(icon_size_w, icon_size_h))
-                    except Exception as e:
-                        print('-- [ObjEveFilter.eventFilter] object icon size may be inapplicable:', _, e)
-                    i += 1
-
-                font_size_6b = int(6 * multiplier_h)
-                font_size_7b = int(7 * multiplier_h)
-                font_size_8b = int(8 * multiplier_h)
-                font_size_9b = int(9 * multiplier_h)
-                font_s6b = QFont("Segoe UI", (font_size_6b), QFont.Bold)
-                font_s7b = QFont("Segoe UI", (font_size_7b), QFont.Bold)
-                font_s8b = QFont("Segoe UI", (font_size_8b), QFont.Bold)
-                font_s9b = QFont("Segoe UI", (font_size_9b), QFont.Bold)
-                for _ in ui_object_font_list_s6b:
-                    _.setFont(font_s6b)
-                for _ in ui_object_font_list_s7b:
-                    _.setFont(font_s7b)
-                for _ in ui_object_font_list_s8b:
-                    _.setFont(font_s8b)
-                for _ in ui_object_font_list_s9b:
-                    _.setFont(font_s9b)
-
-                # ToDo -->  Geometry set Above. Finalize by displaying the new geometry automatically without user needing to click/move the app for the changes to visibly take effect
-
-                prev_multiplier_w = multiplier_w
-                prev_multiplier_h = multiplier_h
         return False
+
+    def scaling_geometry_function(self):
+        global first_load
+        global event_filter_self
+        global avail_w, avail_h
+        global prev_multiplier_w, prev_multiplier_h
+        global ui_object_complete, ui_object_font_list_s6b, ui_object_font_list_s7b, ui_object_font_list_s8b, ui_object_font_list_s9b
+        global obj_geo_item, obj_icon_geo, obj_icon
+        if first_load is True:
+            first_load = False
+            for _ in ui_object_complete:
+                obj_geo_width = _.geometry().width()
+                obj_geo_height = _.geometry().height()
+                obj_geo_pos_w = _.geometry().x()
+                obj_geo_pos_h = _.geometry().y()
+                var = obj_geo_width, obj_geo_height, obj_geo_pos_w, obj_geo_pos_h
+                obj_geo_item.append(var)
+                try:
+                    obj_icon_geo.append(_.iconSize())
+                    obj_icon.append(_)
+                except:
+                    pass
+        new_avail_w = QDesktopWidget().availableGeometry().width()
+        new_avail_h = QDesktopWidget().availableGeometry().height()
+        if new_avail_w >= 1000 and new_avail_h >= 1000:
+            multiplier_h = int(str(new_avail_h)[0])
+        elif new_avail_w < 1000 and new_avail_h < 1000:
+            multiplier_h = 1
+        else:
+            multiplier_h = 1
+        multiplier_w = multiplier_h
+        if prev_multiplier_w != multiplier_w or prev_multiplier_h != multiplier_h or new_avail_w != avail_w or new_avail_h != avail_h:
+            avail_h = new_avail_h
+            avail_w = new_avail_w
+            app_width = 584 * multiplier_w
+            app_height = 330 * multiplier_h
+            pos_w = ((QDesktopWidget().availableGeometry().width() / 2) - (app_width / 2))
+            pos_h = ((QDesktopWidget().availableGeometry().height() / 2) - (app_height / 2))
+            event_filter_self[0].setGeometry(int(pos_w), int(pos_h), app_width, app_height)
+            i = 0
+            for _ in ui_object_complete:
+                # Default Width
+                obj_w = obj_geo_item[i]
+                obj_w = obj_w[0]
+                # Default Height
+                obj_h = obj_geo_item[i]
+                obj_h = obj_h[1]
+                # Default Position Width
+                obj_pos_w = obj_geo_item[i]
+                obj_pos_w = obj_pos_w[2]
+                # Default Position Height
+                obj_pos_h = obj_geo_item[i]
+                obj_pos_h = obj_pos_h[3]
+                print('-- [ObjEveFilter.eventFilter] default geometry:', obj_w, obj_h, obj_pos_w, obj_pos_h)
+                new_obj_w = obj_w * multiplier_w
+                new_obj_h = obj_h * multiplier_h
+                new_obj_pos_w = obj_pos_w * multiplier_w
+                new_obj_pos_h = obj_pos_h * multiplier_h
+                print('-- [ObjEveFilter.eventFilter] new geometry:', new_obj_w, new_obj_h, new_obj_pos_w, new_obj_pos_h)
+                _.move(new_obj_pos_w, new_obj_pos_h)
+                _.resize(new_obj_w, new_obj_h)
+                i += 1
+            i = 0
+            for _ in obj_icon_geo:
+                try:
+                    geo_var = str(_)
+                    geo_var = geo_var.replace('PyQt5.QtCore.QSize(', '')
+                    geo_var = geo_var.replace(')', '')
+                    geo_var = geo_var.replace(',', '')
+                    geo_var_split = geo_var.split()
+                    icon_sz_w = int(geo_var_split[0])
+                    icon_sz_h = int(geo_var_split[1])
+                    print('-- [ObjEveFilter.eventFilter] original icon_sz_w:', icon_sz_w, '  original icon_sz_h:',
+                          icon_sz_h)
+                    icon_size_w = icon_sz_w * multiplier_w
+                    icon_size_h = icon_sz_h * multiplier_h
+                    print('-- [ObjEveFilter.eventFilter] [multiply result] new icon_sz_w:', icon_size_w,
+                          '  new icon_sz_h:', icon_size_h)
+                    obj_icon[i].setIconSize(QSize(icon_size_w, icon_size_h))
+                except Exception as e:
+                    print('-- [ObjEveFilter.eventFilter] object icon size may be inapplicable:', _, e)
+                i += 1
+            font_size_6b = int(6 * multiplier_h)
+            font_size_7b = int(7 * multiplier_h)
+            font_size_8b = int(8 * multiplier_h)
+            font_size_9b = int(9 * multiplier_h)
+            font_s6b = QFont("Segoe UI", (font_size_6b), QFont.Bold)
+            font_s7b = QFont("Segoe UI", (font_size_7b), QFont.Bold)
+            font_s8b = QFont("Segoe UI", (font_size_8b), QFont.Bold)
+            font_s9b = QFont("Segoe UI", (font_size_9b), QFont.Bold)
+            for _ in ui_object_font_list_s6b:
+                _.setFont(font_s6b)
+            for _ in ui_object_font_list_s7b:
+                _.setFont(font_s7b)
+            for _ in ui_object_font_list_s8b:
+                _.setFont(font_s8b)
+            for _ in ui_object_font_list_s9b:
+                _.setFont(font_s9b)
+            # ToDo -->  Geometry set Above. Finalize by displaying the new geometry automatically without user needing to click/move the app for the changes to visibly take effect
+            prev_multiplier_w = multiplier_w
+            prev_multiplier_h = multiplier_h
 
 
 class App(QMainWindow):
-    cursorMove = QtCore.pyqtSignal(object)
+    cursorMove = pyqtSignal(object)
 
     def __init__(self):
         super(App, self).__init__()
@@ -2427,12 +2396,10 @@ class App(QMainWindow):
                 self.qle_backlight_rgb.setAlignment(Qt.AlignCenter)
 
     def icuedisplay_quit_function(self):
-        global thread_compile_devices, thread_keyevents, thread_exclusive_gkey_event_unmount, thread_exclusive_gkey_event_mount
+        global thread_compile_devices, thread_keyevents
         global thread_gkey_pressed, thread_sdk_event_handler, thread_test_locked
 
         thread_keyevents[0].stop()
-        thread_exclusive_gkey_event_unmount[0].stop()
-        thread_exclusive_gkey_event_mount[0].stop()
         thread_gkey_pressed[0].stop()
         thread_sdk_event_handler[0].stop()
         thread_test_locked[0].stop()
@@ -3101,13 +3068,11 @@ class App(QMainWindow):
 
     def isenabled_true(self):
         print('-- [App.isenabled_true]: plugged in')
-        global bool_switch_power_plan, bool_switch_powershell
         for _ in self.object_interaction_enabled:
             _.setEnabled(True)
 
     def isenabled_false(self):
         print('-- [App.isenabled_false]: plugged in')
-        global bool_switch_power_plan
         for _ in self.object_interaction_enabled:
             _.setEnabled(False)
 
@@ -3251,7 +3216,7 @@ class App(QMainWindow):
     def btn_cpu_mon_function(self):
         print('-- [App.btn_cpu_mon_function]: plugged in')
         global bool_switch_startup_cpu_util, thread_cpu_util
-        global devices_kb, devices_ms
+        global devices_kb
         self.setFocus()
         if len(devices_kb) > 0:
             if self.write_engaged is False:
@@ -3773,7 +3738,7 @@ class App(QMainWindow):
     def btn_defnetshare_function(self):
         print('-- [App.btn_defnetshare_function]: plugged in')
         global bool_switch_startup_net_share_mon, thread_net_share
-        global devices_ms, devices_kb
+        global devices_kb
         self.setFocus()
         if len(devices_kb) > 0:
             if self.write_engaged is False:
@@ -3818,40 +3783,49 @@ class App(QMainWindow):
 
     def initUI(self):
         print('-- [App.initUI]: plugged in')
-        global bool_backend_allow_display, bool_switch_startup_exclusive_control, bool_switch_startup_minimized
-        global bool_switch_startup_cpu_util, bool_switch_startup_dram_util, bool_switch_startup_vram_util, bool_switch_cpu_temperature, bool_switch_vram_temperature
-        global bool_switch_startup_hdd_read_write, bool_switch_startup_net_share_mon, bool_switch_startup_net_traffic
-        global sdk_color_cpu_on, sdk_color_dram_on, sdk_color_vram_on, sdk_color_hddwrite_on, sdk_color_hddread_on, sdk_color_netshare_on, sdk_color_backlight
-        global thread_compile_devices
-        global thread_disk_rw
         global thread_cpu_util
         global thread_dram_util
         global thread_vram_util
+        global thread_temperatures
+        global thread_disk_rw
+        global thread_disk_guid
         global thread_net_traffic
         global thread_net_connection
         global thread_net_share
-        global thread_sdk_event_handler
-        global thread_temperatures
-        global thread_media_display
-        global thread_pause_loop
+        global thread_media_display,thread_pause_loop
         global thread_power
-        global thread_test_locked
-        global thread_keyevents
-        global bool_switch_startup_media_display
-        global str_path_kb_img, str_path_ms_img
-        global bool_switch_power_plan
-        global bool_switch_powershell
-        global bool_switch_fahrenheit
-        global thread_gkey_pressed
-        global bool_switch_g2_disks
-        global thread_disk_guid
         global thread_eject, thread_mount, thread_unmount
-        global thread_notification
         global thread_windows_update_monitor
-        global bool_switch_lock_gkeys
-        global sdk_color_backlight_on
-        global bool_switch_g5_backlight
         global thread_key_timer
+        global thread_keyevents
+        global thread_gkey_pressed
+        global thread_test_locked
+        global thread_notification
+        global thread_compile_devices
+        global thread_sdk_event_handler
+
+        global bool_backend_allow_display
+        global bool_switch_startup_cpu_util
+        global bool_switch_startup_dram_util
+        global bool_switch_startup_vram_util
+        global bool_switch_fahrenheit
+        global bool_switch_cpu_temperature
+        global bool_switch_vram_temperature
+        global bool_switch_startup_hdd_read_write
+        global bool_switch_startup_net_traffic
+        global bool_switch_startup_net_share_mon
+        global bool_switch_power_plan
+        global bool_switch_g2_disks
+        global bool_switch_powershell
+        global bool_switch_g5_backlight
+        global bool_switch_lock_gkeys
+        global bool_switch_startup_media_display
+        global bool_switch_startup_exclusive_control
+        global bool_switch_startup_minimized
+
+        global str_path_kb_img, str_path_ms_img
+        global sdk_color_backlight, sdk_color_backlight_on
+        global sdk_color_cpu_on, sdk_color_dram_on, sdk_color_vram_on, sdk_color_hddwrite_on, sdk_color_hddread_on, sdk_color_netshare_on
 
         notification_thread = SdkNotificationClass()
         thread_notification.append(notification_thread)
@@ -4164,7 +4138,6 @@ class CompileDevicesClass(QThread):
 
     def __init__(self, btn_con_stat_name, lbl_con_stat_kb, lbl_con_stat_mouse, btn_con_stat_ms_img, btn_con_stat_kb_img, btn_refresh_recompile, btn_title_bar_style_0, btn_title_bar_style_1):
         QThread.__init__(self)
-        global sdk_color_hddread_on, sdk_color_backlight
         self.btn_con_stat_name = btn_con_stat_name
         self.lbl_con_stat_kb = lbl_con_stat_kb
         self.lbl_con_stat_mouse = lbl_con_stat_mouse
@@ -4178,8 +4151,7 @@ class CompileDevicesClass(QThread):
         self.bool_backend_comprehensive_enumeration = True
 
     def enum_kb(self):
-        global sdk
-        global devices_kb, devices_kb_name, corsairled_id_num_kb_complete
+        global sdk, devices_kb, devices_kb_name, corsairled_id_num_kb_complete
         # 1. Get Key Names & Key IDs
         led_position = sdk.get_led_positions_by_device_index(self.device_index)
         led_position_str = str(led_position).split('), ')
@@ -4202,8 +4174,7 @@ class CompileDevicesClass(QThread):
             print('-- [CompileDevicesClass.enumerate_device]  corsairled_id_num_kb_complete:', corsairled_id_num_kb_complete)
 
     def enum_ms(self):
-        global sdk
-        global devices_ms, devices_ms_name, corsairled_id_num_ms_complete
+        global sdk, devices_ms, devices_ms_name, corsairled_id_num_ms_complete
         led_position = sdk.get_led_positions_by_device_index(self.device_index)
         led_position_str = str(led_position).split('), ')
         led_position_str_tmp = led_position_str[0].split()
@@ -4227,6 +4198,7 @@ class CompileDevicesClass(QThread):
 
     def stop_all_threads(self):
         print('-- [CompileDevicesClass.stop_all_threads]: plugged in')
+        global devices_kb, devices_ms
         global thread_disk_rw
         global thread_cpu_util
         global thread_dram_util
@@ -4235,7 +4207,6 @@ class CompileDevicesClass(QThread):
         global thread_net_connection
         global thread_net_share
         global thread_sdk_event_handler
-        global devices_kb, devices_ms
         global thread_temperatures
         global thread_media_display
         global thread_pause_loop
@@ -4374,7 +4345,7 @@ class CompileDevicesClass(QThread):
         global bool_switch_startup_hdd_read_write
         global thread_net_connection, bool_switch_startup_net_con, bool_switch_startup_net_con_ms, bool_switch_startup_net_con_kb
         global bool_switch_startup_net_share_mon, bool_switch_startup_hdd_read_write
-        global bool_backend_config_read_complete, bool_switch_startup_exclusive_control
+        global bool_switch_startup_exclusive_control
         global thread_temperatures, bool_switch_cpu_temperature, bool_switch_vram_temperature
         global thread_media_display
         global thread_power
@@ -4424,7 +4395,9 @@ class CompileDevicesClass(QThread):
 
     def attempt_connect(self):
         # print('-- [CompileDevicesClass.attempt_connect]: plugged in')
-        global sdk, bool_backend_icue_connected, devices_previous, bool_backend_icue_connected_previous, devices_kb, devices_ms
+        global sdk, devices_kb, devices_ms
+        global bool_backend_icue_connected, devices_previous, bool_backend_icue_connected_previous
+        
         connected = sdk.connect()
         if not connected:
             bool_backend_icue_connected = False
@@ -4448,9 +4421,7 @@ class CompileDevicesClass(QThread):
 
     def entry_sequence(self):
         print('-- [CompileDevicesClass.entry_sequence]: plugged in')
-        global sdk
-        global devices_kb, devices_ms
-        global devices_kb_selected, devices_ms_selected
+        global sdk, devices_kb, devices_ms, devices_kb_selected, devices_ms_selected
         global corsairled_id_num_ms_complete, corsairled_id_num_kb_complete
         global sdk_color_backlight
 
@@ -4576,19 +4547,17 @@ class CompileDevicesClass(QThread):
 
     def read_config(self):
         print('-- [ConfigCompile.read_config]: plugged in')
-        global sdk_color_cpu_on, timing_cpu_util, bool_switch_startup_cpu_util
+        global sdk_color_cpu_on, timing_cpu_util, bool_switch_startup_cpu_util, bool_switch_cpu_temperature
         global sdk_color_dram_on, timing_dram_util, bool_switch_startup_dram_util
-        global sdk_color_vram_on, timing_vram_util, devices_gpu_selected, bool_switch_startup_vram_util
+        global sdk_color_vram_on, timing_vram_util, devices_gpu_selected, bool_switch_startup_vram_util, bool_switch_vram_temperature
         global sdk_color_hddwrite_on, timing_hdd_util, sdk_color_hddread_on, bool_switch_startup_hdd_read_write
-        global bool_switch_startup_net_traffic, timing_net_traffic_util
-        global devices_network_adapter_name, bool_backend_valid_network_adapter_name
-        global corsairled_id_num_netsnt, corsairled_id_num_netrcv
-        global bool_switch_startup_net_con_ms, corsairled_id_num_netcon_ms, bool_switch_startup_net_con_kb, bool_switch_startup_net_con
+        global devices_network_adapter_name, bool_backend_valid_network_adapter_name, timing_net_traffic_util, corsairled_id_num_netsnt, corsairled_id_num_netrcv, bool_switch_startup_net_traffic
+        global bool_switch_startup_net_con, corsairled_id_num_netcon_ms, bool_switch_startup_net_con_kb, bool_switch_startup_net_con_ms
         global bool_switch_startup_net_share_mon
+
         global sdk_color_backlight
         global bool_switch_startup_minimized, bool_switch_startup_autorun, bool_switch_startup_exclusive_control
         global bool_backend_allow_display, bool_backend_icue_connected, bool_backend_config_read_complete
-        global bool_switch_cpu_temperature, bool_switch_vram_temperature
         global str_path_kb_img, str_path_ms_img
         global bool_switch_startup_media_display
         global bool_switch_power_plan
@@ -4930,7 +4899,7 @@ class CompileDevicesClass(QThread):
 
     def run(self):
         print('-- [CompileDevicesClass.run]: plugged in')
-        global bool_backend_allow_display, bool_backend_icue_connected, bool_backend_config_read_complete, devices_kb, devices_ms
+        global devices_kb, devices_ms, bool_backend_allow_display, bool_backend_config_read_complete
         bool_backend_config_read_complete = False
         bool_backend_allow_display = False
         self.btn_refresh_recompile.setStyleSheet(self.btn_title_bar_style_0)
@@ -4997,7 +4966,7 @@ class SdkNotificationClass(QThread):
 
     def run(self):
         print('-- [SdkNotificationClass.run]: plugged in')
-        global notification_key, devices_kb, bool_backend_onpress_clause_g6
+        global sdk, devices_kb, devices_kb_selected, corsairled_id_num_gkeys, notification_key
 
         while True:
             try:
@@ -5152,7 +5121,7 @@ class SdkNotificationClass(QThread):
                         except Exception as e:
                             print('-- [SdkNotificationClass.run] Error:', e)
 
-                        if bool_backend_onpress_clause_g6 is False:
+                        if bool_backend_allow_g_key_access is False:
                             try:
                                 sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({177: (255, 0, 0)}))
                             except Exception as e:
@@ -5242,18 +5211,17 @@ class SdkSendInstructionClass(QThread):
     def run(self):
         print('-- [SdkSendInstructionClass.run]: plugged in')
 
-        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
-        global devices_ms, devices_ms_selected
+        global sdk, devices_kb, devices_kb_selected, devices_ms, devices_ms_selected, sdk_color_backlight
+        global corsairled_id_num_gkeys
         global corsairled_id_num_hddreadwrite
-        global bool_instruction_eject, bool_instruction_eject_end, bool_instruction_mount, bool_instruction_mount_end, bool_instruction_unmount, bool_instruction_unmount_end
-        global bool_switch_backlight, bool_instruction_backlight
-        global bool_backend_allow_g_key_access
         global corsairled_id_num_ms_complete, corsairled_id_num_kb_complete
+        global bool_switch_g5_backlight
+        global bool_backend_allow_g_key_access
+        global bool_switch_backlight, bool_instruction_backlight
+        global bool_instruction_eject, bool_instruction_eject_end, bool_instruction_mount, bool_instruction_mount_end, bool_instruction_unmount, bool_instruction_unmount_end
         global thread_net_connection
         global thread_media_display, bool_switch_startup_media_display
         global thread_power, bool_switch_power_plan
-        global corsairled_id_num_gkeysx
-        global bool_switch_g5_backlight
         global thread_cpu_util, thread_dram_util, thread_vram_util, thread_temperatures, thread_net_connection, thread_net_share, thread_net_traffic, thread_disk_rw, thread_media_display, thread_pause_loop, thread_keyevents
 
         zone_id = [170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188]
@@ -5264,7 +5232,7 @@ class SdkSendInstructionClass(QThread):
                     bool_instruction_eject = False
                     try:
                         """ arm """
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 255, 0)}))
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_gkeys[1]: (255, 255, 0)}))
                         sdk.set_led_colors_flush_buffer()
                     except Exception as e:
                         print('-- [SdkSendInstructionClass.run] Error:', e)
@@ -5290,7 +5258,7 @@ class SdkSendInstructionClass(QThread):
                         g2_function_long_i += 1
 
                     try:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (0, 0, 0)}))
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_gkeys[1]: (0, 0, 0)}))
                         sdk.set_led_colors_flush_buffer()
                     except Exception as e:
                         print('-- [SdkSendInstructionClass.run] Error:', e)
@@ -5299,7 +5267,7 @@ class SdkSendInstructionClass(QThread):
                     bool_instruction_mount = False
                     try:
                         """ arm """
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 100, 0)}))
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_gkeys[1]: (255, 100, 0)}))
                         sdk.set_led_colors_flush_buffer()
                     except Exception as e:
                         print('-- [SdkSendInstructionClass.run] Error:', e)
@@ -5325,7 +5293,7 @@ class SdkSendInstructionClass(QThread):
                         g2_function_long_i += 1
 
                     try:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (0, 0, 0)}))
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_gkeys[1]: (0, 0, 0)}))
                         sdk.set_led_colors_flush_buffer()
                     except Exception as e:
                         print('-- [SdkSendInstructionClass.run] Error:', e)
@@ -5334,7 +5302,7 @@ class SdkSendInstructionClass(QThread):
                     bool_instruction_unmount = False
                     try:
                         """ arm """
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (255, 0, 0)}))
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_gkeys[1]: (255, 0, 0)}))
                         sdk.set_led_colors_flush_buffer()
                     except Exception as e:
                         print('-- [SdkSendInstructionClass.run] Error:', e)
@@ -5359,7 +5327,7 @@ class SdkSendInstructionClass(QThread):
                         g2_function_long_i += 1
 
                     try:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({122: (0, 0, 0)}))
+                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_gkeys[1]: (0, 0, 0)}))
                         sdk.set_led_colors_flush_buffer()
                     except Exception as e:
                         print('-- [SdkSendInstructionClass.run] Error:', e)
@@ -5488,9 +5456,7 @@ class SdkEventG2_Eject(QThread):
 
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, corsairled_id_num_hddreadwrite
         global disk_guid
-        global bool_backend_alpha_stage_engaged
-        global bool_backend_g2_input, kb_event
-        global bool_instruction_eject, bool_instruction_eject_end
+        global bool_backend_alpha_stage_engaged, bool_backend_g2_input, kb_event, bool_instruction_mount, bool_instruction_mount_end
         global notification_key
 
         bool_backend_alpha_stage_engaged = True
@@ -5544,9 +5510,10 @@ class SdkEventG2_Eject(QThread):
     def stop(self):
         print('-- [SdkEventG2_Eject.stop]: plugged in')
         print('-- [SdkEventG2_Eject.stop disarmed')
-        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, bool_backend_alpha_stage_engaged, bool_backend_g2_input
+        global bool_backend_alpha_stage_engaged, bool_backend_g2_input
         global bool_instruction_eject_end, notification_key
 
+        notification_key = 0
         bool_backend_g2_input = False
         bool_instruction_eject_end = True
         bool_backend_alpha_stage_engaged = False
@@ -5632,6 +5599,7 @@ class SdkEventG2_Mount(QThread):
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, bool_backend_alpha_stage_engaged, bool_backend_g2_input, bool_instruction_mount_end
         global notification_key
 
+        notification_key = 0
         bool_backend_g2_input = False
         bool_instruction_mount_end = True
         bool_backend_alpha_stage_engaged = False
@@ -5702,6 +5670,7 @@ class SdkEventG2_Unmount(QThread):
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, bool_backend_alpha_stage_engaged, bool_backend_g2_input, bool_instruction_unmount_end
         global notification_key
 
+        notification_key = 0
         bool_backend_g2_input = False
         bool_instruction_unmount_end = True
         bool_backend_alpha_stage_engaged = False
@@ -5739,22 +5708,22 @@ class OnPressClass(QThread):
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
                                                       ({177: (255, 255, 0)}))
         except Exception as e:
-            print('-- [SdkNotificationClass.run] Error:', e)
+            print('-- [OnPressClass.yellow_function] Error:', e)
         try:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
                                                       ({178: (255, 255, 0)}))
         except Exception as e:
-            print('-- [SdkNotificationClass.run] Error:', e)
+            print('-- [OnPressClass.yellow_function] Error:', e)
         try:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
                                                       ({179: (255, 255, 0)}))
         except Exception as e:
-            print('-- [SdkNotificationClass.run] Error:', e)
+            print('-- [OnPressClass.yellow_function] Error:', e)
         try:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
                                                       ({180: (255, 255, 0)}))
         except Exception as e:
-            print('-- [SdkNotificationClass.run] Error:', e)
+            print('-- [OnPressClass.yellow_function] Error:', e)
 
     def orange_function(self):
         global sdk, devices_kb, devices_kb_selected
@@ -5762,22 +5731,22 @@ class OnPressClass(QThread):
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
                                                       ({177: (255, 100, 0)}))
         except Exception as e:
-            print('-- [SdkNotificationClass.run] Error:', e)
+            print('-- [OnPressClass.orange_function] Error:', e)
         try:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
                                                       ({178: (255, 100, 0)}))
         except Exception as e:
-            print('-- [SdkNotificationClass.run] Error:', e)
+            print('-- [OnPressClass.orange_function] Error:', e)
         try:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
                                                       ({179: (255, 100, 0)}))
         except Exception as e:
-            print('-- [SdkNotificationClass.run] Error:', e)
+            print('-- [OnPressClass.orange_function] Error:', e)
         try:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
                                                       ({180: (255, 100, 0)}))
         except Exception as e:
-            print('-- [SdkNotificationClass.run] Error:', e)
+            print('-- [OnPressClass.orange_function] Error:', e)
 
     def red_function(self):
         global sdk, devices_kb, devices_kb_selected
@@ -5785,22 +5754,22 @@ class OnPressClass(QThread):
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
                                                       ({177: (255, 0, 0)}))
         except Exception as e:
-            print('-- [SdkNotificationClass.run] Error:', e)
+            print('-- [OnPressClass.red_function] Error:', e)
         try:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
                                                       ({178: (255, 0, 0)}))
         except Exception as e:
-            print('-- [SdkNotificationClass.run] Error:', e)
+            print('-- [OnPressClass.red_function] Error:', e)
         try:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
                                                       ({179: (255, 0, 0)}))
         except Exception as e:
-            print('-- [SdkNotificationClass.run] Error:', e)
+            print('-- [OnPressClass.red_function] Error:', e)
         try:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
                                                       ({180: (255, 0, 0)}))
         except Exception as e:
-            print('-- [SdkNotificationClass.run] Error:', e)
+            print('-- [OnPressClass.red_function] Error:', e)
 
     def white_function(self):
         global sdk, devices_kb, devices_kb_selected
@@ -5808,30 +5777,30 @@ class OnPressClass(QThread):
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
                                                       ({177: (255, 255, 255)}))
         except Exception as e:
-            print('-- [SdkNotificationClass.run] Error:', e)
+            print('-- [OnPressClass.white_function] Error:', e)
         try:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
                                                       ({178: (255, 255, 255)}))
         except Exception as e:
-            print('-- [SdkNotificationClass.run] Error:', e)
+            print('-- [OnPressClass.white_function] Error:', e)
         try:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
                                                       ({179: (255, 255, 255)}))
         except Exception as e:
-            print('-- [SdkNotificationClass.run] Error:', e)
+            print('-- [OnPressClass.white_function] Error:', e)
         try:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
                                                       ({180: (255, 255, 255)}))
         except Exception as e:
-            print('-- [SdkNotificationClass.run] Error:', e)
+            print('-- [OnPressClass.white_function] Error:', e)
 
     def run(self):
         print('-- [OnPressClass.run]: plugged in')
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, g_key_pressed
-        global bool_backend_onpress_clause_g1, bool_backend_onpress_clause_g2, bool_backend_onpress_clause_g3
-        global bool_backend_onpress_clause_g4, bool_backend_onpress_clause_g5, bool_backend_onpress_clause_g6
         global bool_backend_allow_g_key_access
         global thread_key_timer, key_down_timer_int
+        global corsairled_id_num_gkeys
+        global bool_switch_power_plan, bool_switch_g2_disks, bool_switch_g3, bool_switch_powershell, bool_switch_g5_backlight, bool_switch_lock_gkeys
 
         # Run & Send functions once using bool_catch
         bool_catch_0 = False
@@ -5840,16 +5809,6 @@ class OnPressClass(QThread):
         bool_catch_3 = False
         bool_catch_4 = False
         bool_catch_list = [bool_catch_0, bool_catch_1, bool_catch_2, bool_catch_3, bool_catch_4]
-
-        # Allows other threads to know if gkeys are engaged and if so do not manipulate the gkeys while this thread manipulates the gkeys
-        bool_backend_onpress_clause_g1 = False
-        bool_backend_onpress_clause_g2 = False
-        bool_backend_onpress_clause_g3 = False
-        bool_backend_onpress_clause_g4 = False
-        bool_backend_onpress_clause_g5 = False
-        bool_backend_onpress_clause_g6 = False
-        bool_backend_onpress_clause_list = [bool_backend_onpress_clause_g1, bool_backend_onpress_clause_g2, bool_backend_onpress_clause_g3,
-                                            bool_backend_onpress_clause_g4, bool_backend_onpress_clause_g5, bool_backend_onpress_clause_g6]
 
         # Stop & start thread_key_timer
         thread_key_timer[0].stop()
@@ -5892,7 +5851,9 @@ class OnPressClass(QThread):
         }
         gkey_dict_pressed_list = [gkey_event_press_dict_zero, gkey_event_press_dict_0, gkey_event_press_dict_1, gkey_event_press_dict_2, gkey_event_press_dict_3]
 
-        gkey_pressed_id = [121, 122, 123, 124, 125, 126]
+        bool_switch_gkeys = [bool_switch_power_plan, bool_switch_g2_disks, bool_switch_g3, bool_switch_powershell,
+                             bool_switch_g5_backlight, bool_switch_lock_gkeys]
+
         gkey_pressed_col = [(0, 0, 0), (255, 255, 0), (255, 100, 0), (255, 0, 0), (255, 255, 255)]
 
         while True:
@@ -5903,37 +5864,25 @@ class OnPressClass(QThread):
                     if _ == g_key_pressed:
                         if bool_catch_list[key_down_timer_int_tmp] is False:
                             bool_catch_list[key_down_timer_int_tmp] = True
-                            bool_backend_onpress_clause_list[i] = True
                             ex_func = gkey_dict_pressed_list[key_down_timer_int_tmp][_]
                             if bool_backend_allow_g_key_access is True and g_key_pressed != 'CorsairKeyId.Kb_G6':
-                                print('-- accessing dictionary pressed entry:', _)
-                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({gkey_pressed_id[i]: gkey_pressed_col[key_down_timer_int_tmp]}))
-                                ex_func()
+                                if bool_switch_gkeys[i] is True:
+                                    print('-- [OnPressClass.run] accessing dictionary pressed entry:', _)
+                                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_gkeys[i]: gkey_pressed_col[key_down_timer_int_tmp]}))
+                                    ex_func()
+                                else:
+                                    print('-- [OnPressClass.run]: function disabled:', _)
                             elif g_key_pressed == 'CorsairKeyId.Kb_G6':
-                                print('-- accessing dictionary pressed entry:', _)
-                                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({gkey_pressed_id[i]: gkey_pressed_col[key_down_timer_int_tmp]}))
-                                ex_func()
+                                if bool_switch_gkeys[5] is True:
+                                    print('-- [OnPressClass.run] accessing dictionary pressed entry:', _)
+                                    sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_gkeys[i]: gkey_pressed_col[key_down_timer_int_tmp]}))
+                                    ex_func()
+                                else:
+                                    print('-- [OnPressClass.run]: function disabled:', _)
                     i += 1
-
-        bool_backend_onpress_clause_g1 = False
-        bool_backend_onpress_clause_g2 = False
-        bool_backend_onpress_clause_g3 = False
-        bool_backend_onpress_clause_g4 = False
-        bool_backend_onpress_clause_g5 = False
-        bool_backend_onpress_clause_g6 = False
 
     def stop(self):
         print('-- [OnPressClass.stop]: plugged in')
-        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
-        global bool_backend_onpress_clause_g1, bool_backend_onpress_clause_g2, bool_backend_onpress_clause_g3
-        global bool_backend_onpress_clause_g4, bool_backend_onpress_clause_g5, bool_backend_onpress_clause_g6
-
-        bool_backend_onpress_clause_g1 = False
-        bool_backend_onpress_clause_g2 = False
-        bool_backend_onpress_clause_g3 = False
-        bool_backend_onpress_clause_g4 = False
-        bool_backend_onpress_clause_g5 = False
-        bool_backend_onpress_clause_g6 = False
 
         self.terminate()
 
@@ -5949,103 +5898,102 @@ class SdkEventHandlerClass(QThread):
         self.allow_sdk_event = True
 
     def g1_function_short(self):
-        global devices_kb, bool_switch_power_plan, power_plan, power_plan_index
-        global notification_key
+        global bool_switch_power_plan, power_plan, power_plan_index
 
-        print('-- [App.g1_function_short]: plugged in')
+        print('-- [SdkEventHandlerClass.g1_function_short]: plugged in')
         if len(devices_kb):
             if bool_switch_power_plan is True:
-                print('-- [App.g1_function_short] cycling power plan')
+                print('-- [SdkEventHandlerClass.g1_function_short] cycling power plan')
                 if power_plan_index < 3:
                     power_plan_index += 1
                 else:
                     power_plan_index = 0
                 try:
                     print('power_plan_index try:', power_plan_index)
-                    print('-- [App.g1_function_short] attempting to set power plan:', power_plan[power_plan_index])
+                    print('-- [SdkEventHandlerClass.g1_function_short] attempting to set power plan:', power_plan[power_plan_index])
                     x = power_plan[power_plan_index]
                     x = x.split()
                     power_plan_guid = x[3].strip()
-                    print('-- [App.g1_function_short] isolating GUID:', power_plan_guid)
+                    print('-- [SdkEventHandlerClass.g1_function_short] isolating GUID:', power_plan_guid)
                     cmd = 'powercfg /SETACTIVE ' + power_plan_guid
                     print('running command:', cmd)
                     xcmd = subprocess.Popen(cmd, shell=True, startupinfo=info)
                 except Exception as e:
-                    print('-- [App.g1_function_short] Error:', e)
+                    print('-- [SdkEventHandlerClass.g1_function_short] Error:', e)
 
     def g1_function_long(self):
-        print('-- [App.g1_function_long]: plugged in')
+        print('-- [SdkEventHandlerClass.g1_function_long]: plugged in')
         os.system('shutdown /h')
 
     def g1_function_long_2sec(self):
-        print('-- [App.g1_function_long_2sec]: plugged in')
+        print('-- [SdkEventHandlerClass.g1_function_long_2sec]: plugged in')
         os.system('shutdown /r /t 0')
 
     def g1_function_long_3sec(self):
-        print('-- [App.g1_function_long_3sec]: plugged in')
+        print('-- [SdkEventHandlerClass.g1_function_long_3sec]: plugged in')
         os.system('shutdown /s /t 0')
 
     def g2_function_short(self):
-        print('-- [App.g2_function_short]: plugged in')
+        print('-- [SdkEventHandlerClass.g2_function_short]: plugged in')
 
     def g2_function_long(self):
-        print('-- [App.g2_function_long]: plugged in')
+        print('-- [SdkEventHandlerClass.g2_function_long]: plugged in')
 
     def g2_function_long_2sec(self):
-        print('-- [App.g2_function_long_2sec]: plugged in')
+        print('-- [SdkEventHandlerClass.g2_function_long_2sec]: plugged in')
 
     def g2_function_long_3sec(self):
-        print('-- [App.g2_function_long_3sec]: plugged in')
+        print('-- [SdkEventHandlerClass.g2_function_long_3sec]: plugged in')
 
     def g3_function_short(self):
-        print('-- [App.g3_function_short]: plugged in')
+        print('-- [SdkEventHandlerClass.g3_function_short]: plugged in')
 
     def g3_function_long(self):
-        print('-- [App.g3_function_long]: plugged in')
+        print('-- [SdkEventHandlerClass.g3_function_long]: plugged in')
 
     def g3_function_long_2sec(self):
-        print('-- [App.g3_function_long_2sec]: plugged in')
+        print('-- [SdkEventHandlerClass.g3_function_long_2sec]: plugged in')
 
     def g3_function_long_3sec(self):
-        print('-- [App.g3_function_long_3sec]: plugged in')
+        print('-- [SdkEventHandlerClass.g3_function_long_3sec]: plugged in')
 
     def g4_function_short(self):
-        print('-- [App.g4_function_short]: plugged in')
+        print('-- [SdkEventHandlerClass.g4_function_short]: plugged in')
         global bool_switch_powershell
         if bool_switch_powershell is True:
-            print('-- [App.g4_function_short]: attempting to run start powershell')
+            print('-- [SdkEventHandlerClass.g4_function_short]: attempting to run start powershell')
             try:
                 cwd_0 = os.getcwd()
                 print('-- [App.g4_function_short] current working directory:', cwd_0)
 
                 os.chdir(os.path.join(os.path.expanduser('~'), '/'))
                 cwd_1 = os.getcwd()
-                print('-- [App.g4_function_short] current working directory changed:', cwd_1)
+                print('-- [SdkEventHandlerClass.g4_function_short] current working directory changed:', cwd_1)
 
                 os.startfile('powershell')
 
                 os.chdir(os.path.join(cwd_0))
                 cwd_2 = os.getcwd()
-                print('-- [App.g4_function_short] returning to previous directory:', cwd_2)
+                print('-- [SdkEventHandlerClass.g4_function_short] returning to previous directory:', cwd_2)
 
             except Exception as e:
                 print(e)
 
     def g4_function_long(self):
-        print('-- [App.g4_function_long]: plugged in')
+        print('-- [SdkEventHandlerClass.g4_function_long]: plugged in')
 
     def g4_function_long_2sec(self):
-        print('-- [App.g4_function_long_2sec]: plugged in')
+        print('-- [SdkEventHandlerClass.g4_function_long_2sec]: plugged in')
 
     def g4_function_long_3sec(self):
-        print('-- [App.g4_function_long_3sec]: plugged in')
+        print('-- [SdkEventHandlerClass.g4_function_long_3sec]: plugged in')
 
     def g5_function_short(self):
-        print('-- [App.g5_function_short]: plugged in')
+        print('-- [SdkEventHandlerClass.g5_function_short]: plugged in')
 
     def g5_function_long(self):
-        print('-- [App.g5_function_long]: plugged in')
-        global bool_switch_backlight, bool_instruction_backlight, bool_block_input, bool_switch_g5_backlight
+        print('-- [SdkEventHandlerClass.g5_function_long]: plugged in')
+        global bool_switch_backlight, bool_instruction_backlight, bool_switch_g5_backlight
         if bool_switch_g5_backlight is True:
             if bool_switch_backlight is False:
                 bool_switch_backlight = True
@@ -6055,95 +6003,82 @@ class SdkEventHandlerClass(QThread):
                 bool_instruction_backlight = True
 
     def g5_function_long_2sec(self):
-        print('-- [App.g5_function_long_2sec]: plugged in')
+        print('-- [SdkEventHandlerClass.g5_function_long_2sec]: plugged in')
         global bool_backend_display_hud
+        global thread_compile_devices, devices_previous
+
         if bool_backend_display_hud is True:
             bool_backend_display_hud = False
             try:
                 thread_windows_update_monitor[0].stop()
             except Exception as e:
-                print('-- [App.g5_function_long_2sec]: Handled Exception:', e)
+                print('-- [SdkEventHandlerClass.g5_function_long_2sec]: Handled Exception:', e)
             try:
                 thread_eject[0].stop()
             except Exception as e:
-                print('-- [App.g5_function_long_2sec]: Handled Exception:', e)
+                print('-- [SdkEventHandlerClass.g5_function_long_2sec]: Handled Exception:', e)
             try:
                 thread_mount[0].stop()
             except Exception as e:
-                print('-- [App.g5_function_long_2sec]: Handled Exception:', e)
+                print('-- [SdkEventHandlerClass.g5_function_long_2sec]: Handled Exception:', e)
             try:
                 thread_unmount[0].stop()
             except Exception as e:
-                print('-- [App.g5_function_long_2sec]: Handled Exception:', e)
+                print('-- [SdkEventHandlerClass.g5_function_long_2sec]: Handled Exception:', e)
             try:
                 thread_pause_loop[0].stop()
             except Exception as e:
-                print('-- [App.g5_function_long_2sec]: Handled Exception:', e)
+                print('-- [SdkEventHandlerClass.g5_function_long_2sec]: Handled Exception:', e)
             try:
                 thread_media_display[0].stop()
             except Exception as e:
-                print('-- [App.g5_function_long_2sec]: Handled Exception:', e)
+                print('-- [SdkEventHandlerClass.g5_function_long_2sec]: Handled Exception:', e)
             try:
                 thread_disk_rw[0].stop()
             except Exception as e:
-                print('-- [App.g5_function_long_2sec]: Handled Exception:', e)
+                print('-- [SdkEventHandlerClass.g5_function_long_2sec]: Handled Exception:', e)
             try:
                 thread_cpu_util[0].stop()
             except Exception as e:
-                print('-- [App.g5_function_long_2sec]: Handled Exception:', e)
+                print('-- [SdkEventHandlerClass.g5_function_long_2sec]: Handled Exception:', e)
             try:
                 thread_dram_util[0].stop()
             except Exception as e:
-                print('-- [App.g5_function_long_2sec]: Handled Exception:', e)
+                print('-- [SdkEventHandlerClass.g5_function_long_2sec]: Handled Exception:', e)
             try:
                 thread_vram_util[0].stop()
             except Exception as e:
-                print('-- [App.g5_function_long_2sec]: Handled Exception:', e)
+                print('-- [SdkEventHandlerClass.g5_function_long_2sec]: Handled Exception:', e)
             try:
                 thread_net_traffic[0].stop()
             except Exception as e:
-                print('-- [App.g5_function_long_2sec]: Handled Exception:', e)
+                print('-- [SdkEventHandlerClass.g5_function_long_2sec]: Handled Exception:', e)
             try:
                 thread_net_connection[0].stop()
             except Exception as e:
-                print('-- [App.g5_function_long_2sec]: Handled Exception:', e)
+                print('-- [SdkEventHandlerClass.g5_function_long_2sec]: Handled Exception:', e)
             try:
                 thread_net_share[0].stop()
             except Exception as e:
-                print('-- [App.g5_function_long_2sec]: Handled Exception:', e)
+                print('-- [SdkEventHandlerClass.g5_function_long_2sec]: Handled Exception:', e)
             try:
                 thread_temperatures[0].stop()
             except Exception as e:
-                print('-- [App.g5_function_long_2sec]: Handled Exception:', e)
+                print('-- [SdkEventHandlerClass.g5_function_long_2sec]: Handled Exception:', e)
         elif bool_backend_display_hud is False:
             bool_backend_display_hud = True
-            print('-- [App.g5_function_long_2sec]: plugged in')
-            global thread_compile_devices, devices_previous
-            print('-- [App.g5_function_long_2sec] stopping thread: thread_compile_devices:')
+            print('-- [SdkEventHandlerClass.g5_function_long_2sec]: plugged in')
+            print('-- [SdkEventHandlerClass.g5_function_long_2sec] stopping thread: thread_compile_devices:')
             thread_compile_devices[0].stop()
             devices_previous = []
-            print('-- [App.g5_function_long_2sec] starting thread: thread_compile_devices:')
+            print('-- [SdkEventHandlerClass.g5_function_long_2sec] starting thread: thread_compile_devices:')
             thread_compile_devices[0].start()
 
-        """ other threads to keep in mind """
-        # thread_notification = []
-        # thread_sdk_instruction = []
-        # thread_exclusive_gkey_event_mount = []
-        # thread_disk_guid = []
-        # thread_exclusive_gkey_event_unmount = []
-        # thread_gkey_pressed = []
-        # thread_keyevents = []
-        # thread_test_locked = []
-        # thread_power = []
-        # thread_compile_devices = []
-        # thread_sdk_event_handler = []
-        # thread_hard_block = []
-
     def g5_function_long_3sec(self):
-        print('-- [App.g5_function_long_3sec]: plugged in')
+        print('-- [SdkEventHandlerClass.g5_function_long_3sec]: plugged in')
 
     def g6_function_short(self):
-        print('-- [App.g6_function_short]: plugged in')
+        print('-- [SdkEventHandlerClass.g6_function_short]: plugged in')
         global bool_backend_allow_g_key_access, notification_key, bool_switch_lock_gkeys, bool_block_input
 
         if bool_block_input is False:
@@ -6156,7 +6091,7 @@ class SdkEventHandlerClass(QThread):
                     notification_key = 8
 
     def g6_function_long(self):
-        print('-- [App.g6_function_long]: plugged in')
+        print('-- [SdkEventHandlerClass.g6_function_long]: plugged in')
         global bool_backend_allow_g_key_access, notification_key, bool_block_input, thread_hard_block, sec_key_str, sec_key_path
 
         if bool_block_input is False:
@@ -6168,10 +6103,10 @@ class SdkEventHandlerClass(QThread):
                 bool_backend_allow_g_key_access = False
                 notification_key = 7
                 thread_hard_block[0].start()
-                print('-- [App.g6_function_long]: changing bool_block_input to:', bool_block_input)
+                print('-- [SdkEventHandlerClass.g6_function_long]: changing bool_block_input to:', bool_block_input)
 
             else:
-                print('-- key unpaired: attempting impromptu pair')
+                print('-- [SdkEventHandlerClass.g6_function_long] attempting impromptu pair')
                 with open('./config.dat', 'r') as fo:
                     for line in fo:
                         line = line.strip()
@@ -6179,7 +6114,7 @@ class SdkEventHandlerClass(QThread):
                             var = line.replace('security_key_path: ', '')
                             if os.path.exists(var):
                                 sec_key_path = var
-                                print('-- pairing previously unpaired security key:', sec_key_path)
+                                print('-- [SdkEventHandlerClass.g6_function_long] pairing previously unpaired security key:', sec_key_path)
                                 with open(sec_key_path, 'r') as fo:
                                     for line in fo:
                                         line = line.strip()
@@ -6188,42 +6123,41 @@ class SdkEventHandlerClass(QThread):
                                             bool_impromptu_pair = True
                                             break
                             elif not os.path.exists(var):
-                                print('-- path does not exists:', var)
+                                print('-- [SdkEventHandlerClass.g6_function_long] path does not exists:', var)
                 if bool_impromptu_pair is True:
                     self.g6_function_long()
 
         elif bool_block_input is True:
             thread_hard_block[0].stop()
-            print('-- [App.g6_function_long]: changing bool_block_input to:', bool_block_input)
+            print('-- [SdkEventHandlerClass.g6_function_long]: changing bool_block_input to:', bool_block_input)
 
     def g6_function_long_2sec(self):
-        print('-- [App.g6_function_long_2sec]: plugged in')
+        print('-- [SdkEventHandlerClass.g6_function_long_2sec]: plugged in')
 
     def g6_function_long_3sec(self):
-        print('-- [App.g6_function_long_3sec]: plugged in')
+        print('-- [SdkEventHandlerClass.g6_function_long_3sec]: plugged in')
 
     def black_function(self):
-        global notification_key
         try:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
                                                       ({177: (0, 0, 0)}))
         except Exception as e:
-            print('-- [SdkNotificationClass.run] Error:', e)
+            print('-- [SdkNotificationClass.black_function] Error:', e)
         try:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
                                                       ({178: (0, 0, 0)}))
         except Exception as e:
-            print('-- [SdkNotificationClass.run] Error:', e)
+            print('-- [SdkNotificationClass.black_function] Error:', e)
         try:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
                                                       ({179: (0, 0, 0)}))
         except Exception as e:
-            print('-- [SdkNotificationClass.run] Error:', e)
+            print('-- [SdkNotificationClass.black_function] Error:', e)
         try:
             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected],
                                                       ({180: (0, 0, 0)}))
         except Exception as e:
-            print('-- [SdkNotificationClass.run] Error:', e)
+            print('-- [SdkNotificationClass.black_function] Error:', e)
 
     def gkey_sub_thread_stop(self):
         global thread_eject, thread_mount, thread_unmount
@@ -6237,7 +6171,7 @@ class SdkEventHandlerClass(QThread):
 
     def on_press(self, event_id, data):
         # print('-- [SdkEventHandlerClass.on_press]: plugged in')
-        global sdk, devices_kb, devices_kb_selected, g_key_pressed, thread_gkey_pressed
+        global g_key_pressed, thread_gkey_pressed
 
         try:
             self.black_function()
@@ -6258,11 +6192,13 @@ class SdkEventHandlerClass(QThread):
             print('-- [SdkEventHandlerClass.on_press] Error:', e)
 
     def on_release(self, event_id, data):
+        global sdk, devices_kb, devices_kb_selected
         global thread_gkey_pressed, thread_eject, thread_mount, thread_unmount
-        global bool_switch_g2_disks, bool_backend_allow_g_key_access, key_down_timer_int
+        global bool_backend_allow_g_key_access, key_down_timer_int
+        global corsairled_id_num_gkeys
+        global bool_switch_power_plan, bool_switch_g2_disks, bool_switch_g5_backlight
+        global bool_switch_powershell, bool_switch_lock_gkeys
         # print('-- [SdkEventHandlerClass.on_release]: plugged in')
-
-        gkey_pressed_id = [121, 122, 123, 124, 125, 126]
 
         try:
             thread_gkey_pressed[0].stop()
@@ -6283,9 +6219,9 @@ class SdkEventHandlerClass(QThread):
         try:
             released_key_int = int(self.released_keyId[-1]) - 1
             if bool_backend_allow_g_key_access is True:
-                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({gkey_pressed_id[released_key_int]: (0, 0, 0)}))
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_gkeys[released_key_int]: (0, 0, 0)}))
             if self.released_keyId == 'CorsairKeyId.Kb_G6' and bool_backend_allow_g_key_access is False:
-                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({gkey_pressed_id[released_key_int]: (255, 0, 0)}))
+                sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_gkeys[released_key_int]: (255, 0, 0)}))
         except Exception as e:
             print('-- [SdkEventHandlerClass.on_release] Error:', e)
 
@@ -6327,17 +6263,27 @@ class SdkEventHandlerClass(QThread):
 
                 gkey_dict_list = [gkey_event_dict_0, gkey_event_dict_1, gkey_event_dict_2, gkey_event_dict_3]
 
+                bool_switch_gkeys = [bool_switch_power_plan, bool_switch_g2_disks, bool_switch_g3, bool_switch_powershell, bool_switch_g5_backlight, bool_switch_lock_gkeys]
+
+                i = 0
                 for _ in gkey_dict_list[key_down_time]:
                     if _ == self.released_keyId:
                         ex_func = gkey_dict_list[key_down_time][_]
                         if bool_backend_allow_g_key_access is True and self.released_keyId != 'CorsairKeyId.Kb_G6':
-                            print('-- accessing dictionary entry:', _)
-                            self.black_function()
-                            ex_func()
+                            if bool_switch_gkeys[i] is True:
+                                print('-- [SdkEventHandlerClass.on_release] accessing dictionary entry:', _)
+                                self.black_function()
+                                ex_func()
+                            else:
+                                print('-- [SdkEventHandlerClass.on_release] function disabled:', _)
                         elif self.released_keyId == 'CorsairKeyId.Kb_G6':
-                            print('-- accessing dictionary entry:', _)
-                            self.black_function()
-                            ex_func()
+                            if bool_switch_gkeys[5] is True:
+                                print('-- [SdkEventHandlerClass.on_release] accessing dictionary entry:', _)
+                                self.black_function()
+                                ex_func()
+                            else:
+                                print('-- [SdkEventHandlerClass.on_release] function disabled:', _)
+                    i += 1
 
         except Exception as e:
             print('-- [SdkEventHandlerClass.on_release] Error:', e)
@@ -6526,7 +6472,7 @@ class KeyEventClass(QThread):
     def check_pid(self):
         user32 = ctypes.windll.user32
         h_wnd = user32.GetForegroundWindow()
-        pid = wintypes.DWORD()
+        pid = ctypes.wintypes.DWORD()
         user32.GetWindowThreadProcessId(h_wnd, ctypes.byref(pid))
         self.check_pid_int = pid.value
 
@@ -6745,7 +6691,8 @@ class PowerClass(QThread):
 
     def run(self):
         print('-- [PowerClass.run]: plugged in')
-        global power_plan, power_plan_index, devices_kb, devices_kb_selected, sdk, bool_backend_onpress_clause_g1, notification_key, bool_backend_allow_g_key_access
+        global power_plan, power_plan_index, devices_kb, devices_kb_selected, sdk, notification_key
+        global bool_backend_allow_g_key_access, corsairled_id_num_gkeys
         while True:
             try:
                 if len(devices_kb) > 0:
@@ -6771,14 +6718,14 @@ class PowerClass(QThread):
                                         notification_key = 3
                                     power_plan_index = 0
                                     # if self.active_pp != self.active_pp_prev:
-                                    if bool_backend_onpress_clause_g1 is not True:
+                                    if bool_backend_allow_g_key_access is True:
                                         self.active_pp_prev = 1
                                         try:
-                                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 0, 0)}))
+                                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_gkeys[0]: (255, 0, 0)}))
                                         except Exception as e:
                                             print("-- [PowerClass.run]: Error:", e)
                                         try:
-                                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 0, 0)}))
+                                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_gkeys[0]: (255, 0, 0)}))
                                         except Exception as e:
                                             print("-- [PowerClass.run]: Error:", e)
 
@@ -6788,14 +6735,14 @@ class PowerClass(QThread):
                                         notification_key = 4
                                     power_plan_index = 1
                                     # if self.active_pp != self.active_pp_prev:
-                                    if bool_backend_onpress_clause_g1 is not True:
+                                    if bool_backend_allow_g_key_access is True:
                                         self.active_pp_prev = 2
                                         try:
-                                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (0, 255, 0)}))
+                                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_gkeys[0]: (0, 255, 0)}))
                                         except Exception as e:
                                             print("-- [PowerClass.run]: Error:", e)
                                         try:
-                                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (0, 255, 0)}))
+                                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_gkeys[0]: (0, 255, 0)}))
                                         except Exception as e:
                                             print("-- [PowerClass.run]: Error:", e)
 
@@ -6805,14 +6752,14 @@ class PowerClass(QThread):
                                         notification_key = 5
                                     power_plan_index = 2
                                     # if self.active_pp != self.active_pp_prev:
-                                    if bool_backend_onpress_clause_g1 is not True:
+                                    if bool_backend_allow_g_key_access is True:
                                         self.active_pp_prev = 3
                                         try:
-                                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (0, 255, 255)}))
+                                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_gkeys[0]: (0, 255, 255)}))
                                         except Exception as e:
                                             print("-- [PowerClass.run]: Error:", e)
                                         try:
-                                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (0, 255, 255)}))
+                                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_gkeys[0]: (0, 255, 255)}))
                                         except Exception as e:
                                             print("-- [PowerClass.run]: Error:", e)
 
@@ -6822,14 +6769,14 @@ class PowerClass(QThread):
                                         notification_key = 6
                                     power_plan_index = 3
                                     # if self.active_pp != self.active_pp_prev:
-                                    if bool_backend_onpress_clause_g1 is not True:
+                                    if bool_backend_allow_g_key_access is True:
                                         self.active_pp_prev = 4
                                         try:
-                                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 15, 100)}))
+                                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_gkeys[0]: (255, 15, 100)}))
                                         except Exception as e:
                                             print("-- [PowerClass.run]: Error:", e)
                                         try:
-                                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: (255, 15, 100)}))
+                                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_gkeys[0]: (255, 15, 100)}))
                                         except Exception as e:
                                             print("-- [PowerClass.run]: Error:", e)
 
@@ -6853,11 +6800,11 @@ class PowerClass(QThread):
 
     def stop(self):
         print('-- [PowerClass.stop]: plugged in')
-        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight
+        global sdk, devices_kb, devices_kb_selected, sdk_color_backlight,corsairled_id_num_gkeys
         self.active_pp = 0
         self.active_pp_prev = 0
         try:
-            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({121: sdk_color_backlight}))
+            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({corsairled_id_num_gkeys[0]: sdk_color_backlight}))
         except Exception as e:
             print('-- [PowerClass.stop] Error:', e)
         self.terminate()
@@ -6930,7 +6877,7 @@ class MediaDisplayClass(QThread):
 
     async def get_media_state(self):
         global sdk, devices_kb, devices_kb_selected, sdk_color_backlight, thread_pause_loop
-        sessions = await MediaManager.request_async()
+        sessions = await wmc.GlobalSystemMediaTransportControlsSessionManager.request_async()
 
         current_session = sessions.get_current_session()
 
@@ -6946,10 +6893,6 @@ class MediaDisplayClass(QThread):
                         if len(devices_kb) > 0:
                             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: (0, 255, 0)}))
                         if len(devices_kb) > 0:
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({100: (0, 0, 255)}))
-                        if len(devices_kb) > 0:
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({102: (0, 0, 255)}))
-                        if len(devices_kb) > 0:
                             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: sdk_color_backlight}))
                     except Exception as e:
                         print("-- [MediaDisplayClass.get_media_state]: Error:", e)
@@ -6961,10 +6904,6 @@ class MediaDisplayClass(QThread):
                     self.media_state_prev = 2
                     thread_pause_loop[0].start()
                     try:
-                        if len(devices_kb) > 0:
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({100: (0, 255, 255)}))
-                        if len(devices_kb) > 0:
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({102: (0, 255, 255)}))
                         if len(devices_kb) > 0:
                             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: sdk_color_backlight}))
                     except Exception as e:
@@ -6981,10 +6920,6 @@ class MediaDisplayClass(QThread):
                             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: sdk_color_backlight}))
                         if len(devices_kb) > 0:
                             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: (255, 0, 0)}))
-                        if len(devices_kb) > 0:
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({100: sdk_color_backlight}))
-                        if len(devices_kb) > 0:
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({102: sdk_color_backlight}))
                     except Exception as e:
                         print("-- [MediaDisplayClass.get_media_state]: Error:", e)
 
@@ -6999,10 +6934,6 @@ class MediaDisplayClass(QThread):
                             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: sdk_color_backlight}))
                         if len(devices_kb) > 0:
                             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: (255, 0, 0)}))
-                        if len(devices_kb) > 0:
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({100: sdk_color_backlight}))
-                        if len(devices_kb) > 0:
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({102: sdk_color_backlight}))
                     except Exception as e:
                         print("-- [MediaDisplayClass.get_media_state]: Error:", e)
 
@@ -7017,10 +6948,6 @@ class MediaDisplayClass(QThread):
                             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: sdk_color_backlight}))
                         if len(devices_kb) > 0:
                             sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: (255, 0, 0)}))
-                        if len(devices_kb) > 0:
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({100: sdk_color_backlight}))
-                        if len(devices_kb) > 0:
-                            sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({102: sdk_color_backlight}))
                     except Exception as e:
                         print("-- [MediaDisplayClass.get_media_state]: Error:", e)
 
@@ -7035,10 +6962,6 @@ class MediaDisplayClass(QThread):
                         sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: sdk_color_backlight}))
                     if len(devices_kb) > 0:
                         sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({99: (255, 0, 0)}))
-                    if len(devices_kb) > 0:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({100: sdk_color_backlight}))
-                    if len(devices_kb) > 0:
-                        sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({102: sdk_color_backlight}))
                 except Exception as e:
                     print("-- [MediaDisplayClass.get_media_state]: Error:", e)
 
@@ -7346,7 +7269,6 @@ class NetworkMonClass(QThread):
 
     def run(self):
         print('-- [NetworkMonClass.run]: plugged in')
-        # pythoncom.CoInitialize()
         global devices_kb, timing_net_traffic_util
         while True:
             try:
@@ -7737,7 +7659,7 @@ class InternetConnectionClass(QThread):
 
     def send_instruction(self):
         # print('-- [InternetConnectionClass.send_instruction]: plugged in')
-        global sdk, devices_ms, devices_ms_selected, corsairled_id_num_ms_complete, ping_test_key_id, corsairled_id_num_netcon_kb
+        global sdk, devices_ms, devices_ms_selected, corsairled_id_num_ms_complete, ping_test_key_id
         global corsairled_id_num_netcon_ms, bool_switch_startup_net_con_ms, bool_switch_startup_net_con_kb, devices_kb, devices_kb_selected
         global bool_switch_startup_net_traffic
 
@@ -7914,7 +7836,7 @@ class HddMonClass(QThread):
 
     def get_stat(self):
         # print('-- [HddMonClass.get_stat]: plugged in')
-        global alpha_str, hdd_bytes_type_w, hdd_bytes_type_r, hdd_bytes_str, bool_backend_alpha_stage_engaged
+        global alpha_str, bool_backend_alpha_stage_engaged
         get_stat_allow = False
         try:
             self.disk_letter_complete = []
