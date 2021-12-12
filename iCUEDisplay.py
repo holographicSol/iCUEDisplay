@@ -5458,6 +5458,7 @@ class SdkEventG2_Eject(QThread):
         global disk_guid
         global bool_backend_alpha_stage_engaged, bool_backend_g2_input, kb_event, bool_instruction_mount, bool_instruction_mount_end
         global notification_key
+        global bool_instruction_eject, bool_instruction_eject_end
 
         bool_backend_alpha_stage_engaged = True
 
@@ -6403,8 +6404,8 @@ class CompileDiskGUIDDictionaryListClass(QThread):
                     else:
                         break
                     rc = xcmd.poll()
-                guid = ''
-                disk_let = ''
+                # guid = ''
+                # disk_let = ''
                 i_1 = 0
                 for _ in cmd_output:
                     if len(_) == 3:
