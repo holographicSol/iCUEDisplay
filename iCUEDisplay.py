@@ -6371,7 +6371,7 @@ class HardBlockInputClass(QThread):
             print('-- unblocking input')
             bool_block_input = False
             bool_backend_allow_g_key_access = True
-            ok = windll.user32.BlockInput(False)
+            ok = ctypes.windll.user32.BlockInput(False)
             notification_key = 8
             self.terminate()
         elif check_pass is False:
