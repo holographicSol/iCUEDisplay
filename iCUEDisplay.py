@@ -4985,7 +4985,7 @@ class SdkNotificationClass(QThread):
         QThread.__init__(self)
 
     def notification_off(self):
-        time.sleep(1)
+        time.sleep(0.6)
         if len(devices_kb) > 0:
             try:
                 sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({177: (0, 0, 0)}))
@@ -5235,7 +5235,7 @@ class SdkNotificationClass(QThread):
                 print('-- [SdkNotificationClass.run] Error:', e)
                 time.sleep(1)
             
-            time.sleep(0.5)
+            time.sleep(0.1)
 
     def stop(self):
         print('-- [SdkNotificationClass.stop]: plugged in')
