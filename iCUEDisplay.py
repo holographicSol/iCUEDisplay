@@ -1958,12 +1958,14 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.lbl_power_plan)
         ui_object_complete.append(self.lbl_power_plan)
         ui_object_font_list_s8b.append(self.lbl_power_plan)
-        self.lbl_power_plan.setToolTip('[G1] Power\n\nEnables/Disables [G1] Power Plan.\n\nG1 key LED will reflect the '
-                                       'current power plan while a short press will change the power plan.\n\nIt is '
-                                       'recommended to properly configure your power plan(s) to compliment this '
-                                       'feature, reducing Processor Maximum State for Power Saver.\n\nShort Press: '
-                                       'Cycle Power Plan\n1 Second [Yellow G1]: Hibernate/Sleep\n2 Seconds [Amber G1]: '
-                                       'Restart\n3 Seconds [Red G1]: Shutdown\n4 Seconds [White G1]: Cancel')
+        self.lbl_power_plan.setToolTip('[G1] Power\n\nEnables/Disables [G1] Power Plan.\n\n'
+                                       '[G1] Cycle Power Plan.\n'
+                                       '[G1] 1 Second Press: Hibernate/Sleep.\n'
+                                       '[G1] 2 Second Press: Restart.\n'
+                                       '[G1] 3 Second Press: Shutdown.\n'
+                                       '[G1] 4 Second Press: Cancel\n\n'
+                                       'G1 key LED will reflect the current power plan and a short press will cycle through power plans.\n'
+                                       'It is recommended to properly configure your power plan(s) to compliment this feature, reducing Processor Maximum State for Power Saver.')
 
         self.btn_power_plan = QPushButton(self)
         self.btn_power_plan.move(self.menu_obj_pos_w + 2 + 4 + 126, self.height - (4 * 6) - (self.monitor_btn_h * 6))
@@ -1974,12 +1976,14 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.btn_power_plan)
         self.object_interaction_enabled.append(self.btn_power_plan)
         ui_object_complete.append(self.btn_power_plan)
-        self.btn_power_plan.setToolTip('[G1] Power\n\nEnables/Disables [G1] Power Plan.\n\nG1 key LED will reflect the '
-                                       'current power plan while a short press will change the power plan.\n\nIt is '
-                                       'recommended to properly configure your power plan(s) to compliment this '
-                                       'feature, reducing Processor Maximum State for Power Saver.\n\nShort Press: '
-                                       'Cycle Power Plan\n1 Second [Yellow G1]: Hibernate/Sleep\n2 Seconds [Amber G1]: '
-                                       'Restart\n3 Seconds [Red G1]: Shutdown\n4 Seconds [White G1]: Cancel')
+        self.btn_power_plan.setToolTip('[G1] Power\n\nEnables/Disables [G1] Power Plan.\n\n'
+                                       '[G1] Cycle Power Plan.\n'
+                                       '[G1] 1 Second Press: Hibernate/Sleep.\n'
+                                       '[G1] 2 Second Press: Restart.\n'
+                                       '[G1] 3 Second Press: Shutdown.\n'
+                                       '[G1] 4 Second Press: Cancel\n\n'
+                                       'G1 key LED will reflect the current power plan and a short press will cycle through power plans.\n'
+                                       'It is recommended to properly configure your power plan(s) to compliment this feature, reducing Processor Maximum State for Power Saver.')
 
         self.lbl_g2_disk = QPushButton(self)
         self.lbl_g2_disk.move(self.menu_obj_pos_w + 2, self.height - (4 * 5) - (self.monitor_btn_h * 5))
@@ -1991,7 +1995,15 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.lbl_g2_disk)
         ui_object_complete.append(self.lbl_g2_disk)
         ui_object_font_list_s8b.append(self.lbl_g2_disk)
-        self.lbl_g2_disk.setToolTip('[G2] Disks\n\nEnables/Disables [G2] Disks\n\nShort Press [G2] Or Any Non-Alpha Key To Disarm. (ESC or Short press [G2] recommended)\n1 Second Hold [Yellow G2]: Eject\n2 Seconds [Amber G2]: Mount (Only un-mounted drives can be mounted, you may not mount an ejected drive).\n3 Seconds [Red G2]: Unmount (Un-mounted drives will not be automatically mounted by Windows until next reboot.\n4 Seconds [White G2]: Cancel\n\nNote: Only drives that have been unmounted while iCUE Display has been running can be mounted.\nAny drive assigned a Disk Letter can be ejected/mounted/unmounted when the alpha keys reflect your expressed intent.\n\nWARNING: This Feature Is Experimental')
+        self.lbl_g2_disk.setToolTip('[G2] Disks\n\nEnables/Disables [G2] Disks\n\n'
+                                    '[G2] Short Press or any non-alpha key to disarm. (ESC or short press [G2] recommended to disarm)\n'
+                                    '[G2] 1 Second Press: Eject\n'
+                                    '[G2] 2 Second Press: Mount (Only un-mounted drives can be mounted, you may not mount an ejected drive).\n'
+                                    '[G2] 3 Second Press: Unmount (Un-mounted drives will not be automatically mounted by Windows until next reboot.\n'
+                                    '[G2] 4 Second Press: Cancel\n\n'
+                                    'Note: Only drives that have been unmounted while iCUE Display has been running can be mounted.\n'
+                                    'Any drive assigned a disk letter can be ejected/mounted/unmounted by pressing the disk letters alpha key on the keyboard.\n'
+                                    'If the diive does not eject, unmount then the drive may be busy or in in use.')
 
         self.btn_g2_disk = QPushButton(self)
         self.btn_g2_disk.move(self.menu_obj_pos_w + 2 + 4 + 126, self.height - (4 * 5) - (self.monitor_btn_h * 5))
@@ -2002,7 +2014,15 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.btn_g2_disk)
         self.object_interaction_enabled.append(self.btn_g2_disk)
         ui_object_complete.append(self.btn_g2_disk)
-        self.btn_g2_disk.setToolTip('G2 Disks\n\nEnables/Disables G2 Disks.')
+        self.btn_g2_disk.setToolTip('[G2] Disks\n\nEnables/Disables [G2] Disks\n\n'
+                                    '[G2] Short Press or any non-alpha key to disarm. (ESC or short press [G2] recommended to dissarm)\n'
+                                    '[G2] 1 Second Press: Eject\n'
+                                    '[G2] 2 Second Press: Mount (Only un-mounted drives can be mounted, you may not mount an ejected drive).\n'
+                                    '[G2] 3 Second Press: Unmount (Un-mounted drives will not be automatically mounted by Windows until next reboot.\n'
+                                    '[G2] 4 Second Press: Cancel\n\n'
+                                    'Note: Only drives that have been unmounted while iCUE Display has been running can be mounted.\n'
+                                    'Any drive assigned a disk letter can be ejected/mounted/unmounted by pressing the disk letters alpha key on the keyboard.\n'
+                                    'If the diive does not eject, unmount then the drive may be busy or in in use.')
 
         """ Power Saver """
         self.lbl_power_plan_key_0 = QLabel(self)
@@ -2126,7 +2146,9 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.lbl_powershell)
         ui_object_complete.append(self.lbl_powershell)
         ui_object_font_list_s8b.append(self.lbl_powershell)
-        self.lbl_powershell.setToolTip('[G4] Powershell\n\nEnables/Disables [G4] Powershell.\n\nShort press [G4] spawns administrator Powershell window if iCUE Display is running as admin')
+        self.lbl_powershell.setToolTip('[G4] Powershell\n\nEnables/Disables [G4] Powershell.\n\n'
+                                       '[G4] Short press spawns Powershell.\n'
+                                       '[G4] 1 Second press spawns Command Prompt.')
 
         self.btn_powershell = QPushButton(self)
         self.btn_powershell.move(self.menu_obj_pos_w + 2 + 4 + 126, self.height - (4 * 3) - (self.monitor_btn_h * 3))
@@ -2137,7 +2159,9 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.btn_powershell)
         self.object_interaction_enabled.append(self.btn_powershell)
         ui_object_complete.append(self.btn_powershell)
-        self.btn_powershell.setToolTip('[G4] Powershell\n\nEnables/Disables [G4] Powershell.\n\nShort press [G4] spawns administrator Powershell window if iCUE Display is running as admin')
+        self.btn_powershell.setToolTip('[G4] Powershell\n\nEnables/Disables [G4] Powershell.\n\n'
+                                       '[G4] Short press spawns Powershell.\n'
+                                       '[G4] 1 Second press spawns Command Prompt.')
 
         self.lbl_g5_backlight = QPushButton(self)
         self.lbl_g5_backlight.move(self.menu_obj_pos_w + 2, self.height - (4 * 2) - (self.monitor_btn_h * 2))
@@ -2149,7 +2173,9 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.lbl_g5_backlight)
         ui_object_complete.append(self.lbl_g5_backlight)
         ui_object_font_list_s8b.append(self.lbl_g5_backlight)
-        self.lbl_g5_backlight.setToolTip('[G5] Backlight\n\nEnables/Disables [G5] Backlight.\n\n[G5] 1 Second Press Turns On/Off Backlight.\n\n[G5] 2 Second Press Turns On/Off HUD Monitor(s)')
+        self.lbl_g5_backlight.setToolTip('[G5] Backlight\n\nEnables/Disables [G5] Backlight.\n\n'
+                                         '[G5] 1 Second Press Turns On/Off Backlight.\n'
+                                         '[G5] 2 Second Press Turns On/Off all keyboard display functionality except gkeys and capslock/numlock state reflection. Gkeys remain enabled & can be disabled separately)')
 
         self.btn_g5_backlight = QPushButton(self)
         self.btn_g5_backlight.move(self.menu_obj_pos_w + 2 + 4 + 126, self.height - (4 * 2) - (self.monitor_btn_h * 2))
@@ -2160,7 +2186,9 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.btn_g5_backlight)
         self.object_interaction_enabled.append(self.btn_g5_backlight)
         ui_object_complete.append(self.btn_g5_backlight)
-        self.btn_g5_backlight.setToolTip('[G5] Backlight\n\nEnables/Disables [G5] Backlight.\n\n[G5] 1 Second Press Turns On/Off Backlight.\n\n[G5] 2 Second Press Turns On/Off HUD Monitor(s)')
+        self.btn_g5_backlight.setToolTip('[G5] Backlight\n\nEnables/Disables [G5] Backlight.\n\n'
+                                         '[G5] 1 Second Press Turns On/Off Backlight.\n'
+                                         '[G5] 2 Second Press Turns On/Off all keyboard display functionality except gkeys and capslock/numlock state reflection. Gkeys remain enabled & can be disabled separately)')
 
         self.lbl_lock_gkeys = QPushButton(self)
         self.lbl_lock_gkeys.move(self.menu_obj_pos_w + 2, self.height - (4 * 1) - (self.monitor_btn_h * 1))
@@ -2172,7 +2200,13 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.lbl_lock_gkeys)
         ui_object_complete.append(self.lbl_lock_gkeys)
         ui_object_font_list_s8b.append(self.lbl_lock_gkeys)
-        self.lbl_lock_gkeys.setToolTip('[G6] Lock Gkeys\n\nEnables/Disables GKeys.\n\n[G6] Short Press: Disable/Enable iCUE Display GKeys.\n[G6] 1 Second Hold (Yellow): Enable/Disable Input Hard Block\n\n1. A key must be paired every time iCUE Display is ran in order to enable Input Hard Block.\n2. The paired key must be inserted to disable Input Hard Block\n\n(WARNING: If iCUE Display and or iCUE crashes while input is hard blocked then you may have to reboot.\nAlso CTRL+ALT+DELETE will disable the ability to disable Input Hard Block completely because communication to the iCUE server will be severed)')
+        self.lbl_lock_gkeys.setToolTip('[G6] Lock Gkeys\n\nEnables/Disables GKeys.\n\n'
+                                       '[G6] Short Press: Enable/Disable iCUE Display GKey Functions.\n'
+                                       '[G6] 1 Second Press: Enable/Disable Input Hard Block\n\n'
+                                       '1. A key must be paired every time iCUE Display is ran in order to enable Input Hard Block.\n'
+                                       '2. The paired key must be inserted to disable Input Hard Block\n\n'
+                                       '(WARNING: If iCUE Display and or iCUE crashes while input is hard blocked then you may have to reboot.\n'
+                                       'Also CTRL+ALT+DELETE will disable the ability to disable Input Hard Block completely because communication to the iCUE server will be severed)')
 
         self.btn_lock_gkeys = QPushButton(self)
         self.btn_lock_gkeys.move(self.menu_obj_pos_w + 2 + 4 + 126, self.height - (4 * 1) - (self.monitor_btn_h * 1))
@@ -2183,7 +2217,13 @@ class App(QMainWindow):
         print('-- [App.__init__] created:', self.btn_lock_gkeys)
         self.object_interaction_enabled.append(self.btn_lock_gkeys)
         ui_object_complete.append(self.btn_lock_gkeys)
-        self.btn_lock_gkeys.setToolTip('[G6] Lock Gkeys\n\nEnables/Disables GKeys.\n\n[G6] Short Press: Disable/Enable iCUE Display GKeys.\n[G6] 1 Second Hold (Yellow): Enable/Disable Input Hard Block\n\n1. A key must be paired every time iCUE Display is ran in order to enable Input Hard Block.\n2. The paired key must be inserted to disable Input Hard Block\n\n(WARNING: If iCUE Display and or iCUE crashes while input is hard blocked then you may have to reboot.\nAlso CTRL+ALT+DELETE will disable the ability to disable Input Hard Block completely because communication to the iCUE server will be severed)')
+        self.btn_lock_gkeys.setToolTip('[G6] Lock Gkeys\n\nEnables/Disables GKeys.\n\n'
+                                       '[G6] Short Press: Enable/Disable iCUE Display GKey Functions.\n'
+                                       '[G6] 1 Second Press: Enable/Disable Input Hard Block\n\n'
+                                       '1. A key must be paired every time iCUE Display is ran in order to enable Input Hard Block.\n'
+                                       '2. The paired key must be inserted to disable Input Hard Block\n\n'
+                                       '(WARNING: If iCUE Display and or iCUE crashes while input is hard blocked then you may have to reboot.\n'
+                                       'Also CTRL+ALT+DELETE will disable the ability to disable Input Hard Block completely because communication to the iCUE server will be severed)')
 
         self.btn_lock_gkeys_key_create = QPushButton(self)
         self.btn_lock_gkeys_key_create.move(self.menu_obj_pos_w + 2 + 4 + 126 + 4 + 28, self.height - (4 * 1) - (self.monitor_btn_h * 1))
@@ -5965,7 +6005,7 @@ class SdkEventHandlerClass(QThread):
             print('-- [SdkEventHandlerClass.g4_function_short]: attempting to run start powershell')
             try:
                 cwd_0 = os.getcwd()
-                print('-- [App.g4_function_short] current working directory:', cwd_0)
+                print('-- [SdkEventHandlerClass.g4_function_short] current working directory:', cwd_0)
 
                 os.chdir(os.path.join(os.path.expanduser('~'), '/'))
                 cwd_1 = os.getcwd()
@@ -5982,6 +6022,25 @@ class SdkEventHandlerClass(QThread):
 
     def g4_function_long(self):
         print('-- [SdkEventHandlerClass.g4_function_long]: plugged in')
+        global bool_switch_powershell
+        if bool_switch_powershell is True:
+            print('-- [SdkEventHandlerClass.g4_function_long]: attempting to run start command prompt')
+            try:
+                cwd_0 = os.getcwd()
+                print('-- [SdkEventHandlerClass.g4_function_long] current working directory:', cwd_0)
+
+                os.chdir(os.path.join(os.path.expanduser('~'), '/'))
+                cwd_1 = os.getcwd()
+                print('-- [SdkEventHandlerClass.g4_function_long] current working directory changed:', cwd_1)
+
+                os.startfile('cmd')
+
+                os.chdir(os.path.join(cwd_0))
+                cwd_2 = os.getcwd()
+                print('-- [SdkEventHandlerClass.g4_function_long] returning to previous directory:', cwd_2)
+
+            except Exception as e:
+                print(e)
 
     def g4_function_long_2sec(self):
         print('-- [SdkEventHandlerClass.g4_function_long_2sec]: plugged in')
@@ -6826,6 +6885,7 @@ class PauseLoopClass(QThread):
                     sdk.set_led_colors_buffer_by_device_index(devices_kb[devices_kb_selected], ({101: (255, 255, 0)}))
                 except Exception as e:
                     print("-- [PauseLoopClass.run]: Error:", e)
+            # Blink rate equal to a healthy heart beat
             time.sleep(0.6)
             if len(devices_kb) > 0:
                 try:
