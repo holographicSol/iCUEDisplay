@@ -131,10 +131,11 @@ press (0.75 seconds +) will remove the notification and not run the directed cod
 [NOTES 2: The exe is compiled with a modified __init__.py in the winrt module. To modify the module in your own python open __init__.py in 
 site-packages\winrt, and comment out '_winrt.init_apartment()' and replace with 'pythoncom.CoInitialize()' like this:
 
+
 import pythoncom
 from . import _winrt
+
 pythoncom.CoInitialize()
-# _winrt.init_apartment()
 
 ]
 
