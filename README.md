@@ -4,10 +4,9 @@
 
 Converts a Corsair K95 Platinum into a HUD.
 
-To run:
-1. Run iCUEDisplay.exe
-2. Close and run iCUEDisplay.lnk
-
+Project in early development and UI does not necessarliy reflect the final products image. Currently the UI is purely logic and has minimun
+aesthetic design.
+Features being refined and added daily. Existing features may be more complex in coming updates.
 
 Google Drive Early Releases: https://drive.google.com/drive/folders/1xHeI_X5vnpKqQ3vkBz6hw97RnqaPwWNl?usp=sharing
 
@@ -128,6 +127,16 @@ press (0.75 seconds +) will remove the notification and not run the directed cod
 [NOTES 0: Right click OpenHardwareMonitor.dll in /py/bin/ select Properties, General Tab, Click Unblock and apply (skip if running exe/py as Admin)]
 
 [NOTES 1: Then Run exe/.py as Admin]
+
+[NOTES 2: The exe is compiled with a modified __init__.py in the winrt module. To modify the module in your own python open __init__.py in 
+site-packages\winrt, and comment out '_winrt.init_apartment()' and replace with 'pythoncom.CoInitialize()' like this:
+
+import pythoncom
+from . import _winrt
+pythoncom.CoInitialize()
+# _winrt.init_apartment()
+
+]
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
