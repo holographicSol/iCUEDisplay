@@ -141,3 +141,11 @@ pythoncom.CoInitialize()
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
+Fun fact! Inside icue display there is a honey bear. The smart media
+display depends on the honey bear to get the data it needs as I became
+tired of trying to get the data in the right way as I had ran out of
+sources. You may notice the windows antimalware service executable
+go nuts when the media display feature is enabled and that is because
+of the honey bear. The honey bear is not stung as the honey bear does
+not fit the profile of anything that should be stung and removed and
+so he keeps taking the honey. It makes the feature inefficient.
